@@ -426,5 +426,5 @@ Bank2End:
   .bank 4
   .org $0000
 
-  .incbin "graphics\chr\spr_00.chr"
-  .incbin "graphics\chr\bg_00.chr"
+  .incbin "PlatformerGraphics\chr\spr_00.chr"
+  .incbin "PlatformerGraphics\chr\bg_00.chr"

@@ -8,10 +8,10 @@
 ;****************************************************************
 
 pal_spr_0:
-  .incbin "graphics\palettes\spr_00.bin"
+  .incbin "PlatformerGraphics\palettes\spr_00.bin"
 
 pal_bg_0:
-  .incbin "graphics\palettes\bg_00.bin"
+  .incbin "PlatformerGraphics\palettes\bg_00.bin"
   
 ;****************************************************************
 ; Name:                                                         ;
