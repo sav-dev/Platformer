@@ -92,7 +92,7 @@ playerBulletCooldown    .rs 1  ; when player can shoot again
 playerState             .rs 1  ; player state (normal/falling/exploding)
 playerAnimation         .rs 1  ; player state
 playerDirection         .rs 1  ; player direction
-playerAnimationCounter  .rs 1  ; player animation counter (timer)
+playerCounter           .rs 1  ; player counter (timer), used mostly for animation
 playerAnimationFrame    .rs 1  ; player animation frame
 playerJump              .rs 1  ; 0 means not jumping, otherwise contains the jump counter
 

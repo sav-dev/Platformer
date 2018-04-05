@@ -103,6 +103,9 @@ PLAYER_NOT_VISIBLE      = $03   ; player has died and is timing out
 PLAYER_ANIM_FRAMES      = $04   ; frames are counting down so 4 -> 3 -> 2 -> 1
 PLAYER_ANIM_SPEED       = $08
                         
+PLAYER_DEAD_COOLDOWN    = $A0   ; how much time should pass after player is dead before the screen fades out
+PLAYER_DEAD_FADED_OUT   = $32   ; how much time should pass after the screen fades out before the game is restarted
+                    
 SPRITES_PLAYER          = SPRITES_ADDRESS
 PLAYER_SPRITES_COUNT    = $09   ; for iterating all sprites
                         

@@ -43,11 +43,18 @@ UpdatePlayer:
 ;   Called when player is not visible and timing out            ;
 ;                                                               ;
 ; Used variables:                                               ;
-;   todo                                                        ;
+;   N/I                                                         ;
 ;****************************************************************
 
 UpdatePlayerNotVisible:
+  DEC playerCounter
+  BEQ .resetLevel
   RTS
+  .resetLevel:
+    JSR FadeOut
+    LDX #PLAYER_DEAD_FADED_OUT
+    JSR SleepForXFrames
+    JSR LoadGame
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -165,10 +172,10 @@ UpdatePlayerNormal:
       STA playerDirection             ; set player direction to left
       LDA playerAnimation
       CMP #PLAYER_CROUCH
-      BEQ .notMovingVertically        ; if player is crouching horizontal movement not possible      
+      BEQ .notMovingHorizontally      ; if player is crouching horizontal movement not possible      
       LDA #PLAYER_SPEED_NEGATIVE
       STA playerDX                    ; set DX
-      JMP .movingVertically           ; player will move vertically
+      JMP .movingHorizontally         ; player will move vertically
     .checkLeftDone:
     
     .checkRight:
@@ -179,13 +186,13 @@ UpdatePlayerNormal:
       STA playerDirection             ; set player direction to right
       LDA playerAnimation
       CMP #PLAYER_CROUCH
-      BEQ .notMovingVertically        ; if player is crouching horizontal movement not possible      
+      BEQ .notMovingHorizontally      ; if player is crouching horizontal movement not possible      
       LDA #PLAYER_SPEED_POSITIVE
       STA playerDX                    ; set DX
-      JMP .movingVertically           ; player will move vertically
+      JMP .movingHorizontally         ; player will move vertically
     .checkRightDone:
     
-    .notMovingVertically:
+    .notMovingHorizontally:
       LDA playerAnimation             ; if we got here it means player is not moving vertically
       CMP #PLAYER_RUN                 
       BEQ .changeStateToStand
@@ -195,16 +202,16 @@ UpdatePlayerNormal:
         STA playerAnimation
         JMP .horizontalMovementDone
     
-    .movingVertically:
+    .movingHorizontally:
       LDA playerAnimation
       CMP #PLAYER_JUMP
       BEQ .checkHorizontalCollision   ; player in the jumping animation, no updates needed
       CMP #PLAYER_STAND
       BEQ .startRunning               ; player is standing and wants to move, start running
-      DEC playerAnimationCounter
+      DEC playerCounter
       BNE .checkHorizontalCollision   ; counter is counting down
       LDA #PLAYER_ANIM_SPEED
-      STA playerAnimationCounter
+      STA playerCounter
       DEC playerAnimationFrame
       BNE .checkHorizontalCollision
       LDA #PLAYER_ANIM_FRAMES
@@ -215,7 +222,7 @@ UpdatePlayerNormal:
       LDA #PLAYER_RUN
       STA playerAnimation
       LDA #PLAYER_ANIM_SPEED
-      STA playerAnimationCounter
+      STA playerCounter
       LDA #PLAYER_ANIM_FRAMES
       STA playerAnimationFrame  
     
@@ -309,11 +316,32 @@ UpdatePlayerNormal:
 ;   Called when player is in the falling down state             ;
 ;                                                               ;
 ; Used variables:                                               ;
-;   todo                                                        ;
+;   N/I                                                         ;
 ;****************************************************************
 
 UpdatePlayerFalling:
-  RTS
+
+  .applyGravity:
+    LDA #GRAVITY
+    STA playerDY
+    JSR MovePlayerVertically
+    
+  .checkPlayerY:
+    LDA playerY
+    CMP #$40
+    BCC .render                   ; if playerY is < 64, keep rendering the player
+    CMP #$80
+    BCS .render                   ; if playerY is >= 128, keep rendering the player
+  
+  .playerOffScreen:               ; if we get here it means playerY >= 64 && playerY < 128, meaning player is well off screen
+    LDA #PLAYER_DEAD_COOLDOWN
+    STA playerCounter
+    LDA #PLAYER_NOT_VISIBLE
+    STA playerState
+    RTS
+  
+  .render:
+    JMP RenderPlayerFalling
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -911,10 +939,10 @@ MovePlayerHorizontally:
 MovePlayerVertically:
   
   .applyMovement:
-    LDA playerY
+    LDA playerDY
     BEQ .noMovement
     CLC   
-    ADC playerDY    
+    ADC playerY    
     STA playerY
   
   .plaformBoxY:
@@ -961,7 +989,7 @@ LoadPlayer:
     STA playerState
     LDA #$00                      
     STA playerJump
-    STA playerAnimationCounter
+    STA playerCounter
     STA playerAnimationFrame      
     LDA #PLAYER_STAND             
     STA playerAnimation    
@@ -1091,7 +1119,91 @@ RenderPlayer:
       DEY
       LDA [b], y
       CLC
-      ADC playerY
+      ADC playerY                 ; yOffs are always negative, so if tile is off screen, e.g. if player Y = 3
+      BCC .loopCheck              ; and yOff= -8 (F8), then carry won't be set and tile should be ignored
+      STA renderYPos              ; todo - this loopCheck is untested
+      LDA [d], y
+      STA renderTile
+      LDA [f], y
+      STA renderAtts
+      LDA [h], y
+      CLC
+      ADC playerX
+      STA renderXPos
+      JSR RenderSprite
+      .loopCheck:
+        TYA
+        BNE .renderTileLoop
+        RTS
+        
+;****************************************************************
+; Name:                                                         ;
+;   RenderPlayerFalling                                         ;
+;                                                               ;
+; Description:                                                  ;
+;   Renders player when falling off screen                      ;
+;                                                               ;
+; Used variables:                                               ;
+;   Y                                                           ;
+;   b ~ i used as pointers                                      ;
+;****************************************************************
+    
+RenderPlayerFalling:
+  
+  .directionCheck:
+    LDA playerDirection
+    BEQ .facingLeft               ; DIRECTION_LEFT = 0
+        
+    .facingRight:   
+      LDA #LOW(xOffRight)   
+      STA h   
+      LDA #HIGH(xOffRight)    
+      STA i   
+        
+      LDA #LOW (attsRight)    
+      STA f   
+      LDA #HIGH (attsRight)   
+      STA g   
+      JMP .yAndTiles
+        
+    .facingLeft:    
+      LDA #LOW(xOffLeft)    
+      STA h   
+      LDA #HIGH(xOffLeft)   
+      STA i   
+        
+      LDA #LOW (attsLeft)   
+      STA f   
+      LDA #HIGH (attsLeft)    
+      STA g   
+        
+  .yAndTiles:    
+    LDA #LOW(yOffNonCrouch)   
+    STA b   
+    LDA #HIGH(yOffNonCrouch)    
+    STA c   
+        
+    LDA #LOW(tilesJump) 
+    STA d 
+    LDA #HIGH(tilesJump)  
+    STA e
+      
+  .render:
+    
+    ; once we get here
+    ;   b+c points to y off table
+    ;   d+e points to tiles table
+    ;   f+g points to atts table
+    ;   h+i points to x off table
+  
+    LDY #PLAYER_SPRITES_COUNT
+    .renderTileLoop:
+      DEY
+      LDA [b], y
+      CLC
+      ADC playerY                 ; when falling down, we want to ignore tiles that would be rendered on top of the screen
+      CMP #$80                    ; compare the tile Y with $80, if it's less then ignore it
+      BCC .loopCheck
       STA renderYPos
       LDA [d], y
       STA renderTile
@@ -1102,9 +1214,10 @@ RenderPlayer:
       ADC playerX
       STA renderXPos
       JSR RenderSprite
-      TYA
-      BNE .renderTileLoop
-      RTS
+      .loopCheck:
+        TYA
+        BNE .renderTileLoop
+        RTS
     
 ;****************************************************************
 ; Name:                                                         ;
