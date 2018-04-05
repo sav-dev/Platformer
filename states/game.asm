@@ -68,6 +68,13 @@ LoadGame:
     JSR WaitForFrame              ; wait for values to be written
   .disablePPUAndSleepDone:
 
+  .setVramAddressingTo1:
+    LDA #%10010000                ; enable NMI, sprites from PT 0, bg from PT 1. Use NT 0, 1 VRAM increment (for palettes)
+    STA soft2000
+    INC needPpuReg
+    JSR WaitForFrame              ; wait for values to be written
+  .setVramAddressingTo1Done:
+  
   .loadPalettes:
     LDA #LOW(pal_bg_0)
     STA genericPointer
@@ -83,12 +90,12 @@ LoadGame:
     JSR WaitForFrame              ; wait for values to be written
   .loadPalettesDone:
  
-  .setVramAddressing:
-    LDA #%10010100                ; enable NMI, sprites from PT 0, bg from PT 1. Use NT 0, 32 VRAM increment
+  .setVramAddressingTo32:
+    LDA #%10010100                ; enable NMI, sprites from PT 0, bg from PT 1. Use NT 0, 32 VRAM increment (for background)
     STA soft2000
     INC needPpuReg
     JSR WaitForFrame              ; wait for values to be written
-  .setVramAddressingDone:
+  .setVramAddressingTo32Done:
  
   .loadLevel:
     LDA currentLevel
@@ -120,5 +127,4 @@ LoadGame:
     INC needPpuReg
   .enablePPUDone:
   
-  JSR WaitForFrame 
-  RTS
+  JMP WaitForFrame 
