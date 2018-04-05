@@ -89,7 +89,8 @@ playerPlatformBoxY2     .rs 1
 
 playerBulletCooldown    .rs 1  ; when player can shoot again
 
-playerState             .rs 1  ; player state
+playerState             .rs 1  ; player state (normal/falling/exploding)
+playerAnimation         .rs 1  ; player state
 playerDirection         .rs 1  ; player direction
 playerAnimationCounter  .rs 1  ; player animation counter (timer)
 playerAnimationFrame    .rs 1  ; player animation frame

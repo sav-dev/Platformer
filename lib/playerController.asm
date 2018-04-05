@@ -8,15 +8,7 @@
 ;   UpdatePlayer                                                ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Updates player based on current state and input.            ;
-;   Renders the player.                                         ;
-;   Sets:                                                       ;
-;     - playerX and playerY (updated position)                  ;
-;     - playerDX and  playerDY (how much player has moved)      ;
-;     - updates scroll if needed                                ;
-;     - playerPlatformBox, playerCollisionBox                   ;
-;     - playerGunX and playerGunY                               ;
-;     - playerState                                             ;
+;   Calls into various UpdatePlayer routines based on state     ;
 ;                                                               ;
 ; Used variables:                                               ;
 ;   X                                                           ;
@@ -33,6 +25,61 @@
 ;****************************************************************
 
 UpdatePlayer:
+  LDA playerState
+  BEQ UpdatePlayerNormal        ; PLAYER_NORMAL = 0
+  CMP #PLAYER_NOT_VISIBLE
+  BEQ UpdatePlayerNotVisible
+  CMP #PLAYER_FALLING
+  BEQ .playerFalling
+  JMP UpdatePlayerExploding
+  .playerFalling:
+    JMP UpdatePlayerFalling
+    
+;****************************************************************
+; Name:                                                         ;
+;   UpdatePlayerNotVisible                                      ;
+;                                                               ;
+; Description:                                                  ;
+;   Called when player is not visible and timing out            ;
+;                                                               ;
+; Used variables:                                               ;
+;   todo                                                        ;
+;****************************************************************
+
+UpdatePlayerNotVisible:
+  RTS
+
+;****************************************************************
+; Name:                                                         ;
+;   UpdatePlayerNormal                                          ;
+;                                                               ;
+; Description:                                                  ;
+;   Updates player based on current state and input.            ;
+;   Renders the player.                                         ;
+;   Sets:                                                       ;
+;     - playerX and playerY (updated position)                  ;
+;     - playerDX and  playerDY (how much player has moved)      ;
+;     - updates scroll if needed                                ;
+;     - playerPlatformBox, playerCollisionBox                   ;
+;     - playerGunX and playerGunY                               ;
+;     - playerAnimation                                         ;
+;     {todo: spawn bullets}                                     ;
+;                                                               ;
+; Used variables:                                               ;
+;   X                                                           ;
+;   Y                                                           ;
+;   b                                                           ;
+;   c                                                           ;
+;   d                                                           ;
+;   e                                                           ;
+;   f                                                           ;
+;   g                                                           ;
+;   h                                                           ;
+;   i                                                           ;
+;   collision vars                                              ;
+;****************************************************************
+
+UpdatePlayerNormal:
 
   .verticalMovement:                  ; process vertical movement first
     
@@ -61,7 +108,7 @@ UpdatePlayer:
       
     .playerMidAir:
       LDA #PLAYER_JUMP                ; no collision, player is mid-air, no more checks required
-      STA playerState
+      STA playerAnimation
       JMP .verticalMovementDone       
         
     .processCollision:  
@@ -72,7 +119,7 @@ UpdatePlayer:
         LDA #JUMP_PEAK                ; collision was when going up, treat it as the jumps peak, then exit
         STA playerJump
         LDA #PLAYER_JUMP
-        STA playerState
+        STA playerAnimation
         JMP .verticalMovementDone
         
       .collisionGoingDown:
@@ -86,7 +133,7 @@ UpdatePlayer:
         LDA #JUMP_FRAMES
         STA playerJump
         LDA #PLAYER_JUMP
-        STA playerState
+        STA playerAnimation
         JMP .verticalMovementDone
       .checkADone:
       
@@ -95,16 +142,16 @@ UpdatePlayer:
         AND #CONTROLLER_DOWN
         BEQ .checkDownDone            ; check if player wants to crouch
         LDA #PLAYER_CROUCH
-        STA playerState
+        STA playerAnimation
         JMP .verticalMovementDone
       .checkDownDone:
       
       .noInput:                       ; no input, set state to either STAND or RUN
-        LDA playerState
+        LDA playerAnimation
         CMP #PLAYER_RUN
         BEQ .verticalMovementDone     ; player is already running, leave animation as RUN
         LDA #PLAYER_STAND
-        STA playerState               ; set state to STAND        
+        STA playerAnimation           ; set state to STAND        
   
   .verticalMovementDone:              ; vertical movement processed
      
@@ -116,7 +163,7 @@ UpdatePlayer:
       BEQ .checkLeftDone              ; check if left is pressed
       LDA #DIRECTION_LEFT
       STA playerDirection             ; set player direction to left
-      LDA playerState
+      LDA playerAnimation
       CMP #PLAYER_CROUCH
       BEQ .notMovingVertically        ; if player is crouching horizontal movement not possible      
       LDA #PLAYER_SPEED_NEGATIVE
@@ -130,7 +177,7 @@ UpdatePlayer:
       BEQ .checkRightDone             ; check if right is pressed
       LDA #DIRECTION_RIGHT
       STA playerDirection             ; set player direction to right
-      LDA playerState
+      LDA playerAnimation
       CMP #PLAYER_CROUCH
       BEQ .notMovingVertically        ; if player is crouching horizontal movement not possible      
       LDA #PLAYER_SPEED_POSITIVE
@@ -139,17 +186,17 @@ UpdatePlayer:
     .checkRightDone:
     
     .notMovingVertically:
-      LDA playerState                 ; if we got here it means player is not moving vertically
+      LDA playerAnimation             ; if we got here it means player is not moving vertically
       CMP #PLAYER_RUN                 
       BEQ .changeStateToStand
       JMP .horizontalMovementDone
       .changeStateToStand:            ; if player is in the RUN state, replace it with the STAND State
         LDA #PLAYER_STAND
-        STA playerState
+        STA playerAnimation
         JMP .horizontalMovementDone
     
     .movingVertically:
-      LDA playerState
+      LDA playerAnimation
       CMP #PLAYER_JUMP
       BEQ .checkHorizontalCollision   ; player in the jumping animation, no updates needed
       CMP #PLAYER_STAND
@@ -166,7 +213,7 @@ UpdatePlayer:
       
     .startRunning:
       LDA #PLAYER_RUN
-      STA playerState
+      STA playerAnimation
       LDA #PLAYER_ANIM_SPEED
       STA playerAnimationCounter
       LDA #PLAYER_ANIM_FRAMES
@@ -240,7 +287,46 @@ UpdatePlayer:
 
   .renderPlayer:
     JSR RenderPlayer
+    
+  ; todo: spawn bullets here
+
+  .checkIfFallingOffScreen:
+    LDA playerY
+    CMP #PLAYER_Y_MAX
+    BNE .checkThreats
+    LDA #PLAYER_FALLING
+    STA playerState
+    RTS
+    
+  .checkThreats:
+    RTS
   
+;****************************************************************
+; Name:                                                         ;
+;   UpdatePlayerFalling                                         ;
+;                                                               ;
+; Description:                                                  ;
+;   Called when player is in the falling down state             ;
+;                                                               ;
+; Used variables:                                               ;
+;   todo                                                        ;
+;****************************************************************
+
+UpdatePlayerFalling:
+  RTS
+
+;****************************************************************
+; Name:                                                         ;
+;   UpdatePlayerExploding                                       ;
+;                                                               ;
+; Description:                                                  ;
+;   Called when player is in the exploding state                ;
+;                                                               ;
+; Used variables:                                               ;
+;   todo                                                        ;
+;****************************************************************
+
+UpdatePlayerExploding:
   RTS
   
 ;****************************************************************
@@ -367,7 +453,7 @@ UpdatePlayerBullets:
 ;                                      
 ;  .getYPosition:                      
 ;    DEX                               ; x points to the Y position
-;    LDA playerState                   
+;    LDA playerAnimation                   
 ;    CMP #PLAYER_CROUCH                
 ;    BEQ .playerCrouching              
 ;                                      
@@ -871,12 +957,14 @@ LoadPlayer:
     JSR MovePlayerVertically    
   
   .presetState:
+    LDA #PLAYER_NORMAL
+    STA playerState
     LDA #$00                      
     STA playerJump
     STA playerAnimationCounter
     STA playerAnimationFrame      
     LDA #PLAYER_STAND             
-    STA playerState    
+    STA playerAnimation    
     LDA #DIRECTION_RIGHT
     STA playerDirection
   
@@ -927,7 +1015,7 @@ RenderPlayer:
       STA g   
         
   .stateCheck:    
-    LDA playerState   
+    LDA playerAnimation   
     CMP #PLAYER_CROUCH    
     BEQ .playerCrouch   
           
@@ -936,7 +1024,7 @@ RenderPlayer:
     LDA #HIGH(yOffNonCrouch)    
     STA c   
         
-    LDA playerState   
+    LDA playerAnimation   
     BEQ .playerStand              ; PLAYER_STAND = 0
     CMP #PLAYER_JUMP  
     BEQ .playerJump 

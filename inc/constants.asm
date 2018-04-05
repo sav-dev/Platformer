@@ -94,6 +94,11 @@ PLAYER_STAND            = $00
 PLAYER_JUMP             = $01
 PLAYER_RUN              = $02
 PLAYER_CROUCH           = $03
+
+PLAYER_NORMAL           = $00   ; normal state
+PLAYER_FALLING          = $01   ; player falling off screen
+PLAYER_EXPLODING        = $02   ; player is exploding
+PLAYER_NOT_VISIBLE      = $03   ; player has died and is timing out
                         
 PLAYER_ANIM_FRAMES      = $04   ; frames are counting down so 4 -> 3 -> 2 -> 1
 PLAYER_ANIM_SPEED       = $08

@@ -378,7 +378,7 @@ RenderSprite:
   LDA spritePointer
   CLC
   ADC #SPRITE_POINTER_JUMP  
-  STA spritePointer  
+  STA spritePointer
   RTS
   
 ;****************************************************************
@@ -393,6 +393,7 @@ Bank2Start:
   .include "lib\paletteManager.asm"  
   .include "lib\collisionManager.asm"
   .include "lib\playerController.asm"
+  .include "lib\explosionsController.asm"
 
   .include "states\game.asm"
 
