@@ -51,10 +51,12 @@ UpdatePlayerNotVisible:
   BEQ .resetLevel
   RTS
   .resetLevel:
+    JSR WaitForFrame
     JSR FadeOut
     LDX #PLAYER_DEAD_FADED_OUT
     JSR SleepForXFrames
     JSR LoadGame
+    JMP GameLoopDone
 
 ;****************************************************************
 ; Name:                                                         ;
