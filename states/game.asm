@@ -119,6 +119,7 @@ LoadGame:
     LDA #$00
     STA nametable                 ; show nametable 0 first
     STA scroll                    ; scroll starts at 0
+    STA scroll + $01
   .initVarsDone:
  
   .enablePPU:                                    
