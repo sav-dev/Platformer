@@ -311,8 +311,7 @@ UpdatePlayerNormal:
     JSR CheckForThreatCollisions
     LDA collision
     BEQ .updatePlayerDone
-    LDA #PLAYER_EXPLODING
-    STA playerState
+    JMP ExplodePlayer
   
   .updatePlayerDone:
     RTS
@@ -360,7 +359,7 @@ UpdatePlayerFalling:
 ;   Called when player is in the exploding state                ;
 ;                                                               ;
 ; Used variables:                                               ;
-;   todo                                                        ;
+;   N/I                                                         ;
 ;****************************************************************
 
 UpdatePlayerExploding:
@@ -370,6 +369,27 @@ UpdatePlayerExploding:
   LDA #PLAYER_NOT_VISIBLE
   STA playerState
   RTS
+  
+;****************************************************************
+; Name:                                                         ;
+;   ExplodePlayer                                               ;
+;                                                               ;
+; Description:                                                  ;
+;   Puts the player in the exploding state and sets all timers  ;
+;                                                               ;
+; Used variables:                                               ;
+;   N/I                                                         ;
+;****************************************************************
+
+ExplodePlayer:
+  LDA #PLAYER_EXPLODING
+  STA playerState
+  LDA #EXPLOSION_ANIM_FRAMES
+  STA playerAnimationFrame
+  LDA #EXPLOSION_ANIM_SPEED
+  STA playerCounter
+  RTS
+  
   
 ;****************************************************************
 ; Name:                                                         ;

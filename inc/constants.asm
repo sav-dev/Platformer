@@ -132,6 +132,13 @@ PLAYER_GUN_OFF_Y        = $EC - $03 ; -03 for bullet offset within the sprite
 PLAYER_GUN_OFF_Y_C      = $F4 - $03 ; same
 
 ;****************************************************************
+; Explosion related constans                                    ;
+;****************************************************************
+
+EXPLOSION_ANIM_FRAMES   = $04   ; frames are counting down so 4 -> 3 -> 2 -> 1
+EXPLOSION_ANIM_SPEED    = $08
+
+;****************************************************************
 ; Scroll                                                        ;
 ;****************************************************************
 
