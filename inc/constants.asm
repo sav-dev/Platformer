@@ -77,8 +77,15 @@ DIRECTION_NONE  = $02
 ; Player related constans                                       ;
 ;****************************************************************
 
+; inclusive so it's 16 & 32 really
 PLAYER_PLAT_BOX_WIDTH   = SPRITE_DIMENSION_X2 - $01
 PLAYER_PLAT_BOX_HEIGHT  = SPRITE_DIMENSION_X4 - $01
+
+PLAYER_THR_BOX_X_OFF    = $01
+PLAYER_THR_BOX_Y_OFF    = $02
+PLAYER_THR_BOX_WIDTH    = $0D
+PLAYER_THR_BOX_HEIGHT   = $19
+PLAYER_THR_BOX_HEIGHT_C = $11
 
 PLAYER_SPEED_POSITIVE   = $02   ; positive player speed
 PLAYER_SPEED_NEGATIVE   = $FE   ; positive player speed = positive speed * (-1)

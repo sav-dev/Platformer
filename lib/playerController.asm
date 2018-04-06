@@ -308,6 +308,13 @@ UpdatePlayerNormal:
     RTS
     
   .checkThreats:
+    JSR CheckForThreatCollisions
+    LDA collision
+    BEQ .updatePlayerDone
+    LDA #PLAYER_EXPLODING
+    STA playerState
+  
+  .updatePlayerDone:
     RTS
   
 ;****************************************************************
@@ -357,6 +364,11 @@ UpdatePlayerFalling:
 ;****************************************************************
 
 UpdatePlayerExploding:
+  ; todo actually implement this
+  LDA #PLAYER_DEAD_COOLDOWN
+  STA playerCounter
+  LDA #PLAYER_NOT_VISIBLE
+  STA playerState
   RTS
   
 ;****************************************************************
@@ -890,6 +902,61 @@ CheckCollisionHorizontal:
     
 ;****************************************************************
 ; Name:                                                         ;
+;   CheckForThreatCollisions                                    ;
+;                                                               ;
+; Description:                                                  ;
+;   Checks for collisions between player and threats            ;
+;                                                               ;
+; Output variables:                                             ;
+;   collision set to 1 means collision has been detected        ;
+;                                                               ;
+; Used variables:                                               ;
+;   Y                                                           ;
+;   c                                                           ;
+;   d                                                           ;
+;   i                                                           ;
+;   collision vars                                              ;
+;   genericPointer                                              ;
+;****************************************************************
+  
+CheckForThreatCollisions:
+
+  .setBox:
+    LDA playerThreatBoxX1
+    STA bx1
+    LDA playerThreatBoxX2
+    STA bx2
+    LDA playerThreatBoxY1
+    STA by1
+    LDA playerThreatBoxY2
+    STA by2
+
+  .checkFirstThreatScreen:
+    LDA #$00
+    STA c
+    LDA threatsPointer
+    STA genericPointer
+    LDA threatsPointer + $01
+    STA genericPointer + $01
+    JSR CheckForPlatformOneScreen
+    LDA collision
+    BNE .collisionCheckDone
+    
+  .checkSecondThreatScreen:
+    INC c
+    JSR MoveThreatsPointerForward
+    LDA threatsPointer
+    STA genericPointer
+    LDA threatsPointer + $01
+    STA genericPointer + $01
+    JSR CheckForPlatformOneScreen
+    JSR MoveThreatsPointerBack
+    
+  .collisionCheckDone:
+    RTS
+    
+;****************************************************************
+; Name:                                                         ;
 ;   MovePlayerHorizontally                                      ;
 ;                                                               ;
 ; Description:                                                  ;
@@ -905,7 +972,7 @@ MovePlayerHorizontally:
   
   .applyMovement:
     LDA playerDX
-    BEQ .noMovement
+    ;BEQ .noMovement            no need for this check currently
     CLC
     ADC playerX
     STA playerX    
@@ -914,14 +981,18 @@ MovePlayerHorizontally:
     LDA playerX
     STA playerPlatformBoxX1
     CLC
-    ADC #$0F
-    BCS .capXAtMaax
-    STA playerPlatformBoxX2
-    JMP .noMovement
-    .capXAtMaax:
-      LDA #SCREEN_WIDTH
-      STA playerPlatformBoxX2
+    ADC #PLAYER_PLAT_BOX_WIDTH     
+    STA playerPlatformBoxX2     ; don't cap X2 since player should never be off screen horizontally
   
+  .threatBoxX:
+    LDA playerX
+    CLC
+    ADC #PLAYER_THR_BOX_X_OFF
+    STA playerThreatBoxX1
+    CLC
+    ADC #PLAYER_THR_BOX_WIDTH      
+    STA playerThreatBoxX2       ; don't cap here either
+    
   .noMovement:
     RTS
   
@@ -942,7 +1013,7 @@ MovePlayerVertically:
   
   .applyMovement:
     LDA playerDY
-    BEQ .noMovement
+    ;BEQ .noMovement            no need for this check currently
     CLC   
     ADC playerY    
     STA playerY
@@ -951,13 +1022,50 @@ MovePlayerVertically:
     LDA playerY
     STA playerPlatformBoxY2
     SEC
-    SBC #$1F
+    SBC #PLAYER_PLAT_BOX_HEIGHT
     BCC .capYAtMin
     STA playerPlatformBoxY1
-    RTS
+    JMP .threatBoxY
     .capYAtMin:
       LDA #$00
       STA playerPlatformBoxY1
+  
+  .threatBoxY:
+    LDA playerY
+    SEC
+    SBC #PLAYER_THR_BOX_Y_OFF
+    BCC .capBothAtMin
+    STA playerThreatBoxY2
+    
+    LDA playerAnimation
+    CMP #PLAYER_CROUCH
+    BEQ .crouching
+            
+    .notCrouching:
+      LDA playerThreatBoxY2
+      SEC
+      SBC #PLAYER_THR_BOX_HEIGHT
+      BCC .capY1AtMin
+      STA playerThreatBoxY1
+      RTS
+    
+    .crouching:
+      LDA playerThreatBoxY2
+      SEC
+      SBC #PLAYER_THR_BOX_HEIGHT_C
+      BCC .capY1AtMin
+      STA playerThreatBoxY1
+      RTS
+    
+    .capBothAtMin:
+      LDA #$00
+      STA playerThreatBoxY1
+      STA playerThreatBoxY2      
+      RTS
+      
+    .capY1AtMin:
+      LDA #$00
+      STA playerThreatBoxY1      
   
   .noMovement:
     RTS   

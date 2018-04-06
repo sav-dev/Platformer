@@ -87,6 +87,11 @@ playerPlatformBoxX2     .rs 1
 playerPlatformBoxY1     .rs 1
 playerPlatformBoxY2     .rs 1
 
+playerThreatBoxX1       .rs 1  ; can be removed for a slight performance decrease (4 bytes freed though)
+playerThreatBoxX2       .rs 1
+playerThreatBoxY1       .rs 1
+playerThreatBoxY2       .rs 1
+
 playerBulletCooldown    .rs 1  ; when player can shoot again
 
 playerState             .rs 1  ; player state (normal/falling/exploding)
