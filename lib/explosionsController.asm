@@ -1,6 +1,6 @@
 ;****************************************************************
-; PlayerController                                              ;
-; Responsible for player's movement and graphics                ;
+; ExplosionsController                                          ;
+; Responsible for rendering explosions                          ;
 ;****************************************************************
 
 ;****************************************************************
@@ -21,6 +21,7 @@
 ;   e                                                           ;
 ;   h                                                           ;
 ;   i                                                           ;
+;   j                                                           ;
 ;****************************************************************
 
 RenderExplosion:  
@@ -78,9 +79,47 @@ RenderExplosion:
     ;   b+c points to y off table   
     ;   d+e points to tiles table   
     ;   h+i points to x off table   
-    ;   atts are constant           
+    ;   atts are constant  
                                     
-    LDY #EXPLOSION_SPRITES_COUNT    
+    LDY #EXPLOSION_SPRITES_COUNT
+    LDA #$00
+    STA j
+    
+    ; Y = decreasing counter with frame to render (decremented first run): 3->2->1->0
+    ; j = stop after this frame is rendered
+    
+    ; if explosionX <= F0 -> render everything
+    ; if explosionX <= F7 -> if offscreen render nothing, otherwise render everything
+    ; else     -> if offscreen render 2 & 3 (set j to 2), otherwise render 0 & 1 (set y to 2)
+    ;             render nothing if frame = 4    
+    
+    LDA explosionX
+    CMP #$F1
+    BCC .renderTileLoop             ; explosionX < F1 => explosionX <= F0
+    CMP #$F8
+    BCC .f7Case                     ; explosionX < F8 => explosionX <= F7
+    
+    .elseCase:
+      LDA explosionFrame
+      CMP #$04
+      BEQ .explosionRendered    
+      LDA explosionOffScreen
+      BEQ .elseCaseNotOffScreen
+      
+      .elseCaseOffScreen:
+        LDA #$02
+        STA j
+        JMP .renderTileLoop
+        
+      .elseCaseNotOffScreen:
+        LDY #$02
+        JMP .renderTileLoop
+        
+    .f7Case:
+      LDA explosionOffScreen
+      BEQ .renderTileLoop
+      JMP .explosionRendered   
+    
     .renderTileLoop:                
       DEY                           
       LDA [b], y                    
@@ -91,17 +130,17 @@ RenderExplosion:
       STA renderTile                
       LDA #EXPLOSION_ATTS                   
       STA renderAtts          
-      ; todo: handle explosionOffScreen
       LDA [h], y                    
       CLC                           
-      ADC explosionX                   
-      STA renderXPos                
-      JSR RenderSprite              
-      .loopCheck:                   
-        TYA
-        BNE .renderTileLoop         
-        RTS                         
-
+      ADC explosionX
+      STA renderXPos
+      JSR RenderSprite
+      CPY j
+      BNE .renderTileLoop
+      
+  .explosionRendered:  
+    RTS
+    
 ;****************************************************************
 ; ATTS for explosion are currently constant for each tile       ;
 ;****************************************************************
@@ -113,16 +152,15 @@ EXPLOSION_ATTS = $00
 ;****************************************************************
   
 explosionXOff1st:
-  .byte $05, $00, $00, $00
+  .byte $05, CLEAR_SPRITE, CLEAR_SPRITE, CLEAR_SPRITE
 explosionXOffRest:
-  .byte $00, $08, $00, $08
+  .byte $00, $00, $08, $08
 explosionYOff1st:
   .byte $04, CLEAR_SPRITE, CLEAR_SPRITE, CLEAR_SPRITE
 explosionYOffRest:
-  .byte $00, $00, $08, $08
+  .byte $00, $08, $00, $08
 explosionTiles:
-  .byte $22, $23, $24, $25
-  .byte $1E, $1F, $20, $21
-  .byte $1A, $1B, $1C, $1D
+  .byte $22, $24, $23, $25
+  .byte $1E, $20, $1F, $21
+  .byte $1A, $1C, $1B, $1D
   .byte $19, CLEAR_SPRITE, CLEAR_SPRITE, CLEAR_SPRITE
-

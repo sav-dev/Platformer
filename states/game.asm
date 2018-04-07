@@ -29,7 +29,7 @@ GameFrame:
    
   .updatePlayerBullets:
     JSR UpdatePlayerBullets
-    
+   
   .setNmiFlags:
     .dma:
       INC needDma                   ; always do DMA     

@@ -394,6 +394,7 @@ Bank2Start:
   .include "lib\collisionManager.asm"
   .include "lib\playerController.asm"
   .include "lib\explosionsController.asm"
+  .include "lib\bulletController.asm"
 
   .include "states\game.asm"
 
