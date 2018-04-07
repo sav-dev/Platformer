@@ -87,6 +87,8 @@ PLAYER_THR_BOX_WIDTH    = $0D
 PLAYER_THR_BOX_HEIGHT   = $19
 PLAYER_THR_BOX_HEIGHT_C = $11
 
+PLAYER_EXPL_Y_OFF       = SPRITE_DIMENSION_X3
+
 PLAYER_SPEED_POSITIVE   = $02   ; positive player speed
 PLAYER_SPEED_NEGATIVE   = $FE   ; positive player speed = positive speed * (-1)
                         
@@ -135,8 +137,9 @@ PLAYER_GUN_OFF_Y_C      = $F4 - $03 ; same
 ; Explosion related constans                                    ;
 ;****************************************************************
 
+EXPLOSION_SPRITES_COUNT = $04
 EXPLOSION_ANIM_FRAMES   = $04   ; frames are counting down so 4 -> 3 -> 2 -> 1
-EXPLOSION_ANIM_SPEED    = $08
+EXPLOSION_ANIM_SPEED    = $06
 
 ;****************************************************************
 ; Scroll                                                        ;

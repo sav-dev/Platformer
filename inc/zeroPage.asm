@@ -102,6 +102,15 @@ playerAnimationFrame    .rs 1  ; player animation frame
 playerJump              .rs 1  ; 0 means not jumping, otherwise contains the jump counter
 
 ;****************************************************************
+; Explosion vars                                                ;
+;****************************************************************
+
+explosionX              .rs 1  ; explosion position
+explosionY              .rs 1
+explosionFrame          .rs 1  ; explosion frame
+explosionOffScreen      .rs 1  ; 1 means explosion is on screen (so x = $FE means render on the left)
+
+;****************************************************************
 ; Collision checks                                              ;
 ;****************************************************************
 
@@ -116,7 +125,7 @@ by2                     .rs 1
 collision               .rs 1
 
 ;****************************************************************
-; Sprite rendering checks                                       ;
+; Sprite rendering                                              ;
 ;****************************************************************
 
 spritePointer           .rs 1

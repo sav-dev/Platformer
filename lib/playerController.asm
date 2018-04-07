@@ -363,12 +363,34 @@ UpdatePlayerFalling:
 ;****************************************************************
 
 UpdatePlayerExploding:
-  ; todo actually implement this
-  LDA #PLAYER_DEAD_COOLDOWN
-  STA playerCounter
-  LDA #PLAYER_NOT_VISIBLE
-  STA playerState
-  RTS
+  
+  .updateTimer:
+    DEC playerCounter
+    BNE .renderExplosion
+  
+  .updateFrame:
+    LDA #EXPLOSION_ANIM_SPEED
+    STA playerCounter
+    DEC playerAnimationFrame
+    BNE .renderExplosion
+    
+  .animationEnded:  
+    LDA #PLAYER_DEAD_COOLDOWN
+    STA playerCounter
+    LDA #PLAYER_NOT_VISIBLE
+    STA playerState
+    RTS
+    
+  .renderExplosion:
+    LDA playerX
+    STA explosionX
+    LDA playerY
+    SEC
+    SBC #PLAYER_EXPL_Y_OFF
+    STA explosionY
+    LDA playerAnimationFrame
+    STA explosionFrame
+    JMP RenderExplosion
   
 ;****************************************************************
 ; Name:                                                         ;
@@ -1150,26 +1172,26 @@ RenderPlayer:
     BEQ .facingLeft               ; DIRECTION_LEFT = 0
         
     .facingRight:   
-      LDA #LOW(xOffRight)   
+      LDA #LOW(playerXOffRight)   
       STA h   
-      LDA #HIGH(xOffRight)    
+      LDA #HIGH(playerXOffRight)    
       STA i   
         
-      LDA #LOW (attsRight)    
+      LDA #LOW (playerAttsRight)    
       STA f   
-      LDA #HIGH (attsRight)   
+      LDA #HIGH (playerAttsRight)   
       STA g   
       JMP .stateCheck   
         
     .facingLeft:    
-      LDA #LOW(xOffLeft)    
+      LDA #LOW(playerXOffLeft)    
       STA h   
-      LDA #HIGH(xOffLeft)   
+      LDA #HIGH(playerXOffLeft)   
       STA i   
         
-      LDA #LOW (attsLeft)   
+      LDA #LOW (playerAttsLeft)   
       STA f   
-      LDA #HIGH (attsLeft)    
+      LDA #HIGH (playerAttsLeft)    
       STA g   
         
   .stateCheck:    
@@ -1177,9 +1199,9 @@ RenderPlayer:
     CMP #PLAYER_CROUCH    
     BEQ .playerCrouch   
           
-    LDA #LOW(yOffNonCrouch)   
+    LDA #LOW(playerYOffNonCrouch)   
     STA b   
-    LDA #HIGH(yOffNonCrouch)    
+    LDA #HIGH(playerYOffNonCrouch)    
     STA c   
         
     LDA playerAnimation   
@@ -1190,9 +1212,9 @@ RenderPlayer:
     ;BEQ #PLAYER_RUN  
       
     .playerRun: 
-      LDA #LOW(tilesRun)  
+      LDA #LOW(playerTilesRun)  
       STA d 
-      LDA #HIGH(tilesRun) 
+      LDA #HIGH(playerTilesRun) 
       STA e 
         
       LDX playerAnimationFrame    ; X = animation frame             
@@ -1212,28 +1234,28 @@ RenderPlayer:
       JMP .render
       
     .playerStand:
-      LDA #LOW(tilesStand) 
+      LDA #LOW(playerTilesStand) 
       STA d 
-      LDA #HIGH(tilesStand)  
+      LDA #HIGH(playerTilesStand)  
       STA e 
       JMP .render
     
     .playerJump:
-      LDA #LOW(tilesJump) 
+      LDA #LOW(playerTilesJump) 
       STA d 
-      LDA #HIGH(tilesJump)  
+      LDA #HIGH(playerTilesJump)  
       STA e
       JMP .render
     
     .playerCrouch:
-      LDA #LOW(yOffCrouch)
+      LDA #LOW(playerYOffCrouch)
       STA b
-      LDA #HIGH(yOffCrouch)
+      LDA #HIGH(playerYOffCrouch)
       STA c
       
-      LDA #LOW(tilesCrouch) 
+      LDA #LOW(playerTilesCrouch) 
       STA d 
-      LDA #HIGH(tilesCrouch)  
+      LDA #HIGH(playerTilesCrouch)  
       STA e
       
   .render:
@@ -1285,37 +1307,37 @@ RenderPlayerFalling:
     BEQ .facingLeft               ; DIRECTION_LEFT = 0
         
     .facingRight:   
-      LDA #LOW(xOffRight)   
+      LDA #LOW(playerXOffRight)   
       STA h   
-      LDA #HIGH(xOffRight)    
+      LDA #HIGH(playerXOffRight)    
       STA i   
         
-      LDA #LOW (attsRight)    
+      LDA #LOW (playerAttsRight)    
       STA f   
-      LDA #HIGH (attsRight)   
+      LDA #HIGH (playerAttsRight)   
       STA g   
       JMP .yAndTiles
         
     .facingLeft:    
-      LDA #LOW(xOffLeft)    
+      LDA #LOW(playerXOffLeft)    
       STA h   
-      LDA #HIGH(xOffLeft)   
+      LDA #HIGH(playerXOffLeft)   
       STA i   
         
-      LDA #LOW (attsLeft)   
+      LDA #LOW (playerAttsLeft)   
       STA f   
-      LDA #HIGH (attsLeft)    
+      LDA #HIGH (playerAttsLeft)    
       STA g   
         
   .yAndTiles:    
-    LDA #LOW(yOffNonCrouch)   
+    LDA #LOW(playerYOffNonCrouch)   
     STA b   
-    LDA #HIGH(yOffNonCrouch)    
+    LDA #HIGH(playerYOffNonCrouch)    
     STA c   
         
-    LDA #LOW(tilesJump) 
+    LDA #LOW(playerTilesJump) 
     STA d 
-    LDA #HIGH(tilesJump)  
+    LDA #HIGH(playerTilesJump)  
     STA e
       
   .render:
@@ -1394,25 +1416,25 @@ jumpLookupTable:
 ; 117 bytes, could be less since there is a lot of duplication  ;
 ;****************************************************************
   
-xOffRight:
+playerXOffRight:
   .byte $03, $FB, $03, $0B, $00, $08, $00, $08, $F8
-xOffLeft:
+playerXOffLeft:
   .byte $05, $0D, $05, $FD, $08, $00, $08, $00, $10
-yOffNonCrouch:
+playerYOffNonCrouch:
   .byte $E0, $E8, $E8, $E8, $F0, $F0, $F8, $F8, $F3
-yOffCrouch:
+playerYOffCrouch:
   .byte $E8, $F0, $F0, $F0, $F8, $F8, CLEAR_SPRITE, CLEAR_SPRITE, $F8
-attsRight:
+playerAttsRight:
   .byte $00, $00, $01, $01, $00, $00, $00, $00, $00
-attsLeft:
+playerAttsLeft:
   .byte $40, $40, $41, $41, $40, $40, $40, $40, $40
-tilesStand:
+playerTilesStand:
   .byte $00, $01, $02, $03, $04, $05, $06, $07, CLEAR_SPRITE ; Stand
-tilesJump:
+playerTilesJump:
   .byte $00, $01, $02, $03, $04, $08, $09, $0A, CLEAR_SPRITE ; Jump
-tilesCrouch:
+playerTilesCrouch:
   .byte $00, $01, $02, $03, $18, $06, CLEAR_SPRITE, CLEAR_SPRITE, $12 ; Crouch
-tilesRun:
+playerTilesRun:
   .byte $00, $01, $02, $03, $16, $17, $11, $07, $12 ; Run 4
   .byte $00, $01, $02, $03, $13, $14, $15, $0E, CLEAR_SPRITE ; Run 3
   .byte $00, $01, $02, $03, $0F, $10, $11, $07, $12 ; Run 2
