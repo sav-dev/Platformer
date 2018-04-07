@@ -42,7 +42,7 @@ LoadLevel:
   ; for now player position is hardcoded
   LDA #$30
   STA playerX
-  LDA #$9F
+  LDA #$CF
   STA playerY
   
 RTS
