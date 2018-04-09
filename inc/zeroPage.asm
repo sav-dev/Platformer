@@ -102,13 +102,22 @@ playerAnimationFrame    .rs 1  ; player animation frame
 playerJump              .rs 1  ; 0 means not jumping, otherwise contains the jump counter
 
 ;****************************************************************
-; Explosion vars                                                ;
+; Generic input vars                                            ;
 ;****************************************************************
 
-explosionX              .rs 1  ; explosion position
-explosionY              .rs 1
-explosionFrame          .rs 1  ; explosion frame
-explosionOffScreen      .rs 1  ; 1 means explosion is on screen (so x = $FE means render on the left)
+genericX                .rs 1  ; generic position
+genericY                .rs 1 
+genericFrame            .rs 1  ; generic frame count
+genericDirection        .rs 1  ; generic direction
+genericCounter          .rs 1  ; generic counter
+genericOffScreen        .rs 1  ; 1 means object is off screen (so x = $FE means render on the left side of the screen)
+
+;****************************************************************
+; Free bullet slots                                             ;
+;****************************************************************
+
+availablePlayerBullets  .rs 1
+availableEnemyBullets   .rs 1
 
 ;****************************************************************
 ; Collision checks                                              ;

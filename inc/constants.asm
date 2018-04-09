@@ -65,13 +65,18 @@ GAMESTATE_NONE = $FF
 ; Physics related constans                                      ;
 ;****************************************************************
 
-GRAVITY = $03                 ; how much the gravity pulls down per frame
+GRAVITY = $03                   ; how much the gravity pulls down per frame
 
-DIRECTION_LEFT  = $00         ; constants, do not change
-DIRECTION_RIGHT = $01
-DIRECTION_UP    = $00
-DIRECTION_DOWN  = $01
-DIRECTION_NONE  = $02
+DIRECTION_LEFT    = $00         ; constants, do not change
+DIRECTION_RIGHT   = $01
+DIRECTION_UP      = $00
+DIRECTION_DOWN    = $01
+DIRECTION_NONE    = $02
+                  
+GENERIC_DIR_LEFT  = $00
+GENERIC_DIR_RIGHT = $01
+GENERIC_DIR_UP    = $02
+GENERIC_DIR_DOWN  = $03
                                
 ;****************************************************************
 ; Player related constans                                       ;
@@ -120,12 +125,6 @@ PLAYER_SPRITES_COUNT    = $09   ; for iterating all sprites
                         
 PLAYER_CROUCH_OFFSET    = $03   ; offset of sprite 8 when crouching
                         
-PLAYER_BULLET_SPRITE    = $FD
-PLAYER_BULLET_PALETTE   = $00
-PLAYER_BULLET_WIDTH     = $07   ; really 8 but checks are inclusive
-PLAYER_BULLET_HEIGHT    = $04   ; really 5 but checks are inclusive
-PLAYER_BULLET_SPEED     = $06
-PLAYER_BULLET_LIMIT     = $05   ; could be less?
 PLAYER_BULLET_COOLDOWN  = $18
                         
 PLAYER_GUN_OFF_X_R      = $12
@@ -140,6 +139,34 @@ PLAYER_GUN_OFF_Y_C      = $F4 - $03 ; same
 EXPLOSION_SPRITES_COUNT = $04
 EXPLOSION_ANIM_FRAMES   = $04   ; frames are counting down so 4 -> 3 -> 2 -> 1
 EXPLOSION_ANIM_SPEED    = $06
+
+;****************************************************************
+; Bullets related constans                                      ;
+;****************************************************************
+
+BULLET_MEMORY_STATE     = $00
+BULLET_MEMORY_X_OFF     = $01
+BULLET_MEMORY_Y_OFF     = $02
+BULLET_MEMORY_DIRECTION = $03
+
+BULLET_S_NOT_EXIST      = $00
+BULLET_S_JUST_SPAWNED   = $01
+BULLET_S_NORMAL         = $02
+BULLET_S_SMTH_HIT       = $03
+
+BULLET_SPRITE_H         = $FD
+BULLET_SPRITE_V         = $FC
+BULLET_SPRITE_E         = $FB
+BULLET_PALETTE          = $00
+
+BULLET_WIDTH            = $07   ; bullet hitbox, (x,y) are top left corner, inclusive so -1
+BULLET_HEIGHT           = $04   ; these are for horizontal bullet (5x8), it's 8x5 for vertical
+        
+BULLET_SPEED            = $06
+
+PLAYER_BULLET_LIMIT     = $05
+ENEMIES_BULLET_LIMIT    = $05
+TOTAL_BULLET_LIMIT      = PLAYER_BULLET_LIMIT + ENEMIES_BULLET_LIMIT
 
 ;****************************************************************
 ; Scroll                                                        ;

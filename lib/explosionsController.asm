@@ -11,7 +11,7 @@
 ;   Renders an explosion                                        ;
 ;                                                               ;
 ; Input variables:                                              ;
-;   Explosion vars                                              ;
+;   Generic vars                                                ;
 ;                                                               ;
 ; Used variables:                                               ;
 ;   Y                                                           ;
@@ -27,7 +27,7 @@
 RenderExplosion:  
 
   .setPositionPointers:  
-    LDA explosionFrame
+    LDA genericFrame
     CMP #$04                        ; 4th frame is really the 1st frame
     BEQ .firstFrame                 
                                     
@@ -57,7 +57,7 @@ RenderExplosion:
     STA d                           
     LDA #HIGH(explosionTiles)       
     STA e                           
-    LDX explosionFrame              ; X = animation frame             
+    LDX genericFrame                ; X = animation frame             
     DEX                             ; X = animation frame - 1 (so for frame 1 there is no offset etc)
     BEQ .render                     
     LDA #$00                        
@@ -93,17 +93,17 @@ RenderExplosion:
     ; else     -> if offscreen render 2 & 3 (set j to 2), otherwise render 0 & 1 (set y to 2)
     ;             render nothing if frame = 4    
     
-    LDA explosionX
+    LDA genericX
     CMP #$F1
     BCC .renderTileLoop             ; explosionX < F1 => explosionX <= F0
     CMP #$F8
     BCC .f7Case                     ; explosionX < F8 => explosionX <= F7
     
     .elseCase:
-      LDA explosionFrame
+      LDA genericFrame
       CMP #$04
       BEQ .explosionRendered    
-      LDA explosionOffScreen
+      LDA genericOffScreen
       BEQ .elseCaseNotOffScreen
       
       .elseCaseOffScreen:
@@ -116,7 +116,7 @@ RenderExplosion:
         JMP .renderTileLoop
         
     .f7Case:
-      LDA explosionOffScreen
+      LDA genericOffScreen
       BEQ .renderTileLoop
       JMP .explosionRendered   
     
@@ -124,7 +124,7 @@ RenderExplosion:
       DEY                           
       LDA [b], y                    
       CLC                           
-      ADC explosionY                   
+      ADC genericY                   
       STA renderYPos                
       LDA [d], y                    
       STA renderTile                
@@ -132,7 +132,7 @@ RenderExplosion:
       STA renderAtts          
       LDA [h], y                    
       CLC                           
-      ADC explosionX
+      ADC genericX
       STA renderXPos
       JSR RenderSprite
       CPY j

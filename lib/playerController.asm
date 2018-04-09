@@ -283,21 +283,31 @@ UpdatePlayerNormal:
           JSR DecrementScroll          
           LDA #$01
           STA b
-          JSR ScrollPlayerBullets          
+          JSR ScrollBullets          
           JMP .horizontalMovementDone  
           
         .scrollRight:
           JSR IncrementScroll          
           LDA #$00
           STA b
-          JSR ScrollPlayerBullets
+          JSR ScrollBullets
           
   .horizontalMovementDone: 
 
   .renderPlayer:
     JSR RenderPlayer
     
-  ; todo: spawn bullets here
+  .spawnBullets:
+    LDA playerBulletCooldown
+    BEQ .checkB
+    DEC playerBulletCooldown
+    JMP .checkIfFallingOffScreen
+    
+  .checkB:
+    LDA controllerPressed
+    AND #CONTROLLER_B 
+    BEQ .checkIfFallingOffScreen      ; check if player wants to fire
+    JSR SpawnPlayerBullet
 
   .checkIfFallingOffScreen:
     LDA playerY
@@ -383,13 +393,13 @@ UpdatePlayerExploding:
     
   .renderExplosion:
     LDA playerX
-    STA explosionX
+    STA genericX
     LDA playerY
     SEC
     SBC #PLAYER_EXPL_Y_OFF
-    STA explosionY
+    STA genericY
     LDA playerAnimationFrame
-    STA explosionFrame
+    STA genericFrame
     JMP RenderExplosion
   
 ;****************************************************************
@@ -410,241 +420,7 @@ ExplodePlayer:
   STA playerAnimationFrame
   LDA #EXPLOSION_ANIM_SPEED
   STA playerCounter
-  RTS
-  
-  
-;****************************************************************
-; Name:                                                         ;
-;   UpdatePlayerBullets                                         ;
-;                                                               ;
-; Description:                                                  ;
-;   Updates player bullets, includes spawning new ones          ;
-;                                                               ;
-; Used variables:                                               ;
-;   X                                                           ;
-;   Y                                                           ;
-;   c                                                           ;
-;   d                                                           ;
-;   i                                                           ;
-;   collision vars                                              ;
-;   genericPointer                                              ;
-;****************************************************************
-  
-UpdatePlayerBullets:
-  
-;  .moveBullets:
-;    LDY #PLAYER_BULLET_LIMIT
-;    .moveBulletLoop:      
-;      DEY
-;      TYA
-;      ASL A
-;      ASL A     
-;      TAX
-;                  
-;      INX                             ; x points to tile
-;      LDA playerBullets, x            ; load bullet tile
-;      CMP #CLEAR_SPRITE               
-;      BEQ .moveBulletLoopCheck        ; bullet not populated
-;                                      
-;      DEX                             ; x points to the Y position
-;      LDA playerBullets, x            ; load the Y position
-;      STA by1                         ; set by1
-;      CLC                             
-;      ADC #PLAYER_BULLET_HEIGHT       
-;      STA by2                         ; set by2
-;                                      
-;      INX                             
-;      INX                             ; x points to atts
-;      LDA playerBullets, x            ; load bullet atts      
-;      ; AND #%01000000                ; no need for AND as bullets use pallete 0
-;      BEQ .bulletFlyingRight          ; not rotated means bullet flying right
-;                                      
-;      .bulletFlyingLeft:              
-;        INX                           ; x points to X position
-;        LDA playerBullets, x          ; load bullet X position
-;        SEC                           
-;        SBC #PLAYER_BULLET_SPEED      
-;        BCC .clearBullet              ; clear bullet if goes off screen
-;        STA playerBullets, x          ; set new X position
-;        JMP .checkCollisions          
-;                                      
-;      .bulletFlyingRight:             
-;        INX                           ; x points to X position
-;        LDA playerBullets, x          ; load bullet X position
-;        CLC                           
-;        ADC #PLAYER_BULLET_SPEED      
-;        BCS .clearBullet              ; clear bullet if goes off screen
-;        STA playerBullets, x          ; set new X position
-;                                      
-;      .checkCollisions:               
-;        STA bx1                       ; set bx1 (A still contains the new X posistion)
-;        CLC
-;        ADC #PLAYER_BULLET_WIDTH
-;        BCS .clearBullet              ; bullet already partially off screen
-;        STA bx2                       ; set bx2
-;        STY e                         ; cache Y in e since CheckForAllCollisions updates it        
-;        JSR CheckForAllCollisions
-;        LDY e                         ; restore Y
-;        LDA collision                 ; check if collision detected
-;        BEQ .moveBulletLoopCheck      
-;        
-;      .clearBullet:      
-;        DEX                           ; CheckForAllCollisions doesn't affect X so it's OK
-;        DEX                           ; x points to tile
-;        LDA #CLEAR_SPRITE             
-;        STA playerBullets, x          ; clear bullet
-;      
-;      .moveBulletLoopCheck:
-;        TYA
-;        BNE .moveBulletLoop    
-;  
-;  .updateCooldown:
-;    LDA playerBulletCooldown
-;    BEQ .checkInput
-;    DEC playerBulletCooldown
-;    RTS
-;  
-;  .checkInput:
-;    LDA controllerPressed
-;    AND #CONTROLLER_B
-;    BNE .checkIfPlayerOnScreen
-;    RTS
-;  
-;  .checkIfPlayerOnScreen:
-;    ; todo: check if player is on screen and can fire
-;    
-;  .findFreeBulletSlot:
-;    LDY #PLAYER_BULLET_LIMIT
-;    .findLoop:      
-;      DEY
-;      TYA
-;      ASL A
-;      ASL A     
-;      TAX      
-;      INX                             ; x points to tile
-;      LDA playerBullets, x            ; load bullet tile
-;      CMP #CLEAR_SPRITE               
-;      BEQ freeSlotFound               ; free slot found
-;      TYA                             
-;      BNE .findLoop                   
-;      RTS                             ; no free slots. Exit.
-;                                      
-;  freeSlotFound:                      ; when we get here X still points to the free bullet slot tile
-;    LDA #PLAYER_BULLET_COOLDOWN       
-;    STA playerBulletCooldown          ; set cooldown
-;    LDA #PLAYER_BULLET_SPRITE         
-;    STA playerBullets, x              ; set bullet tile      
-;                                      
-;  .getYPosition:                      
-;    DEX                               ; x points to the Y position
-;    LDA playerAnimation                   
-;    CMP #PLAYER_CROUCH                
-;    BEQ .playerCrouching              
-;                                      
-;    .playerUp:                        
-;      LDA playerY                     
-;      CLC                             
-;      ADC #PLAYER_GUN_OFF_Y           
-;      STA playerBullets, x            ; set the Y position
-;      JMP .getXPositionAndAtts        
-;                                      
-;    .playerCrouching:                 
-;      LDA playerY                     
-;      CLC                             
-;      ADC #PLAYER_GUN_OFF_Y_C         
-;      STA playerBullets, x            ; set the X position
-;                                      
-;  .getXPositionAndAtts:               
-;    INX                               
-;    INX                               ; x points to atts
-;    LDA playerDirection               
-;    BEQ .shootLeft                    ; DIRECTION_LEFT = 0
-;                                      
-;    .shootRight:                      
-;      LDA #PLAYER_BULLET_PALETTE      
-;      STA playerBullets, x            ; set atts
-;      INX                             ; x points to the X position
-;      LDA playerX                     
-;      CLC                             
-;      ADC #PLAYER_GUN_OFF_X_R         
-;      STA playerBullets, x            ; set the X position
-;      RTS                             
-;                                      
-;    .shootLeft:                       
-;      ; LDA #PLAYER_BULLET_PALETTE    
-;      ; ORA #%01000000                
-;      LDA #%01000000                  ; can just do this as long as palette == 0
-;      STA playerBullets, x            ; set atts
-;      INX                             ; x points to the X position
-;      LDA playerX                     
-;      CLC                             
-;      ADC #PLAYER_GUN_OFF_X_L         
-;      STA playerBullets, x            ; set the X position
-      RTS
-    
-;****************************************************************
-; Name:                                                         ;
-;   ScrollPlayerBullets                                         ;
-;                                                               ;
-; Description:                                                  ;
-;   Moves player bullets as part of the scroll                  ;
-;                                                               ;
-; Input values:                                                 ;
-;   b - 0 means we're incementing scroll (move left)            ;
-;       1 means we're decementing scroll (move right)           ;
-;                                                               ;
-; Used variables:                                               ;
-;   X                                                           ;
-;****************************************************************  
-
-ScrollPlayerBullets:
-
-;  .moveBullets:
-;    LDY #PLAYER_BULLET_LIMIT
-;    .moveBulletLoop:      
-;      DEY
-;      TYA
-;      ASL A
-;      ASL A     
-;      TAX
-;      
-;      INX                           ; x points to tile
-;      LDA playerBullets, x          ; load bullet tile
-;      CMP #CLEAR_SPRITE             
-;      BEQ .moveBulletLoopCheck      ; bullet not populated
-;                                    
-;      INX                           ; x points to atts
-;      INX                           ; x points to X position
-;                                    
-;      LDA b                         
-;      BNE .moveRight                
-;                                    
-;      .moveLeft:                    
-;        LDA playerBullets, x        ; load bullet X position
-;        SEC                         
-;        SBC #PLAYER_SPEED_POSITIVE  
-;        BCC .clearBullet            ; clear bullet if goes off screen
-;        STA playerBullets, x        ; set new X position
-;        JMP .moveBulletLoopCheck    
-;                                    
-;      .moveRight:                   
-;        LDA playerBullets, x        ; load bullet X position
-;        CLC                         
-;        ADC #PLAYER_SPEED_POSITIVE    
-;        BCS .clearBullet            ; clear bullet if goes off screen
-;        STA playerBullets, x        ; set new X position
-;        JMP .moveBulletLoopCheck    
-;                                    
-;      .clearBullet:                 
-;        DEX                         
-;        DEX                         ; x points to tile
-;        LDA #CLEAR_SPRITE           
-;        STA playerBullets, x        ; clear bullet
-;      
-;      .moveBulletLoopCheck:
-;        TYA
-;        BNE .moveBulletLoop  
-        RTS
+  RTS   
 
 ;****************************************************************
 ; Name:                                                         ;

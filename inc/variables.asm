@@ -34,6 +34,13 @@ rightTiles        .rs 128   ; last 128 bytes of the tile dictionary
  .rsset $0400
  
 ;****************************************************************
+; Bullets                                                       ;
+;****************************************************************
+
+playerBullets     .rs 20    ; 4 x PLAYER_BULLET_LIMIT; see constants.asm for format
+enemyBullets      .rs 20    ; 4 x ENEMY_BULLET_LIMIT; see constants.asm for format
+ 
+;****************************************************************
 ; Game state                                                    ;
 ;****************************************************************
 
