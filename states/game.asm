@@ -27,8 +27,8 @@ GameFrame:
   .updatePlayer:
     JSR UpdatePlayer
    
-  .updatePlayerBullets:
-    JSR UpdatePlayerBullets
+  .updateBullets:
+    JSR UpdateBullets
    
   .setNmiFlags:
     .dma:
@@ -120,10 +120,6 @@ LoadGame:
     STA nametable                 ; show nametable 0 first
     STA scroll                    ; scroll starts at 0
     STA scroll + $01
-    LDA #PLAYER_BULLET_LIMIT
-    STA availablePlayerBullets
-    LDA #ENEMIES_BULLET_LIMIT
-    STA availableEnemyBullets
   .initVarsDone:
  
   .enablePPU:                                    

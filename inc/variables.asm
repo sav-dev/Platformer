@@ -28,17 +28,23 @@ leftTiles         .rs 128   ; first 128 bytes of the tile dictionary
 rightTiles        .rs 128   ; last 128 bytes of the tile dictionary
 
 ;****************************************************************
-; Other variables - 768 bytes available                         ;
-;****************************************************************
-
- .rsset $0400
- 
-;****************************************************************
 ; Bullets                                                       ;
 ;****************************************************************
 
+ .rsset $0400
+
 playerBullets     .rs 20    ; 4 x PLAYER_BULLET_LIMIT; see constants.asm for format
 enemyBullets      .rs 20    ; 4 x ENEMY_BULLET_LIMIT; see constants.asm for format
+
+ .rsset $0400
+
+allBullets        .rs 40    ; redefined for all bullets
+ 
+;****************************************************************
+; Other variables - 728 bytes available                         ;
+;****************************************************************
+
+ .rsset $0428
  
 ;****************************************************************
 ; Game state                                                    ;

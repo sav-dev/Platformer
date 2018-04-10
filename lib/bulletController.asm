@@ -12,23 +12,13 @@
 ;                                                               ;
 ; Used variables:                                               ;
 ;   Generic vars                                                ;
+;   X                                                           ;
 ;****************************************************************
   
 SpawnPlayerBullet:
 
-  .checkCount:
-    LDA availablePlayerBullets
-    BNE .setPointerAndCounter
-    RTS                               ; no slots available
+  ; POI - possible optimization - keep a count of free bullets, return immediately if at 0
 
-  .setPointerAndCounter:
-    LDA #LOW(playerBullets)
-    STA genericPointer
-    LDA #HIGH(playerBullets)
-    STA genericPointer + $01
-    LDA #PLAYER_BULLET_LIMIT
-    STA genericCounter
-    
   .getYPosition:                      
     LDA playerAnimation                   
     CMP #PLAYER_CROUCH                
@@ -63,7 +53,7 @@ SpawnPlayerBullet:
       STA genericX
       LDA #GENERIC_DIR_RIGHT
       STA genericDirection
-      JMP SpawnBullet
+      JMP .spawnBullet
                                       
     .shootLeft:                       
       LDA playerX                     
@@ -72,176 +62,298 @@ SpawnPlayerBullet:
       STA genericX
       LDA #GENERIC_DIR_LEFT
       STA genericDirection
-      JMP SpawnBullet
-  
-;****************************************************************
-; Name:                                                         ;
-;   SpawnBullet                                                 ;
-;                                                               ;
-; Description:                                                  ;
-;   Spawns a bullet                                             ;
-;                                                               ;
-; Input variables:                                              ;
-;   genericPointer                                              ;
-;   genericCounter                                              ;
-;   genericX                                                    ;
-;   genericY                                                    ;
-;   genericDirection                                            ;
-;                                                               ;
-; Used variables:                                               ;
-;   X                                                           ;
-;   Y                                                           ;
-;****************************************************************
-  
-SpawnBullet:
+      
+  .spawnBullet:
+    LDX #PLAYER_BULLET_LAST
 
-  .findFreeBulletSlot:
-    DEC genericCounter
-    ASL genericCounter
-    ASL genericCounter
-    LDY genericCounter                ; Y = (genericCounter - 1) x 4, i.e. points to the last bullet state field
-    
-    .findLoop:      
-      LDA [genericPointer], y
+    .findFreeSlotLoop:      
+      LDA playerBullets, x
       BEQ .freeSlotFound              ; BULLET_S_NOT_EXIST == 0
-      TYA
+      TXA
       BEQ .noFreeSlots
-      DEY
-      DEY
-      DEY
-      DEY
-      JMP .findLoop
+      DEX
+      DEX
+      DEX
+      DEX
+      JMP .findFreeSlotLoop
       
     .noFreeSlots:
-      RTS                                ; no free slots
+      RTS                             ; no free slots
                                       
-  .freeSlotFound:                      ; when we get here [genericPointer], y points to the first byte of the free slot
+  .freeSlotFound:                     ; when we get here X points to the first byte of the free slot
     LDA #BULLET_S_JUST_SPAWNED
-    STA [genericPointer], y
-    INY                                ; this follows the bullet format declared in constants
-    LDA genericX
-    STA [genericPointer], y
-    INY
-    LDA genericY
-    STA [genericPointer], y
-    INY
+    STA playerBullets, x
+    INX
     LDA genericDirection
-    STA [genericPointer], y
-    DEC availablePlayerBullets
+    STA playerBullets, x
+    INX
+    LDA genericX
+    STA playerBullets, x
+    INX
+    LDA genericY
+    STA playerBullets, x
     RTS
 
 ;****************************************************************
 ; Name:                                                         ;
-;   UpdatePlayerBullets                                         ;
+;   UpdateBullets                                               ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Updates player bullets                                      ;
+;   Updates all bullets                                         ;
+;    - move                                                     ;
+;    - platform & threat collision check                        ;
+;    - render                                                   ;
 ;                                                               ;
 ; Used variables:                                               ;
-;   {todo}                                                      ;
-;****************************************************************
-  
-UpdatePlayerBullets:
-  LDA #LOW(playerBullets)
-  STA genericPointer
-  LDA #HIGH(playerBullets)
-  STA genericPointer + $01
-  LDA #PLAYER_BULLET_LIMIT
-  STA genericCounter
-  JMP UpdatBullets
-
-;****************************************************************
-; Name:                                                         ;
-;   UpdatBullets                                                ;
-;                                                               ;
-; Description:                                                  ;
-;   Updates bullets                                             ;
-;                                                               ;
-; Used variables:                                               ;
-;   {todo}                                                      ;
+;   X                                                           ;
+;   Y                                                           ;
+;   c                                                           ;
+;   d                                                           ;
+;   i                                                           ;
+;   collision vars                                              ;
+;   generic vars                                                ;
 ;****************************************************************
   
 UpdateBullets:
-  RTS
-  
-;  .moveBullets:
-;    LDY #PLAYER_BULLET_LIMIT
-;    .moveBulletLoop:      
-;      DEY
-;      TYA
-;      ASL A
-;      ASL A     
-;      TAX
-;                  
-;      INX                             ; x points to tile
-;      LDA playerBullets, x            ; load bullet tile
-;      CMP #CLEAR_SPRITE               
-;      BEQ .moveBulletLoopCheck        ; bullet not populated
-;                                      
-;      DEX                             ; x points to the Y position
-;      LDA playerBullets, x            ; load the Y position
-;      STA by1                         ; set by1
-;      CLC                             
-;      ADC #PLAYER_BULLET_HEIGHT       
-;      STA by2                         ; set by2
-;                                      
-;      INX                             
-;      INX                             ; x points to atts
-;      LDA playerBullets, x            ; load bullet atts      
-;      ; AND #%01000000                ; no need for AND as bullets use pallete 0
-;      BEQ .bulletFlyingRight          ; not rotated means bullet flying right
-;                                      
-;      .bulletFlyingLeft:              
-;        INX                           ; x points to X position
-;        LDA playerBullets, x          ; load bullet X position
-;        SEC                           
-;        SBC #PLAYER_BULLET_SPEED      
-;        BCC .clearBullet              ; clear bullet if goes off screen
-;        STA playerBullets, x          ; set new X position
-;        JMP .checkCollisions          
-;                                      
-;      .bulletFlyingRight:             
-;        INX                           ; x points to X position
-;        LDA playerBullets, x          ; load bullet X position
-;        CLC                           
-;        ADC #PLAYER_BULLET_SPEED      
-;        BCS .clearBullet              ; clear bullet if goes off screen
-;        STA playerBullets, x          ; set new X position
-;                                      
-;      .checkCollisions:               
-;        STA bx1                       ; set bx1 (A still contains the new X posistion)
-;        CLC
-;        ADC #PLAYER_BULLET_WIDTH
-;        BCS .clearBullet              ; bullet already partially off screen
-;        STA bx2                       ; set bx2
-;        STY e                         ; cache Y in e since CheckForAllCollisions updates it        
-;        JSR CheckForAllCollisions
-;        LDY e                         ; restore Y
-;        LDA collision                 ; check if collision detected
-;        BEQ .moveBulletLoopCheck      
-;        
-;      .clearBullet:      
-;        DEX                           ; CheckForAllCollisions doesn't affect X so it's OK
-;        DEX                           ; x points to tile
-;        LDA #CLEAR_SPRITE             
-;        STA playerBullets, x          ; clear bullet
-;      
-;      .moveBulletLoopCheck:
-;        TYA
-;        BNE .moveBulletLoop    
-;  
-;  .updateCooldown:
-;    LDA playerBulletCooldown
-;    BEQ .checkInput
-;    DEC playerBulletCooldown
-;    RTS
-;  
-;  .checkInput:
-;    LDA controllerPressed
-;    AND #CONTROLLER_B
-;    BNE .checkIfPlayerOnScreen
-;    RTS
 
+  LDX #TOTAL_BULLET_LAST
+  
+  .updateLoop:      
+    LDA allBullets, x
+    BNE .bulletExists                 ; BULLET_S_NOT_EXIST == 0    
+    JMP .updateLoopCheck              ; bullet doesn't exist, check the next one
+    
+    .bulletExists:
+      CMP #BULLET_S_SMTH_HIT
+      BNE .checkDirection                
+      JMP .clearBullet                ; something hit last frame, clear the bullet now
+      
+    .checkDirection:
+      STA genericFrame                ; cache the state in the genericFrame variable
+      INX                             ; X points to direction        
+      LDA allBullets, x 
+      STA genericDirection            ; cache the direction in the genericDirection variable   
+        
+    .moveAndPreset:
+      BEQ .goingLeft                  ; GENERIC_DIR_LEFT = 0
+      CMP #GENERIC_DIR_RIGHT  
+      BEQ .goingRight  
+      CMP #GENERIC_DIR_DOWN 
+      BEQ .goingDown
+      JMP .goingUp
+                
+      .goingRight:
+        INX                           ; X points to x position
+        LDA allBullets, x 
+        CLC
+        ADC #BULLET_SPEED             ; move bullet left
+        BCC .moveRight                ; carry clear if bx1 + bullet speed <= screen width: bullet on screen
+        JMP .clearBulletMovePointer2
+      
+        .moveRight:
+          STA allBullets, x           ; update the bullet position
+          STA bx1                     ; preset bx1
+          STA renderXPos              ; preset render x
+          LDA #BULLET_ATTS_RIGHT
+          STA renderAtts              ; preset render atts
+          JMP .goingHorizontally
+        
+      .goingLeft:
+        INX                           ; X points to x position
+        LDA allBullets, x 
+        SEC 
+        SBC #BULLET_SPEED             ; move bullet left        
+        BCS .moveLeft                 ; carry set if bx1 - bullet speed >= 0: bullet on screen
+        JMP .clearBulletMovePointer2
+      
+        .moveLeft:
+          STA allBullets, x           ; update the bullet position
+          STA bx1                     ; preset bx1
+          STA renderXPos              ; preset render x
+          LDA #BULLET_ATTS_LEFT
+          STA renderAtts              ; preset render atts
+        
+      .goingHorizontally:             ; common for left and right
+        LDA #BULLET_SPRITE_H
+        STA renderTile                ; preset render tile
+        INX                           ; X points to y position
+        LDA allBullets, x
+        STA by1                       ; preset by1
+        STA renderYPos                ; preset render y
+        CLC
+        ADC #BULLET_HEIGHT            ; height because going horizontally
+        STA by2                       ; preset by2
+        LDA bx1
+        CLC
+        ADC #BULLET_WIDTH             ; width because going horizontally
+        BCS .boxCapX2
+        STA bx2
+        JMP .checkCollisions
+        
+      .goingDown:
+        INX                           ; X points to x position
+        LDA allBullets, x 
+        STA bx1                       ; preset bx1
+        STA renderXPos                ; preset render x
+        INX                           ; X points to y position
+        LDA allBullets, x
+        CLC 
+        ADC #BULLET_SPEED             ; move bullet down
+        CMP #SCREEN_HEIGHT        
+        BCC .moveDown                 ; carry clear if by1 + bullet speed < screen height: bullet on screen
+        JMP .clearBulletMovePointer3
+        
+        .moveDown:
+          STA allBullets, x           ; update the bullet position
+          STA by1                     ; preset by1
+          STA renderYPos              ; preset render y
+          LDA #BULLET_ATTS_DOWN 
+          STA renderAtts              ; preset render atts
+          JMP .goingVertically
+        
+      .goingUp:
+        INX                           ; X points to x position
+        LDA allBullets, x 
+        STA bx1                       ; preset bx1
+        STA renderXPos                ; preset render x
+        INX                           ; X points to y position
+        LDA allBullets, x
+        SEC 
+        SBC #BULLET_SPEED             ; move bullet up
+        BCS .moveUp                   ; carry set if by1 - bullet speed >= 0: bullet on screen
+        JMP .clearBulletMovePointer3
+      
+        .moveUp:
+          STA allBullets, x           ; update the bullet position
+          STA by1                     ; preset by1
+          STA renderYPos              ; preset render y
+          LDA #BULLET_ATTS_UP 
+          STA renderAtts              ; preset render atts
+        
+      .goingVertically:               ; common for up and down
+        LDA #BULLET_SPRITE_V  
+        STA renderTile                ; preset render tile
+        LDA by1
+        CLC
+        ADC #BULLET_WIDTH             ; width because going vertically
+        STA by2                       ; preset by2
+        LDA bx1
+        CLC
+        ADC #BULLET_HEIGHT            ; height because going vertically
+        BCS .boxCapX2
+        STA bx2
+        JMP .checkCollisions         
+            
+      .boxCapX2:                      ; common for all directions
+        LDA #SCREEN_WIDTH
+        STA bx2
+            
+    .checkCollisions:                 ; when we get here the bullet has been moved in memory, box is set, rendering vars are preset
+      ;JSR CheckForAllCollisions
+      ;LDA collision
+      BNE .renderBullet
+      
+    .collision:      
+      
+    .renderBullet:
+      JSR RenderSprite
+      DEX
+      DEX
+      DEX                             ; X points back to the state
+      JMP .updateLoopCheck
+      
+    .clearBulletMovePointer3:         ; this expects X to point to y position
+      DEX
+      
+    .clearBulletMovePointer2:         ; this expects X to point to the x position
+      DEX
+      DEX
+     
+    .clearBullet:                     ; this expects X to point to the state
+      LDA #BULLET_S_NOT_EXIST 
+      STA allBullets, x 
+        
+    .updateLoopCheck:                 ; this expects X to point to the state
+      TXA
+      BEQ .updateDone
+      DEX
+      DEX
+      DEX
+      DEX
+      JMP .updateLoop
+  
+  .updateDone:
+    RTS
+
+;****************************************************************
+; Name:                                                         ;
+;   CheckForAllCollisions                                       ;
+;                                                               ;
+; Description:                                                  ;
+;   Checks for both platforms and threats collisions on both    ;
+;   screens with the 'b' hitbox                                 ;
+;                                                               ;
+; Input variables:                                              ;
+;   'b' hitboxes                                                ;
+;                                                               ;
+; Output variables:                                             ;
+;   collision set to 1 means collision has been detected        ;
+;   'a' hitboxes remain set to whatever the collision was with  ;
+;                                                               ;
+; Used variables:                                               ;
+;   Y                                                           ;
+;   c                                                           ;
+;   d                                                           ;
+;   i                                                           ;
+;   collision vars                                              ;
+;   genericPointer                                              ;
+;****************************************************************
+  
+CheckForAllCollisions:
+
+  .checkFirstPlatformScreen:
+    LDA #$00
+    STA c
+    LDA platformsPointer
+    STA genericPointer
+    LDA platformsPointer + $01
+    STA genericPointer + $01
+    JSR CheckForPlatformOneScreen
+    LDA collision
+    BNE .collisionCheckDone
+
+  .checkFirstThreatScreen:
+    LDA threatsPointer
+    STA genericPointer
+    LDA threatsPointer + $01
+    STA genericPointer + $01
+    JSR CheckForPlatformOneScreen
+    LDA collision
+    BNE .collisionCheckDone
+  
+  .checkSecondPlatformScreen:
+    INC c
+    JSR MovePlatformsPointerForward
+    LDA platformsPointer
+    STA genericPointer
+    LDA platformsPointer + $01
+    STA genericPointer + $01
+    JSR CheckForPlatformOneScreen
+    JSR MovePlatformsPointerBack
+    LDA collision
+    BNE .collisionCheckDone
+  
+  .checkSecondThreatScreen:
+    JSR MoveThreatsPointerForward
+    LDA threatsPointer
+    STA genericPointer
+    LDA threatsPointer + $01
+    STA genericPointer + $01
+    JSR CheckForPlatformOneScreen
+    JSR MoveThreatsPointerBack
+    
+  .collisionCheckDone:
+    RTS
       
 ;****************************************************************
 ; Name:                                                         ;

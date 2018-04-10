@@ -109,15 +109,7 @@ genericX                .rs 1  ; generic position
 genericY                .rs 1 
 genericFrame            .rs 1  ; generic frame count
 genericDirection        .rs 1  ; generic direction
-genericCounter          .rs 1  ; generic counter
 genericOffScreen        .rs 1  ; 1 means object is off screen (so x = $FE means render on the left side of the screen)
-
-;****************************************************************
-; Free bullet slots                                             ;
-;****************************************************************
-
-availablePlayerBullets  .rs 1
-availableEnemyBullets   .rs 1
 
 ;****************************************************************
 ; Collision checks                                              ;

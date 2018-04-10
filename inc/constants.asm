@@ -77,7 +77,8 @@ GENERIC_DIR_LEFT  = $00
 GENERIC_DIR_RIGHT = $01
 GENERIC_DIR_UP    = $02
 GENERIC_DIR_DOWN  = $03
-                               
+GENERIC_DIR_NONE  = $04                 
+                 
 ;****************************************************************
 ; Player related constans                                       ;
 ;****************************************************************
@@ -129,8 +130,8 @@ PLAYER_BULLET_COOLDOWN  = $18
                         
 PLAYER_GUN_OFF_X_R      = $12
 PLAYER_GUN_OFF_X_L      = $FD - $08 ; -08 for rotation
-PLAYER_GUN_OFF_Y        = $EC - $03 ; -03 for bullet offset within the sprite
-PLAYER_GUN_OFF_Y_C      = $F4 - $03 ; same
+PLAYER_GUN_OFF_Y        = $EC - $02 ; -02 for bullet offset within the sprite
+PLAYER_GUN_OFF_Y_C      = $F4 - $02 ; same
 
 ;****************************************************************
 ; Explosion related constans                                    ;
@@ -144,10 +145,11 @@ EXPLOSION_ANIM_SPEED    = $06
 ; Bullets related constans                                      ;
 ;****************************************************************
 
+BULLET_MEMORY_BYTES     = $04
 BULLET_MEMORY_STATE     = $00
-BULLET_MEMORY_X_OFF     = $01
-BULLET_MEMORY_Y_OFF     = $02
-BULLET_MEMORY_DIRECTION = $03
+BULLET_MEMORY_DIRECTION = $01
+BULLET_MEMORY_X_OFF     = $02
+BULLET_MEMORY_Y_OFF     = $03
 
 BULLET_S_NOT_EXIST      = $00
 BULLET_S_JUST_SPAWNED   = $01
@@ -157,7 +159,11 @@ BULLET_S_SMTH_HIT       = $03
 BULLET_SPRITE_H         = $FD
 BULLET_SPRITE_V         = $FC
 BULLET_SPRITE_E         = $FB
-BULLET_PALETTE          = $00
+
+BULLET_ATTS_LEFT        = $40
+BULLET_ATTS_RIGHT       = $00
+BULLET_ATTS_UP          = $80
+BULLET_ATTS_DOWN        = $00
 
 BULLET_WIDTH            = $07   ; bullet hitbox, (x,y) are top left corner, inclusive so -1
 BULLET_HEIGHT           = $04   ; these are for horizontal bullet (5x8), it's 8x5 for vertical
@@ -165,8 +171,20 @@ BULLET_HEIGHT           = $04   ; these are for horizontal bullet (5x8), it's 8x
 BULLET_SPEED            = $06
 
 PLAYER_BULLET_LIMIT     = $05
+PLAYER_BULLET_VAR_SIZE  = PLAYER_BULLET_LIMIT * BULLET_MEMORY_BYTES
+PLAYER_BULLET_LAST      = PLAYER_BULLET_VAR_SIZE - BULLET_MEMORY_BYTES
+
 ENEMIES_BULLET_LIMIT    = $05
-TOTAL_BULLET_LIMIT      = PLAYER_BULLET_LIMIT + ENEMIES_BULLET_LIMIT
+ENEMIES_BULLET_VAR_SIZE = ENEMIES_BULLET_LIMIT * BULLET_MEMORY_BYTES
+ENEMIES_BULLET_LAST     = ENEMIES_BULLET_VAR_SIZE - BULLET_MEMORY_BYTES
+
+;TOTAL_BULLET_LIMIT      = PLAYER_BULLET_LIMIT + ENEMIES_BULLET_LIMIT
+;TOTAL_BULLET_VAR_SIZE   = PLAYER_BULLET_VAR_SIZE + ENEMIES_BULLET_VAR_SIZE
+;TOTAL_BULLET_LAST       = TOTAL_BULLET_VAR_SIZE - BULLET_MEMORY_BYTES
+
+TOTAL_BULLET_LIMIT      = PLAYER_BULLET_LIMIT
+TOTAL_BULLET_VAR_SIZE   = PLAYER_BULLET_VAR_SIZE
+TOTAL_BULLET_LAST       = TOTAL_BULLET_VAR_SIZE - BULLET_MEMORY_BYTES
 
 ;****************************************************************
 ; Scroll                                                        ;
