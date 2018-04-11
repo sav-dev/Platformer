@@ -389,6 +389,7 @@ UpdateBullets:
       
     .renderBullet:
       STX b                           ; RenderSprite updates X so cache it in b
+      DEC renderYPos                  ; todo - temporarily decrement this, figure out what to do about the sprite -1
       JSR RenderSprite
       LDX b                           ; read X back from b
       JMP .updateLoopCheck

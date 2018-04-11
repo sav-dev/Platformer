@@ -361,6 +361,8 @@ DisablePPU:
 ; Used variables:                                               ;
 ;   X                                                           ;
 ;****************************************************************
+
+; todo - should this simply apply the -1 to Y?
   
 RenderSprite:  
   LDX spritePointer
