@@ -61,6 +61,8 @@ GameFrame:
 
 LoadGame:
 
+  ; clear bullet data
+
   .disablePPUAndSleep:  
     JSR DisablePPU
     JSR ClearSprites

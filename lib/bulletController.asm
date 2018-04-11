@@ -3,6 +3,8 @@
 ; Responsible for spawning and updating bullets                 ;
 ;****************************************************************
 
+; todo - figure out the way these loops work - too many INX/DEX? cache the pointer value?
+
 ;****************************************************************
 ; Name:                                                         ;
 ;   SpawnPlayerBullet                                           ;
