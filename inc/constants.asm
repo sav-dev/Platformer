@@ -126,7 +126,7 @@ PLAYER_SPRITES_COUNT    = $09   ; for iterating all sprites
                         
 PLAYER_CROUCH_OFFSET    = $03   ; offset of sprite 8 when crouching
                         
-PLAYER_BULLET_COOLDOWN  = $18
+PLAYER_BULLET_COOLDOWN  = $08   ; todo - is this even required
                         
 PLAYER_GUN_OFF_X_R      = $12
 PLAYER_GUN_OFF_X_L      = $FD - $08 ; -08 for rotation
@@ -164,11 +164,15 @@ BULLET_ATTS_LEFT        = $40
 BULLET_ATTS_RIGHT       = $00
 BULLET_ATTS_UP          = $80
 BULLET_ATTS_DOWN        = $00
+BULLET_ATTS_E           = $00
+
+BULLET_E_WIDTH          = SPRITE_DIMENSION
+BULLET_E_HEIGHT         = SPRITE_DIMENSION
 
 BULLET_WIDTH            = $07   ; bullet hitbox, (x,y) are top left corner, inclusive so -1
 BULLET_HEIGHT           = $04   ; these are for horizontal bullet (5x8), it's 8x5 for vertical
         
-BULLET_SPEED            = $06
+BULLET_SPEED            = $04
 
 PLAYER_BULLET_LIMIT     = $05
 PLAYER_BULLET_VAR_SIZE  = PLAYER_BULLET_LIMIT * BULLET_MEMORY_BYTES
