@@ -132,8 +132,28 @@ UpdateBullets:
     
     .bulletExists:
       CMP #BULLET_S_SMTH_HIT
-      BNE .checkDirection                
-      JMP .clearBullet                ; something hit last frame, clear the bullet now
+      BCC .checkDirection             ; carry clear if state < BULLET_S_SMTH_HIT meaning either normal or just spawned
+      
+    .bulletExploding:                 ; bullet is exploding
+      CLC
+      ADC #$01                        ; increment the state by 1
+      CMP #BULLET_S_TO_CLEAR          ; check if bullet should be cleared
+      BNE .updateExplosion      
+      JMP .clearBullet                ; clear the bullet
+      
+    .updateExplosion:                 ; we should still render the explosion
+      STA allBullets, x               ; update state
+      INX
+      INX                             ; X points to the x position
+      LDA allBullets, x
+      STA renderXPos                  ; set x position
+      INX                             ; X points to they position
+      LDA allBullets, x
+      STA renderYPos                  ; set y position
+      DEX
+      DEX
+      DEX                             ; X points to state again
+      JMP .collisionUpdateTileAtts    ; jump to the right place to set tile and atts
       
     .checkDirection:
       STA genericFrame                ; cache the state in the genericFrame variable
@@ -297,7 +317,7 @@ UpdateBullets:
       BNE .collisionCheckDirection
       JMP .clearBulletMovePointer3    ; if the bullet was just spawned and there's a collision, just clear it
     
-    .collisionCheckDirection:
+    .collisionCheckDirection:         ; to update the position we'll use the fact that 'a' boxes position of whatever we hit
       LDA genericDirection
       BEQ .collisionLeft              ; GENERIC_DIR_LEFT = 0
       CMP #GENERIC_DIR_RIGHT  
@@ -309,28 +329,32 @@ UpdateBullets:
         INC ay2
         LDA ay2
         STA allBullets, x             ; X points to y currently
+        STA renderYPos
         JMP .collisionUpdateState3
       
       .collisionDown:                 ; collision going down, meaning bullet y should be set to ay1 - tile size
         LDA ay1
         SEC
-        SBC BULLET_E_HEIGHT
+        SBC #BULLET_E_HEIGHT
         STA allBullets, x             ; X points to y currently
+        STA renderYPos
         JMP .collisionUpdateState3
             
-      .collisionLeft:                 ; collision going left, meaning bullet y should be set to bx2 + 1
+      .collisionLeft:                 ; collision going left, meaning bullet y should be set to ax2 + 1
         DEX                           ; X points to x position
-        INC bx2
-        LDA bx2
+        INC ax2
+        LDA ax2
         STA allBullets, x
+        STA renderXPos
         JMP .collisionUpdateState2
       
-      .collisionRight:                ; collision going right, meaning bullet y should be set to bx1 - tile size
+      .collisionRight:                ; collision going right, meaning bullet y should be set to ax1 - tile size
         DEX                           ; X points to x position
-        LDA bx1
+        LDA ax1
         SEC
-        SBC BULLET_E_HEIGHT
+        SBC #BULLET_E_WIDTH
         STA allBullets, x
+        STA renderXPos
         JMP .collisionUpdateState2
         
     .collisionUpdateState3:
@@ -343,6 +367,8 @@ UpdateBullets:
     .collisionUpdateState:
       LDA #BULLET_S_SMTH_HIT
       STA allBullets, x
+      
+    .collisionUpdateTileAtts:
       LDA #BULLET_SPRITE_E
       STA renderTile
       LDA #BULLET_ATTS_E

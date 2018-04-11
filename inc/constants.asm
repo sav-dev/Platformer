@@ -145,22 +145,25 @@ EXPLOSION_ANIM_SPEED    = $06
 ; Bullets related constans                                      ;
 ;****************************************************************
 
-BULLET_MEMORY_BYTES     = $04
+BULLET_MEMORY_BYTES     = $04   ; bullet memory layout
 BULLET_MEMORY_STATE     = $00
 BULLET_MEMORY_DIRECTION = $01
 BULLET_MEMORY_X_OFF     = $02
 BULLET_MEMORY_Y_OFF     = $03
 
-BULLET_S_NOT_EXIST      = $00
+BULLET_E_DURATION       = $05   ; duration of bullet explosion
+
+BULLET_S_NOT_EXIST      = $00   ; bullet states
 BULLET_S_JUST_SPAWNED   = $01
 BULLET_S_NORMAL         = $02
 BULLET_S_SMTH_HIT       = $03
+BULLET_S_TO_CLEAR       = BULLET_S_SMTH_HIT + BULLET_E_DURATION
 
-BULLET_SPRITE_H         = $FD
+BULLET_SPRITE_H         = $FD   ; tiles
 BULLET_SPRITE_V         = $FC
 BULLET_SPRITE_E         = $FB
 
-BULLET_ATTS_LEFT        = $40
+BULLET_ATTS_LEFT        = $40   ; atts
 BULLET_ATTS_RIGHT       = $00
 BULLET_ATTS_UP          = $80
 BULLET_ATTS_DOWN        = $00
