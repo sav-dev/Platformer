@@ -495,8 +495,8 @@ CheckForCollisionsPlatAndTh:
 ;   Moves all bullets as part of the scroll                     ;
 ;                                                               ;
 ; Input values:                                                 ;
-;   b - 0 means we're incementing scroll (move left)            ;
-;       1 means we're decementing scroll (move right)           ;
+;   b - 0 means we're incrementing scroll (move left)           ;
+;       1 means we're decrementing scroll (move right)          ;
 ;                                                               ;
 ; Used variables:                                               ;
 ;   X                                                           ;
@@ -504,49 +504,53 @@ CheckForCollisionsPlatAndTh:
 
 ScrollBullets:
 
-;  .moveBullets:
-;    LDY #PLAYER_BULLET_LIMIT
-;    .moveBulletLoop:      
-;      DEY
-;      TYA
-;      ASL A
-;      ASL A     
-;      TAX
-;      
-;      INX                           ; x points to tile
-;      LDA playerBullets, x          ; load bullet tile
-;      CMP #CLEAR_SPRITE             
-;      BEQ .moveBulletLoopCheck      ; bullet not populated
-;                                    
-;      INX                           ; x points to atts
-;      INX                           ; x points to X position
-;                                    
-;      LDA b                         
-;      BNE .moveRight                
-;                                    
-;      .moveLeft:                    
-;        LDA playerBullets, x        ; load bullet X position
-;        SEC                         
-;        SBC #PLAYER_SPEED_POSITIVE  
-;        BCC .clearBullet            ; clear bullet if goes off screen
-;        STA playerBullets, x        ; set new X position
-;        JMP .moveBulletLoopCheck    
-;                                    
-;      .moveRight:                   
-;        LDA playerBullets, x        ; load bullet X position
-;        CLC                         
-;        ADC #PLAYER_SPEED_POSITIVE    
-;        BCS .clearBullet            ; clear bullet if goes off screen
-;        STA playerBullets, x        ; set new X position
-;        JMP .moveBulletLoopCheck    
-;                                    
-;      .clearBullet:                 
-;        DEX                         
-;        DEX                         ; x points to tile
-;        LDA #CLEAR_SPRITE           
-;        STA playerBullets, x        ; clear bullet
-;      
-;      .moveBulletLoopCheck:
-;        TYA
-;        BNE .moveBulletLoop  
-        RTS
+  LDX #TOTAL_BULLET_LAST
+  
+  .updateLoop:      
+    LDA allBullets, x
+    BEQ .updateLoopCheck              ; BULLET_S_NOT_EXIST == 0
+    
+    INX
+    INX                               ; X points to the x posistion
+    
+    LDA b
+    BEQ .moveLeft
+    
+    .moveRight:
+      LDA allBullets, x
+      CLC
+      ADC #SCROLL_SPEED
+      BCS .offScreen
+      STA allBullets, x
+      JMP .updateLoopCheckDec2
+    
+    .moveLeft:       
+      LDA allBullets, x
+      SEC
+      SBC #SCROLL_SPEED
+      BCC .offScreen
+      STA allBullets, x
+      JMP .updateLoopCheckDec2
+    
+    .offScreen:                       ; bullet off screen, clear
+      DEX
+      DEX                             ; X points to state
+      LDA #BULLET_S_NOT_EXIST 
+      STA allBullets, x 
+      JMP .updateLoopCheck
+    
+    .updateLoopCheckDec2:             ; this expects X to point to the x position
+      DEX
+      DEX
+    
+    .updateLoopCheck:                 ; this expects X to point to the state
+      TXA
+      BEQ .updateDone
+      DEX
+      DEX
+      DEX
+      DEX
+      JMP .updateLoop
+  
+  .updateDone:
+    RTS      
