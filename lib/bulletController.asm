@@ -143,6 +143,11 @@ UpdateBullets:
       
     .updateExplosion:                 ; we should still render the explosion
       STA allBullets, x               ; update state
+      AND #%00000011                  ; A = 00, 01, 10 or 11 based on current state
+      ROR A
+      ROR A
+      ROR A                           ; A = 00000000, 01000000, 10000000, 11000000 meaning different rotations
+      STA renderAtts                  ; no need to ORA #BULLET_ATTS_E since BULLET_ATTS_E = 0
       INX
       INX                             ; X points to the x position
       LDA allBullets, x
@@ -153,7 +158,9 @@ UpdateBullets:
       DEX
       DEX
       DEX                             ; X points to state again
-      JMP .collisionUpdateTileAtts    ; jump to the right place to set tile and atts
+      LDA #BULLET_SPRITE_E
+      STA renderTile      
+      JMP .renderBullet               ; jump to the right place to set tile and atts
       
     .checkDirection:
       STA genericFrame                ; cache the state in the genericFrame variable
@@ -367,8 +374,6 @@ UpdateBullets:
     .collisionUpdateState:
       LDA #BULLET_S_SMTH_HIT
       STA allBullets, x
-      
-    .collisionUpdateTileAtts:
       LDA #BULLET_SPRITE_E
       STA renderTile
       LDA #BULLET_ATTS_E
