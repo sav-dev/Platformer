@@ -362,10 +362,9 @@ DisablePPU:
 ;   X                                                           ;
 ;****************************************************************
 
-; todo - should this simply apply the -1 to Y?
-  
 RenderSprite:  
   LDX spritePointer
+  DEC renderYPos                ; sprites are rendered one line below the y position
   LDA renderYPos
   STA sprites, x
   INX

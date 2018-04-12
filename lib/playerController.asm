@@ -1197,9 +1197,9 @@ playerXOffRight:
 playerXOffLeft:
   .byte $05, $0D, $05, $FD, $08, $00, $08, $00, $10
 playerYOffNonCrouch:
-  .byte $E0, $E8, $E8, $E8, $F0, $F0, $F8, $F8, $F3
+  .byte $E1, $E9, $E9, $E9, $F1, $F1, $F9, $F9, $F4
 playerYOffCrouch:
-  .byte $E8, $F0, $F0, $F0, $F8, $F8, CLEAR_SPRITE, CLEAR_SPRITE, $F8
+  .byte $E9, $F1, $F1, $F1, $F9, $F9, CLEAR_SPRITE, CLEAR_SPRITE, $F9
 playerAttsRight:
   .byte $00, $00, $01, $01, $00, $00, $00, $00, $00
 playerAttsLeft:
@@ -1215,3 +1215,4 @@ playerTilesRun:
   .byte $00, $01, $02, $03, $13, $14, $15, $0E, CLEAR_SPRITE ; Run 3
   .byte $00, $01, $02, $03, $0F, $10, $11, $07, $12 ; Run 2
   .byte $00, $01, $02, $03, $0B, $0C, $0D, $0E, CLEAR_SPRITE ; Run 1
+

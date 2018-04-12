@@ -59,9 +59,7 @@ GameFrame:
 ;   currentLevel                                                ;
 ;****************************************************************
 
-LoadGame:
-
-  ; clear bullet data
+LoadGame:  
 
   .disablePPUAndSleep:  
     JSR DisablePPU
@@ -129,5 +127,17 @@ LoadGame:
     STA soft2001                  
     INC needPpuReg
   .enablePPUDone:
+  
+  .clearMemory:
+    .clearBullets:
+      LDX #ENEMIES_BULLET_VAR_SIZE    
+      .clearBulletLoop:
+        DEX
+        LDA #$00
+        STA allBullets
+        TXA
+        BNE .clearBulletLoop
+    .clearBulletsDone:      
+  .clearMemoryDone:
   
   JMP WaitForFrame 
