@@ -32,13 +32,9 @@ RenderExplosion:
     BEQ .firstFrame                 
                                     
   .notFirstFrame:                   
-    LDA #LOW(explosionYOffRest)     
     STA b                           
-    LDA #HIGH(explosionYOffRest)      
     STA c                           
-    LDA #LOW(explosionXOffRest)     
     STA h                           
-    LDA #HIGH(explosionXOffRest)      
     STA i                           
     JMP .setTilePointer             
                                     
@@ -153,12 +149,14 @@ EXPLOSION_ATTS = $00
     
 explosionXOff1st:
   .byte $05, CLEAR_SPRITE, CLEAR_SPRITE, CLEAR_SPRITE
-explosionXOffRest:
-  .byte $00, $00, $08, $08
+; Commented out for optimization, use XOff2x2 instead
+;explosionXOffRest:
+;  .byte $00, $00, $08, $08
 explosionYOff1st:
   .byte $04, CLEAR_SPRITE, CLEAR_SPRITE, CLEAR_SPRITE
-explosionYOffRest:
-  .byte $00, $08, $00, $08
+; Commented out for optimization, use YOff2x2 instead
+;explosionYOffRest:
+;  .byte $00, $08, $00, $08
 explosionTiles:
   .byte $22, $24, $23, $25
   .byte $1E, $20, $1F, $21

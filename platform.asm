@@ -396,7 +396,8 @@ Bank2Start:
   .include "lib\playerController.asm"
   .include "lib\explosionsController.asm"
   .include "lib\bulletController.asm"
-
+  .include "lib\enemiesManager.asm"
+  
   .include "states\game.asm"
 
 Bank2End:
@@ -405,6 +406,7 @@ Bank2End:
   .org $E000
  
   .include "data\levels.asm"
+  .include "data\enemies.asm"
  
   .bank 0
   .org $8000
