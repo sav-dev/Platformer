@@ -32,9 +32,13 @@ RenderExplosion:
     BEQ .firstFrame                 
                                     
   .notFirstFrame:                   
+    LDA #LOW(YOff2x2)               ; instead of explosionYOffRest
     STA b                           
+    LDA #HIGH(YOff2x2)              ; instead of explosionYOffRest
     STA c                           
+    LDA #LOW(XOff2x2)               ; instead of explosionXOffRest
     STA h                           
+    LDA #HIGH(XOff2x2)              ; instead of explosionXOffRest
     STA i                           
     JMP .setTilePointer             
                                     
