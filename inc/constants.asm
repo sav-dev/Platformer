@@ -54,6 +54,10 @@ SPRITE_SIZE         = $04 ; size of one sprite
 
 MAX_SPRITE_COUNT    = $40 ; 64 sprites
 
+ENEMY_NO_FLIP       = $00 ; lowest bit set means V, second to lowest bit set means H
+ENEMY_FLIP          = $01 ; 0000 0001
+
+
 ;****************************************************************
 ; Game state                                                    ;
 ;****************************************************************
