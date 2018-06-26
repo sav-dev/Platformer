@@ -30,7 +30,8 @@ YOff2x2V:
 ;  all information needed to draw an enemy
 ;  Format:
 ;    1 byte = sprite count (N)
-;    8 bytes = pointers to offsets in order: xOff, xOffH, yOff, yOffV (H & V are 0s if not applicable).
+;    8 bytes = pointers to offsets in order: xOff, yOff, xOffFlip, yOffFlip
+;    1 byte = value to XOR with atts if flip
 ;    N bytes = atts
 ;    N bytes = frame M - 1
 ;    N bytes = frame M - 2
@@ -43,7 +44,9 @@ Beetle:
 .spriteCount:
   .byte $0C
 .offsets:
-  .byte LOW(XOff4x3),HIGH(XOff4x3),LOW(XOff4x3H),HIGH(XOff4x3H),LOW(YOff4x3),HIGH(YOff4x3),$00,$00
+  .byte LOW(XOff4x3), HIGH(XOff4x3), LOW(YOff4x3), HIGH(YOff4x3), LOW(XOff4x3H), HIGH(XOff4x3H), LOW(YOff4x3), HIGH(YOff4x3)
+.flipXor:
+  .byte %01000000
 .attributes:
   .byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 .tiles:
@@ -58,7 +61,9 @@ Bug:
 .spriteCount:
   .byte $04
 .offsets:
-  .byte LOW(XOff2x2),HIGH(XOff2x2),LOW(XOff2x2H),HIGH(XOff2x2H),LOW(YOff2x2),HIGH(YOff2x2),$00,$00
+  .byte LOW(XOff2x2), HIGH(XOff2x2), LOW(YOff2x2), HIGH(YOff2x2), LOW(XOff2x2H), HIGH(XOff2x2H), LOW(YOff2x2), HIGH(YOff2x2)
+.flipXor:
+  .byte %01000000
 .attributes:
   .byte $01,$01,$01,$01
 .tiles:
@@ -71,7 +76,9 @@ Eye:
 .spriteCount:
   .byte $04
 .offsets:
-  .byte LOW(XOff2x2),HIGH(XOff2x2),LOW(XOff2x2H),HIGH(XOff2x2H),LOW(YOff2x2),HIGH(YOff2x2),$00,$00
+  .byte LOW(XOff2x2), HIGH(XOff2x2), LOW(YOff2x2), HIGH(YOff2x2), LOW(XOff2x2H), HIGH(XOff2x2H), LOW(YOff2x2), HIGH(YOff2x2)
+.flipXor:
+  .byte %01000000
 .attributes:
   .byte $02,$82,$02,$82
 .tiles:
@@ -82,7 +89,9 @@ Spikes:
 .spriteCount:
   .byte $04
 .offsets:
-  .byte LOW(XOff2x2),HIGH(XOff2x2),$00,$00,LOW(YOff2x2),HIGH(YOff2x2),$00,$00
+  .byte LOW(XOff2x2), HIGH(XOff2x2), LOW(YOff2x2), HIGH(YOff2x2), LOW(XOff2x2), HIGH(XOff2x2), LOW(YOff2x2), HIGH(YOff2x2)
+.flipXor:
+  .byte %00000000
 .attributes:
   .byte $03,$03,$03,$03
 .tiles:
@@ -93,7 +102,9 @@ TurretV:
 .spriteCount:
   .byte $04
 .offsets:
-  .byte LOW(XOff2x2),HIGH(XOff2x2),$00,$00,LOW(YOff2x2),HIGH(YOff2x2),HIGH(YOff2x2V),HIGH(YOff2x2V)
+  .byte LOW(XOff2x2), HIGH(XOff2x2), LOW(YOff2x2), HIGH(YOff2x2), LOW(XOff2x2), HIGH(XOff2x2), LOW(YOff2x2V), HIGH(YOff2x2V)
+.flipXor:
+  .byte %10000000
 .attributes:
   .byte $04,$84,$04,$04
 .tiles:
@@ -104,7 +115,9 @@ TurretH:
 .spriteCount:
   .byte $04
 .offsets:
-  .byte LOW(XOff2x2),HIGH(XOff2x2),LOW(XOff2x2H),HIGH(XOff2x2H),LOW(YOff2x2),HIGH(YOff2x2),$00,$00
+  .byte LOW(XOff2x2), HIGH(XOff2x2), LOW(YOff2x2), HIGH(YOff2x2), LOW(XOff2x2H), HIGH(XOff2x2H), LOW(YOff2x2), HIGH(YOff2x2)
+.flipXor:
+  .byte %01000000
 .attributes:
   .byte $04,$04,$04,$44
 .tiles:
