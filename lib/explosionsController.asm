@@ -4,7 +4,7 @@
 ;****************************************************************
 
 ; POI - possible optimization - at a cost of 2 CHR sprites, this entire file could be removed
-; which will save a ton of program bytes. Use the 'render enemy' logic instead.
+; which will save a ton of program bytes. Use the 'render enemy' logic instead. Do this change?
 
 ;****************************************************************
 ; Name:                                                         ;

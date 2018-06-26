@@ -24,11 +24,33 @@ GameFrame:
     STA needDrawLocal
     STA needPpuRegLocal
      
-  .updatePlayer:
-    JSR UpdatePlayer
+  ;.updatePlayer:
+  ;  JSR UpdatePlayer
+  ; 
+  ;.updateBullets:
+  ;  JSR UpdateBullets
    
-  .updateBullets:
-    JSR UpdateBullets
+  LDA #LOW(Beetle)
+  STA genericPointer
+  LDA #HIGH(Beetle)
+  STA genericPointer + $01
+  
+  LDA #$10
+  STA genericX
+  
+  LDA #$10
+  STA genericY
+  
+  LDA #$00
+  STA genericOffScreen
+  
+  LDA #$00
+  STA genericDirection
+  
+  LDA #$01
+  STA genericFrame
+  
+  JSR RenderEnemy
    
   .setNmiFlags:
     .dma:

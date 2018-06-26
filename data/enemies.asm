@@ -48,14 +48,14 @@ Beetle:
 .flipXor:
   .byte %01000000
 .attributes:
-  .byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+  .byte $01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01
 .tiles:
 .Beetle2:
-  .byte $26,$27,$28,$29,$2A,$2B,$2C,$2D,$35,$36,$37,$2E
+  .byte $26,$2A,$35,$27,$2B,$36,$28,$2C,$37,$29,$2D,$2E
 .Beetle1:
-  .byte $26,$27,$28,$29,$2A,$2B,$2C,$2D,$32,$33,$34,$2E
+  .byte $26,$2A,$32,$27,$2B,$33,$28,$2C,$34,$29,$2D,$2E
 .Beetle0:
-  .byte $26,$27,$28,$29,$2A,$2B,$2C,$2D,$2F,$30,$31,$2E
+  .byte $26,$2A,$2F,$27,$2B,$30,$28,$2C,$31,$29,$2D,$2E
 
 Bug:
 .spriteCount:
@@ -65,12 +65,12 @@ Bug:
 .flipXor:
   .byte %01000000
 .attributes:
-  .byte $01,$01,$01,$01
+  .byte $00,$00,$00,$00
 .tiles:
 .Bug1:
-  .byte $38,$39,$3C,$3D
+  .byte $38,$3C,$39,$3D
 .Bug0:
-  .byte $38,$39,$3A,$3B
+  .byte $38,$3A,$39,$3B
 
 Eye:
 .spriteCount:
@@ -83,7 +83,7 @@ Eye:
   .byte $02,$82,$02,$82
 .tiles:
 .Eye:
-  .byte $3E,$3F,$3E,$3F
+  .byte $3E,$3E,$3F,$3F
 
 Spikes:
 .spriteCount:
@@ -93,10 +93,10 @@ Spikes:
 .flipXor:
   .byte %00000000
 .attributes:
-  .byte $03,$03,$03,$03
+  .byte $02,$02,$02,$02
 .tiles:
 .Spikes:
-  .byte $40,$41,$42,$43
+  .byte $40,$42,$41,$43
 
 TurretV:
 .spriteCount:
@@ -106,10 +106,10 @@ TurretV:
 .flipXor:
   .byte %10000000
 .attributes:
-  .byte $04,$84,$04,$04
+  .byte $01,$81,$01,$01
 .tiles:
 .TurretV:
-  .byte $44,$45,$44,$46
+  .byte $44,$44,$45,$46
 
 TurretH:
 .spriteCount:
@@ -119,9 +119,9 @@ TurretH:
 .flipXor:
   .byte %01000000
 .attributes:
-  .byte $04,$04,$04,$44
+  .byte $01,$01,$01,$41
 .tiles:
 .TurretH:
-  .byte $47,$48,$49,$49
+  .byte $47,$49,$48,$49
 
 

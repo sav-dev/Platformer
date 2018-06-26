@@ -400,6 +400,8 @@ UpdatePlayerExploding:
     STA genericY
     LDA playerAnimationFrame
     STA genericFrame
+    LDA #$00
+    STA genericOffScreen
     JMP RenderExplosion
   
 ;****************************************************************
