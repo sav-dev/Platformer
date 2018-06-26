@@ -140,12 +140,12 @@ RenderEnemy:
         ADC #SPRITE_DIMENSION
         BCS .loopCheck          ; carry set means tile is partialy on screen, never render those
         LDA genericOffScreen    ; if we got here it means tile is fully on screen
-        BCS .loopCheck          ; only render it if genericOffScreen == 0
+        BNE .loopCheck          ; only render it if genericOffScreen == 0
         JMP .renderTile
       
       .tileOffScreen:           
         LDA genericOffScreen    ; if we got here it means tile is fully off screen
-        BCC .loopCheck          ; only render if genericOffScreen == 1
+        BEQ .loopCheck          ; only render if genericOffScreen == 1
       
    .renderTile:                 ; if we got here we want to render the tile
      LDA [f], y                 ; load the y offset

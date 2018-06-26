@@ -35,7 +35,7 @@ GameFrame:
   LDA #HIGH(Beetle)
   STA genericPointer + $01
   
-  LDA #$10
+  LDA #$ED
   STA genericX
   
   LDA #$10
@@ -44,7 +44,7 @@ GameFrame:
   LDA #$00
   STA genericOffScreen
   
-  LDA #$00
+  LDA #$01
   STA genericDirection
   
   LDA #$01
