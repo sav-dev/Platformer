@@ -28,6 +28,13 @@ leftTiles         .rs 128   ; first 128 bytes of the tile dictionary
 rightTiles        .rs 128   ; last 128 bytes of the tile dictionary
 
 ;****************************************************************
+; Sound                                                         ;
+;****************************************************************
+
+  .rsset $0300
+; ...
+
+;****************************************************************
 ; Bullets                                                       ;
 ;****************************************************************
 
@@ -39,7 +46,7 @@ enemyBullets      .rs 20    ; 4 x ENEMY_BULLET_LIMIT; see constants.asm for form
  .rsset $0400
 
 allBullets        .rs 40    ; redefined for all bullets
- 
+
 ;****************************************************************
 ; Other variables - 728 bytes available                         ;
 ;****************************************************************

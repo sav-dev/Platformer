@@ -115,7 +115,9 @@ RenderEnemy:
     LDA genericPointer + $01
     STA k
       
-  ; all pointers set, now draw
+  .render:                      ; all pointers set, now render
+    
+    ; .....
   
   RTS
   

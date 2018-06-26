@@ -85,13 +85,13 @@ RenderExplosion:
     LDA #$00
     STA j
     
-    ; Y = decreasing counter with frame to render (decremented first run): 3->2->1->0
-    ; j = stop after this frame is rendered
+    ; Y = decreasing counter with sprite to render (decremented first run): 3->2->1->0
+    ; j = stop after this sprite is rendered
     
     ; if explosionX <= F0 -> render everything
     ; if explosionX <= F7 -> if offscreen render nothing, otherwise render everything
-    ; else     -> if offscreen render 2 & 3 (set j to 2), otherwise render 0 & 1 (set y to 2)
-    ;             render nothing if frame = 4    
+    ; else                -> if offscreen render 2 & 3 (set j to 2), otherwise render 0 & 1 (set y to 2)
+    ;                        render nothing if frame = 4 (i.e. first frame with only one sprite) 
     
     LDA genericX
     CMP #$F1
@@ -143,6 +143,7 @@ RenderExplosion:
     
 ;****************************************************************
 ; ATTS for explosion are currently constant for each tile       ;
+; POI - one sprite in CHR could be saved if we flipped it       ;
 ;****************************************************************
 
 EXPLOSION_ATTS = $00
