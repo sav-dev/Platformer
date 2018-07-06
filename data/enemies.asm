@@ -4,6 +4,107 @@
 ;****************************************************************
 
 ;
+;  constant properties for enemies
+;    hitbox x off    : 1 byte
+;    hitbox y off    : 1 byte
+;    hitbox width    : 1 byte (inclusive)
+;    hitbox height   : 1 byte (inclusive)
+;    gun x off       : 1 byte (0 for non shooting)
+;    gun y off       : 1 byte (0 for non shooting)
+;    gun x off flip  : 1 byte (0 for non shooting)
+;    gun y off flip  : 1 byte (0 for non shooting)
+;    animation speed : 1 byte (0 for non animated)
+;    # of frames     : 1 bytes
+;    rendering info  : 2 bytes
+;    expl. offsets   : 2 bytes (x/y)
+;
+
+BeetleConsts:
+.hitboxInfo:
+  .byte $02,$04,$1B,$10
+.gunInfo:
+  .byte $1E,$05,$01,$05
+.animationSpeed:
+  .byte $08
+.numberOfFrames:
+  .byte $03
+.renderingInfo:
+  .byte LOW(BeetleRender), HIGH(BeetleRender)
+.explosionOffset:
+  .byte $08, $08
+
+BugConsts:
+.hitboxInfo:
+  .byte $02,$04,$0B,$0A
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $0C
+.numberOfFrames:
+  .byte $02
+.renderingInfo:
+  .byte LOW(BugRender), HIGH(BugRender)
+.explosionOffset:
+  .byte $00, $00
+
+EyeConsts:
+.hitboxInfo:
+  .byte $03,$02,$09,$0B
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $00
+.numberOfFrames:
+  .byte $01
+.renderingInfo:
+  .byte LOW(EyeRender), HIGH(EyeRender)
+.explosionOffset:
+  .byte $00, $00
+
+SpikesConsts:
+.hitboxInfo:
+  .byte $02,$02,$0A,$0A
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $00
+.numberOfFrames:
+  .byte $01
+.renderingInfo:
+  .byte LOW(SpikesRender), HIGH(SpikesRender)
+.explosionOffset:
+  .byte $00, $00
+
+TurretVConsts:
+.hitboxInfo:
+  .byte $01,$01,$0D,$0D
+.gunInfo:
+  .byte $0C,$0F,$0C,$00
+.animationSpeed:
+  .byte $00
+.numberOfFrames:
+  .byte $01
+.renderingInfo:
+  .byte LOW(TurretVRender), HIGH(TurretVRender)
+.explosionOffset:
+  .byte $00, $00
+
+TurretHConsts:
+.hitboxInfo:
+  .byte $01,$01,$0D,$0D
+.gunInfo:
+  .byte $0F,$03,$00,$03
+.animationSpeed:
+  .byte $00
+.numberOfFrames:
+  .byte $01
+.renderingInfo:
+  .byte LOW(TurretHRender), HIGH(TurretHRender)
+.explosionOffset:
+  .byte $00, $00
+
+
+;
 ;  all offsets for possible grids
 ;    XOffNxM = x offsets for NxM grid
 ;    XOffNxMH = x offsets for NxM grid (H flip)
@@ -40,7 +141,7 @@ YOff2x2V:
 ;    N bytes = frame 0
 ;
 
-Beetle:
+BeetleRender:
 .spriteCount:
   .byte $0C
 .offsets:
@@ -57,7 +158,7 @@ Beetle:
 .Beetle0:
   .byte $26,$2A,$2F,$27,$2B,$30,$28,$2C,$31,$29,$2D,$2E
 
-Bug:
+BugRender:
 .spriteCount:
   .byte $04
 .offsets:
@@ -72,7 +173,7 @@ Bug:
 .Bug0:
   .byte $38,$3A,$39,$3B
 
-Eye:
+EyeRender:
 .spriteCount:
   .byte $04
 .offsets:
@@ -85,7 +186,7 @@ Eye:
 .Eye:
   .byte $3E,$3E,$3F,$3F
 
-Spikes:
+SpikesRender:
 .spriteCount:
   .byte $04
 .offsets:
@@ -98,7 +199,7 @@ Spikes:
 .Spikes:
   .byte $40,$42,$41,$43
 
-TurretV:
+TurretVRender:
 .spriteCount:
   .byte $04
 .offsets:
@@ -111,7 +212,7 @@ TurretV:
 .TurretV:
   .byte $44,$44,$45,$46
 
-TurretH:
+TurretHRender:
 .spriteCount:
   .byte $04
 .offsets:
