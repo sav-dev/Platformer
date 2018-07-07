@@ -5,6 +5,172 @@
 
 ;****************************************************************
 ; Name:                                                         ;
+;   LoadEnemiesInitial                                          ;
+;                                                               ;
+; Description:                                                  ;
+;   Load enemies for screen 0 and 1, sets the enemiesPointer    ;
+;                                                               ;
+; Input variables:                                              ;
+;   genericPointer - set to the start of the enemies data       ;
+;                                                               ;
+; Output variables:                                             ;
+;   enemiesPointer - set to the enemis data for screen 1 (!)    ;
+;   genericPointer - set to the first byte after enemies data   ;
+;                                                               ;
+; Used variables:                                               ;
+;   b                                                           ;
+;   c                                                           ;
+;****************************************************************
+
+LoadEnemiesInitial:
+  
+  .screensToSkip:
+    LDA maxScroll + $01                ; see LoadPlatformsAndThreats for explanation of this logic
+    CLC
+    ADC #$02
+    STA b
+                                       
+  .setEnemiesPointer:                 
+    LDA genericPointer                 
+    STA enemiesPointer               
+    LDA genericPointer + $01           
+    STA enemiesPointer + $01           ; enemiesPointer set to enemies for screen 0
+  
+  .moveEnemiesPointerLoop:
+    JSR MoveEnemiesPointerForward      ; move enemiesPointer forward
+    DEC b
+    BNE .moveEnemiesPointerLoop        ; after this loop, enemiesPointer set to the first byte after enemies data
+    
+  .setGenericPointer:
+    LDA genericPointer
+    STA b
+    LDA genericPointer + $01
+    STA c                              ; cache genericPointer (still pointing to the start of the data) in b/c
+    LDA enemiesPointer
+    STA genericPointer
+    LDA enemiesPointer + $01
+    STA genericPointer + $01           ; genericPointer now points to the first byte after enemies data
+    LDA b
+    STA enemiesPointer
+    LDA c
+    STA enemiesPointer + $01           ; enemiesPointer now points to the first byte of the enemies data
+    
+  .loadEnemies:
+    JSR LoadEnemies                    ; load enemies for screen 0
+    JSR MoveEnemiesPointerForward
+    JSR LoadEnemies                    ; load enemies for screen 1
+
+  RTS                                  ; enemies loaded, pointer points to screen 1 as expected
+
+;****************************************************************
+; Name:                                                         ;
+;   LoadEnemiesForward                                          ;
+;                                                               ;
+; Description:                                                  ;
+;   Load enemies for the screen in the front,                   ;
+;   also moves the enemies pointer forward                      ;
+;                                                               ;
+; Used variables:                                               ;
+;****************************************************************
+
+LoadEnemiesForward:
+ 
+  ; ...
+
+  RTS  
+  
+;****************************************************************
+; Name:                                                         ;
+;   LoadEnemies                                                 ;
+;                                                               ;
+; Description:                                                  ;
+;   Load enemies for the screen in the back,                    ;
+;   also moves the enemies pointer back                         ;
+;                                                               ;
+; Used variables:                                               ;
+;****************************************************************
+
+LoadEnemiesBack:
+
+  ; ...
+
+  RTS
+  
+;****************************************************************
+; Name:                                                         ;
+;   LoadEnemies                                                 ;
+;                                                               ;
+; Description:                                                  ;
+;   Load enemies from enemiesPointer                            ;
+;                                                               ;
+; Input variables:                                              ;
+;   enemiesPointer - enemies to load                            ;
+;                                                               ;
+; Used variables:                                               ;
+;****************************************************************
+
+LoadEnemies:
+
+  ; ...
+
+  RTS
+  
+;****************************************************************
+; Name:                                                         ;
+;   MoveEnemiesPointerForward                                   ;
+;                                                               ;
+; Description:                                                  ;
+;   Moves the enemies pointer forward                           ;
+;                                                               ;
+; Used variables:                                               ;
+;   Y                                                           ;
+;****************************************************************
+
+MoveEnemiesPointerForward:
+  LDY #$00
+  LDA [enemiesPointer], y
+  CLC
+  ADC enemiesPointer
+  STA enemiesPointer
+  LDA enemiesPointer + $01
+  ADC #$00
+  STA enemiesPointer + $01
+  RTS
+  
+;****************************************************************
+; Name:                                                         ;
+;   MoveEnemiesPointerBack                                      ;
+;                                                               ;
+; Description:                                                  ;
+;   Moves the enemies pointer back                              ;
+;                                                               ;
+; Used variables:                                               ;
+;   Y                                                           ;
+;   i                                                           ;
+;****************************************************************
+
+MoveEnemiesPointerBack:
+  LDA enemiesPointer
+  SEC
+  SBC #$01
+  STA enemiesPointer
+  LDA enemiesPointer + $01
+  SBC #$00
+  STA enemiesPointer + $01
+  LDY #$00
+  LDA [enemiesPointer], y
+  STA i
+  LDA enemiesPointer
+  SEC
+  SBC i
+  STA enemiesPointer
+  LDA enemiesPointer + $01
+  SBC #$00
+  STA enemiesPointer + $01
+  RTS
+
+;****************************************************************
+; Name:                                                         ;
 ;   RenderEnemy                                                 ;
 ;                                                               ;
 ; Description:                                                  ;

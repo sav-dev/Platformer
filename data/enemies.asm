@@ -18,6 +18,10 @@
 ;    rendering info  : 2 bytes
 ;    expl. offsets   : 2 bytes (x/y)
 ;
+;  ordered by animation id
+;
+
+EnemyConsts:
 
 BeetleConsts:
 .hitboxInfo:

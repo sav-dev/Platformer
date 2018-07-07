@@ -572,6 +572,7 @@ IncrementScroll:
     STA soft2000                       ; set the base nametable address
     JSR MovePlatformsPointerForward    ; move platforms pointer forward
     JSR MoveThreatsPointerForward      ; move threats pointer forward
+    JSR LoadEnemiesForward             ; load enemies for the screen in the front, also moves the enemies pointer
   .checkForScrollWrapDone:             
                                        
   .newDataCheck:
@@ -882,6 +883,7 @@ DecrementScroll:
     STA soft2000                       ; set the base nametable address
     JSR MovePlatformsPointerBack       ; move platforms pointer back
     JSR MoveThreatsPointerBack         ; move threats pointer back
+    JSR LoadEnemiesBack                ; load enemies for the screen in the back, also moves the enemies pointer
   .checkForScrollWrapDone:
 
   .newDataCheck:

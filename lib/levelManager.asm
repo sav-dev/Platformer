@@ -37,6 +37,7 @@
 LoadLevel:
   JSR LoadLevelBackground      ; load level background, uses levelPointer, sets genericPointer and max scroll
   JSR LoadPlatformsAndThreats  ; load platforms and threats, sets platformsPointer, threatsPointer and genericPointer
+  JSR LoadEnemiesInitial       ; load enemies, sets enemiesPointer
   
   ; todo - add more stuff, like enemies, starting x/y
   ; for now player position is hardcoded

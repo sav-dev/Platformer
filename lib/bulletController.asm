@@ -72,7 +72,7 @@ SpawnPlayerBullet:
   .spawnBullet:
     LDX #PLAYER_BULLET_LAST
 
-    .findFreeSlotLoop:      
+    .findFreeSlotLoop:    
       LDA playerBullets, x
       BEQ .freeSlotFound              ; BULLET_S_NOT_EXIST == 0
       TXA

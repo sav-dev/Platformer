@@ -36,6 +36,7 @@ attsPointer             .rs 2  ; points to the right-most rendered atts column
 attsBackPointer         .rs 2  ; points to the left-most rendered atts column
 platformsPointer        .rs 2  ; points to the platform data for current screen
 threatsPointer          .rs 2  ; points to the threat data for current screen
+enemiesPointer          .rs 2  ; points to the enemies data for *next* screen (since we load one screen ahead)
 
 ;****************************************************************
 ; Buffering related variables                                   ;
