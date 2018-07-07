@@ -145,6 +145,12 @@ LoadEnemiesBack:
 ;   Y                                                           ;
 ;   X                                                           ;
 ;   b                                                           ;
+;   c                                                           ;
+;   d                                                           ;
+;                                                               ;
+; Remarks:                                                      ;
+;   depends_on_enemy_in_level_data_format                       ;
+;   depends_on_enemy_in_memory_format                           ;
 ;****************************************************************
 
 LoadEnemies:
@@ -159,7 +165,7 @@ LoadEnemies:
   ;        - screen the enemy is on (1 byte)
   ;        - movement speed (1 byte)
   ;        - max movement distance (1 byte)
-  ;        - movement type (1 byte)
+  ;        - movement direction (1 byte)
   ;        - initial movement distance (1 byte)
   ;        - initial flip (1 byte)
   ;        - x position (1 byte)
@@ -169,6 +175,24 @@ LoadEnemies:
   ;        - shooting frequency initial (1 byte)
   ;   - pointer to the previous screen (from here): (n x 14) + 2 (1 byte)
 
+  ; - enemies in memory in the following format (16 bytes):
+  ;    - state (1 byte)
+  ;    - id (1 byte)
+  ;    - pointer to const. data (1 byte)
+  ;    - screen the enemy is on (1 byte)
+  ;    - movement speed (1 byte)
+  ;    - max movement distance (1 byte)
+  ;    - movement direction (1 byte)
+  ;    - current movement distance (1 byte)
+  ;    - current flip (1 byte)
+  ;    - x position (1 byte)
+  ;    - y position (1 byte)
+  ;    - remaining life (1 byte)  
+  ;    - shooting frequency (1 byte)
+  ;    - shooting timer (1 byte)
+  ;    - animation timer (1 byte)
+  ;    - animation frame (1 byte)
+  
   .loadEnemiesCount:
   
     LDY #$01                    ; skip the pointer, Y points to the number of enemies
@@ -180,59 +204,34 @@ LoadEnemies:
     INY
     LDA [enemiesPointer], y     ; load the id
     ; todo: check if the enemy has been destroyed    
-    ; todo: store
+    STA c                       ; cache it in c for now
     
     INY
     LDA [enemiesPointer], y     ; load the slot to put enemy in
-    ; todo: store
-       
-    INY
-    LDA [enemiesPointer], y     ; load the pointer to const. data
-    ; todo: store
+    TAX                         ; put in in X - X points to state        
     
-    INY
-    LDA [enemiesPointer], y     ; load the screen the enemy is on 
-    ; todo: store
+    LDA #ENEMY_STATE_ACTIVE
+    STA enemies, x              ; set the state
     
-    INY
-    LDA [enemiesPointer], y     ; load the movement speed
-    ; todo: store
+    INX                         ; x points to the id
+    LDA c                       ; load the id back from c
+    STA enemies, x              ; store
     
-    INY
-    LDA [enemiesPointer], y     ; load the max movement distance
-    ; todo: store
+    LDA #$0C                    ; next 12 bytes are the same in both definitions:
+    STA d                       ; pointer, screen, speed, distance, direction, current distance, flip, x, y, life, shooting freq, shooting timer
+    .copyLoop:                  ; d will be the loop pointer
+      INY
+      LDA [enemiesPointer], y   ; load enemy data
+      INX
+      STA enemies, x            ; store in memory data
+      DEC d
+      BNE .copyLoop   
     
-    INY
-    LDA [enemiesPointer], y     ; load the movement type
-    ; todo: store
-    
-    INY
-    LDA [enemiesPointer], y     ; load the initial movement distance
-    ; todo: store
-    
-    INY
-    LDA [enemiesPointer], y     ; load the initial flip
-    ; todo: store
-    
-    INY
-    LDA [enemiesPointer], y     ; load the x position
-    ; todo: store
-    
-    INY
-    LDA [enemiesPointer], y     ; load the y position
-    ; todo: store
-
-    INY
-    LDA [enemiesPointer], y     ; load the initial life
-    ; todo: store
-    
-    INY
-    LDA [enemiesPointer], y     ; load the shooting frequency
-    ; todo: store
-    
-    INY
-    LDA [enemiesPointer], y     ; load the shooting frequency initial
-    ; todo: store
+    LDA #$01                    ; next two bytes are the animation vars, set both to 1 (so they'll loop to the beginning the next frame)
+    INX
+    STA enemies, x
+    INX
+    STA enemies, x
     
     DEC b
     BNE .loadEnemiesLoop        ; loop if needed
@@ -250,11 +249,41 @@ LoadEnemies:
 ;   b - screen to unload the enemies for                        ;
 ;                                                               ;
 ; Used variables:                                               ;
+;   b                                                           ;
+;   c                                                           ;
+;                                                               ;
+; Remarks:                                                      ;
+;   depends_on_enemy_in_memory_format                           ;
 ;****************************************************************
 
 UnloadEnemies:
 
-  ; ...
+  LDX #LAST_ENEMY_SCREEN           ; loop all enemies going down  
+  LDA #ENEMIES_COUNT
+  STA c                            ; c is the loop counter
+  
+  .unloadEnemyLoop:
+  
+    LDA enemies, x                 ; load the screen the enemy is on
+    CMP b
+    BNE .loopCondition             ; if screen != b, don't do anything
+    
+    .unloadEnemy:
+      DEX
+      DEX
+      DEX                          ; x points to the state
+      LDA #ENEMY_STATE_EMPTY
+      STA enemies, x               ; unload the enemy
+      INX
+      INX
+      INX                          ; x points back to the screen
+    
+    .loopCondition:
+      TXA                          ; decrement the pointer
+      SEC
+      SBC #ENEMY_SIZE
+      DEC c
+      BNE .unloadEnemyLoop         ; decrement the loop counter
   
   RTS
   
@@ -358,7 +387,7 @@ RenderEnemy:
   
   .checkFlip:
     LDA genericDirection    
-    BEQ .noFlip                 ; ENEMY_NO_FLIP == 0
+    BEQ .noFlip                 ; RENDER_ENEMY_NO_FLIP == 0
   
   .flip:                        ;  flip, use the last two pointers
     INY

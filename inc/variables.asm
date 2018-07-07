@@ -35,23 +35,31 @@ rightTiles        .rs 128   ; last 128 bytes of the tile dictionary
 ; ...
 
 ;****************************************************************
+; Enemies                                                       ;
+;****************************************************************
+
+ .rsset $0400              
+
+enemies           .rs 200   ; POI - can be lowered, must be = max enemies x enemy size; see enemiesManager.asm for format
+
+;****************************************************************
 ; Bullets                                                       ;
 ;****************************************************************
 
- .rsset $0400
+ .rsset $0500
 
 playerBullets     .rs 20    ; 4 x PLAYER_BULLET_LIMIT; see constants.asm for format
 enemyBullets      .rs 20    ; 4 x ENEMY_BULLET_LIMIT; see constants.asm for format
 
- .rsset $0400
+ .rsset $0500
 
 allBullets        .rs 40    ; redefined for all bullets
 
 ;****************************************************************
-; Other variables - 728 bytes available                         ;
+; Other variables                                               ;
 ;****************************************************************
 
- .rsset $0428
+ .rsset $0528
  
 ;****************************************************************
 ; Game state                                                    ;

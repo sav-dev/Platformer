@@ -32,30 +32,30 @@ CONTROLLER_RIGHT = %00000001
 ; Graphics related constans                                     ;
 ;****************************************************************
 
-SPRITE_POINTER_JUMP = $2C ; has to % 4 but not 8
-
-SCREEN_WIDTH        = $FF ; screen width in pixels
-SCREEN_HEIGHT       = $F0 ; screen height in pixels
-                    
-SPRITE_DIMENSION    = $08 ; width/height of one sprite
-SPRITE_DIMENSION_X2 = SPRITE_DIMENSION * $02
-SPRITE_DIMENSION_X3 = SPRITE_DIMENSION * $03
-SPRITE_DIMENSION_X4 = SPRITE_DIMENSION * $04
-               
-CLEAR_SPRITE        = $FE ; when any of the sprite's values are set to this then the sprite is cleared
-CLEAR_TILE          = $FE ; clear background tile
-CLEAR_ATTS          = $00 ; clear background atts
-                                        
-Y_OFF               = $00 ; offset of the Y position in the sprite data
-TILE_OFF            = $01 ; offset of the tile byte in the sprite data
-ATTS_OFF            = $02 ; offset of the att. byte in the sprite data
-X_OFF               = $03 ; offset of the X position in the sprite data
-SPRITE_SIZE         = $04 ; size of one sprite
-
-MAX_SPRITE_COUNT    = $40 ; 64 sprites
-
-ENEMY_NO_FLIP       = $00 ; lowest bit set means V, second to lowest bit set means H
-ENEMY_FLIP          = $01 ; 0000 0001
+SPRITE_POINTER_JUMP   = $2C ; has to % 4 but not 8
+                      
+SCREEN_WIDTH          = $FF ; screen width in pixels
+SCREEN_HEIGHT         = $F0 ; screen height in pixels
+                      
+SPRITE_DIMENSION      = $08 ; width/height of one sprite
+SPRITE_DIMENSION_X2   = SPRITE_DIMENSION * $02
+SPRITE_DIMENSION_X3   = SPRITE_DIMENSION * $03
+SPRITE_DIMENSION_X4   = SPRITE_DIMENSION * $04
+                      
+CLEAR_SPRITE          = $FE ; when any of the sprite's values are set to this then the sprite is cleared
+CLEAR_TILE            = $FE ; clear background tile
+CLEAR_ATTS            = $00 ; clear background atts
+                                          
+Y_OFF                 = $00 ; offset of the Y position in the sprite data
+TILE_OFF              = $01 ; offset of the tile byte in the sprite data
+ATTS_OFF              = $02 ; offset of the att. byte in the sprite data
+X_OFF                 = $03 ; offset of the X position in the sprite data
+SPRITE_SIZE           = $04 ; size of one sprite
+                      
+MAX_SPRITE_COUNT      = $40 ; 64 sprites
+                      
+RENDER_ENEMY_NO_FLIP  = $00 ; lowest bit set means V, second to lowest bit set means H
+RENDER_ENEMY_FLIP     = $01 ; 0000 0001
 
 
 ;****************************************************************
@@ -200,3 +200,36 @@ TOTAL_BULLET_LAST       = TOTAL_BULLET_VAR_SIZE - BULLET_MEMORY_BYTES
 SCROLL_SPEED = PLAYER_SPEED_POSITIVE ; scroll speed synchronized with player speed, must be 1, 2 or 4
                                      ; could be 8 but then inc/dec logic must be updated (the 'e' var)
                                      ; POI - possible optimization - if set to 1, inc/dec logic may be optimized
+                                     
+;****************************************************************
+; Enemies                                                       ;
+;****************************************************************
+
+ENEMY_SIZE                = $10        ; 16 bytes per enemy  
+ENEMIES_COUNT             = $0C        ; 12 enemies max
+
+; format in enemiesManager.asm
+; depends_on_enemy_in_memory_format
+ENEMY_STATE               = $00
+ENEMY_ID                  = $01
+ENEMY_POINTER             = $02
+ENEMY_SCREEN              = $03
+ENEMY_SPEED               = $04
+ENEMY_MAX_DISTANCE        = $05
+ENEMY_MOVEMENT_DIRECTION  = $06
+ENEMY_CURRENT_DISTANCE    = $07
+ENEMY_FLIP                = $08
+ENEMY_X                   = $09
+ENEMY_Y                   = $0A
+ENEMY_LIFE                = $0B
+ENEMY_SHOOTING_FREQ       = $0C
+ENEMY_SHOOTING_TIMER      = $0D
+ENEMY_ANIMATION_TIMER     = $0E
+ENEMY_ANIMATION_FRAME     = $0F
+
+LAST_ENEMY                = ENEMY_SIZE * (ENEMIES_COUNT - $01)
+LAST_ENEMY_SCREEN         = LAST_ENEMY + ENEMY_SCREEN
+
+ENEMY_STATE_EMPTY       = $00
+ENEMY_STATE_ACTIVE      = $01
+ENEMY_STATE_EXPLODING   = $02
