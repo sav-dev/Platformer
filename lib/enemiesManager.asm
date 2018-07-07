@@ -18,6 +18,8 @@
 ;   genericPointer - set to the first byte after enemies data   ;
 ;                                                               ;
 ; Used variables:                                               ;
+;   Y                                                           ;
+;   X                                                           ;
 ;   b                                                           ;
 ;   c                                                           ;
 ;****************************************************************
@@ -45,7 +47,7 @@ LoadEnemiesInitial:
     LDA genericPointer
     STA b
     LDA genericPointer + $01
-    STA c                              ; cache genericPointer (still pointing to the start of the data) in b/c
+    STA c                              ; cache genericPointer (still pointing to the start of the data) in b c
     LDA enemiesPointer
     STA genericPointer
     LDA enemiesPointer + $01
@@ -75,13 +77,28 @@ LoadEnemiesInitial:
 
 LoadEnemiesForward:
  
-  ; ...
+  ; say we're moving from screen 2 to 3 - in that case we want to load enemies for screen 4
+  ; at this point, enemiesPointer is pointing to screen 3, so we must move it forward
+  ;
+  ; but first we need to unload enemies for screen 2 - when this is called, screen is already set to 3,
+  ; so we want to unload enemies for "screen - 1"
+ 
+  .unloadEnemies:
+    LDA scroll + $01
+    SEC
+    SBC #$01
+    STA b                             ; b = screen - 1
+    JSR UnloadEnemies                 ; unload enemies
+ 
+  .loadEnemiesAndUpdatePointer:
+    JSR MoveEnemiesPointerForward     ; move pointer forward
+    JSR LoadEnemies                   ; load enemies
 
   RTS  
   
 ;****************************************************************
 ; Name:                                                         ;
-;   LoadEnemies                                                 ;
+;   LoadEnemiesBack                                             ;
 ;                                                               ;
 ; Description:                                                  ;
 ;   Load enemies for the screen in the back,                    ;
@@ -92,8 +109,26 @@ LoadEnemiesForward:
 
 LoadEnemiesBack:
 
-  ; ...
+  ; say we're moving from screen 3 to 2 - in that case we want to load enemies for screen 2
+  ; at this point, enemiesPointer is pointing to screen 4, so we must move it back twice, load,
+  ; then move it forward once so it points to screen 3 as expected
+  ;
+  ; but first we need to unload enemies for screen 4 - when this is called, screen is already updated to 2,
+  ; so we want to unload enemies for "screen + 2"
 
+  .unloadEnemies:
+    LDA scroll + $01
+    CLC
+    ADC #$02
+    STA b                             ; b = screen + 1
+    JSR UnloadEnemies                 ; unload enemies
+ 
+  .loadEnemiesAndUpdatePointer:
+    JSR MoveEnemiesPointerBack
+    JSR MoveEnemiesPointerBack        ; move pointer back twice
+    JSR LoadEnemies                   ; load enemies
+    JSR MoveEnemiesPointerForward     ; move pointer forward
+  
   RTS
   
 ;****************************************************************
@@ -107,12 +142,120 @@ LoadEnemiesBack:
 ;   enemiesPointer - enemies to load                            ;
 ;                                                               ;
 ; Used variables:                                               ;
+;   Y                                                           ;
+;   X                                                           ;
+;   b                                                           ;
 ;****************************************************************
 
 LoadEnemies:
 
-  ; ...
+  ; - enemies in the following format:
+  ;   - pointer to next screen (from here): (n x 14) + 3 (1 byte)
+  ;   - number of enemies (1 byte)
+  ;   - n times the enemy data (14 bytes)
+  ;        - id (1 byte)
+  ;        - slot to put enemy in (1 byte)
+  ;        - pointer to const. data (1 byte)
+  ;        - screen the enemy is on (1 byte)
+  ;        - movement speed (1 byte)
+  ;        - max movement distance (1 byte)
+  ;        - movement type (1 byte)
+  ;        - initial movement distance (1 byte)
+  ;        - initial flip (1 byte)
+  ;        - x position (1 byte)
+  ;        - y position (1 byte)            
+  ;        - initial life (1 byte)
+  ;        - shooting frequency (1 byte)
+  ;        - shooting frequency initial (1 byte)
+  ;   - pointer to the previous screen (from here): (n x 14) + 2 (1 byte)
 
+  .loadEnemiesCount:
+  
+    LDY #$01                    ; skip the pointer, Y points to the number of enemies
+    LDA [enemiesPointer], y     ; load the number of enemies
+    STA b                       ; store it in b    
+   
+  .loadEnemiesLoop:
+  
+    INY
+    LDA [enemiesPointer], y     ; load the id
+    ; todo: check if the enemy has been destroyed    
+    ; todo: store
+    
+    INY
+    LDA [enemiesPointer], y     ; load the slot to put enemy in
+    ; todo: store
+       
+    INY
+    LDA [enemiesPointer], y     ; load the pointer to const. data
+    ; todo: store
+    
+    INY
+    LDA [enemiesPointer], y     ; load the screen the enemy is on 
+    ; todo: store
+    
+    INY
+    LDA [enemiesPointer], y     ; load the movement speed
+    ; todo: store
+    
+    INY
+    LDA [enemiesPointer], y     ; load the max movement distance
+    ; todo: store
+    
+    INY
+    LDA [enemiesPointer], y     ; load the movement type
+    ; todo: store
+    
+    INY
+    LDA [enemiesPointer], y     ; load the initial movement distance
+    ; todo: store
+    
+    INY
+    LDA [enemiesPointer], y     ; load the initial flip
+    ; todo: store
+    
+    INY
+    LDA [enemiesPointer], y     ; load the x position
+    ; todo: store
+    
+    INY
+    LDA [enemiesPointer], y     ; load the y position
+    ; todo: store
+
+    INY
+    LDA [enemiesPointer], y     ; load the initial life
+    ; todo: store
+    
+    INY
+    LDA [enemiesPointer], y     ; load the shooting frequency
+    ; todo: store
+    
+    INY
+    LDA [enemiesPointer], y     ; load the shooting frequency initial
+    ; todo: store
+    
+    DEC b
+    BNE .loadEnemiesLoop        ; loop if needed
+          
+  RTS
+  
+;****************************************************************
+; Name:                                                         ;
+;   UnloadEnemies                                               ;
+;                                                               ;
+; Description:                                                  ;
+;   Unloads enemies for given screen                            ;
+;                                                               ;
+; Input variables:                                              ;
+;   b - screen to unload the enemies for                        ;
+;                                                               ;
+; Used variables:                                               ;
+;****************************************************************
+
+UnloadEnemies:
+
+  ; ...
+  
   RTS
   
 ;****************************************************************
