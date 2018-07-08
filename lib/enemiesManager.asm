@@ -8,12 +8,19 @@
 ;   UpdateEnemies                                               ;
 ;                                                               ;
 ; Description:                                                  ;
-;   todo: update description                                    ;
+;   Updates all enemies:                                        ;
+;     - move                                                    ;
+;     - spawn bullets                                           ;
+;     - check for collisions                                    ;
+;     - render                                                  ;
 ;                                                               ;
 ; Used variables:                                               ;
 ;****************************************************************
 
 UpdateEnemies:
+
+  ; todo: update all enemies !
+
   RTS
 
 ;****************************************************************

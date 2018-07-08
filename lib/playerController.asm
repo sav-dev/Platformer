@@ -72,7 +72,7 @@ UpdatePlayerNotVisible:
 ;     - playerPlatformBox, playerCollisionBox                   ;
 ;     - playerGunX and playerGunY                               ;
 ;     - playerAnimation                                         ;
-;     {todo: spawn bullets}                                     ;
+;     - spawns bullets                                          ;
 ;                                                               ;
 ; Used variables:                                               ;
 ;   X                                                           ;
