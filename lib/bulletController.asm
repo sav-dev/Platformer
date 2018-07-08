@@ -73,7 +73,7 @@ SpawnPlayerBullet:
     LDX #PLAYER_BULLET_LAST
 
     .findFreeSlotLoop:    
-      LDA allBullets, x
+      LDA bullets, x
       BEQ .freeSlotFound              ; BULLET_S_NOT_EXIST == 0
       TXA
       BEQ .noFreeSlots                ; PLAYER_BULLET_FIRST == 0
@@ -88,16 +88,16 @@ SpawnPlayerBullet:
                                       
   .freeSlotFound:                     ; when we get here X points to the first byte of the free slot
     LDA #BULLET_S_JUST_SPAWNED
-    STA allBullets, x
+    STA bullets, x
     INX
     LDA genericDirection
-    STA allBullets, x
+    STA bullets, x
     INX
     LDA genericX
-    STA allBullets, x
+    STA bullets, x
     INX
     LDA genericY
-    STA allBullets, x
+    STA bullets, x
     LDA #PLAYER_BULLET_COOLDOWN
     STA playerBulletCooldown
     RTS
@@ -191,7 +191,7 @@ UpdateBullets:
   LDX j                               ; load last bullet to update
   
   .updateLoop:      
-    LDA allBullets, x
+    LDA bullets, x
     BNE .bulletExists                 ; BULLET_S_NOT_EXIST == 0    
     JMP .updateLoopCheck              ; bullet doesn't exist, check the next one
     
@@ -207,7 +207,7 @@ UpdateBullets:
       JMP .clearBullet                ; clear the bullet
       
     .updateExplosion:                 ; we should still render the explosion
-      STA allBullets, x               ; update state
+      STA bullets, x                  ; update state
       AND #%00000011                  ; A = 00, 01, 10 or 11 based on current state
       ROR A
       ROR A
@@ -215,10 +215,10 @@ UpdateBullets:
       STA renderAtts                  ; no need to ORA #BULLET_ATTS_E since BULLET_ATTS_E = 0
       INX
       INX                             ; X points to the x position
-      LDA allBullets, x
+      LDA bullets, x
       STA renderXPos                  ; set x position
       INX                             ; X points to they position
-      LDA allBullets, x
+      LDA bullets, x
       STA renderYPos                  ; set y position
       DEX
       DEX
@@ -230,7 +230,7 @@ UpdateBullets:
     .checkDirection:
       STA genericFrame                ; cache the state in the genericFrame variable
       INX                             ; X points to direction        
-      LDA allBullets, x 
+      LDA bullets, x 
       STA genericDirection            ; cache the direction in the genericDirection variable   
         
     .moveAndPreset:
@@ -246,17 +246,17 @@ UpdateBullets:
         LDA genericFrame
         CMP #BULLET_S_JUST_SPAWNED
         BEQ .dontMoveRight            ; don't move the bullet if just spawned
-        LDA allBullets, x
+        LDA bullets, x
         CLC
         ADC #BULLET_SPEED             ; move bullet left
         BCC .moveRight                ; carry clear if bx1 + bullet speed <= screen width: bullet on screen
         JMP .clearBulletMovePointer2
       
         .dontMoveRight:
-          LDA allBullets, x
+          LDA bullets, x
       
         .moveRight:
-          STA allBullets, x           ; update the bullet position
+          STA bullets, x              ; update the bullet position
           STA bx1                     ; preset bx1
           STA renderXPos              ; preset render x
           LDA #BULLET_ATTS_RIGHT
@@ -268,17 +268,17 @@ UpdateBullets:
         LDA genericFrame
         CMP #BULLET_S_JUST_SPAWNED
         BEQ .dontMoveLeft             ; don't move the bullet if just spawned
-        LDA allBullets, x 
+        LDA bullets, x 
         SEC 
         SBC #BULLET_SPEED             ; move bullet left        
         BCS .moveLeft                 ; carry set if bx1 - bullet speed >= 0: bullet on screen
         JMP .clearBulletMovePointer2
       
         .dontMoveLeft:
-          LDA allBullets, x 
+          LDA bullets, x 
           
         .moveLeft:
-          STA allBullets, x           ; update the bullet position
+          STA bullets, x              ; update the bullet position
           STA bx1                     ; preset bx1
           STA renderXPos              ; preset render x
           LDA #BULLET_ATTS_LEFT
@@ -288,7 +288,7 @@ UpdateBullets:
         LDA #BULLET_SPRITE_H
         STA renderTile                ; preset render tile
         INX                           ; X points to y position
-        LDA allBullets, x
+        LDA bullets, x
         STA by1                       ; preset by1
         STA renderYPos                ; preset render y
         CLC
@@ -308,14 +308,14 @@ UpdateBullets:
           
       .goingDown:
         INX                           ; X points to x position
-        LDA allBullets, x 
+        LDA bullets, x 
         STA bx1                       ; preset bx1
         STA renderXPos                ; preset render x
         INX                           ; X points to y position
         LDA genericFrame
         CMP #BULLET_S_JUST_SPAWNED
         BEQ .dontMoveDown             ; don't move the bullet if just spawned
-        LDA allBullets, x
+        LDA bullets, x
         CLC 
         ADC #BULLET_SPEED             ; move bullet down
         CMP #SCREEN_HEIGHT        
@@ -323,10 +323,10 @@ UpdateBullets:
         JMP .clearBulletMovePointer3
         
         .dontMoveDown:
-          LDA allBullets, x
+          LDA bullets, x
         
         .moveDown:
-          STA allBullets, x           ; update the bullet position
+          STA bullets, x              ; update the bullet position
           STA by1                     ; preset by1
           STA renderYPos              ; preset render y
           LDA #BULLET_ATTS_DOWN 
@@ -335,24 +335,24 @@ UpdateBullets:
         
       .goingUp:
         INX                           ; X points to x position
-        LDA allBullets, x 
+        LDA bullets, x 
         STA bx1                       ; preset bx1
         STA renderXPos                ; preset render x
         INX                           ; X points to y position
         LDA genericFrame
         CMP #BULLET_S_JUST_SPAWNED
         BEQ .dontMoveUp               ; don't move the bullet if just spawned
-        LDA allBullets, x
+        LDA bullets, x
         SEC 
         SBC #BULLET_SPEED             ; move bullet up
         BCS .moveUp                   ; carry set if by1 - bullet speed >= 0: bullet on screen
         JMP .clearBulletMovePointer3
       
         .dontMoveUp:
-          LDA allBullets, x
+          LDA bullets, x
       
         .moveUp:
-          STA allBullets, x           ; update the bullet position
+          STA bullets, x              ; update the bullet position
           STA by1                     ; preset by1
           STA renderYPos              ; preset render y
           LDA #BULLET_ATTS_UP 
@@ -401,7 +401,7 @@ UpdateBullets:
       .collisionUp:                   ; collision going up, meaning bullet y should be set to ay2 + 1
         INC ay2
         LDA ay2
-        STA allBullets, x             ; X points to y currently
+        STA bullets, x                ; X points to y currently
         STA renderYPos
         JMP .collisionUpdateState3
       
@@ -409,7 +409,7 @@ UpdateBullets:
         LDA ay1
         SEC
         SBC #BULLET_E_HEIGHT
-        STA allBullets, x             ; X points to y currently
+        STA bullets, x                ; X points to y currently
         STA renderYPos
         JMP .collisionUpdateState3
             
@@ -417,7 +417,7 @@ UpdateBullets:
         DEX                           ; X points to x position
         INC ax2
         LDA ax2
-        STA allBullets, x
+        STA bullets, x
         STA renderXPos
         JMP .collisionUpdateState2
       
@@ -426,7 +426,7 @@ UpdateBullets:
         LDA ax1
         SEC
         SBC #BULLET_E_WIDTH
-        STA allBullets, x
+        STA bullets, x
         STA renderXPos
         JMP .collisionUpdateState2
         
@@ -439,7 +439,7 @@ UpdateBullets:
         
     .collisionUpdateState:
       LDA #BULLET_S_SMTH_HIT
-      STA allBullets, x
+      STA bullets, x
       LDA #BULLET_SPRITE_E
       STA renderTile
       LDA #BULLET_ATTS_E
@@ -451,7 +451,7 @@ UpdateBullets:
       DEX
       DEX                             ; X points back to the state
       LDA #BULLET_S_NORMAL
-      STA allBullets, x               ; set state to normal in case it's currently just spawned      
+      STA bullets, x                  ; set state to normal in case it's currently just spawned      
       
     .renderBullet:
       STX b                           ; RenderSprite updates X so cache it in b
@@ -468,7 +468,7 @@ UpdateBullets:
      
     .clearBullet:                     ; this expects X to point to the state
       LDA #BULLET_S_NOT_EXIST 
-      STA allBullets, x 
+      STA bullets, x 
         
     .updateLoopCheck:                 ; this expects X to point to the state
       CPX k                           ; compare to the lower bound param
@@ -572,7 +572,7 @@ ScrollBullets:
   LDX #TOTAL_BULLET_LAST
   
   .updateLoop:      
-    LDA allBullets, x
+    LDA bullets, x
     BEQ .updateLoopCheck              ; BULLET_S_NOT_EXIST == 0
     
     INX
@@ -582,26 +582,26 @@ ScrollBullets:
     BEQ .moveLeft
     
     .moveRight:
-      LDA allBullets, x
+      LDA bullets, x
       CLC
       ADC #SCROLL_SPEED
       BCS .offScreen
-      STA allBullets, x
+      STA bullets, x
       JMP .updateLoopCheckDec2
     
     .moveLeft:       
-      LDA allBullets, x
+      LDA bullets, x
       SEC
       SBC #SCROLL_SPEED
       BCC .offScreen
-      STA allBullets, x
+      STA bullets, x
       JMP .updateLoopCheckDec2
     
     .offScreen:                       ; bullet off screen, clear
       DEX
       DEX                             ; X points to state
       LDA #BULLET_S_NOT_EXIST 
-      STA allBullets, x 
+      STA bullets, x 
       JMP .updateLoopCheck
     
     .updateLoopCheckDec2:             ; this expects X to point to the x position

@@ -136,11 +136,11 @@ LoadGame:
   
   .clearMemory:
     .clearBullets:
-      LDX #ENEMIES_BULLET_VAR_SIZE    
+      LDX #TOTAL_BULLET_VAR_SIZE    
       .clearBulletLoop:
         DEX
         LDA #$00
-        STA allBullets
+        STA bullets
         TXA
         BNE .clearBulletLoop
     .clearBulletsDone:      

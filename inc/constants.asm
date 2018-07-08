@@ -130,7 +130,7 @@ PLAYER_SPRITES_COUNT    = $09   ; for iterating all sprites
                         
 PLAYER_CROUCH_OFFSET    = $03   ; offset of sprite 8 when crouching
                         
-PLAYER_BULLET_COOLDOWN  = $01   ; todo - is this even required
+PLAYER_BULLET_COOLDOWN  = $08   ; todo - is this even required
                         
 PLAYER_GUN_OFF_X_R      = $12
 PLAYER_GUN_OFF_X_L      = $FD - $08 ; -08 for rotation
