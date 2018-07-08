@@ -25,11 +25,17 @@ GameFrame:
     STA needPpuRegLocal
      
   .updatePlayer:
-    JSR UpdatePlayer
+    JSR UpdatePlayer                ; move player, spawn player bullets, check for collisions with platforms and threats, render
    
-  .updateBullets:
-    JSR UpdateBullets
+  .updatePlayerBullets:
+    JSR UpdatePlayerBullets         ; move all player bullets, check for collisions with platforms and threats, render
    
+  .updateEnemies:
+    JSR UpdateEnemies               ; move all enemies, spawn enemy bullets, check for collisions with player and player bullets, render
+
+  .updateEnemyBullets:
+    JSR UpdateEnemyBullets          ; move all enemy bullets, check for collisions with platforms and threats, check for collision with player, render
+    
   .setNmiFlags:
     .dma:
       INC needDma                   ; always do DMA     

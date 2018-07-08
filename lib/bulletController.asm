@@ -73,10 +73,10 @@ SpawnPlayerBullet:
     LDX #PLAYER_BULLET_LAST
 
     .findFreeSlotLoop:    
-      LDA playerBullets, x
+      LDA allBullets, x
       BEQ .freeSlotFound              ; BULLET_S_NOT_EXIST == 0
       TXA
-      BEQ .noFreeSlots
+      BEQ .noFreeSlots                ; PLAYER_BULLET_FIRST == 0
       DEX
       DEX
       DEX
@@ -88,20 +88,76 @@ SpawnPlayerBullet:
                                       
   .freeSlotFound:                     ; when we get here X points to the first byte of the free slot
     LDA #BULLET_S_JUST_SPAWNED
-    STA playerBullets, x
+    STA allBullets, x
     INX
     LDA genericDirection
-    STA playerBullets, x
+    STA allBullets, x
     INX
     LDA genericX
-    STA playerBullets, x
+    STA allBullets, x
     INX
     LDA genericY
-    STA playerBullets, x
+    STA allBullets, x
     LDA #PLAYER_BULLET_COOLDOWN
     STA playerBulletCooldown
     RTS
 
+;****************************************************************
+; Name:                                                         ;
+;   UpdatePlayerBullets                                         ;
+;                                                               ;
+; Description:                                                  ;
+;   Updates player bullets                                      ;
+;                                                               ;
+; Used variables:                                               ;
+;   X                                                           ;
+;   Y                                                           ;
+;   b                                                           ;
+;   c                                                           ;
+;   d                                                           ;
+;   i                                                           ;
+;   collision vars                                              ;
+;   generic vars                                                ;
+;****************************************************************
+  
+UpdatePlayerBullets:  
+  LDA #PLAYER_BULLET_LAST
+  STA j                     ; j = last bullet to update
+  LDA #PLAYER_BULLET_FIRST
+  STA k                     ; k = first bullet to update
+  ;LDA #$00                 ; not needed since PLAYER_BULLET_FIRST == 0
+  STA l                     ; l = 0 means we're updating player bullets
+  JSR UpdateBullets
+  RTS
+  
+;****************************************************************
+; Name:                                                         ;
+;   UpdateEnemyBullets                                          ;
+;                                                               ;
+; Description:                                                  ;
+;   Updates enemy bullets                                       ;
+;                                                               ;
+; Used variables:                                               ;
+;   X                                                           ;
+;   Y                                                           ;
+;   b                                                           ;
+;   c                                                           ;
+;   d                                                           ;
+;   i                                                           ;
+;   collision vars                                              ;
+;   generic vars                                                ;
+;****************************************************************
+
+UpdateEnemyBullets:
+  LDA #ENEMY_BULLET_LAST
+  STA j                     ; j = last bullet to update
+  LDA #ENEMY_BULLET_FIRST
+  STA k                     ; k = first bullet to update
+  LDA #$01
+  STA l                     ; l = 1 means we're updating player bullets
+  JSR UpdateBullets
+  RTS
+  
 ;****************************************************************
 ; Name:                                                         ;
 ;   UpdateBullets                                               ;
@@ -110,7 +166,14 @@ SpawnPlayerBullet:
 ;   Updates all bullets                                         ;
 ;    - move                                                     ;
 ;    - platform & threat collision check                        ;
+;    - player collision check (for enemy bullets)               ;
 ;    - render                                                   ;
+;                                                               ;
+; Input variables:                                              ;
+;   j - last bullet to update                                   ;
+;   k - first bullet to update                                  ;
+;   l - set to 0 if player bullets are updated,                 ;
+;       set to 1 if enemy bullets are update                    ;  
 ;                                                               ;
 ; Used variables:                                               ;
 ;   X                                                           ;
@@ -125,7 +188,7 @@ SpawnPlayerBullet:
   
 UpdateBullets:
 
-  LDX #TOTAL_BULLET_LAST
+  LDX j                               ; load last bullet to update
   
   .updateLoop:      
     LDA allBullets, x
@@ -318,7 +381,8 @@ UpdateBullets:
       LDA collision
       BEQ .noCollision
       
-      ; todo: check for collision with player (for enemy bullets) and enemies (for player bullets)
+      ; todo: check for collision with player (for enemy bullets; l param set)
+      ;       the logic for 'clear just spawned bullets on collision' must not apply to player collision bullets
       
     .collision:
       LDA genericFrame
@@ -407,7 +471,7 @@ UpdateBullets:
       STA allBullets, x 
         
     .updateLoopCheck:                 ; this expects X to point to the state
-      TXA
+      CPX k                           ; compare to the lower bound param
       BEQ .updateDone
       DEX
       DEX

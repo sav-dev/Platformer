@@ -5,6 +5,19 @@
 
 ;****************************************************************
 ; Name:                                                         ;
+;   UpdateEnemies                                               ;
+;                                                               ;
+; Description:                                                  ;
+;   todo: update description                                    ;
+;                                                               ;
+; Used variables:                                               ;
+;****************************************************************
+
+UpdateEnemies:
+  RTS
+
+;****************************************************************
+; Name:                                                         ;
 ;   LoadEnemiesInitial                                          ;
 ;                                                               ;
 ; Description:                                                  ;

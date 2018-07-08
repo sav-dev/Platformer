@@ -48,12 +48,7 @@ enemies           .rs 200   ; POI - can be lowered, must be = max enemies x enem
 
  .rsset $0500
 
-playerBullets     .rs 20    ; 4 x PLAYER_BULLET_LIMIT; see constants.asm for format
-enemyBullets      .rs 20    ; 4 x ENEMY_BULLET_LIMIT; see constants.asm for format
-
- .rsset $0500
-
-allBullets        .rs 40    ; redefined for all bullets
+allBullets        .rs 60    ; 4 x PLAYER_BULLET_LIMIT + 4 x ENEMY_BULLET_LIMIT; see constants.asm for format
 
 ;****************************************************************
 ; Other variables                                               ;

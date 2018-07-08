@@ -130,7 +130,7 @@ PLAYER_SPRITES_COUNT    = $09   ; for iterating all sprites
                         
 PLAYER_CROUCH_OFFSET    = $03   ; offset of sprite 8 when crouching
                         
-PLAYER_BULLET_COOLDOWN  = $08   ; todo - is this even required
+PLAYER_BULLET_COOLDOWN  = $01   ; todo - is this even required
                         
 PLAYER_GUN_OFF_X_R      = $12
 PLAYER_GUN_OFF_X_L      = $FD - $08 ; -08 for rotation
@@ -181,17 +181,26 @@ BULLET_HEIGHT           = $04   ; these are for horizontal bullet (5x8), it's 8x
         
 BULLET_SPEED            = $04
 
+; max. number of bullets for player and enemies
 PLAYER_BULLET_LIMIT     = $05
+ENEMIES_BULLET_LIMIT    = $0A
+
+; size in memory for player bullets, enemy bullets, and the two combined.
+; player bullets come before enemy bullets in the combined var.
 PLAYER_BULLET_VAR_SIZE  = PLAYER_BULLET_LIMIT * BULLET_MEMORY_BYTES
-PLAYER_BULLET_LAST      = PLAYER_BULLET_VAR_SIZE - BULLET_MEMORY_BYTES
-
-ENEMIES_BULLET_LIMIT    = $05
 ENEMIES_BULLET_VAR_SIZE = ENEMIES_BULLET_LIMIT * BULLET_MEMORY_BYTES
-ENEMIES_BULLET_LAST     = ENEMIES_BULLET_VAR_SIZE - BULLET_MEMORY_BYTES
-
-TOTAL_BULLET_LIMIT      = PLAYER_BULLET_LIMIT + ENEMIES_BULLET_LIMIT
 TOTAL_BULLET_VAR_SIZE   = PLAYER_BULLET_VAR_SIZE + ENEMIES_BULLET_VAR_SIZE
-TOTAL_BULLET_LAST       = TOTAL_BULLET_VAR_SIZE - BULLET_MEMORY_BYTES
+
+; pointer to the last and first player bullet in the combined var (and also the player var)
+PLAYER_BULLET_LAST      = PLAYER_BULLET_VAR_SIZE - BULLET_MEMORY_BYTES
+PLAYER_BULLET_FIRST     = $00
+
+; pointer to the last and first enemy bullet in the combined var
+ENEMY_BULLET_LAST       = TOTAL_BULLET_VAR_SIZE - BULLET_MEMORY_BYTES
+ENEMY_BULLET_FIRST      = TOTAL_BULLET_VAR_SIZE - ENEMIES_BULLET_VAR_SIZE
+
+; last bullet in the combined var is the last bullet in the enemy var
+TOTAL_BULLET_LAST       = ENEMY_BULLET_LAST
 
 ;****************************************************************
 ; Scroll                                                        ;
