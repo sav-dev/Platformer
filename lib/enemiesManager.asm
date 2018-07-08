@@ -197,7 +197,8 @@ LoadEnemies:
   
     LDY #$01                    ; skip the pointer, Y points to the number of enemies
     LDA [enemiesPointer], y     ; load the number of enemies
-    STA b                       ; store it in b    
+    BEQ .loadEnemiesExit        ; no enemies to load
+    STA b                       ; store the number of enemies in b    
    
   .loadEnemiesLoop:
   
@@ -236,7 +237,8 @@ LoadEnemies:
     DEC b
     BNE .loadEnemiesLoop        ; loop if needed
           
-  RTS
+  .loadEnemiesExit:
+    RTS
   
 ;****************************************************************
 ; Name:                                                         ;
@@ -279,11 +281,12 @@ UnloadEnemies:
       INX                          ; x points back to the screen
     
     .loopCondition:
-      TXA                          ; decrement the pointer
+      TXA                          
       SEC
       SBC #ENEMY_SIZE
-      DEC c
-      BNE .unloadEnemyLoop         ; decrement the loop counter
+      TAX                          ; decrement the pointer 
+      DEC c                        ; decrement the loop counter
+      BNE .unloadEnemyLoop         
   
   RTS
   
