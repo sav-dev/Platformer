@@ -375,9 +375,20 @@ UpdateActiveEnemy:
       STA ay2      
       
     ; calculate the position of the gun.
-    ;   {todo add description}
     ; we expect Y to point to the hitbox height when we get here
+    ;   {todo add description}
+    ;   {todo implement, for now skip everything}
     .gunPosition:
+      INY
+      INY
+      INY
+      INY
+    
+    ; ...
+    .animationConsts:
+    
+    ; ...
+    .renderPointer:
     
   ; ...
   .checkCollisions:
