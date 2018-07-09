@@ -98,7 +98,7 @@ UpdateActiveEnemy:
   ;  - current movement distance
   ;  - current flip (potentially)
   ;  - x position
-  ;  - y poistion
+  ;  - y position
   ;
   ; we need these cached for later:
   ;  - current flip
@@ -230,9 +230,12 @@ UpdateActiveEnemy:
   ; we have to figure out if enemy should even be rendered. 
   .shouldRender:
     
-    ; assume the enemy should be rendered
+    ; assume the enemy should be rendered.
+    ; also, while we're here, assume collision check is needed and enemy may shoot
     LDA #$01
-    STA renderEnemy
+    STA enemyRender
+    STA enemyCollisions
+    STA enemyShooting
     
     ; transpose X. First check if enemy is on the current screen or the next
     LDA enemyScreen
@@ -255,10 +258,10 @@ UpdateActiveEnemy:
       ADC genericX
       BCS .enemyOffScreen
       STA genericX
-      JMP .loadConsts
+      JMP .processConsts
       
       .enemyOffScreen:
-        DEC renderEnemy
+        DEC enemyRender
         JMP .processShooting
     
     ; enemy is on the current screen. Transpose logic:
@@ -274,7 +277,7 @@ UpdateActiveEnemy:
       SEC
       SBC scroll
       STA genericX
-      BCS .loadConsts
+      BCS .processConsts
       INC genericOffScreen
       CLC
       ADC EnemyConsts, y
@@ -282,11 +285,111 @@ UpdateActiveEnemy:
       CMP #SPRITE_DIMENSION
       BCC .enemyOffScreen
 
+  ; time to process the consts (we've only loaded the width above).
+  .processConsts:    
+        
+    ; first we'll use the next 2 bytes to calculate the hitbox X positions
+    ; bytes in order: x off, width. We'll store the result in ax1 and ax2
+    ; if hitbox is offscreen, we'll set enemyCollisions to 0 (currently it's at 1)
+    ; but first do a Y += 1 to skip the width and point at hitbox x off
+    .hitboxX:  
+      INY
+      LDA genericOffScreen
+      BEQ .hitboxXOnScreen
+      
+      ; if off screen:
+      ;   - load generic X
+      ;   - add hitbox X offset, cache the result in ax2 temporarily
+      ;   - if carry not set - cap at 0
+      ;   - Y += 1 to point at hitbox width
+      ;   - load ax2, add hitbox width
+      ;   - if carry not set - don't check collisions
+      .hitboxXOffScreen:
+        LDA genericX
+        CLC
+        ADC EnemyConsts, y
+        STA ax2
+        BCC .capX1
+        STA ax1
+        JMP .hitboxXOffScreenX2
+        
+        .capX1:
+          LDA #$00
+          STA ax1
+      
+        .hitboxXOffScreenX2:
+          INY
+          LDA ax2
+          CLC
+          ADC EnemyConsts, y
+          BCC .noCollisions
+          STA ax2
+          JMP .hitboxY
+      
+        ; we reach this code if we decide hitbox is off screen
+        ; .gunPosition expects Y to point to screen width
+        ; we sometimes have to do an INY
+        .noCollisionsIny:
+          INY
+        .noCollisions:
+          DEC enemyCollisions
+          JMP .gunPosition
+      
+      ; if on screen:
+      ;   - load generic X
+      ;   - add hitbox X offset
+      ;   - if carry set - don't check collisions
+      ;   - Y += 1 to point at hitbox width
+      ;   - add hitbox width
+      ;   - if carry set - cap at screen width 
+      .hitboxXOnScreen:
+        LDA genericX
+        CLC
+        ADC EnemyConsts, y
+        BCS .noCollisionsIny
+        STA ax1
+        INY
+        CLC
+        ADC EnemyConsts, y
+        BCS .capX2
+        STA ax2
+        JMP .hitboxY
+        
+        .capX2:
+          LDA #SCREEN_WIDTH
+          STA ax2
+       
+    ; use the next 2 bytes (y off, height) to calculate hitbox Y positions.
+    ; store the result in ay1 and ay2. no special logic here.
+    ; we expect Y to point to the hitbox width when we get here
+    ; first do a Y += 1 since Y is still pointing at hitbox width
+    .hitboxY:
+      INY
+      LDA genericY
+      CLC
+      ADC EnemyConsts, y
+      STA ay1
+      INY
+      CLC
+      ADC EnemyConsts, y
+      STA ay2      
+      
+    ; calculate the position of the gun.
+    ;   {todo add description}
+    ; we expect Y to point to the hitbox height when we get here
+    .gunPosition:
+    
   ; ...
-  .loadConsts:
+  .checkCollisions:
     
   ; ...
   .processShooting:
+  
+  ; ...
+  .processAnimation:
+  
+  ; ...
+  .render:
    
   RTS
     

@@ -7,8 +7,8 @@
 ;  constant properties for enemies
 ;    width           : 1 byte
 ;    hitbox x off    : 1 byte
-;    hitbox y off    : 1 byte
 ;    hitbox width    : 1 byte (inclusive)
+;    hitbox y off    : 1 byte
 ;    hitbox height   : 1 byte (inclusive)
 ;    gun x off       : 1 byte (0 for non shooting)
 ;    gun y off       : 1 byte (0 for non shooting)
@@ -28,7 +28,7 @@ BeetleConsts:
 .width:
   .byte $20
 .hitboxInfo:
-  .byte $02,$04,$1B,$10
+  .byte $02,$1B,$04,$10
 .gunInfo:
   .byte $1E,$05,$01,$05
 .animationSpeed:
@@ -44,7 +44,7 @@ BugConsts:
 .width:
   .byte $10
 .hitboxInfo:
-  .byte $02,$04,$0B,$0A
+  .byte $02,$0B,$04,$0A
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -60,7 +60,7 @@ EyeConsts:
 .width:
   .byte $10
 .hitboxInfo:
-  .byte $03,$02,$09,$0B
+  .byte $03,$09,$02,$0B
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -76,7 +76,7 @@ SpikesConsts:
 .width:
   .byte $10
 .hitboxInfo:
-  .byte $02,$02,$0A,$0A
+  .byte $02,$0A,$02,$0A
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -92,7 +92,7 @@ TurretVConsts:
 .width:
   .byte $10
 .hitboxInfo:
-  .byte $01,$01,$0D,$0D
+  .byte $01,$0D,$01,$0D
 .gunInfo:
   .byte $0C,$0F,$0C,$00
 .animationSpeed:
@@ -108,7 +108,7 @@ TurretHConsts:
 .width:
   .byte $10
 .hitboxInfo:
-  .byte $01,$01,$0D,$0D
+  .byte $01,$0D,$01,$0D
 .gunInfo:
   .byte $0F,$03,$00,$03
 .animationSpeed:
