@@ -107,9 +107,11 @@ UpdateActiveEnemy:
   .moveEnemy:
     
     ; set DX and DY to 0 for starters
+    ; also while we're here, set genericOffScreen to 0
     LDA #$00
     STA genericDX
     STA genericDY
+    STA genericOffScreen
     
     ; load and cache the speed
     LDA enemies, x
@@ -218,10 +220,65 @@ UpdateActiveEnemy:
       STA genericY
       INX      
       
-  ; ...
-  .checkCollisions:
-    ; ...
+  ; once we get here, movement has been updated, and the following are set:
+  ;   - X set to remaining life
+  ;   - Y set to the const data pointer
+  ;   - genericDirection set to current flip
+  ;   - genericX and genericY set to the current position
+  ;   - genericOffScreen is set to 0
+  ;
+  ; we have to figure out if enemy is on-screen.
+  ; let's assume it is and we can change it later  
+  ;
+  ; then transpose X
+  .transposeX:
     
+    LDA #$01
+    STA enemyOnScreen
+    
+    LDA enemyScreen
+    CMP scroll + $01
+    BEQ .currentScreen
+    
+    ; enemy is on the next  screen. Transpose logic:
+    ;   - x' = x - low byte of scroll + 256
+    ;   - first calculate A = 255 - scroll + 1. If this overflows,
+    ;     it means scroll = 0, i.e. ememy is off screen
+    ;   - then calculate A = A + x. Again, overflow means enemy off screen
+    ;   - if enemy is off screen, jump to processShooting - we can skip everything until then
+    .nextScreen:
+      LDA #SCREEN_WIDTH
+      SEC
+      SBC scroll
+      CLC
+      ADC #$01
+      BCS .enemyOffScreen
+      ADC genericX
+      BCS .enemyOffScreen
+      STA genericX
+      JMP .loadConsts
+      
+      .enemyOffScreen:
+        DEC enemyOnScreen
+        JMP .processShooting
+    
+    ; enemy is on the current screen. Transpose logic:
+    ;   - x' = x - low byte of scroll
+    ;   - if x' < 0 (carry cleared after the subtraction), set genericOffScreen to 1
+    .currentScreen:
+      LDA genericX
+      SEC
+      SBC scroll
+      STA genericX
+      BCS .loadConsts
+      INC genericOffScreen
+      
+  ; ...
+  .loadConsts:
+    
+  ; ...
+  .processShooting:
+   
   RTS
     
 ;****************************************************************

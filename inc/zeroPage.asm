@@ -122,6 +122,7 @@ xPointerCache           .rs 1  ; for caching the initial value of the x register
 enemyScreen             .rs 1  ; screen the enemy is on
 enemySpeed              .rs 1  ; enemy speed
 enemyMaxDistance        .rs 1  ; max distance
+enemyOnScreen           .rs 1  ; set to true if enemy is on-screen
 
 ;****************************************************************
 ; Collision checks                                              ;

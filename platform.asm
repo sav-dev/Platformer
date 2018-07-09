@@ -26,6 +26,9 @@
 
   .bank 2
   .org $C000 
+
+Bank2Start:
+  
 RESET:
   SEI               ; disable IRQs
   CLD               ; disable decimal mode
@@ -386,8 +389,6 @@ RenderSprite:
 ; Modules import                                                ;
 ;****************************************************************
 
-Bank2Start:
-
   .include "lib\backgroundManager.asm"
   .include "lib\levelManager.asm"
   .include "lib\controllerManager.asm"
@@ -404,16 +405,26 @@ Bank2End:
   
   .bank 3
   .org $E000
+  
+Bank3Start:
  
   .include "data\levels.asm"
   .include "data\enemies.asm"
  
+Bank3End:
+ 
   .bank 0
   .org $8000
+    
+Bank0Start:
+Bank0End:
     
   .bank 1
   .org $A000
 
+Bank1Start:
+Bank1End:
+  
 ;****************************************************************
 ; Vectors                                                       ;
 ;****************************************************************
