@@ -68,6 +68,8 @@
 ;   depends_on_enemy_in_memory_format                           ;
 ;****************************************************************
  
+; todo add more global labels to make debugging easier
+ 
 UpdateActiveEnemy:
 
   ; at this point, X points to the state.
@@ -322,16 +324,19 @@ UpdateActiveEnemy:
           LDA ax2
           CLC
           ADC EnemyConsts, y
-          BCC .noCollisions
+          BCC .noCollisions     ; BUG - what if ax1 >= 0
           STA ax2
           JMP .hitboxY
       
         ; we reach this code if we decide hitbox is off screen
         ; .gunPosition expects Y to point to screen width
-        ; we sometimes have to do an INY
+        ; we sometimes have to do an INY to skip to hitbox width,
+        ; and we always have to do two INYs to skip hitbox y vars
         .noCollisionsIny:
           INY
         .noCollisions:
+          INY
+          INY
           DEC enemyCollisions
           JMP .gunPosition
       
