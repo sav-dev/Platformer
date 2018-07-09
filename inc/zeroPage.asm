@@ -119,7 +119,6 @@ genericDY               .rs 1
 
 ; POI - possible optimization - to save zero page bytes, the vars below could be replaced with the use of pseudo-registers
 xPointerCache           .rs 1  ; for caching the initial value of the x register
-enemyDataPointer        .rs 1  ; pointer in the EnemyConsts array for current enemy
 enemyScreen             .rs 1  ; screen the enemy is on
 enemySpeed              .rs 1  ; enemy speed
 enemyMaxDistance        .rs 1  ; max distance

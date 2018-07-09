@@ -53,7 +53,16 @@
 ;   xPointerCache can also be used to go back to the top        ;
 ;                                                               ;
 ; Used variables:                                               ;
-;   {todo}                                                      ;
+;   X                                                           ;
+;   Y                                                           ;
+;   enemyScreen                                                 ;
+;   enemySpeed                                                  ;
+;   enemyMaxDistance                                            ;
+;   genericDirection                                            ;
+;   genericX                                                    ;
+;   genericY                                                    ;
+;   genericDX                                                   ;
+;   genericDY                                                   ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_enemy_in_memory_format                           ;
@@ -62,7 +71,7 @@
 UpdateActiveEnemy:
 
   ; at this point, X points to the state.
-  ; cache the const data pointer and the screen the enemy is on
+  ; cache the const data pointer in Y and the screen the enemy is on in enemyScreen
   ; first do X += 2 to skip state and id. we'll point to the const data.
   ; then do X += 1 to point to the screen.
   ; then to X += 1 to point to the next byte after the screen (speed).
@@ -70,7 +79,7 @@ UpdateActiveEnemy:
     INX
     INX
     LDA enemies, x
-    STA enemyDataPointer
+    TAY
     INX
     LDA enemies, x
     STA enemyScreen
@@ -122,11 +131,11 @@ UpdateActiveEnemy:
     ; in that case, skip the updates. otherwise, update movement left
     INX
     LDA enemies, x
-    BEQ .applyMovement
+    BEQ .calculateDiffs
     SEC
     SBC enemySpeed
     STA enemies, x
-    BNE .applyMovement
+    BNE .calculateDiffs
     
     ; if we get here, it means an extreme has been met.
     ; we must:
@@ -144,11 +153,74 @@ UpdateActiveEnemy:
       INX
     
     ; once we get here, x is still pointing to movement left, but everything has been updated.
-    .applyMovement:    
-    
+    ; first do a X += 1 to point at movement direction, and load it.
+    ; if it's 0 (ENEMY_MOVE_NONE), skip this section.
+    ; otherwise, based on the direction and flip (cached in genericDirection), set DX and DY
+    .calculateDiffs:
+      INX
+      LDA enemies, x
+      BEQ .applyMovement
+      CMP #ENEMY_MOVE_HORIZONTAL
+      BEQ .horizontalMovement
+      
+      ; in the verticalMovement and horizontalMovement sections we:
+      ;   - check genericDirection
+      ;   - if it's 0 (no flip) we set DX/DY to enemySpeed
+      ;   - if it's 1 (flip) we set DX/DY to -enemySpeed
+      .verticalMovement:
+        LDA genericDirection
+        BEQ .verticalNoFlip
+      
+        .verticalFlip:
+          LDA #$00
+          SEC
+          SBC enemySpeed
+          STA genericDY
+          JMP .applyMovement
         
+        .verticalNoFlip:
+          LDA enemySpeed
+          STA genericDY
+          JMP .applyMovement
+      
+      .horizontalMovement:
+        LDA genericDirection
+        BEQ .horizontalNoFlip
+      
+        .horizontalFlip:
+          LDA #$00
+          SEC
+          SBC enemySpeed
+          STA genericDX
+          JMP .applyMovement
+        
+        .horizontalNoFlip:
+          LDA enemySpeed
+          STA genericDX
+          JMP .applyMovement    
+          
+    ; once we get here, x is still pointing to movement direction, and diffs are set.
+    ; do X += 1 and apply DX, caching the result in genericX
+    ; then do X += 1 and apply DY, caching the result in genericY
+    ; finally do a X += 1 to point the register to the next byte
+    .applyMovement:
+      INX
+      LDA enemies, x
+      CLC
+      ADC genericDX
+      STA enemies, x
+      STA genericX
+      INX
+      LDA enemies, x
+      CLC
+      ADC genericDY
+      STA enemies, x
+      STA genericY
+      INX      
+      
+  ; ...
   .checkCollisions:
-    
+    ; ...
     
   RTS
     
@@ -240,7 +312,7 @@ UpdateEnemies:
 ;   genericPointer - set to the start of the enemies data       ;
 ;                                                               ;
 ; Output variables:                                             ;
-;   enemiesPointer - set to the enemis data for screen 1 (!)    ;
+;   enemiesPointer - set to the enemies data for screen 1 (!)   ;
 ;   genericPointer - set to the first byte after enemies data   ;
 ;                                                               ;
 ; Used variables:                                               ;
