@@ -383,12 +383,27 @@ UpdateActiveEnemy:
       INY
       INY
       INY
+      INY
     
-    ; ...
+    ; cache animation consts.
+    ; this expects Y to point to the animation speed
+    ; two bytes are: animation speed and number of frames
     .animationConsts:
-    
-    ; ...
+      LDA EnemyConsts, y
+      STA enemyAnimationSpeed
+      INY
+      LDA EnemyConsts, y
+      STA enemyFrameCount
+      INY
+            
+    ; cache the render pointer in generic pointer
+    ; when we get here, Y points to the pointer already
     .renderPointer:
+      LDA EnemyConsts, y
+      STA genericPointer
+      INY
+      LDA EnemyConsts, y
+      STA genericPointer + $01
     
   ; ...
   .checkCollisions:
@@ -401,6 +416,9 @@ UpdateActiveEnemy:
   
   ; ...
   .render:
+    LDA #$01
+    STA genericFrame
+    JSR RenderEnemy
    
   RTS
     
