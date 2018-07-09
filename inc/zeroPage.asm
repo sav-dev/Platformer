@@ -80,9 +80,6 @@ controllerPressed       .rs 1  ; buttons that have been pressed since the last f
 playerX                 .rs 1  ; player position (on screen: bottom left)
 playerY                 .rs 1
 
-playerDX                .rs 1  ; how much to move
-playerDY                .rs 1
-
 playerPlatformBoxX1     .rs 1  ; can be removed for a slight performance decrease (4 bytes freed though)
 playerPlatformBoxX2     .rs 1
 playerPlatformBoxY1     .rs 1
@@ -103,7 +100,7 @@ playerAnimationFrame    .rs 1  ; player animation frame
 playerJump              .rs 1  ; 0 means not jumping, otherwise contains the jump counter
 
 ;****************************************************************
-; Generic input vars                                            ;
+; Generic vars                                                  ;
 ;****************************************************************
 
 genericX                .rs 1  ; generic position
@@ -111,6 +108,21 @@ genericY                .rs 1
 genericFrame            .rs 1  ; generic frame count
 genericDirection        .rs 1  ; generic direction
 genericOffScreen        .rs 1  ; 1 means object is off screen (so x = $FE means render on the left side of the screen)
+
+genericDX               .rs 1  ; how much to move, used for player and enemies
+genericDY               .rs 1
+
+
+;****************************************************************
+; Enemy processing                                              ;
+;****************************************************************
+
+; POI - possible optimization - to save zero page bytes, the vars below could be replaced with the use of pseudo-registers
+xPointerCache           .rs 1  ; for caching the initial value of the x register
+enemyDataPointer        .rs 1  ; pointer in the EnemyConsts array for current enemy
+enemyScreen             .rs 1  ; screen the enemy is on
+enemySpeed              .rs 1  ; enemy speed
+enemyMaxDistance        .rs 1  ; max distance
 
 ;****************************************************************
 ; Collision checks                                              ;

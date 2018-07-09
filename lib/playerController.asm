@@ -67,7 +67,6 @@ UpdatePlayerNotVisible:
 ;   Renders the player.                                         ;
 ;   Sets:                                                       ;
 ;     - playerX and playerY (updated position)                  ;
-;     - playerDX and  playerDY (how much player has moved)      ;
 ;     - updates scroll if needed                                ;
 ;     - playerPlatformBox, playerCollisionBox                   ;
 ;     - playerGunX and playerGunY                               ;
@@ -99,7 +98,7 @@ UpdatePlayerNormal:
                                       
       .applyGravity:                  
         LDA #GRAVITY                    
-        STA playerDY                  ; if not mid-jump, apply gravity
+        STA genericDY                 ; if not mid-jump, apply gravity
         JMP .checkVerticalCollision        
                                       
       .processJump:                   
@@ -107,10 +106,10 @@ UpdatePlayerNormal:
         LDX playerJump                
         LDA jumpLookupTable, x        
         BEQ .playerMidAir             ; no vertical movement, player is suspended mid air, no more checks required
-        STA playerDY                  ; load the jump value        
+        STA genericDY                 ; load the jump value        
                                     
     .checkVerticalCollision:          ; DY calculated, now check for a vertical collision
-      JSR CheckCollisionVertical      ; this will update playerDY and set collision and b (b = 1 means was going down)
+      JSR CheckCollisionVertical      ; this will update genericDY and set collision and b (b = 1 means was going down)
       JSR MovePlayerVertically        ; apply movement
       LDA collision 
       BNE .processCollision           ; process collision
@@ -176,7 +175,7 @@ UpdatePlayerNormal:
       CMP #PLAYER_CROUCH
       BEQ .notMovingHorizontally      ; if player is crouching horizontal movement not possible      
       LDA #PLAYER_SPEED_NEGATIVE
-      STA playerDX                    ; set DX
+      STA genericDX                   ; set DX
       JMP .movingHorizontally         ; player will move vertically
     .checkLeftDone:
     
@@ -190,7 +189,7 @@ UpdatePlayerNormal:
       CMP #PLAYER_CROUCH
       BEQ .notMovingHorizontally      ; if player is crouching horizontal movement not possible      
       LDA #PLAYER_SPEED_POSITIVE
-      STA playerDX                    ; set DX
+      STA genericDX                   ; set DX
       JMP .movingHorizontally         ; player will move vertically
     .checkRightDone:
     
@@ -232,7 +231,7 @@ UpdatePlayerNormal:
       JSR CheckCollisionHorizontal
       
     .applyHorizontalMovement:
-      LDA playerDX   
+      LDA genericDX   
       BEQ .horizontalMovementDone     ; no horizontal movement
                                        
       LDA scroll + $01                ; load scroll  high byte
@@ -256,18 +255,18 @@ UpdatePlayerNormal:
         LDA playerX
         CMP #PLAYER_SCREEN_CENTER
         BNE .moveHorizontally         ; player not centered, meaning player is in the left part, move
-        LDA playerDX                  
+        LDA genericDX                  
         CMP #$80                      
-        BCC .scrollRight              ; carry cleared, playerDX < #$80 -> playerDX > 0 -> scroll right
+        BCC .scrollRight              ; carry cleared, genericDX < #$80 -> genericDX > 0 -> scroll right
         JMP .moveHorizontally         ; moving left
                                       
       .rightMost:                     
         LDA playerX
         CMP #PLAYER_SCREEN_CENTER
         BNE .moveHorizontally         ; player not centered, meaning player is in the right part, move      
-        LDA playerDX                  
+        LDA genericDX                  
         CMP #$80                      
-        BCS .scrollLeft               ; carry set, playerDX >= #$80 -> playerDX < 0 -> scroll left
+        BCS .scrollLeft               ; carry set, genericDX >= #$80 -> genericDX < 0 -> scroll left
         JMP .moveHorizontally         ; moving right
                                       
       .moveHorizontally:              
@@ -275,9 +274,9 @@ UpdatePlayerNormal:
         JMP .horizontalMovementDone
                                       
       .scrollHorizontally:            ; scrolling assumes horizontal speed will always be 2
-        LDA playerDX                  
+        LDA genericDX                  
         CMP #$80                      
-        BCC .scrollRight              ; carry cleared, playerDX < #$80 -> playerDX > 0 -> scroll right
+        BCC .scrollRight              ; carry cleared, genericDX < #$80 -> genericDX > 0 -> scroll right
                                        
         .scrollLeft:                   
           JSR DecrementScroll          
@@ -341,7 +340,7 @@ UpdatePlayerFalling:
 
   .applyGravity:
     LDA #GRAVITY
-    STA playerDY
+    STA genericDY
     JSR MovePlayerVertically
     
   .checkPlayerY:
@@ -429,7 +428,7 @@ ExplodePlayer:
 ;   CheckCollisionVertical                                      ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Check for vertical collisions, updates playerDY             ;
+;   Check for vertical collisions, updates genericDY            ;
 ;   collision = 1 set on output if collision detected           ;
 ;   b = 1 set on output if was going down                       ;
 ;                                                               ;
@@ -451,10 +450,10 @@ CheckCollisionVertical:
   STA b                               ; b = 0 means moving up, b <> 0 means moving down
                                       
   .directionCheck:                    
-    LDA playerDY                      
+    LDA genericDY                      
     ;BEQ .notMoving                   ; not moving at all - commented out, this will never be called with DY == 0
     CMP #$80                          
-    BCS .directionCheckDone           ; carry set, playerDY >= #$80 -> playerDY < 0 -> moving up, b stays as 0
+    BCS .directionCheckDone           ; carry set, genericDY >= #$80 -> genericDY < 0 -> moving up, b stays as 0
     INC b                             ; moving down
     JMP .directionCheckDone    
     .notMoving:
@@ -471,16 +470,16 @@ CheckCollisionVertical:
     .checkTopBound:                   
       LDA playerY                     
       CLC                             
-      ADC playerDY                    
-      BCC .offTop                     ; carry clear means playerY + playerDY < 0 - cap at Y_MIN 
+      ADC genericDY                    
+      BCC .offTop                     ; carry clear means playerY + genericDY < 0 - cap at Y_MIN 
       CMP #PLAYER_Y_MIN               
-      BCC .offTop                     ; carry clear means playerY + playerDY < Y_MIN - cap at Y_MIN
+      BCC .offTop                     ; carry clear means playerY + genericDY < Y_MIN - cap at Y_MIN
       JMP .checkBoundsDone            
       .offTop:                        
         LDA #PLAYER_Y_MIN             
         SEC                           ; set DY to Y_MIN - playerY, i.e. stop at min
         SBC playerY                   
-        STA playerDY                  
+        STA genericDY                  
         INC collision                 ; collision with screen edge
         RTS                           ; can just exit since there is no possibility of collision
     .checkTopBoundDone:               
@@ -488,14 +487,14 @@ CheckCollisionVertical:
     .checkBottomBound:                 
       LDA playerY                     
       CLC                             
-      ADC playerDY                    
+      ADC genericDY                    
       CMP #PLAYER_Y_MAX               
-      BCC .checkBottomBoundDone       ; carry clear means playerY + playerDY < Y_MAX - continue
+      BCC .checkBottomBoundDone       ; carry clear means playerY + genericDY < Y_MAX - continue
       .offBottom:                     
         LDA #PLAYER_Y_MAX             
         SEC                           ; set DY to Y_MAX - playerY, i.e. stop at max
         SBC playerY                   
-        STA playerDY                  
+        STA genericDY                  
         INC collision                 ; collision with screen edge
         RTS                           ; can just exit since there is no possibility of collision
     .checkBottomBoundDone:   
@@ -510,11 +509,11 @@ CheckCollisionVertical:
     STA bx2    
     LDA playerPlatformBoxY1
     CLC
-    ADC playerDY
+    ADC genericDY
     STA by1
     LDA playerPlatformBoxY2
     CLC
-    ADC playerDY
+    ADC genericDY
     STA by2  
   .setBoxDone:
 
@@ -557,8 +556,8 @@ CheckCollisionVertical:
       LDA ay2
       SEC
       SBC playerPlatformBoxY1
-      STA playerDY
-      INC playerDY
+      STA genericDY
+      INC genericDY
       RTS
       
     .adjustMovingDown:
@@ -566,8 +565,8 @@ CheckCollisionVertical:
       LDA ay1
       SEC
       SBC playerPlatformBoxY2
-      STA playerDY
-      DEC playerDY
+      STA genericDY
+      DEC genericDY
       RTS
 
 ;****************************************************************
@@ -575,7 +574,7 @@ CheckCollisionVertical:
 ;   CheckCollisionHorizontal                                    ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Check for horizontal collisions, updates playerDX           ;
+;   Check for horizontal collisions, updates genericDX          ;
 ;   collision = 1 set on output if collision detected           ;
 ;   b = 1 set on output if was going right                      ;
 ;                                                               ;
@@ -597,10 +596,10 @@ CheckCollisionHorizontal:
   STA b                             ; b = 0 means moving left, b <> 0 means moving right
  
   .directionCheck: 
-    LDA playerDX
+    LDA genericDX
     ;BEQ .notMoving                 ; not moving at all - commented out, this will never be called with DX == 0
     CMP #$80
-    BCS .directionCheckDone         ; carry set, playerDX >= #$80 -> playerDX < 0 -> moving left, b stays as 0
+    BCS .directionCheckDone         ; carry set, genericDX >= #$80 -> genericDX < 0 -> moving left, b stays as 0
     INC b                           ; moving down
     JMP .directionCheckDone    
     .notMoving:
@@ -617,31 +616,31 @@ CheckCollisionHorizontal:
     .checkLeftBound:
       LDA playerX
       CLC
-      ADC playerDX
-      BCC .offLeft                  ; carry clear means playerX + playerDX < 0 - cap at X_MIN 
+      ADC genericDX
+      BCC .offLeft                  ; carry clear means playerX + genericDX < 0 - cap at X_MIN 
       CMP #PLAYER_X_MIN
-      BCC .offLeft                  ; carry clear means playerX + playerDX < X_MIN - cap at X_MIN
+      BCC .offLeft                  ; carry clear means playerX + genericDX < X_MIN - cap at X_MIN
       JMP .checkBoundsDone
       .offLeft:
         LDA #PLAYER_X_MIN
         SEC                         ; set DX to X_MIN - playerX, i.e. stop at min
         SBC playerX
-        STA playerDX       
+        STA genericDX       
         RTS                         ; can just exit since there is no possibility of collision
     .checkLeftBoundDone:            
          
     .checkRightBound:               
       LDA playerX
       CLC                           
-      ADC playerDX
-      BCS .offRight                 ; carry set means playerX + playerDX > 255 - cap at X_MAX
+      ADC genericDX
+      BCS .offRight                 ; carry set means playerX + genericDX > 255 - cap at X_MAX
       CMP #PLAYER_X_MAX
-      BCC .checkRightBoundDone      ; carry clear means playerX + playerDX < X_MAX - continue
+      BCC .checkRightBoundDone      ; carry clear means playerX + genericDX < X_MAX - continue
       .offRight:
         LDA #PLAYER_X_MAX
         SEC                         ; set DX to X_MAX - playerX, i.e. stop at max
         SBC playerX
-        STA playerDX
+        STA genericDX
         RTS                         ; can just exit since there is no possibility of collision
     .checkRightBoundDone:   
   .checkBoundsDone:
@@ -655,11 +654,11 @@ CheckCollisionHorizontal:
     STA by2    
     LDA playerPlatformBoxX1
     CLC
-    ADC playerDX
+    ADC genericDX
     STA bx1
     LDA playerPlatformBoxX2
     CLC
-    ADC playerDX
+    ADC genericDX
     STA bx2  
   .setBoxDone:
 
@@ -696,7 +695,7 @@ CheckCollisionHorizontal:
     
     ; just zero out the speed, it can stay like that assuming horizontal speed will always be 2
     LDA #$00
-    STA playerDX
+    STA genericDX
     RTS
     
     ;LDA b
@@ -707,8 +706,8 @@ CheckCollisionHorizontal:
     ;  LDA ax2
     ;  SEC
     ;  SBC playerPlatformBoxX1
-    ;  STA playerDX
-    ;  INC playerDX
+    ;  STA genericDX
+    ;  INC genericDX
     ;  RTS
     ;  
     ;.adjustMovingRight:
@@ -716,8 +715,8 @@ CheckCollisionHorizontal:
     ;  LDA ax1
     ;  SEC
     ;  SBC playerPlatformBoxX2
-    ;  STA playerDX
-    ;  DEC playerDX
+    ;  STA genericDX
+    ;  DEC genericDX
     ;  RTS
     
 ;****************************************************************
@@ -780,7 +779,7 @@ CheckForThreatCollisions:
 ;   MovePlayerHorizontally                                      ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Moves the player horizontally based on playerDX             ;
+;   Moves the player horizontally based on genericDX            ;
 ;   Updates position, boxes etc.                                ;
 ;                                                               ;
 ; Used variables:                                               ;
@@ -791,7 +790,7 @@ CheckForThreatCollisions:
 MovePlayerHorizontally:
   
   .applyMovement:
-    LDA playerDX
+    LDA genericDX
     ;BEQ .noMovement            no need for this check currently
     CLC
     ADC playerX
@@ -821,7 +820,7 @@ MovePlayerHorizontally:
 ;   MovePlayerVertically                                        ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Moves the player vertically based on playerDY               ;
+;   Moves the player vertically based on genericDY              ;
 ;   Updates position, boxes etc.                                ;
 ;                                                               ;
 ; Used variables:                                               ;
@@ -832,7 +831,7 @@ MovePlayerHorizontally:
 MovePlayerVertically:
   
   .applyMovement:
-    LDA playerDY
+    LDA genericDY
     ;BEQ .noMovement            no need for this check currently
     CLC   
     ADC playerY    
@@ -904,13 +903,13 @@ LoadPlayer:
 
   .setBoxes:
     LDA #PLAYER_SPEED_POSITIVE    ; move player by +2 and -2 to set the boxes
-    STA playerDX
-    STA playerDY
+    STA genericDX
+    STA genericDY
     JSR MovePlayerHorizontally
     JSR MovePlayerVertically
     LDA #PLAYER_SPEED_NEGATIVE
-    STA playerDX
-    STA playerDY
+    STA genericDX
+    STA genericDY
     JSR MovePlayerHorizontally
     JSR MovePlayerVertically    
   

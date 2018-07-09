@@ -3,6 +3,175 @@
 ; Responsible for rendering and updating enemies                ;
 ;****************************************************************
 
+;
+; - enemies in level data the following format:
+;   - pointer to next screen (from here): (n x 14) + 3 (1 byte)
+;   - number of enemies (1 byte)
+;   - n times the enemy data (14 bytes)
+;        - id (1 byte)
+;        - slot to put enemy in (1 byte)
+;        - pointer to const. data (1 byte)
+;        - screen the enemy is on (1 byte)
+;        - movement speed (1 byte)
+;        - max movement distance (1 byte)
+;        - initial flip (1 byte)
+;        - initial movement left (1 byte)
+;        - movement direction (1 byte)
+;        - x position (1 byte)
+;        - y position (1 byte)            
+;        - initial life (1 byte)
+;        - shooting frequency (1 byte)
+;        - shooting frequency initial (1 byte)
+;   - pointer to the previous screen (from here): (n x 14) + 2 (1 byte)
+;
+; - enemies in memory in the following format (16 bytes):
+;    - state (1 byte)
+;    - id (1 byte)
+;    - pointer to const. data (1 byte)
+;    - screen the enemy is on (1 byte)
+;    - movement speed (1 byte)
+;    - max movement distance (1 byte)
+;    - current flip (1 byte)
+;    - movement left (1 byte)
+;    - movement direction (1 byte)
+;    - x position (1 byte)
+;    - y position (1 byte)
+;    - remaining life (1 byte)  
+;    - shooting frequency (1 byte)
+;    - shooting timer (1 byte)
+;    - animation timer (1 byte)
+;    - animation frame (1 byte)
+;
+
+;****************************************************************
+; Name:                                                         ;
+;   UpdateActiveEnemy                                           ;
+;                                                               ;
+; Description:                                                  ;
+;   Updates an active enemy pointed to by the X register        :
+;   X register points to the state on input                     ;
+;   xPointerCache can also be used to go back to the top        ;
+;                                                               ;
+; Used variables:                                               ;
+;   {todo}                                                      ;
+;                                                               ;
+; Remarks:                                                      ;
+;   depends_on_enemy_in_memory_format                           ;
+;****************************************************************
+ 
+UpdateActiveEnemy:
+
+  ; at this point, X points to the state.
+  ; cache the const data pointer and the screen the enemy is on
+  ; first do X += 2 to skip state and id. we'll point to the const data.
+  ; then do X += 1 to point to the screen.
+  ; then to X += 1 to point to the next byte after the screen (speed).
+  .cachePointerAndScreen:
+    INX
+    INX
+    LDA enemies, x
+    STA enemyDataPointer
+    INX
+    LDA enemies, x
+    STA enemyScreen
+    INX
+    
+  ; the next 7 bytes are:
+  ;  - movement speed (currently pointed to by X)
+  ;  - max movement distance
+  ;  - current flip
+  ;  - movement left
+  ;  - movement direction
+  ;  - x position
+  ;  - y position
+  ;
+  ; use them to move the enemy, updating:
+  ;  - current movement distance
+  ;  - current flip (potentially)
+  ;  - x position
+  ;  - y poistion
+  ;
+  ; we need these cached for later:
+  ;  - current flip
+  ;  - x position
+  ;  - y position
+  .moveEnemy:
+    
+    ; set DX and DY to 0 for starters
+    LDA #$00
+    STA genericDX
+    STA genericDY
+    
+    ; load and cache the speed
+    LDA enemies, x
+    STA enemySpeed
+        
+    ; do X += 1 to point to the max distance, then load it and cache it
+    INX
+    LDA enemies, x
+    STA enemyMaxDistance
+      
+    ; do X += 1 to point to the current flip, then cache it in genericDirection
+    INX
+    LDA enemies, x
+    STA genericDirection
+    
+    ; do X += 1 to point to movement left, then load it
+    ; movementLeft == 0 means the enemy is static
+    ; (it will never be 0 for moving enemies; in this case speed must be 0 and movement type must be none).
+    ; in that case, skip the updates. otherwise, update movement left
+    INX
+    LDA enemies, x
+    BEQ .applyMovement
+    SEC
+    SBC enemySpeed
+    STA enemies, x
+    BNE .applyMovement
+    
+    ; if we get here, it means an extreme has been met.
+    ; we must:
+    ;   - set movement left to max distance
+    ;   - X -= 1 to point to flip, update it, and re-cache
+    ;   - x += 1 to point back to movement left
+    .extremeMet:
+      LDA enemyMaxDistance
+      STA enemies, x
+      DEX
+      LDA enemies, x
+      EOR %00000001
+      STA enemies, x
+      STA genericDirection
+      INX
+    
+    ; once we get here, x is still pointing to movement left, but everything has been updated.
+    .applyMovement:    
+    
+        
+  .checkCollisions:
+    
+    
+  RTS
+    
+;****************************************************************
+; Name:                                                         ;
+;   UpdateExplodingEnemy                                        ;
+;                                                               ;
+; Description:                                                  ;
+;   Updates an exploding enemy pointed to by the X register     :
+;   X register points to the state on input                     ;
+;   xPointerCache can also be used to go back to the top        ;
+;                                                               ;
+; Used variables:                                               ;
+;   {todo}                                                      ;
+;                                                               ;
+; Remarks:                                                      ;
+;   depends_on_enemy_in_memory_format                           ;
+;****************************************************************
+    
+UpdateExplodingEnemy:
+  ; todo
+  RTS
+
 ;****************************************************************
 ; Name:                                                         ;
 ;   UpdateEnemies                                               ;
@@ -15,14 +184,51 @@
 ;     - render                                                  ;
 ;                                                               ;
 ; Used variables:                                               ;
+;   {todo}                                                      ;
 ;****************************************************************
 
 UpdateEnemies:
 
-  ; todo: update all enemies !
+  ; main loop - loop all enemies going down
+  ; load the place pointing to after the last enemy, store it in xPointerCache
+  ; the loop expects value in the A register to point to the enemy after the one we want to process
+  LDA #AFTER_LAST_ENEMY
+  .updateEnemyLoop:         
 
-  RTS
-
+    ; move A to point to the next enemy we want to process. Cache that value in xPointerCache and store it in X
+    SEC
+    SBC #ENEMY_SIZE
+    STA xPointerCache
+    TAX                  
+  
+    ; X now points to the state. Check it:
+    ;   0 == ENEMY_STATE_EMPTY
+    ;   2 == ENEMY_EXPLODING
+    ; else: 1 == ENEMY_STATE_ACTIVE
+    LDA enemies, x       
+    BEQ .enemyEmpty
+    CMP #ENEMY_STATE_EXPLODING
+    BEQ .enemyExploding
+    
+    ; active enemy - call into a subroutine, jump to the loop condition
+    .enemyActive:
+      JSR UpdateActiveEnemy
+      JMP .updateEnemyLoopCondition
+      
+    ; enemy exploding - call into a subroutine, let flow to the empty clause
+    .enemyExploding:
+      JSR UpdateExplodingEnemy
+      
+    ; enemy empty - do nothing, let flow into the loop condition
+    .enemyEmpty:      
+    
+    ; loop condition - if we've not just processed the last enemy, loop.   
+    ; otherwise exit
+    .updateEnemyLoopCondition:
+      LDA xPointerCache
+      BNE .updateEnemyLoop
+      RTS
+    
 ;****************************************************************
 ; Name:                                                         ;
 ;   LoadEnemiesInitial                                          ;
@@ -174,44 +380,6 @@ LoadEnemiesBack:
 ;****************************************************************
 
 LoadEnemies:
-
-  ; - enemies in the following format:
-  ;   - pointer to next screen (from here): (n x 14) + 3 (1 byte)
-  ;   - number of enemies (1 byte)
-  ;   - n times the enemy data (14 bytes)
-  ;        - id (1 byte)
-  ;        - slot to put enemy in (1 byte)
-  ;        - pointer to const. data (1 byte)
-  ;        - screen the enemy is on (1 byte)
-  ;        - movement speed (1 byte)
-  ;        - max movement distance (1 byte)
-  ;        - movement direction (1 byte)
-  ;        - initial movement distance (1 byte)
-  ;        - initial flip (1 byte)
-  ;        - x position (1 byte)
-  ;        - y position (1 byte)            
-  ;        - initial life (1 byte)
-  ;        - shooting frequency (1 byte)
-  ;        - shooting frequency initial (1 byte)
-  ;   - pointer to the previous screen (from here): (n x 14) + 2 (1 byte)
-
-  ; - enemies in memory in the following format (16 bytes):
-  ;    - state (1 byte)
-  ;    - id (1 byte)
-  ;    - pointer to const. data (1 byte)
-  ;    - screen the enemy is on (1 byte)
-  ;    - movement speed (1 byte)
-  ;    - max movement distance (1 byte)
-  ;    - movement direction (1 byte)
-  ;    - current movement distance (1 byte)
-  ;    - current flip (1 byte)
-  ;    - x position (1 byte)
-  ;    - y position (1 byte)
-  ;    - remaining life (1 byte)  
-  ;    - shooting frequency (1 byte)
-  ;    - shooting timer (1 byte)
-  ;    - animation timer (1 byte)
-  ;    - animation frame (1 byte)
   
   .loadEnemiesCount:
   
@@ -239,7 +407,7 @@ LoadEnemies:
     STA enemies, x              ; store
     
     LDA #$0C                    ; next 12 bytes are the same in both definitions:
-    STA d                       ; pointer, screen, speed, distance, direction, current distance, flip, x, y, life, shooting freq, shooting timer
+    STA d                       ; pointer, screen, speed, distance, direction, distance left, flip, x, y, life, shooting freq, shooting timer
     .copyLoop:                  ; d will be the loop pointer
       INY
       LDA [enemiesPointer], y   ; load enemy data
