@@ -26,7 +26,7 @@ EnemyConsts:
 
 BeetleConsts:
 .width:
-  .byte $20:
+  .byte $20
 .hitboxInfo:
   .byte $02,$04,$1B,$10
 .gunInfo:
@@ -42,7 +42,7 @@ BeetleConsts:
 
 BugConsts:
 .width:
-  .byte $10:
+  .byte $10
 .hitboxInfo:
   .byte $02,$04,$0B,$0A
 .gunInfo:
@@ -58,7 +58,7 @@ BugConsts:
 
 EyeConsts:
 .width:
-  .byte $10:
+  .byte $10
 .hitboxInfo:
   .byte $03,$02,$09,$0B
 .gunInfo:
@@ -74,7 +74,7 @@ EyeConsts:
 
 SpikesConsts:
 .width:
-  .byte $10:
+  .byte $10
 .hitboxInfo:
   .byte $02,$02,$0A,$0A
 .gunInfo:
@@ -90,7 +90,7 @@ SpikesConsts:
 
 TurretVConsts:
 .width:
-  .byte $10:
+  .byte $10
 .hitboxInfo:
   .byte $01,$01,$0D,$0D
 .gunInfo:
@@ -106,7 +106,7 @@ TurretVConsts:
 
 TurretHConsts:
 .width:
-  .byte $10:
+  .byte $10
 .hitboxInfo:
   .byte $01,$01,$0D,$0D
 .gunInfo:

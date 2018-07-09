@@ -222,17 +222,17 @@ UpdateActiveEnemy:
       
   ; once we get here, movement has been updated, and the following are set:
   ;   - X set to remaining life
-  ;   - Y set to the const data pointer
+  ;   - Y set to the const data pointer (1st byte: width)
   ;   - genericDirection set to current flip
   ;   - genericX and genericY set to the current position
   ;   - genericOffScreen is set to 0
   ;
-  ; we have to figure out if enemy is on-screen. 
-  .checkPosition:
+  ; we have to figure out if enemy should even be rendered. 
+  .shouldRender:
     
-    ; assume the enemy is on screen
+    ; assume the enemy should be rendered
     LDA #$01
-    STA enemyOnScreen
+    STA renderEnemy
     
     ; transpose X. First check if enemy is on the current screen or the next
     LDA enemyScreen
@@ -258,12 +258,17 @@ UpdateActiveEnemy:
       JMP .loadConsts
       
       .enemyOffScreen:
-        DEC enemyOnScreen
+        DEC renderEnemy
         JMP .processShooting
     
     ; enemy is on the current screen. Transpose logic:
     ;   - x' = x - low byte of scroll
     ;   - if x' < 0 (carry cleared after the subtraction), set genericOffScreen to 1
+    ;     - we then have to check the width from the const data to see if enemy is trully on screen
+    ;     - logic: A = width + generic X
+    ;     - if carry not set - off screen
+    ;     - else if result < 8 (sprite width) - off screen
+    ;     - else - on screen
     .currentScreen:
       LDA genericX
       SEC
@@ -271,7 +276,12 @@ UpdateActiveEnemy:
       STA genericX
       BCS .loadConsts
       INC genericOffScreen
-      
+      CLC
+      ADC EnemyConsts, y
+      BCC .enemyOffScreen
+      CMP #SPRITE_DIMENSION
+      BCC .enemyOffScreen
+
   ; ...
   .loadConsts:
     
@@ -776,7 +786,7 @@ RenderEnemy:
     ;STA genericPointer         ; lower byte, not needed anymore
     STA j                       ; set the same in j
     LDA genericPointer + $01
-    ADC #$00                    ; add carry
+    ;ADC #$00                   ; add carry, not needed anymore
     ;STA genericPointer + $01   ; higher byte, not needed anymore
     STA k                       ; set the same in k
     
@@ -793,9 +803,6 @@ RenderEnemy:
       BCS .tileOffScreen        ; if carry is not set it means the tile is on screen. Otherwise it's off screen      
                                 
       .tileOnScreen:            ; tile on screen, first check if it's not partially on screen
-        CLC
-        ADC #SPRITE_DIMENSION
-        BCS .loopCheck          ; carry set means tile is partialy on screen, never render those
         LDA genericOffScreen    ; if we got here it means tile is fully on screen
         BNE .loopCheck          ; only render it if genericOffScreen == 0
         JMP .renderTile
