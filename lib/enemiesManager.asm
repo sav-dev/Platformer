@@ -227,15 +227,14 @@ UpdateActiveEnemy:
   ;   - genericX and genericY set to the current position
   ;   - genericOffScreen is set to 0
   ;
-  ; we have to figure out if enemy is on-screen.
-  ; let's assume it is and we can change it later  
-  ;
-  ; then transpose X
-  .transposeX:
+  ; we have to figure out if enemy is on-screen. 
+  .checkPosition:
     
+    ; assume the enemy is on screen
     LDA #$01
     STA enemyOnScreen
     
+    ; transpose X. First check if enemy is on the current screen or the next
     LDA enemyScreen
     CMP scroll + $01
     BEQ .currentScreen

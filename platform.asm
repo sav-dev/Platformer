@@ -146,12 +146,15 @@ NMI:
                
   Dma:
   LDA needDma               
-  BEQ DmaDone               
+  BEQ NoDma               
     LDA #SPRITES_LOW_BYTE   ; do sprite DMA
     STA $2003               ; conditional via the 'needDma' flag
     LDA #SPRITES_HIGH_BYTE  
     STA $4014
     LDA #$00
+    JMP DmaDone
+  NoDma:                    ; since we always do DMA in the game logic, if we hit this it means we're lagging
+    NOP                     ; useful for debugging. todo - remove this
   DmaDone:                  
                             
   LDA needDraw              ; do other PPU drawing

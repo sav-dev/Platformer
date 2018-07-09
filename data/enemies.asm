@@ -5,6 +5,7 @@
 
 ;
 ;  constant properties for enemies
+;    width           : 1 byte
 ;    hitbox x off    : 1 byte
 ;    hitbox y off    : 1 byte
 ;    hitbox width    : 1 byte (inclusive)
@@ -24,6 +25,8 @@
 EnemyConsts:
 
 BeetleConsts:
+.width:
+  .byte $20:
 .hitboxInfo:
   .byte $02,$04,$1B,$10
 .gunInfo:
@@ -38,6 +41,8 @@ BeetleConsts:
   .byte $08, $08
 
 BugConsts:
+.width:
+  .byte $10:
 .hitboxInfo:
   .byte $02,$04,$0B,$0A
 .gunInfo:
@@ -52,6 +57,8 @@ BugConsts:
   .byte $00, $00
 
 EyeConsts:
+.width:
+  .byte $10:
 .hitboxInfo:
   .byte $03,$02,$09,$0B
 .gunInfo:
@@ -66,6 +73,8 @@ EyeConsts:
   .byte $00, $00
 
 SpikesConsts:
+.width:
+  .byte $10:
 .hitboxInfo:
   .byte $02,$02,$0A,$0A
 .gunInfo:
@@ -80,6 +89,8 @@ SpikesConsts:
   .byte $00, $00
 
 TurretVConsts:
+.width:
+  .byte $10:
 .hitboxInfo:
   .byte $01,$01,$0D,$0D
 .gunInfo:
@@ -94,6 +105,8 @@ TurretVConsts:
   .byte $00, $00
 
 TurretHConsts:
+.width:
+  .byte $10:
 .hitboxInfo:
   .byte $01,$01,$0D,$0D
 .gunInfo:
