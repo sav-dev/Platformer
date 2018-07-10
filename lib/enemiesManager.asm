@@ -377,8 +377,8 @@ UpdateActiveEnemy:
       
     ; calculate the position of the gun.
     ; we expect Y to point to the hitbox height when we get here
-    ;   {todo add description}
-    ;   {todo implement, for now skip everything}
+    ; {todo add description}
+    ; {todo implement, for now skip everything}
     .gunPosition:
       INY
       INY
@@ -406,21 +406,49 @@ UpdateActiveEnemy:
       LDA EnemyConsts, y
       STA genericPointer + $01
     
-  ; ...
+  ; {todo add description}
+  ; {todo implement, for now skip remaining life}
   EnemyCheckCollisions:
+    INX
     
-  ; ...
+  ; {todo add description}
+  ; {todo implement, for now skip shooting frequency and timer}
   EnemyProcessShooting:
-  
-  ; ...
+    INX
+    INX
+    
+  ; when we get here, X points to the animation timer.
+  ; next byte is the current animation frame.
+  ; decrement the timer, if it equals 0: reset it to enemyAnimationSpeed
+  ; and decrement the frame, if it equals 0: reset it to enemyFrameCount
+  ; make sure genericFrame is set to the current frame at the end
   EnemyProcessAnimation:
+    DEC enemies, x
+    BEQ .updateFrame
+    INX
+    LDA enemies, x
+    STA genericFrame
+    JMP EnemyRender
+    
+    .updateFrame:
+      LDA enemyAnimationSpeed
+      STA enemies, x
+      INX
+      DEC enemies, x
+      BEQ .resetFrame
+      LDA enemies, x
+      STA genericFrame
+      JMP EnemyRender
+      
+    .resetFrame:
+      LDA enemyFrameCount
+      STA enemies, x
+      STA genericFrame
   
-  ; ...
+  ; check if enemy should be rendered and call the right routine
   EnemyRender:
     LDA enemyRender
     BEQ .updateActiveEnemyDone
-    LDA #$01
-    STA genericFrame
     JSR RenderEnemy
    
   .updateActiveEnemyDone:

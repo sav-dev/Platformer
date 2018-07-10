@@ -48,7 +48,7 @@ BugConsts:
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
-  .byte $0C
+  .byte $06
 .numberOfFrames:
   .byte $02
 .renderingInfo:
