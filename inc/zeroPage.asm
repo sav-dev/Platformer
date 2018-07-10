@@ -119,16 +119,22 @@ genericDY               .rs 1
 
 ; POI - possible optimization - to save zero page bytes, the vars below could be replaced with the use of pseudo-registers
 xPointerCache           .rs 1  ; for caching the initial value of the x register
+
 enemyScreen             .rs 1  ; screen the enemy is on
+
 enemySpeed              .rs 1  ; enemy speed
 enemyMaxDistance        .rs 1  ; max distance
+
+enemyAnimationSpeed     .rs 1  ; enemy animation speed
+enemyFrameCount         .rs 1  ; enemy frame count
+
+enemyGunX               .rs 1  ; enemy gun x position
+enemyGunY               .rs 1  ; enemy gun y position
+
 enemyRender             .rs 1  ; set to 1 if enemy should be rendered
 enemyCollisions         .rs 1  ; set to 1 if a collision check is needed
 enemyShooting           .rs 1  ; set to 1 if we should try to spawn a bullet
-enemyAnimationSpeed     .rs 1  ; enemy animation speed
-enemyFrameCount         .rs 1  ; enemy frame count
-enemyGunX               .rs 1  ; enemy gun x position
-enemyGunY               .rs 1  ; enemy gun y position
+
 
 ;****************************************************************
 ; Collision checks                                              ;
