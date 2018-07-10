@@ -149,7 +149,7 @@ UpdateActiveEnemy:
       STA enemies, x
       DEX
       LDA enemies, x
-      EOR %00000001
+      EOR #%00000001
       STA enemies, x
       STA genericDirection
       INX
