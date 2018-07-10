@@ -142,7 +142,7 @@ UpdateActiveEnemy:
     ; if we get here, it means an extreme has been met.
     ; we must:
     ;   - set movement left to max distance
-    ;   - X -= 1 to point to flip, update it, and re-cache
+    ;   - X -= 1 to point to flip, update it but *do not* re-cache
     ;   - x += 1 to point back to movement left
     .extremeMet:
       LDA enemyMaxDistance
@@ -151,7 +151,6 @@ UpdateActiveEnemy:
       LDA enemies, x
       EOR #%00000001
       STA enemies, x
-      STA genericDirection
       INX
     
     ; once we get here, x is still pointing to movement left, but everything has been updated.
@@ -199,7 +198,6 @@ UpdateActiveEnemy:
         .horizontalNoFlip:
           LDA enemySpeed
           STA genericDX
-          JMP .applyMovement    
           
     ; once we get here, x is still pointing to movement direction, and diffs are set.
     ; do X += 1 and apply DX, caching the result in genericX
