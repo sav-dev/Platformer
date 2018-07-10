@@ -68,8 +68,6 @@
 ;   depends_on_enemy_in_memory_format                           ;
 ;****************************************************************
  
-; todo add more global labels to make debugging easier
- 
 UpdateActiveEnemy:
 
   ; at this point, X points to the state.
@@ -106,7 +104,7 @@ UpdateActiveEnemy:
   ;  - current flip
   ;  - x position
   ;  - y position
-  .moveEnemy:
+  EnemyMove:
     
     ; set DX and DY to 0 for starters
     ; also while we're here, set genericOffScreen to 0
@@ -230,7 +228,7 @@ UpdateActiveEnemy:
   ;   - genericOffScreen is set to 0
   ;
   ; we have to figure out if enemy should even be rendered. 
-  .shouldRender:
+  EnemyShouldRender:
     
     ; assume the enemy should be rendered.
     ; also, while we're here, assume collision check is needed and enemy may shoot
@@ -260,11 +258,11 @@ UpdateActiveEnemy:
       ADC genericX
       BCS .enemyOffScreen
       STA genericX
-      JMP .processConsts
+      JMP EnemyProcessConsts
       
       .enemyOffScreen:
         DEC enemyRender
-        JMP .processShooting
+        JMP EnemyProcessShooting
     
     ; enemy is on the current screen. Transpose logic:
     ;   - x' = x - low byte of scroll
@@ -279,7 +277,7 @@ UpdateActiveEnemy:
       SEC
       SBC scroll
       STA genericX
-      BCS .processConsts
+      BCS EnemyProcessConsts
       INC genericOffScreen
       CLC
       ADC EnemyConsts, y
@@ -288,7 +286,7 @@ UpdateActiveEnemy:
       BCC .enemyOffScreen
 
   ; time to process the consts (we've only loaded the width above).
-  .processConsts:    
+  EnemyProcessConsts:    
         
     ; first we'll use the next 2 bytes to calculate the hitbox X positions
     ; bytes in order: x off, width. We'll store the result in ax1 and ax2
@@ -411,21 +409,24 @@ UpdateActiveEnemy:
       STA genericPointer + $01
     
   ; ...
-  .checkCollisions:
+  EnemyCheckCollisions:
     
   ; ...
-  .processShooting:
+  EnemyProcessShooting:
   
   ; ...
-  .processAnimation:
+  EnemyProcessAnimation:
   
   ; ...
-  .render:
+  EnemyRender:
+    LDA enemyRender
+    BEQ .updateActiveEnemyDone
     LDA #$01
     STA genericFrame
     JSR RenderEnemy
    
-  RTS
+  .updateActiveEnemyDone:
+    RTS
     
 ;****************************************************************
 ; Name:                                                         ;
