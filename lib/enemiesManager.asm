@@ -406,10 +406,40 @@ UpdateActiveEnemy:
       LDA EnemyConsts, y
       STA genericPointer + $01
     
-  ; {todo add description}
-  ; {todo implement, for now skip remaining life}
+  ; when we get here, X points to remaining life.
+  ; check for collisions between the enemy and the player,
+  ; and between the enemy and player's bullets.
   EnemyCheckCollisions:
-    INX
+  
+    ; only check for collisions if player is not already exploding or invisible,
+    ; i.e. if state == 0 (PLAYER_NORMAL) or 1 (PLAYER_FALLING).    
+    .collisionWithPlayer:
+      LDA playerState
+      BEQ .collisionWithPlayerCheck
+      CMP #PLAYER_FALLING
+      BEQ .collisionWithPlayerCheck
+      JMP .collisionWithBullets
+      
+      ; load player's threat box into the 'b' vars and check for collisions.
+      ; explode player if collision detected ('collision' not 0 after CheckForCollision).
+      .collisionWithPlayerCheck:
+        LDA playerThreatBoxX1
+        STA bx1
+        LDA playerThreatBoxX2
+        STA bx2
+        LDA playerThreatBoxY1
+        STA by1
+        LDA playerThreatBoxY2
+        STA by2
+        JSR CheckForCollision
+        LDA collision
+        BEQ .collisionWithBullets
+        JSR ExplodePlayer
+    
+    ; {todo implement}
+    ; {for now just INX to skip remaining life}
+    .collisionWithBullets:
+      INX
     
   ; {todo add description}
   ; {todo implement, for now skip shooting frequency and timer}
