@@ -258,9 +258,10 @@ UpdateActiveEnemy:
       STA genericX
       JMP EnemyProcessConsts
       
+      ; enemy off screen, no need to check for collisions
       .enemyOffScreen:
         DEC enemyRender
-        JMP EnemyProcessShooting
+        JMP EnemyProcessShooting ; todo - this skips an INX ?
     
     ; enemy is on the current screen. Transpose logic:
     ;   - x' = x - low byte of scroll
@@ -411,6 +412,10 @@ UpdateActiveEnemy:
   ; and between the enemy and player's bullets.
   EnemyCheckCollisions:
   
+    ; check if collisions should be checked.
+    LDA enemyCollisions
+    BEQ EnemyProcessShooting
+  
     ; only check for collisions if player is not already exploding or invisible,
     ; i.e. if state == 0 (PLAYER_NORMAL) or 1 (PLAYER_FALLING).    
     .collisionWithPlayer:
@@ -437,22 +442,30 @@ UpdateActiveEnemy:
         JSR ExplodePlayer
     
     ; {todo implement}
-    ; {for now just INX to skip remaining life}
     .collisionWithBullets:
-      INX
     
+  ; When we get here, we expect INX to point to remaining life.
   ; {todo add description}
   ; {todo implement, for now skip shooting frequency and timer}
   EnemyProcessShooting:
     INX
     INX
-    
+    INX
+          
   ; when we get here, X points to the animation timer.
   ; next byte is the current animation frame.
   ; decrement the timer, if it equals 0: reset it to enemyAnimationSpeed
   ; and decrement the frame, if it equals 0: reset it to enemyFrameCount
   ; make sure genericFrame is set to the current frame at the end
+  ;
+  ; but first check if enemy should even be rendered.
+  ; this means enemies off screen may not have their animation cycles in sync,
+  ; but makes sure we don't have to load consts for enemies off screen.
+  ; if we want to process animation for enemies off screen,
+  ; the skip in .enemyOffScreen must be updated.
   EnemyProcessAnimation:
+    LDA enemyRender
+    BEQ UpdateActiveEnemyDone
     DEC enemies, x
     BEQ .updateFrame
     INX
@@ -475,13 +488,11 @@ UpdateActiveEnemy:
       STA enemies, x
       STA genericFrame
   
-  ; check if enemy should be rendered and call the right routine
+  ; render the enemy
   EnemyRender:
-    LDA enemyRender
-    BEQ .updateActiveEnemyDone
     JSR RenderEnemy
    
-  .updateActiveEnemyDone:
+  UpdateActiveEnemyDone:
     RTS
     
 ;****************************************************************
