@@ -398,7 +398,6 @@ RenderSprite:
   .include "lib\paletteManager.asm"  
   .include "lib\collisionManager.asm"
   .include "lib\playerController.asm"
-  .include "lib\animationManager.asm"
   .include "lib\explosionsController.asm"
   .include "lib\bulletController.asm"
   .include "lib\enemiesManager.asm"
