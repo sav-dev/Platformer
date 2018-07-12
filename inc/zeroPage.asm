@@ -38,6 +38,9 @@ platformsPointer        .rs 2  ; points to the platform data for current screen
 threatsPointer          .rs 2  ; points to the threat data for current screen
 enemiesPointer          .rs 2  ; points to the enemies data for *next* screen (since we load one screen ahead)
 
+xPointerCache           .rs 1  ; for caching the initial value of the x register
+yPointerCache           .rs 1  ; for caching the initial value of the y register
+
 ;****************************************************************
 ; Buffering related variables                                   ;
 ;****************************************************************
@@ -117,8 +120,6 @@ genericDY               .rs 1
 ;****************************************************************
 
 ; POI - possible optimization - to save zero page bytes, the vars below could be replaced with the use of pseudo-registers
-xPointerCache           .rs 1  ; for caching the initial value of the x register
-
 enemyScreen             .rs 1  ; screen the enemy is on
 
 enemySpeed              .rs 1  ; enemy speed
@@ -133,6 +134,9 @@ enemyGunY               .rs 1  ; enemy gun y position
 enemyRender             .rs 1  ; set to 1 if enemy should be rendered
 enemyCollisions         .rs 1  ; set to 1 if a collision check is needed
 enemyShooting           .rs 1  ; set to 1 if we should try to spawn a bullet
+
+explodeEnemy            .rs 1  ; whether enemy should explode
+removeEnemy             .rs 1  ; whether enemy should be removed from the game
 
 ;****************************************************************
 ; Collision checks                                              ;
