@@ -441,25 +441,10 @@ UpdateActiveEnemy:
         BEQ .collisionWithBullets
         JSR ExplodePlayer
     
-    ; check collisions between all player bullets and the enemy.
-    ; Y will be the loop counter, point it to player's last bullet and decrement.
-    ; when it reaches 0 (== PLAYER_BULLET_FIRST), stop the loop
+    ; {todo add description}
+    ; {todo implement}
     .collisionWithBullets:      
-      LDY #PLAYER_BULLET_LAST
-      .collisionWithBulletsLoop:
-      
-        
-        
-        ; if Y == 0 it means we've just processed the last bullet, exit the loop.
-        ; otherwise, Y -= 4 to point to the next bullet and jump to the top of the loop
-        .collisionWithBulletsLoopCheck:
-          TYA
-          BEQ EnemyProcessShooting
-          DEY
-          DEY
-          DEY
-          DEY
-          JMP .collisionWithBullets
+
     
   ; When we get here, we expect INX to point to remaining life.
   ; {todo add description}
