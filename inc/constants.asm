@@ -56,8 +56,8 @@ SPRITE_SIZE           = $04 ; size of one sprite
                       
 MAX_SPRITE_COUNT      = $40 ; 64 sprites
                       
-RENDER_ENEMY_NO_FLIP  = $00 ; lowest bit set means V, second to lowest bit set means H
-RENDER_ENEMY_FLIP     = $01 ; 0000 0001
+NO_FLIP               = $00
+FLIP                  = $01
 
 
 ;****************************************************************
