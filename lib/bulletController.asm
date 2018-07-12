@@ -559,52 +559,57 @@ UpdateBullets:
 
 ScrollBullets:
 
-  LDX #TOTAL_BULLET_LAST
+  ; update loop expects A to point to the bullet 4 bytes ahead of the one we want to update.
+  LDA #TOTAL_BULLET_LAST - BULLET_MEMORY_BYTES
+  .updateLoop:
   
-  .updateLoop:      
+    ; subtract bullet size, and store it in x and xPointerCache
+    SEC
+    SBC #BULLET_MEMORY_BYTES
+    STA xPointerCache
+    TAX
+  
+    ; load the bullet state, do nothing if the bullet doesn't exist (0 == BULLET_S_NOT_EXIST)
     LDA bullets, x
-    BEQ .updateLoopCheck              ; BULLET_S_NOT_EXIST == 0
+    BEQ .updateLoopCheck
     
+    ; we must move the bullet. X += 2 to point to the x position
     INX
-    INX                               ; X points to the x posistion
+    INX
     
+    ; check which direction we're scrolling in
     LDA b
     BEQ .moveLeft
     
+    ; move bullet right
     .moveRight:
       LDA bullets, x
       CLC
       ADC #SCROLL_SPEED
       BCS .offScreen
       STA bullets, x
-      JMP .updateLoopCheckDec2
+      JMP .updateLoopCheck
     
+    ; move bullet left
     .moveLeft:       
       LDA bullets, x
       SEC
       SBC #SCROLL_SPEED
       BCC .offScreen
       STA bullets, x
-      JMP .updateLoopCheckDec2
+      JMP .updateLoopCheck
     
-    .offScreen:                       ; bullet off screen, clear
-      DEX
-      DEX                             ; X points to state
+    ; if we got here, it means the bullet is off screen.
+    ; load the pointer to the state, then clear the bullet.
+    .offScreen:
+      LDX xPointerCache
       LDA #BULLET_S_NOT_EXIST 
       STA bullets, x 
       JMP .updateLoopCheck
-    
-    .updateLoopCheckDec2:             ; this expects X to point to the x position
-      DEX
-      DEX
-    
-    .updateLoopCheck:                 ; this expects X to point to the state
-      TXA
+        
+    .updateLoopCheck:
+      LDA xPointerCache
       BEQ .updateDone
-      DEX
-      DEX
-      DEX
-      DEX
       JMP .updateLoop
   
   .updateDone:
