@@ -270,7 +270,7 @@ UpdateBullets:
       STA genericDirection
     
     ; move the bullet (unless just spawned) and set all render vars.
-    ; if we go there we still have direction loaded, so first check if it's left (GENERIC_DIR_LEFT),
+    ; if we go there we still have direction loaded, so first check if it's left (GENERIC_DIR_LEFT = 0),
     ; then compare with other directions.
     .moveAndPreset:
       BEQ .goingLeft

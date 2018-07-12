@@ -413,8 +413,10 @@ UpdateActiveEnemy:
   EnemyCheckCollisions:
   
     ; check if collisions should be checked.
+    ; POI - possible optimization - branch order
     LDA enemyCollisions
-    BEQ EnemyProcessShooting
+    BNE .collisionWithPlayer
+    JMP EnemyProcessShooting
   
     ; only check for collisions if player is not already exploding or invisible,
     ; i.e. if state == 0 (PLAYER_NORMAL) or 1 (PLAYER_FALLING).    
@@ -441,10 +443,106 @@ UpdateActiveEnemy:
         BEQ .collisionWithBullets
         JSR ExplodePlayer
     
-    ; {todo add description}
-    ; {todo implement}
+    ; check collisions between the enemy and player's bullets.
+    ; use Y to iterate the bullets - we don't need it anymore.
+    ; the loop expects A to point to the bullet 4 bytes ahead of the one we want to check.
     .collisionWithBullets:      
-
+      LDA #PLAYER_BULLET_LAST + BULLET_MEMORY_BYTES
+      .collisionWithBulletsLoop:
+      
+        ; subtract bullet size, and store it in y and yPointerCache
+        SEC
+        SBC #BULLET_MEMORY_BYTES
+        STA yPointerCache
+        TAY
+        
+        ; check the state, we only want to check bullets that either are active or just spawned.
+        ; first check if state == 0 (BULLET_S_NOT_EXIST), then check if it's < BULLET_S_SMTH_HIT (3).
+        ; that means it's either 1 (BULLET_S_JUST_SPAWNED) or 2 (BULLET_S_NORMAL).
+        LDA bullets, y
+        BEQ .collisionWithBulletsLoopCheck
+        CMP #BULLET_S_SMTH_HIT
+        BCS .collisionWithBulletsLoopCheck
+        
+        ; bullet is active. Load it's hitbox into 'b' vars.
+        ; first Y += 1 to point to direction, then branch off that (GENERIC_DIR_LEFT = 0).
+        ; we only care about vertical/horizontal
+        INY
+        LDA bullets, y
+        BEQ .bulletGoingHorizontally
+        CMP #GENERIC_DIR_RIGHT  
+        BEQ .bulletGoingHorizontally
+        
+        ; based on the direction, set hitbox width and height.
+        ; use genericDX for width and genericDY for height as they are not needed anymore.
+        .bulletGoingVertically:
+          LDA #BULLET_HEIGHT
+          STA genericDX
+          LDA #BULLET_WIDTH
+          STA genericDY
+          JMP .bulletSetHitbox
+        
+        .bulletGoingHorizontally:
+          LDA #BULLET_WIDTH
+          STA genericDX
+          LDA #BULLET_HEIGHT
+          STA genericDY
+          
+        ; set hitbox
+        ; first do Y += 1 to point to the x position, set that in bx1, calculate bx2 (cap at screen width)
+        ; then do Y += 1 to point to the y position, set that in by1, calculate by2
+        .bulletSetHitbox:
+          INY
+          LDA bullets, y
+          STA bx1
+          CLC
+          ADC genericDX
+          BCS .capBX2
+          STA bx2
+          JMP .setYBox
+          
+          .capBX2:
+            LDA #SCREEN_WIDTH
+            STA bx2
+          
+          .setYBox:
+            INY
+            LDA bullets, y
+            STA by1
+            CLC
+            ADC genericDY
+            STA by2
+        
+        ; now check for a collision
+        .bulletCheckCollision:
+          JSR CheckForCollision
+          LDA collision
+          BEQ .collisionWithBulletsLoopCheck
+            
+        ; collision detected
+        .bulletCollision:
+          
+          ; first check if remaining life > 0. decrement it if yes.
+          ; set removeEnemy to 1 if remaining life decremented to 0
+          .updateRemainingLife:
+            LDA enemies, x
+            BEQ .explodeBullet
+            DEC enemies, x
+            BNE .explodeBullet
+            INC removeEnemy
+          
+          ; now explode the bullet by loading the cached state pointer and setting it to BULLET_S_SMTH_HIT
+          .explodeBullet:
+            LDY yPointerCache
+            LDA #BULLET_S_SMTH_HIT
+            STA bullets, y
+        
+        ; loop check - load yPointerCache, if it's 0 - exit (PLAYER_BULLET_FIRST)
+        .collisionWithBulletsLoopCheck:
+          LDA yPointerCache
+          BEQ EnemyProcessShooting
+          JMP .collisionWithBulletsLoop
+        
     
   ; When we get here, we expect INX to point to remaining life.
   ; {todo add description}
@@ -545,7 +643,11 @@ UpdateEnemies:
     SBC #ENEMY_SIZE
     STA xPointerCache
     TAX                  
-  
+
+    ; set removeEnemy to 0
+    LDA #$00
+    STA removeEnemy
+    
     ; X now points to the state. Check it:
     ;   0 == ENEMY_STATE_EMPTY
     ;   2 == ENEMY_EXPLODING
@@ -558,7 +660,17 @@ UpdateEnemies:
     ; active enemy - call into a subroutine, jump to the loop condition
     .enemyActive:
       JSR UpdateActiveEnemy
-      JMP .updateEnemyLoopCondition
+      
+      ; check if enemy should be exploded
+      .checkRemoveEnemy:
+        LDA removeEnemy
+        BEQ .updateEnemyLoopCondition
+        
+        ; {todo: actually explode the enemy}
+        LDX xPointerCache
+        LDA #ENEMY_STATE_EMPTY
+        STA enemies, x        
+        JMP .updateEnemyLoopCondition
       
     ; enemy exploding - call into a subroutine, let flow to the empty clause
     .enemyExploding:
@@ -570,7 +682,7 @@ UpdateEnemies:
     ; loop condition - if we've not just processed the last enemy, loop.   
     ; otherwise exit
     .updateEnemyLoopCondition:
-      LDA xPointerCache
+      LDA xPointerCache        
       BNE .updateEnemyLoop
       RTS
     

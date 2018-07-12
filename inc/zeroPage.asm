@@ -135,8 +135,7 @@ enemyRender             .rs 1  ; set to 1 if enemy should be rendered
 enemyCollisions         .rs 1  ; set to 1 if a collision check is needed
 enemyShooting           .rs 1  ; set to 1 if we should try to spawn a bullet
 
-explodeEnemy            .rs 1  ; whether enemy should explode
-removeEnemy             .rs 1  ; whether enemy should be removed from the game
+removeEnemy             .rs 1  ; whether enemy should be exploded / removed from the game
 
 ;****************************************************************
 ; Collision checks                                              ;
