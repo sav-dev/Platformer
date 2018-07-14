@@ -262,8 +262,6 @@ CheckForPlatformOneScreen:
       
       .transposition:
         
-        ; todo: transpose player instead of every single platform? will be easier with enemies
-        
         ; Transposition logic:
         ;    1st screen: x' = x - low byte of scroll
         ;       calculate x2'. If x2' < 0: check next object (object off screen)
