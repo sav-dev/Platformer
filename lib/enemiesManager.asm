@@ -77,6 +77,8 @@
 ;   depends_on_enemy_in_memory_format                           ;
 ;****************************************************************
  
+; todo: chane all labels to locals
+ 
 UpdateActiveEnemy:
 
   ; at this point, X points to the state.
@@ -628,30 +630,16 @@ UpdateActiveEnemy:
     
     ; enemyGunX and enemyGunY are currently set to gun offsets.
     ; add genericX and genericY to them to get the actual position to spawn the bullet.
-    ; when calculating enemyGunX, make sure the gun is on screen.
-    ; first check if enemy is on screen or not
-    ; {todo: test all of it, to test calculateGunXEnemyOffScreen update consts)
+    ; when calculating enemyGunX, make sure the gun is on screen.    
     .calculateGunX:
-      LDA genericOffScreen
-      BEQ .calculateGunXEnemyOnScreen
-      
-      ; enemy is off screen, meaning the addition must overflow for gun to be on screen
-      .calculateGunXEnemyOffScreen:
-        LDA enemyGunX
-        CLC
-        ADC genericX
-        BCC EnemyProcessAnimation
-        STA enemyGunX
-        JMP .calculateGunY
-      
-      ; enemy is on screen, meaning the addition must not overflow for gun to be on screen
-      .calculateGunXEnemyOnScreen:
-        LDA enemyGunX
-        CLC
-        ADC genericX
-        BCS EnemyProcessAnimation
-        STA enemyGunX
-        JMP .calculateGunY
+    
+      ; {todo: how?!}
+      LDA enemyGunX
+      CLC
+      ADC genericX
+      BCS EnemyProcessAnimation
+      STA enemyGunX
+      JMP .calculateGunY
             
     ; calculating gun y is straightforward
     .calculateGunY:
@@ -667,6 +655,7 @@ UpdateActiveEnemy:
     SpawnEnemyBullet:
       NOP
       ; {todo: currently we get here for the off-screen beetle, debug}
+      ; {todo: test the off screen scenarios}
       ; {todo: implement}
 
           
