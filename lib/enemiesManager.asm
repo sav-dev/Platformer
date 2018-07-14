@@ -57,12 +57,21 @@
 ;   Y                                                           ;
 ;   enemyScreen                                                 ;
 ;   enemySpeed                                                  ;
+;   enemyAnimationSpeed                                         ;
+;   enemyFrameCount                                             ;
+;   enemyGunX                                                   ;
+;   enemyGunY                                                   ;
+;   enemyRender                                                 ;
+;   enemyCollisions                                             ;
+;   enemyShooting                                               ;
 ;   enemyMaxDistance                                            ;
 ;   genericDirection                                            ;
 ;   genericX                                                    ;
 ;   genericY                                                    ;
 ;   genericDX                                                   ;
 ;   genericDY                                                   ;
+;   removeEnemy - incremented if enemy should be exploded       ;
+;   render vars                                                 ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_enemy_in_memory_format                           ;
@@ -619,8 +628,117 @@ UpdateActiveEnemy:
 ;****************************************************************
     
 UpdateExplodingEnemy:
-  ; todo
-  RTS
+  
+  ; X += 3 to point to the screen the enemy is on, load it and put it in enemyScren
+  .loadScreen:
+    INX
+    INX
+    INX
+    LDA enemies, x
+  
+  ; X += 6 to point to the X position, load the X position and put it in genericX
+  .loadX:
+    TXA
+    CLC
+    ADC #$06
+    TAX
+    LDA enemies, x
+    STA genericX
+  
+  ; transpose X. First check if enemy is on the current screen or the next
+  .transposeX:    
+    LDA enemyScreen
+    CMP scroll + $01
+    BEQ .currentScreen
+    
+    ; enemy is on the next  screen. Transpose logic:
+    ;   - x' = x - low byte of scroll + 256
+    ;   - first calculate A = 255 - scroll + 1. If this overflows,
+    ;     it means scroll = 0, i.e. ememy is off screen
+    ;   - then calculate A = A + x. Again, overflow means enemy off screen
+    ;   - if enemy is off screen, explosion can be removed
+    .nextScreen:
+      LDA #SCREEN_WIDTH
+      SEC
+      SBC scroll
+      CLC
+      ADC #$01
+      BCS .enemyOffScreen
+      ADC genericX
+      BCS .enemyOffScreen
+      STA genericX
+      JMP .loadY
+      
+      ; enemy off screen, explosion can be removed
+      .enemyOffScreen:
+        INC removeEnemy
+        RTS
+    
+    ; enemy is on the current screen. Transpose logic:
+    ;   - x' = x - low byte of scroll
+    ;   - if x' < 0 (carry cleared after the subtraction), set genericOffScreen to 1
+    ;     - we then have to check the width from the const data to see if enemy is trully on screen
+    ;     - logic: A = width + generic X
+    ;     - if carry not set - off screen
+    ;     - else if result < 8 (sprite width) - off screen
+    ;     - else - on screen
+    .currentScreen:
+      LDA genericX
+      SEC
+      SBC scroll
+      STA genericX
+      BCS .loadY
+      INC genericOffScreen
+      CLC
+      ADC #EXPLOSION_WIDTH
+      BCC .enemyOffScreen
+      CMP #SPRITE_DIMENSION
+      BCC .enemyOffScreen
+    
+  ; X += 1 to point to the y position, load it and store in genericY
+  .loadY:
+    INX
+    LDA enemies, x
+    STA genericY
+      
+  ; X += 4 to point to the animation timer, decrement it, check if 0
+  .processAnimation:
+    INX
+    INX
+    INX
+    INX
+    DEC enemies, x
+    BEQ .timerIs0
+    
+    ; timer is not 0, X += 1 to point to the animation frame, set it in genericFrame
+    .timerIsNot0:
+      INX
+      LDA enemies, x
+      STA genericFrame
+      JMP .renderExplosion
+          
+    ; timer is 0, reset it to max, then X += 1 to point to the animation frame and dec it
+    ; if not 0, load it and set in genericFrame. if 0, it means animation completed.
+    .timerIs0:
+      LDA #EXPLOSION_ANIM_SPEED
+      STA enemies, x
+      INX
+      LDA enemies, x
+      SEC
+      SBC #$01
+      BEQ .explosionCompleted
+      STA enemies, x
+      STA genericFrame      
+          
+  ; all vars are set, render the explosion then exit
+  .renderExplosion:
+    JSR RenderExplosion    
+    RTS
+    
+  ; explosion completed
+  .explosionCompleted:
+    INC removeEnemy
+    RTS
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -635,6 +753,9 @@ UpdateExplodingEnemy:
 ;                                                               ;
 ; Used variables:                                               ;
 ;   {todo}                                                      ;
+;                                                               ;
+; Remarks:                                                      ;
+;   depends_on_enemy_in_memory_format                           ;
 ;****************************************************************
 
 UpdateEnemies:
@@ -669,19 +790,77 @@ UpdateEnemies:
       JSR UpdateActiveEnemy
       
       ; check if enemy should be exploded
-      .checkRemoveEnemy:
+      .checkRemoveEnemyActive:
         LDA removeEnemy
         BEQ .updateEnemyLoopCondition
         
-        ; {todo: actually explode the enemy}
-        LDX xPointerCache
-        LDA #ENEMY_STATE_EMPTY
-        STA enemies, x        
+        ; explode the enemy.
+        
+        ; update state:
+        .explodeEnemyState:
+          LDX xPointerCache
+          LDA #ENEMY_STATE_EXPLODING
+          STA enemies, x        
+        
+        ; X += 2 to point at the consts pointer
+        ; load the pointer then do += 13 to point to the consts data. store in Y.
+        .loadConstsPointer:
+          INX
+          INX
+          LDA enemies, x
+          CLC
+          ADC #$0D
+          TAY
+          
+        ; X += 7 to point to the X position, update x using x off from consts.
+        ; X += 1 to point to the Y position, Y += 1, update y using y off from consts
+        .updatePosition:
+          TXA
+          CLC
+          ADC #$07
+          TAX
+          LDA enemies, X
+          CLC
+          ADC EnemyConsts, y
+          STA enemies, X
+          INX
+          INY
+          LDA enemies, X
+          CLC
+          ADC EnemyConsts, y
+          STA enemies, X
+          
+        ; X += 4 to point to the animation timer, set it to the const expl. speed.
+        ; X += 1 to point to the animation frame, set it to the const expl. frame count
+        .updateAnimation:
+          INX
+          INX
+          INX
+          INX
+          LDA #EXPLOSION_ANIM_SPEED
+          STA enemies, x
+          INX
+          LDA #EXPLOSION_ANIM_FRAMES
+          STA enemies, x
+        
+        ; enemy exploded, jump to the loop condition
         JMP .updateEnemyLoopCondition
       
     ; enemy exploding - call into a subroutine, let flow to the empty clause
     .enemyExploding:
       JSR UpdateExplodingEnemy
+      
+      ; check if enemy should be removed from the game
+      .checkRemoveEnemyExploding:
+        LDA removeEnemy
+        BEQ .updateEnemyLoopCondition
+        
+        ; remove enemy from the game
+        .removeEnemy:
+          LDX xPointerCache
+          LDA #ENEMY_STATE_EMPTY
+          STA enemies, x        
+          JMP .updateEnemyLoopCondition ; POI - possible optimization - skip the LDA xPointerCache ?
       
     ; enemy empty - do nothing, let flow into the loop condition
     .enemyEmpty:      
@@ -689,7 +868,7 @@ UpdateEnemies:
     ; loop condition - if we've not just processed the last enemy, loop.   
     ; otherwise exit
     .updateEnemyLoopCondition:
-      LDA xPointerCache        
+      LDA xPointerCache      
       BNE .updateEnemyLoop
       RTS
     
@@ -1011,6 +1190,7 @@ MoveEnemiesPointerBack:
 ;     genericPointer - pointing to the enemy (from enemies.asm) ;
 ;                                                               ;
 ; Used variables:                                               ;
+;   X                                                           ;
 ;   Y                                                           ;
 ;   b                                                           ;
 ;   c                                                           ;

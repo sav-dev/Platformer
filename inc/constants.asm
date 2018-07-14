@@ -146,6 +146,7 @@ PLAYER_GUN_OFF_Y_C      = $F4 - $02 ; same
 EXPLOSION_SPRITES_COUNT = $04
 EXPLOSION_ANIM_FRAMES   = $04   ; frames are counting down so 4 -> 3 -> 2 -> 1
 EXPLOSION_ANIM_SPEED    = $06
+EXPLOSION_WIDTH         = SPRITE_DIMENSION * $02
 
 ;****************************************************************
 ; Bullets related constans                                      ;
