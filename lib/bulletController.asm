@@ -558,7 +558,7 @@ UpdateBullets:
 ScrollBullets:
 
   ; update loop expects A to point to the bullet 4 bytes ahead of the one we want to update.
-  LDA #TOTAL_BULLET_LAST - BULLET_MEMORY_BYTES
+  LDA #TOTAL_BULLET_LAST + BULLET_MEMORY_BYTES
   .updateLoop:
   
     ; subtract bullet size, and store it in x and xPointerCache

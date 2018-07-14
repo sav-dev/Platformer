@@ -77,7 +77,7 @@
 ;   depends_on_enemy_in_memory_format                           ;
 ;****************************************************************
  
-; todo: chane all labels to locals
+; todo: change all labels to locals
  
 UpdateActiveEnemy:
 
@@ -641,6 +641,7 @@ UpdateActiveEnemy:
       BEQ .calculateGunXEnemyOnScreen
       
       ; {todo: test both off-screen scenarios, there is a bug there}
+      ; {todo: gun x/y off must be updated for enemies, it's way off}
       
       ; enemy is off screen, meaning the addition must overflow for gun to be on screen
       .calculateGunXEnemyOffScreen:
@@ -669,13 +670,78 @@ UpdateActiveEnemy:
       
     ; spawn enemy bullet using enemyGunX, enemyGunY, enemyOrientation, genericDirection:
     ;   - enemyGunX, enemyGunY - point to spawn the bullet at
-    ;   - enemyOrientation - bit 0 set means shoot horizontally, else shoot vertically (see comment in .calculateDiffs)
+    ;   - enemyOrientation - first bit set means shoot horizontally, else shoot vertically (see comment in .calculateDiffs)
     ;   - genericDirection - 0 means shoot right or down, 1 means shoot left or up (depending on orientation)
     SpawnEnemyBullet:
-      NOP      
-      ; {todo: implement}
+      
+      ; first find a free slot, look for BULLET_S_NOT_EXIST == 0
+      LDY #ENEMY_BULLET_LAST
+      .findFreeSlotLoop:    
+        LDA bullets, x
+        BEQ .freeSlotFound
+        CPX #ENEMY_BULLET_FIRST
+        BEQ EnemyProcessAnimation
+        DEX
+        DEX
+        DEX
+        DEX
+        JMP .findFreeSlotLoop
 
+      ; free slot found, Y points to it
+      ; memory layout: state, direction, x, y
+      .freeSlotFound:
+        
+        ; state = just spawned
+        .setBulletState:
+          LDA #BULLET_S_JUST_SPAWNED
+          STA bullets, y
           
+        ; get bullet direction based on enemyOrientation and genericDirection (see comment above)
+        .setBulletDirection:
+          INY
+          LDA enemyOrientation
+          AND #%00000001
+          BEQ .bulletDirectionVertical
+          
+          .bulletDirectionHorizontal:
+            LDA genericDirection
+            BEQ .bulletDirectionRight
+            
+            .bulletDirectionLeft:
+              LDA #GENERIC_DIR_LEFT
+              JMP .setBulletDirectionValue
+          
+            .bulletDirectionRight:
+              LDA #GENERIC_DIR_RIGHT
+              JMP .setBulletDirectionValue
+          
+          .bulletDirectionVertical:
+            LDA genericDirection
+            BEQ .bulletDirectionDown
+            
+            .bulletDirectionUp:
+              LDA #GENERIC_DIR_UP
+              JMP .setBulletDirectionValue
+            
+            .bulletDirectionDown:
+              LDA #GENERIC_DIR_DOWN
+          
+          ; A = direction when we get here
+          .setBulletDirectionValue:
+            STA bullets, y
+        
+        ; set x position
+        .setBulletX:
+          INY
+          LDA enemyGunX
+          STA bullets, y
+
+        ; set y position
+        .setBulletY:
+          INY
+          LDA enemyGunY
+          STA bullets, y          
+        
   ; when we get here, X points to the animation timer.
   ; next byte is the current animation frame.
   ; decrement the timer, if it equals 0: reset it to enemyAnimationSpeed
