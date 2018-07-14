@@ -18,6 +18,7 @@
 ;                                                               ;
 ; Used variables:                                               ;
 ;   Y                                                           ;
+;   X                                                           ;
 ;   b                                                           ;
 ;   c                                                           ;
 ;   d                                                           ;

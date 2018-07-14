@@ -20,8 +20,8 @@
 ;        - x position (1 byte)
 ;        - y position (1 byte)            
 ;        - initial life (1 byte)
-;        - shooting frequency (1 byte)
 ;        - shooting frequency initial (1 byte)
+;        - shooting frequency (1 byte)
 ;   - pointer to the previous screen (from here): (n x 14) + 2 (1 byte)
 ;
 ; - enemies in memory in the following format (16 bytes):
@@ -37,8 +37,8 @@
 ;    - x position (1 byte)
 ;    - y position (1 byte)
 ;    - remaining life (1 byte)  
-;    - shooting frequency (1 byte)
 ;    - shooting timer (1 byte)
+;    - shooting frequency (1 byte)
 ;    - animation timer (1 byte)
 ;    - animation frame (1 byte)
 ;
@@ -55,6 +55,7 @@
 ; Used variables:                                               ;
 ;   X                                                           ;
 ;   Y                                                           ;
+;   enemyOrientation                                            ;
 ;   enemyScreen                                                 ;
 ;   enemySpeed                                                  ;
 ;   enemyAnimationSpeed                                         ;
@@ -163,14 +164,26 @@ UpdateActiveEnemy:
       INX
     
     ; once we get here, x is still pointing to movement left, but everything has been updated.
-    ; first do a X += 1 to point at movement direction, and load it.
-    ; if it's 0 (ENEMY_MOVE_NONE), skip this section.
+    ; first do a X += 1 to point at movement direction, load it, and cache it in enemyOrientation
+    ;
+    ; that var is a bit complicated.
+    ; possible values:
+    ;   0 = 00000000 - none
+    ;   1 = 00000001 - static horizontal
+    ;   2 = 00000010 - static vertical
+    ;   5 = 00000101 - moving horizontal
+    ;   6 = 00000110 - moving vertical
+    ;
+    ; for sake of movement, anything < 5 means no movement - in that case, skip this section
     ; otherwise, based on the direction and flip (cached in genericDirection), set DX and DY
+    ;
+    ; POI - possible optimization - have separate vars for movement type and pointing direction?   
     .calculateDiffs:
       INX
       LDA enemies, x
-      BEQ .applyMovement
+      STA enemyOrientation
       CMP #ENEMY_MOVE_HORIZONTAL
+      BCC .applyMovement
       BEQ .horizontalMovement
       
       ; in the verticalMovement and horizontalMovement sections we:
@@ -397,6 +410,7 @@ UpdateActiveEnemy:
     ; {todo add description}
     ; {todo implement, for now skip everything}
     .gunPosition:
+      DEC enemyShooting
       INY
       INY
       INY
@@ -560,13 +574,43 @@ UpdateActiveEnemy:
           JMP .collisionWithBulletsLoop
         
     
-  ; When we get here, we expect INX to point to remaining life.
-  ; {todo add description}
-  ; {todo implement, for now skip shooting frequency and timer}
+  ; When we get here, we expect X to point to remaining life.
+  ; X += 1 to point to the current shooting timer
+  ; load it, if it's 0 it means the enemy doesn't shoot
+  ; otherwise DEC the timer, if it's 0 the enemy should shoot
   EnemyProcessShooting:
     INX
-    INX
-    INX
+    LDA enemies, x
+    BEQ .enemyDoesntShoot
+    DEC enemies, x
+    BEQ .enemyShoot
+    
+    ; enemy doesn't shoot - X += 2 to point to the animation timer, then jump to EnemyProcessAnimation
+    .enemyDoesntShoot:
+      INX
+      INX
+      JMP EnemyProcessAnimation
+
+    ; enemy should shoot.
+    ; first do X += 1 to point to the shooting frequency, load it, do X -= 1
+    ; and store it to reset the shooting timer. then do X += 2 to point to the animation timer.
+    ; then check the enemyShooting - if it's 0, go to EnemyProcessAnimation
+    .enemyShoot:
+      INX
+      LDA enemies, x
+      DEX
+      STA enemies, x
+      INX
+      INX
+      LDA enemyShooting
+      BEQ EnemyProcessAnimation
+      
+    ; spawn enemy bullet using enemyGunX, enemyGunY, enemyOrientation, genericDirection:
+    ;   - enemyGunX, enemyGunY - point to spawn the bullet at
+    ;   - enemyOrientation - bit 0 set means shoot horizontally, else shoot vertically (see comment in .calculateDiffs)
+    ;   - genericDirection - 0 means shoot right or down, 1 means shoot left or up (depending on orientation)
+    .spawnEnemyBullet:
+      ; {todo implement}
           
   ; when we get here, X points to the animation timer.
   ; next byte is the current animation frame.
