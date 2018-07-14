@@ -38,7 +38,7 @@ BeetleConsts:
 .renderingInfo:
   .byte LOW(BeetleRender), HIGH(BeetleRender)
 .explosionOffset:
-  .byte $08, $08
+  .byte $08, $04
 
 BugConsts:
 .width:

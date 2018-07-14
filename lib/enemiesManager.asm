@@ -270,7 +270,7 @@ UpdateActiveEnemy:
       ; enemy off screen, no need to check for collisions
       .enemyOffScreen:
         DEC enemyRender
-        JMP EnemyProcessShooting ; todo - this skips an INX ?
+        JMP EnemyProcessShooting
     
     ; enemy is on the current screen. Transpose logic:
     ;   - x' = x - low byte of scroll
@@ -621,7 +621,17 @@ UpdateActiveEnemy:
 ;   xPointerCache can also be used to go back to the top        ;
 ;                                                               ;
 ; Used variables:                                               ;
-;   {todo}                                                      ;
+;   Y                                                           ;
+;   X                                                           ;
+;   generic vars                                                ;
+;   b                                                           ;
+;   c                                                           ;
+;   d                                                           ;
+;   e                                                           ;
+;   h                                                           ;
+;   i                                                           ;
+;   j                                                           ;
+;   remove enemy - set to 1 if enemy should be removed          ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_enemy_in_memory_format                           ;
@@ -752,7 +762,19 @@ UpdateExplodingEnemy:
 ;     - render                                                  ;
 ;                                                               ;
 ; Used variables:                                               ;
-;   {todo}                                                      ;
+;   Y                                                           ;
+;   X                                                           ;
+;   generic vars                                                ;
+;   enemy vars                                                  ;
+;   render vars                                                 ;
+;   b                                                           ;
+;   c                                                           ;
+;   d                                                           ;
+;   e                                                           ;
+;   h                                                           ;
+;   i                                                           ;
+;   j                                                           ;
+;   remove enemy                                                ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_enemy_in_memory_format                           ;
