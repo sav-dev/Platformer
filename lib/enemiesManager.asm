@@ -628,18 +628,37 @@ UpdateActiveEnemy:
       INX
       INX
     
+    ; check if we're even rendering the enemy, don't shoot if not
+    .shootingEnemyOnScreen:
+      LDA enemyRender
+      BEQ EnemyProcessAnimation
+    
     ; enemyGunX and enemyGunY are currently set to gun offsets.
     ; add genericX and genericY to them to get the actual position to spawn the bullet.
     ; when calculating enemyGunX, make sure the gun is on screen.    
-    .calculateGunX:
-    
-      ; {todo: how?!}
-      LDA enemyGunX
-      CLC
-      ADC genericX
-      BCS EnemyProcessAnimation
-      STA enemyGunX
-      JMP .calculateGunY
+    .calculateGunX:    
+      LDA genericOffScreen
+      BEQ .calculateGunXEnemyOnScreen
+      
+      ; {todo: test both off-screen scenarios, there is a bug there}
+      
+      ; enemy is off screen, meaning the addition must overflow for gun to be on screen
+      .calculateGunXEnemyOffScreen:
+        LDA enemyGunX
+        CLC
+        ADC genericX
+        BCC EnemyProcessAnimation
+        STA enemyGunX
+        JMP .calculateGunY
+      
+      ; enemy is on screen, meaning the addition must not overflow for gun to be on screen
+      .calculateGunXEnemyOnScreen:
+        LDA enemyGunX
+        CLC
+        ADC genericX
+        BCS EnemyProcessAnimation
+        STA enemyGunX
+        JMP .calculateGunY
             
     ; calculating gun y is straightforward
     .calculateGunY:
@@ -653,9 +672,7 @@ UpdateActiveEnemy:
     ;   - enemyOrientation - bit 0 set means shoot horizontally, else shoot vertically (see comment in .calculateDiffs)
     ;   - genericDirection - 0 means shoot right or down, 1 means shoot left or up (depending on orientation)
     SpawnEnemyBullet:
-      NOP
-      ; {todo: currently we get here for the off-screen beetle, debug}
-      ; {todo: test the off screen scenarios}
+      NOP      
       ; {todo: implement}
 
           
