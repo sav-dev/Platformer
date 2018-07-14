@@ -1488,7 +1488,7 @@ RenderEnemy:
     ;STA genericPointer         ; lower byte, not needed anymore
     STA j                       ; set the same in j
     LDA genericPointer + $01
-    ;ADC #$00                   ; add carry, not needed anymore
+    ADC #$00                    ; add carry
     ;STA genericPointer + $01   ; higher byte, not needed anymore
     STA k                       ; set the same in k
     
