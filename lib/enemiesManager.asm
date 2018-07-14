@@ -64,7 +64,6 @@
 ;   enemyGunY                                                   ;
 ;   enemyRender                                                 ;
 ;   enemyCollisions                                             ;
-;   enemyShooting                                               ;
 ;   enemyMaxDistance                                            ;
 ;   genericDirection                                            ;
 ;   genericX                                                    ;
@@ -255,7 +254,6 @@ UpdateActiveEnemy:
     LDA #$01
     STA enemyRender
     STA enemyCollisions
-    STA enemyShooting
     
     ; transpose X. First check if enemy is on the current screen or the next
     LDA enemyScreen
@@ -405,17 +403,43 @@ UpdateActiveEnemy:
       ADC EnemyConsts, y
       STA ay2      
       
-    ; calculate the position of the gun.
+    ; get the position of the gun.
     ; we expect Y to point to the hitbox height when we get here
-    ; {todo add description}
-    ; {todo implement, for now skip everything}
+    ;
+    ; the next 4 const bytes are:
+    ;  - gun x off
+    ;  - gun y off
+    ;  - gun x off (flip)
+    ;  - gun y off (flip)
+    ;    
+    ; first do Y += 1 to point to x off
+    ; then check direction, and set enemyGunX and enemyGunY to a right const value.
+    ; make sure we do Y += 4 (5 including the initial one) to point to animation speed.
     .gunPosition:
-      DEC enemyShooting
       INY
-      INY
-      INY
-      INY
-      INY
+      LDA genericDirection
+      BEQ .gunPositionNoFlip
+      
+      .gunPositionFlip:
+        INY
+        INY
+        LDA EnemyConsts, y
+        STA enemyGunX
+        INY
+        LDA EnemyConsts, y
+        STA enemyGunY
+        INY
+        JMP .animationConsts
+      
+      .gunPositionNoFlip:
+        LDA EnemyConsts, y
+        STA enemyGunX
+        INY
+        LDA EnemyConsts, y
+        STA enemyGunY
+        INY
+        INY
+        INY            
     
     ; cache animation consts.
     ; this expects Y to point to the animation speed
@@ -593,8 +617,7 @@ UpdateActiveEnemy:
 
     ; enemy should shoot.
     ; first do X += 1 to point to the shooting frequency, load it, do X -= 1
-    ; and store it to reset the shooting timer. then do X += 2 to point to the animation timer.
-    ; then check the enemyShooting - if it's 0, go to EnemyProcessAnimation
+    ; and store it to reset the shooting timer. then do X += 2 to point to the animation timer.33
     .enemyShoot:
       INX
       LDA enemies, x
@@ -602,15 +625,50 @@ UpdateActiveEnemy:
       STA enemies, x
       INX
       INX
-      LDA enemyShooting
-      BEQ EnemyProcessAnimation
+    
+    ; enemyGunX and enemyGunY are currently set to gun offsets.
+    ; add genericX and genericY to them to get the actual position to spawn the bullet.
+    ; when calculating enemyGunX, make sure the gun is on screen.
+    ; first check if enemy is on screen or not
+    ; {todo: test all of it, to test calculateGunXEnemyOffScreen update consts)
+    .calculateGunX:
+      LDA genericOffScreen
+      BEQ .calculateGunXEnemyOnScreen
+      
+      ; enemy is off screen, meaning the addition must overflow for gun to be on screen
+      .calculateGunXEnemyOffScreen:
+        LDA enemyGunX
+        CLC
+        ADC genericX
+        BCC EnemyProcessAnimation
+        STA enemyGunX
+        JMP .calculateGunY
+      
+      ; enemy is on screen, meaning the addition must not overflow for gun to be on screen
+      .calculateGunXEnemyOnScreen:
+        LDA enemyGunX
+        CLC
+        ADC genericX
+        BCS EnemyProcessAnimation
+        STA enemyGunX
+        JMP .calculateGunY
+            
+    ; calculating gun y is straightforward
+    .calculateGunY:
+      LDA enemyGunY
+      CLC
+      ADC genericY
+      STA enemyGunY
       
     ; spawn enemy bullet using enemyGunX, enemyGunY, enemyOrientation, genericDirection:
     ;   - enemyGunX, enemyGunY - point to spawn the bullet at
     ;   - enemyOrientation - bit 0 set means shoot horizontally, else shoot vertically (see comment in .calculateDiffs)
     ;   - genericDirection - 0 means shoot right or down, 1 means shoot left or up (depending on orientation)
-    .spawnEnemyBullet:
-      ; {todo implement}
+    SpawnEnemyBullet:
+      NOP
+      ; {todo: currently we get here for the off-screen beetle, debug}
+      ; {todo: implement}
+
           
   ; when we get here, X points to the animation timer.
   ; next byte is the current animation frame.
