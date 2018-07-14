@@ -677,14 +677,14 @@ UpdateActiveEnemy:
       ; first find a free slot, look for BULLET_S_NOT_EXIST == 0
       LDY #ENEMY_BULLET_LAST
       .findFreeSlotLoop:    
-        LDA bullets, x
+        LDA bullets, y
         BEQ .freeSlotFound
-        CPX #ENEMY_BULLET_FIRST
+        CPY #ENEMY_BULLET_FIRST
         BEQ EnemyProcessAnimation
-        DEX
-        DEX
-        DEX
-        DEX
+        DEY
+        DEY
+        DEY
+        DEY
         JMP .findFreeSlotLoop
 
       ; free slot found, Y points to it
