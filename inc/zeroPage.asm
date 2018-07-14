@@ -106,6 +106,8 @@ playerJump              .rs 1  ; 0 means not jumping, otherwise contains the jum
 ; Generic vars                                                  ;
 ;****************************************************************
 
+frameCount              .rs 1  ; frame counter
+
 genericX                .rs 1  ; generic position
 genericY                .rs 1 
 genericFrame            .rs 1  ; generic frame count

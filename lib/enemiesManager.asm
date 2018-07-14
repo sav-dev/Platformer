@@ -298,31 +298,38 @@ UpdateActiveEnemy:
       
       ; if off screen:
       ;   - load generic X
-      ;   - add hitbox X offset, cache the result in ax2 temporarily
-      ;   - if carry not set - cap at 0
-      ;   - Y += 1 to point at hitbox width
-      ;   - load ax2, add hitbox width
-      ;   - if carry not set - don't check collisions
+      ;   - add hitbox X offset
+      ;   - if carry clear, it means the box starts at the previous screen
       .hitboxXOffScreen:
         LDA genericX
         CLC
-        ADC EnemyConsts, y
-        STA ax2
-        BCC .capX1
-        STA ax1
-        JMP .hitboxXOffScreenX2
-        
-        .capX1:
-          LDA #$00
-          STA ax1
+        ADC EnemyConsts, y        
+        BCC .hitboxXPartiallyOffscreen
       
-        .hitboxXOffScreenX2:
+        ; box fully on screen, A still holds calculated x1
+        ;   - set x1
+        ;   - Y += 1 to point at hitbox width
+        ;   - x2 = x1 + width
+        .hitboxXFullyOnScreen:
+          STA ax1
           INY
-          LDA ax2
           CLC
           ADC EnemyConsts, y
-          BCC .noCollisions     ; BUG - what if ax1 >= 0
           STA ax2
+          JMP .hitboxY
+        
+        ; box partially off screen, A still holds calculated x1
+        ;   - Y += 1 to point at hitbox width
+        ;   - x2 = x1 + width, if carry clear it means hitbox is off screen - jump to .noCollisions
+        ;   - x1 = 0
+        .hitboxXPartiallyOffscreen:
+          INY
+          CLC
+          ADC EnemyConsts, y
+          BCC .noCollisions
+          STA ax2
+          LDA #$00
+          STA ax1
           JMP .hitboxY
       
         ; we reach this code if we decide hitbox is off screen

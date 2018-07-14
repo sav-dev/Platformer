@@ -295,18 +295,6 @@ UpdatePlayerNormal:
 
   .renderPlayer:
     JSR RenderPlayer
-    
-  .spawnBullets:
-    LDA playerBulletCooldown
-    BEQ .checkB
-    DEC playerBulletCooldown
-    JMP .checkIfFallingOffScreen
-    
-  .checkB:
-    LDA controllerPressed
-    AND #CONTROLLER_B 
-    BEQ .checkIfFallingOffScreen      ; check if player wants to fire
-    JSR SpawnPlayerBullet
 
   .checkIfFallingOffScreen:
     LDA playerY
@@ -423,6 +411,34 @@ ExplodePlayer:
   STA playerCounter
   RTS   
 
+;****************************************************************
+; Name:                                                         ;
+;   SpawnPlayerBullets                                          ;
+;                                                               ;
+; Description:                                                  ;
+;   Checks if player can/wants to fire, spawns a bullet at      ;
+;   current position if that's the case                         ;
+;                                                               ;
+; Used variables:                                               ;
+;   N/I                                                         ;
+;****************************************************************
+
+SpawnPlayerBullets:  
+
+  LDA playerBulletCooldown
+  BEQ .checkB
+  DEC playerBulletCooldown
+  RTS
+    
+  .checkB:
+    LDA controllerPressed
+    AND #CONTROLLER_B 
+    BEQ .return
+    JMP SpawnPlayerBullet
+
+  .return:
+    RTS
+  
 ;****************************************************************
 ; Name:                                                         ;
 ;   CheckCollisionVertical                                      ;
