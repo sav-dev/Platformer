@@ -205,6 +205,8 @@ ENEMY_BULLET_FIRST      = TOTAL_BULLET_VAR_SIZE - ENEMIES_BULLET_VAR_SIZE
 ; last bullet in the combined var is the last bullet in the enemy var
 TOTAL_BULLET_LAST       = ENEMY_BULLET_LAST
 
+ENEMY_BULLET_ATTS       = $02
+
 ;****************************************************************
 ; Scroll                                                        ;
 ;****************************************************************

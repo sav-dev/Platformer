@@ -241,7 +241,7 @@ UpdateBullets:
       ROR A
       ROR A
       STA renderAtts
-      
+            
       ; X += 2 to point to x position, then store renderXPos
       INX
       INX
@@ -256,7 +256,7 @@ UpdateBullets:
       ; set render tile to exploding bullet
       LDA #BULLET_SPRITE_E
       STA renderTile   
-    
+      
       ; render bullet
       JMP .renderBullet
       
@@ -433,11 +433,8 @@ UpdateBullets:
       .checkCollisions:
         JSR CheckForCollisionsPlatAndTh
         LDA collision
-        BEQ .noCollision
-        
-        ; todo: check for collision with player (for enemy bullets; l param set)
-        ; todo: the logic for 'clear just spawned bullets on collision' must not apply to player collision bullets
-        
+        BEQ .noCollisionWithPlatAndTh
+                
       ; if we get here, a collision has been detected. X still points to the Y position.
       ; if it was just spawn, just clear it. otherwise we must update it's position
       .collision:
@@ -507,7 +504,40 @@ UpdateBullets:
         STA renderAtts
         JMP .renderBullet
         
-      ; we get here if no collision was detected.
+      ; we get here if no collision with platforms or threats was detected.
+      ; check for collisions with player for enemy bullets.
+      .noCollisionWithPlatAndTh:        
+        LDA l
+        BEQ .noCollision
+        
+        ; only check for collisions if player is not already exploding or invisible,
+        ; i.e. if state == 0 (PLAYER_NORMAL) or 1 (PLAYER_FALLING).    
+        LDA playerState
+        BEQ .collisionWithPlayerCheck
+        CMP #PLAYER_FALLING
+        BEQ .collisionWithPlayerCheck
+        JMP .noCollision     
+      
+      ; check for collision with player.
+      ; bullet's box is still in 'b' boxes, set the player's box in 'a' boxes.
+      .collisionWithPlayerCheck:        
+        LDA playerThreatBoxX1
+        STA ax1
+        LDA playerThreatBoxX2
+        STA ax2
+        LDA playerThreatBoxY1
+        STA ay1
+        LDA playerThreatBoxY2
+        STA ay2
+        JSR CheckForCollision
+        LDA collision
+        BEQ .noCollision
+        
+        ; collision with player detected - explode player, then go to .collisionUpdateState
+        JSR ExplodePlayer
+        JMP .collisionUpdateState        
+      
+      ; no collisions detected.
       ; load X from xPointerCache to point to the state, then set it to BULLET_S_NORMAL
       ; (in case it's currently set to BULLET_S_JUST_SPAWNED).
       ; then go to render the bullet.
@@ -516,11 +546,20 @@ UpdateBullets:
         LDA #BULLET_S_NORMAL
         STA bullets, x
         
-      ; all render vars are set, so just call into RenderSprite.
-      ; then go to the loop check.
+      ; render the bullet
       .renderBullet:
-        JSR RenderSprite
-        JMP .updateLoopCheck
+      
+        ; use different palette for enemy bullets
+        ; POI - possible optimization - is this really needed?
+        LDA l
+        BEQ .renderSprite
+        LDA renderAtts
+        ORA #ENEMY_BULLET_ATTS
+        STA renderAtts
+      
+        .renderSprite:
+          JSR RenderSprite
+          JMP .updateLoopCheck
         
       ; we get here if we want to clear the bullet.
       ; load X from xPointerCache to point to the state, then set it to BULLET_S_NOT_EXIST
