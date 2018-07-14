@@ -641,7 +641,6 @@ UpdateActiveEnemy:
       BEQ .calculateGunXEnemyOnScreen
       
       ; {todo: test both off-screen scenarios, there is a bug there}
-      ; {todo: gun x/y off must be updated for enemies, it's way off}
       
       ; enemy is off screen, meaning the addition must overflow for gun to be on screen
       .calculateGunXEnemyOffScreen:

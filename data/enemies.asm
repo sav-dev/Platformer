@@ -30,7 +30,7 @@ BeetleConsts:
 .hitboxInfo:
   .byte $02,$1B,$04,$10
 .gunInfo:
-  .byte $1E,$05,$01,$05
+  .byte $1E,$03,$01,$03
 .animationSpeed:
   .byte $08
 .numberOfFrames:
@@ -94,7 +94,7 @@ TurretVConsts:
 .hitboxInfo:
   .byte $01,$0D,$01,$0D
 .gunInfo:
-  .byte $0C,$0F,$0C,$00
+  .byte $0A,$0F,$0A,$00
 .animationSpeed:
   .byte $00
 .numberOfFrames:
@@ -110,7 +110,7 @@ TurretHConsts:
 .hitboxInfo:
   .byte $01,$0D,$01,$0D
 .gunInfo:
-  .byte $0F,$03,$00,$03
+  .byte $0F,$01,$00,$01
 .animationSpeed:
   .byte $00
 .numberOfFrames:
