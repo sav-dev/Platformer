@@ -54,7 +54,7 @@ bullets           .rs 60    ; 4 x PLAYER_BULLET_LIMIT + 4 x ENEMY_BULLET_LIMIT; 
 ; Other variables                                               ;
 ;****************************************************************
 
- .rsset $0528
+ .rsset $0560
  
 ;****************************************************************
 ; Game state                                                    ;
