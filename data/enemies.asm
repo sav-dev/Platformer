@@ -10,10 +10,10 @@
 ;    hitbox width    : 1 byte (inclusive)
 ;    hitbox y off    : 1 byte
 ;    hitbox height   : 1 byte (inclusive)
-;    gun x off       : 1 byte (0 for non shooting)
-;    gun y off       : 1 byte (0 for non shooting)
-;    gun x off flip  : 1 byte (0 for non shooting)
-;    gun y off flip  : 1 byte (0 for non shooting)
+;    gun x off       : 1 byte (signed, 0 for non shooting)
+;    gun y off       : 1 byte (signed, 0 for non shooting)
+;    gun x off flip  : 1 byte (signed, 0 for non shooting)
+;    gun y off flip  : 1 byte (signed, 0 for non shooting)
 ;    animation speed : 1 byte (0 for non animated)
 ;    # of frames     : 1 bytes
 ;    rendering info  : 2 bytes
@@ -30,7 +30,7 @@ BeetleConsts:
 .hitboxInfo:
   .byte $02,$1B,$04,$10
 .gunInfo:
-  .byte $1E,$03,$01,$03
+  .byte $1E,$03,$F9,$03
 .animationSpeed:
   .byte $08
 .numberOfFrames:
@@ -94,7 +94,7 @@ TurretVConsts:
 .hitboxInfo:
   .byte $01,$0D,$01,$0D
 .gunInfo:
-  .byte $0A,$0F,$0A,$00
+  .byte $0A,$0F,$0A,$F8
 .animationSpeed:
   .byte $00
 .numberOfFrames:
@@ -110,7 +110,7 @@ TurretHConsts:
 .hitboxInfo:
   .byte $01,$0D,$01,$0D
 .gunInfo:
-  .byte $0F,$01,$00,$01
+  .byte $0F,$01,$F8,$01
 .animationSpeed:
   .byte $00
 .numberOfFrames:

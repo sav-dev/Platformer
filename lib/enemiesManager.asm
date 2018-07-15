@@ -642,25 +642,34 @@ UpdateActiveEnemy:
       
       ; {todo: test both off-screen scenarios, there is a bug there}
       
-      ; enemy is off screen, meaning the addition must overflow for gun to be on screen
+      ; enemy is off screen
+      ;  - if gunXOff < 0 (BMI), don't spawn the bullet
+      ;  - otherwise, make sure carry is set (i.e. overflow happens and gun is on screen)
       .calculateGunXEnemyOffScreen:
         LDA enemyGunX
+        BMI EnemyProcessAnimation
+        
+      .addMakeSureCarrySet:
         CLC
         ADC genericX
         BCC EnemyProcessAnimation
         STA enemyGunX
         JMP .calculateGunY
       
-      ; enemy is on screen, meaning the addition must not overflow for gun to be on screen
+      ; enemy is on screen
+      ;  - if gunXOff < 0 (BMI), make sure carry is set (it's not set if e.g. genericX = 5 and gunXOff = -10 = F6, F6 + 5 = FB = -5)
+      ;  - otherwise, make sure carry is not set (i.e. overflow doesn't happen and gun stays on screen)
       .calculateGunXEnemyOnScreen:
         LDA enemyGunX
-        CLC
-        ADC genericX
-        BCS EnemyProcessAnimation
-        STA enemyGunX
-        JMP .calculateGunY
+        BMI .addMakeSureCarrySet
+        
+        .addMakeSureCarryNotSet:
+          CLC
+          ADC genericX
+          BCS EnemyProcessAnimation
+          STA enemyGunX
             
-    ; calculating gun y is straightforward
+    ; calculating gun y is straightforward - make sure an enemy is never put high enough on the screen to shoot off screen
     .calculateGunY:
       LDA enemyGunY
       CLC
