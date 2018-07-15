@@ -162,7 +162,7 @@ LoadGame:
       .clearBulletLoop:
         DEX
         LDA #$00
-        STA bullets
+        STA bullets, x
         TXA
         BNE .clearBulletLoop
     .clearBulletsDone:      

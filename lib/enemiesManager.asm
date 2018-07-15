@@ -474,12 +474,9 @@ UpdateActiveEnemy:
     BNE .collisionWithPlayer
     JMP EnemyProcessShooting
   
-    ; only check for collisions if player is not already exploding or invisible,
-    ; i.e. if state == 0 (PLAYER_NORMAL) or 1 (PLAYER_FALLING).    
+    ; only check for collisions if player  state == 0 (PLAYER_NORMAL)
     .collisionWithPlayer:
       LDA playerState
-      BEQ .collisionWithPlayerCheck
-      CMP #PLAYER_FALLING
       BEQ .collisionWithPlayerCheck
       JMP .collisionWithBullets
       
