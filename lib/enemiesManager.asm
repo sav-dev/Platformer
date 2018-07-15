@@ -637,8 +637,6 @@ UpdateActiveEnemy:
       LDA genericOffScreen
       BEQ .calculateGunXEnemyOnScreen
       
-      ; {todo: test both off-screen scenarios, there is a bug there}
-      
       ; enemy is off screen
       ;  - if gunXOff < 0 (BMI), don't spawn the bullet
       ;  - otherwise, make sure carry is set (i.e. overflow happens and gun is on screen)
