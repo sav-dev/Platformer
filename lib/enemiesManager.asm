@@ -1000,7 +1000,9 @@ UpdateEnemies:
           LDX xPointerCache
           LDA #ENEMY_STATE_EXPLODING
           STA enemies, x        
-        
+      
+        ; { todo - mark the enemy as destroyed }
+      
         ; X += 2 to point at the consts pointer
         ; load the pointer then do += 13 to point to the consts data. store in Y.
         .loadConstsPointer:
@@ -1093,6 +1095,14 @@ UpdateEnemies:
 ;****************************************************************
 
 LoadEnemiesInitial:
+  
+  .clearDestroyedEnemies:              ; set all bytes in destroyed enemies to 0
+    LDA #$00
+    LDX #$0A                           ; 10 = size of destroyed enemies in bytes
+    .clearDestroyedEnemiesLoop:
+      STA destroyedEnemies, x
+      DEX
+      BNE .clearDestroyedEnemiesLoop
   
   .screensToSkip:
     LDA maxScroll + $01                ; see LoadPlatformsAndThreats for explanation of this logic
@@ -1214,7 +1224,6 @@ LoadEnemiesBack:
 ;   X                                                           ;
 ;   b                                                           ;
 ;   c                                                           ;
-;   d                                                           ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_enemy_in_level_data_format                       ;
@@ -1223,49 +1232,69 @@ LoadEnemiesBack:
 
 LoadEnemies:
   
-  .loadEnemiesCount:
-  
-    LDY #$01                    ; skip the pointer, Y points to the number of enemies
-    LDA [enemiesPointer], y     ; load the number of enemies
-    BEQ .loadEnemiesExit        ; no enemies to load
-    STA b                       ; store the number of enemies in b    
+  ; first Y += 1 to skip the pointer to the next screen.
+  ; then load the number of enemies, exit if 0, store in b
+  .loadEnemiesCount:  
+    LDY #$01
+    LDA [enemiesPointer], y
+    BEQ .loadEnemiesExit
+    STA b
    
+   ; loop for loading enemies
   .loadEnemiesLoop:
   
-    INY
-    LDA [enemiesPointer], y     ; load the id
-    ; todo: check if the enemy has been destroyed    
-    STA c                       ; cache it in c for now
-    
-    INY
-    LDA [enemiesPointer], y     ; load the slot to put enemy in
-    TAX                         ; put in in X - X points to state        
-    
-    LDA #ENEMY_STATE_ACTIVE
-    STA enemies, x              ; set the state
-    
-    INX                         ; x points to the id
-    LDA c                       ; load the id back from c
-    STA enemies, x              ; store
-    
-    LDA #$0C                    ; next 12 bytes are the same in both definitions:
-    STA d                       ; pointer, screen, speed, distance, direction, distance left, flip, x, y, life, shooting freq, shooting timer
-    .copyLoop:                  ; d will be the loop pointer
+    ; Y += 1 to point to the id of the enemy.
+    ; load it, then cache it in c
+    ; then check if the enemy should be loaded
+    .cacheId:
       INY
-      LDA [enemiesPointer], y   ; load enemy data
+      LDA [enemiesPointer], y
+      STA c
+      
+      ; { todo - check if the enemy has been destroyed }
+    
+    ; load the slot the enemy should be put it, and store it in X = the pointer in memory.
+    .getSlot:
+      INY
+      LDA [enemiesPointer], y
+      TAX
+    
+    ; X points to the state, set it to "active"
+    .setState:
+      LDA #ENEMY_STATE_ACTIVE
+      STA enemies, x
+    
+    ; X += 1 to point to the id, then set it to the value cached in c
+    .setId:
       INX
-      STA enemies, x            ; store in memory data
-      DEC d
-      BNE .copyLoop   
+      LDA c
+      STA enemies, x
     
-    LDA #$01                    ; next two bytes are the animation vars, set both to 1 (so they'll loop to the beginning the next frame)
-    INX
-    STA enemies, x
-    INX
-    STA enemies, x
+    ; next 12 bytes are the sane in both definitions:
+    ; pointer, screen, speed, distance, direction, distance left, flip, x, y, life, shooting freq, shooting timer
+    ; c will be the loop pointer (no longer needed), copy the 12 bytes incrementing Y and X in each loop
+    LDA #$0C
+    STA c
+    .copyLoop:
+      INY
+      LDA [enemiesPointer], y
+      INX
+      STA enemies, x
+      DEC c
+      BNE .copyLoop
     
+    ; next two bytes are the animation vars, set both to 1 (so they'll loop to the beginning the next frame)
+    ; do X += 1 before each set to point to the right place
+    .setAnimationVars:
+      LDA #$01                    
+      INX
+      STA enemies, x
+      INX
+      STA enemies, x
+    
+    ; loop if needed
     DEC b
-    BNE .loadEnemiesLoop        ; loop if needed
+    BNE .loadEnemiesLoop
           
   .loadEnemiesExit:
     RTS

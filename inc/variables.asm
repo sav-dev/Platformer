@@ -38,9 +38,14 @@ rightTiles        .rs 128   ; last 128 bytes of the tile dictionary
 ; Enemies                                                       ;
 ;****************************************************************
 
- .rsset $0400              
+ .rsset $0400
+ 
+; POI - possible optimization - these sizes can be lowered
+; size of enemies must be "max enemies on screen * enemy size"
+; size of destroyedEnemies must be "max enemies in a level / 8"
 
-enemies           .rs 200   ; POI - can be lowered, must be = max enemies x enemy size; see enemiesManager.asm for format
+enemies           .rs 200
+destroyedEnemies  .rs 10
 
 ;****************************************************************
 ; Bullets                                                       ;
