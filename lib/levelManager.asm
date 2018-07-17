@@ -35,15 +35,42 @@
 ;****************************************************************
 
 LoadLevel:
-  JSR LoadLevelBackground      ; load level background, uses levelPointer, sets max scroll and genericPointer (to 1st byte after background data)
-  JSR LoadPlatformsAndThreats  ; load platforms and threats, sets platformsPointer, threatsPointer and genericPointer (to 1st byte after platforms/threats data)
-  JSR LoadEnemiesInitial       ; load enemies, sets enemiesPointer and genericPointer (to 1st byte after enemy data)
+
+  ; load level background - input is levelPointer, sets max scroll and genericPointer (to 1st byte after background data)
+  JSR LoadLevelBackground    
+
+  ; load platforms and threats - input is genericPointer, sets platformsPointer, threatsPointer and genericPointer (to 1st byte after platforms/threats data)  
+  JSR LoadPlatformsAndThreats
   
-  ; todo - add more stuff, like enemies, starting x/y
-  ; for now player position is hardcoded
-  LDA #$30
+  ; load enemies - input is genericPointer, sets enemiesPointer and genericPointer (to 1st byte after enemy data)
+  JSR LoadEnemiesInitial
+  
+  ; everything has been loaded, only thing left is player starting position and exit position. format:
+  ;  - starting position x (genericPointer points here)
+  ;  - starting position y
+  ;  - exit screen
+  ;  - exit x
+  ;  - exit y
+  LDY #$00
+  LDA [genericPointer], y
   STA playerX
-  LDA #$CF
+  
+  INY
+  LDA [genericPointer], y
   STA playerY
+  
+  ; {todo load and store exit screen/x/y, probably not need to put it in zero page if we check it on dpad up}
+  
+  INY
+  LDA [genericPointer], y
+  ; STA levelExitScreen
+  
+  INY
+  LDA [genericPointer], y
+  ; STA levelExitX
+  
+  INY
+  LDA [genericPointer], y
+  ; STA levelExitY   
   
 RTS

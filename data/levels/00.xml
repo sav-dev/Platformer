@@ -2516,4 +2516,12 @@
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
     </Enemy>
   </Enemies>
+  <PlayerStartingPosition>
+    <X>50</X>
+    <Y>207</Y>
+  </PlayerStartingPosition>
+  <ExitPosition>
+    <X>0</X>
+    <Y>0</Y>
+  </ExitPosition>
 </Level>
