@@ -2516,6 +2516,28 @@
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
     </Enemy>
   </Enemies>
+  <Elevators>
+    <Elevator>
+      <X>56</X>
+      <Y>64</Y>
+      <Size>8</Size>
+      <MovementType>Vertical</MovementType>
+      <Speed>2</Speed>
+      <MinPosition>48</MinPosition>
+      <MaxPosition>128</MaxPosition>
+      <InitialFlip>true</InitialFlip>
+    </Elevator>
+    <Elevator>
+      <X>112</X>
+      <Y>160</Y>
+      <Size>4</Size>
+      <MovementType>Horizontal</MovementType>
+      <Speed>2</Speed>
+      <MinPosition>64</MinPosition>
+      <MaxPosition>192</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+    </Elevator>
+  </Elevators>
   <PlayerStartingPosition>
     <X>50</X>
     <Y>207</Y>
