@@ -102,9 +102,14 @@ UpdatePlayerNormal:
         JMP .checkVerticalCollision        
                                       
       .processJump:
-              
-        .jumpCheckA:                  ; remove everything from here up to JMP .lookupJumpDistance (inclusive)
-          LDA controllerDown          ; to get rid of the 'keep A to jump' mechanic
+
+        ; remove everything from here up to and including JMP .lookupJumpDistance to get rid of the 'keep A to jump' mechanic
+      
+        CMP #JUMP_PRESS               ; check if we're at a point where we require A to be pressed to continue the jump
+        BCS .updateJumpCounter
+      
+        .jumpCheckA:
+          LDA controllerDown
           AND #CONTROLLER_A 
           BNE .updateJumpCounter      ; if A is still pressed, process the jump normally
           
@@ -1189,10 +1194,12 @@ RenderPlayerFalling:
 ;   Lookup table with jump DY values                            ;
 ;****************************************************************
 
-JUMP_FRAMES = $19     ; = 25
-JUMP_PEAK = $04       ; =  4
-JUMP_SLOWDOWN = $08   ; =  8
-jumpLookupTable:
+JUMP_PEAK = $04       ; =  4, if a platform is hit going up, go to this point in the jump
+JUMP_SLOWDOWN = $08   ; =  8, id A is not down, go to this point in the jump (unless already there)
+JUMP_PRESS = $16      ; = 22, require A to be pressed when jump counter < this
+
+JUMP_FRAMES = $19     ; = 25, number of 'jump frames'
+jumpLookupTable:      ;       start with this number then go down
   .byte $00           ; =  0
   .byte $00           ; =  0
   .byte $00           ; =  0
