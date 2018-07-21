@@ -2528,13 +2528,43 @@
       <InitialFlip>true</InitialFlip>
     </Elevator>
     <Elevator>
-      <X>112</X>
-      <Y>160</Y>
+      <X>240</X>
+      <Y>184</Y>
+      <Size>2</Size>
+      <MovementType>None</MovementType>
+      <Speed>0</Speed>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+    </Elevator>
+    <Elevator>
+      <X>288</X>
+      <Y>128</Y>
       <Size>4</Size>
       <MovementType>Horizontal</MovementType>
-      <Speed>2</Speed>
-      <MinPosition>64</MinPosition>
-      <MaxPosition>192</MaxPosition>
+      <Speed>1</Speed>
+      <MinPosition>288</MinPosition>
+      <MaxPosition>320</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+    </Elevator>
+    <Elevator>
+      <X>416</X>
+      <Y>128</Y>
+      <Size>4</Size>
+      <MovementType>Horizontal</MovementType>
+      <Speed>1</Speed>
+      <MinPosition>400</MinPosition>
+      <MaxPosition>479</MaxPosition>
+      <InitialFlip>true</InitialFlip>
+    </Elevator>
+    <Elevator>
+      <X>928</X>
+      <Y>200</Y>
+      <Size>2</Size>
+      <MovementType>Vertical</MovementType>
+      <Speed>4</Speed>
+      <MinPosition>200</MinPosition>
+      <MaxPosition>220</MaxPosition>
       <InitialFlip>false</InitialFlip>
     </Elevator>
   </Elevators>

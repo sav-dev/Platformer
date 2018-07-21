@@ -216,9 +216,6 @@ SCROLL_SPEED = PLAYER_SPEED_POSITIVE ; scroll speed synchronized with player spe
 ; Enemies                                                       ;
 ;****************************************************************
 
-ENEMY_SIZE                = $10        ; 16 bytes per enemy  
-ENEMIES_COUNT             = $0C        ; 12 enemies max
-
 ; format in enemiesManager.asm
 ; depends_on_enemy_in_memory_format
 ENEMY_STATE               = $00
@@ -254,6 +251,24 @@ ENEMY_MOVE_VERTICAL     = $06
 ; Elevators                                                     ;
 ;****************************************************************
 
-ELEVATOR_SPRITE         = $F9
-ELEVATOR_END_SPRITE     = $FA
-ELEVATOR_ATTS           = $02
+ELEVATOR_SPRITE              = $F9
+ELEVATOR_END_SPRITE          = $FA
+ELEVATOR_ATTS                = $02
+
+; format in elevatorManager.asm
+; depends_on_elevator_in_memory_format
+ELEVATOR_EL_SIZE             = $00
+ELEVATOR_SCREEN              = $01
+ELEVATOR_SPEED               = $02
+ELEVATOR_MAX_DISTANCE        = $03
+ELEVATOR_CURRENT_DISTANCE    = $04
+ELEVATOR_MOVEMENT_DIRECTION  = $05
+ELEVATOR_X                   = $06
+ELEVATOR_Y                   = $07
+
+; elevator size == 0 means elevator is not loaded
+ELEVATOR_EL_SIZE_EMPTY       = $00
+
+AFTER_LAST_ELEVATOR          = ELEVATOR_SIZE * ELEVATORS_COUNT 
+LAST_ELEVATOR                = AFTER_LAST_ELEVATOR - ELEVATOR_SIZE
+LAST_ELEVATOR_SCREEN         = LAST_ELEVATOR + ELEVATOR_SCREEN

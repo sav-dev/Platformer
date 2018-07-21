@@ -573,6 +573,7 @@ IncrementScroll:
     JSR MovePlatformsPointerForward    ; move platforms pointer forward
     JSR MoveThreatsPointerForward      ; move threats pointer forward
     JSR LoadEnemiesForward             ; load enemies for the screen in the front, also moves the enemies pointer
+    JSR LoadElevatorsForward           ; load elevators for the screen in the front, also moves the elevators pointer
   .checkForScrollWrapDone:             
                                        
   .newDataCheck:
@@ -884,6 +885,7 @@ DecrementScroll:
     JSR MovePlatformsPointerBack       ; move platforms pointer back
     JSR MoveThreatsPointerBack         ; move threats pointer back
     JSR LoadEnemiesBack                ; load enemies for the screen in the back, also moves the enemies pointer
+    JSR LoadElevatorsBack              ; load elevators for the screen in the back, also moves the elevators pointer
   .checkForScrollWrapDone:
 
   .newDataCheck:

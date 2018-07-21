@@ -155,7 +155,10 @@ LoadElevatorsBack:
 ;   elevatorsPointer - elevators to load                        ;
 ;                                                               ;
 ; Used variables:                                               ;
-;   {todo}                                                      ;    
+;   Y                                                           ;    
+;   X                                                           ;    
+;   b                                                           ;    
+;   c                                                           ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_elevator_in_level_data_format                    ;
@@ -163,8 +166,41 @@ LoadElevatorsBack:
 ;****************************************************************
 
 LoadElevators:
-  ; todo implement 
-  RTS
+  
+  ; first Y += 1 to skip the pointer to the next screen.
+  ; then load the number of enemies, exit if 0, store in b
+  .loadElevatorsCount:  
+    LDY #$01
+    LDA [enemiesPointer], y
+    BEQ .loadElevatorsExit
+    STA b
+  
+  ; loop for loading elevators
+  .loadElevatorsLoop:
+  
+    ; load slot - Y += 1 to point to the slot, load it, store it in X
+    INY
+    LDA [elevatorsPointer], y
+    TAX
+      
+    ; remaining 8 bytes are the same.
+    ; use c as the loop counter.
+    LDA #$08
+    STA c
+    .copyLoop:
+      INY
+      LDA [elevatorsPointer], y      
+      STA elevators, x
+      INX
+      DEC c
+      BNE .copyLoop
+  
+    ; loop if needed
+    DEC b
+    BNE .loadElevatorsLoop
+  
+  .loadElevatorsExit:
+    RTS
   
 ;****************************************************************
 ; Name:                                                         ;
@@ -177,15 +213,42 @@ LoadElevators:
 ;   b - screen to unload the elevators for                      ;
 ;                                                               ;
 ; Used variables:                                               ;
+;   X                                                           ;
 ;   b                                                           ;
-;   {todo}                                                      ;
+;   c                                                           ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_elevator_in_memory_format                        ;
 ;****************************************************************
 
 UnloadElevators:
-  ; {todo}
+
+  LDX #LAST_ELEVATOR_SCREEN        ; loop all elevators going down
+  LDA #ELEVATORS_COUNT
+  STA c                            ; c is the loop counter
+  
+  ; POI - possible optimization - instead of DEC c BNE, do CPX BNE ? same in UnloadEnemies
+  
+  .unloadElevatorLoop:
+  
+    LDA elevators, x               ; load the screen the elevator is on
+    CMP b
+    BNE .loopCondition             ; if screen != b, don't do anything
+    
+    .unloadElevator:
+      DEX                          ; x points to the elevator size
+      LDA #ELEVATOR_EL_SIZE_EMPTY
+      STA elevators, x             ; unload the elevator
+      INX                          ; x points back to the screen
+    
+    .loopCondition:
+      TXA
+      SEC
+      SBC #ENEMY_SIZE
+      TAX                          ; decrement the pointer 
+      DEC c                        ; decrement the loop counter
+      BNE .unloadElevatorLoop         
+
   RTS
   
 ;****************************************************************
