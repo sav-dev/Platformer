@@ -5,6 +5,227 @@
 
 ;****************************************************************
 ; Name:                                                         ;
+;   LoadElevatorsInitial                                        ;
+;                                                               ;
+; Description:                                                  ;
+;   Loads elevators for screen 0 and 1,                         ;
+;   sets the elevatorsPointer                                   ;
+;                                                               ;
+; Input variables:                                              ;
+;   genericPointer - set to the start of the elevators data     ;
+;                                                               ;
+; Output variables:                                             ;
+;   elevatorsPointer - set to the elevators data for screen 1   ;
+;   genericPointer - set to the first byte after elevators data ;
+;                                                               ;
+; Used variables:                                               ;
+;   Y                                                           ;
+;   X                                                           ;
+;   b                                                           ;
+;   c                                                           ;
+;****************************************************************
+
+LoadElevatorsInitial:
+  
+  .screensToSkip:
+    LDA maxScroll + $01                ; see LoadPlatformsAndThreats for explanation of this logic
+    CLC
+    ADC #$02
+    STA b
+                                       
+  .setElevatorsPointer:                 
+    LDA genericPointer                 
+    STA elevatorsPointer               
+    LDA genericPointer + $01           
+    STA elevatorsPointer + $01         ; elevatorsPointer set to elevators for screen 0
+  
+  .moveElevatorsPointerLoop:
+    JSR MoveElevatorsPointerForward    ; move elevatorsPointer forward
+    DEC b
+    BNE .moveElevatorsPointerLoop      ; after this loop, elevatorsPointer set to the first byte after elevators data
+    
+  .setGenericPointer:
+    LDA genericPointer
+    STA b
+    LDA genericPointer + $01
+    STA c                              ; cache genericPointer (still pointing to the start of the data) in b c
+    LDA elevatorsPointer
+    STA genericPointer
+    LDA elevatorsPointer + $01
+    STA genericPointer + $01           ; genericPointer now points to the first byte after elevators data
+    LDA b
+    STA elevatorsPointer
+    LDA c
+    STA elevatorsPointer + $01         ; elevatorsPointer now points to the first byte of the elevators data
+    
+  .loadElevators:
+    JSR LoadElevators                  ; load elevators for screen 0
+    JSR MoveElevatorsPointerForward
+    JSR LoadElevators                  ; load elevators for screen 1
+
+  RTS                                  ; elevators loaded, pointer points to screen 1 as expected
+
+;****************************************************************
+; Name:                                                         ;
+;   LoadElevatorsForward                                        ;
+;                                                               ;
+; Description:                                                  ;
+;   Load elevators for the screen in the front,                 ;
+;   also moves the elevators pointer forward                    ;
+;                                                               ;
+; Used variables:                                               ;
+;   {todo}                                                      ;
+;****************************************************************
+
+LoadElevatorsForward:
+ 
+  ; look in LookEnemiesForward for the logic
+ 
+  .unloadElevators:
+    LDA scroll + $01
+    SEC
+    SBC #$01
+    STA b                             ; b = screen - 1
+    JSR UnloadElevators               ; unload elevators
+ 
+  .loadElevatorsAndUpdatePointer:
+    JSR MoveElevatorsPointerForward   ; move pointer forward
+    JSR LoadElevators                 ; load elevators
+
+  RTS  
+  
+;****************************************************************
+; Name:                                                         ;
+;   LoadElevatorsBack                                           ;
+;                                                               ;
+; Description:                                                  ;
+;   Load elevators for the screen in the back,                  ;
+;   also moves the elevators pointer back                       ;
+;                                                               ;
+; Used variables:                                               ;
+;   {todo}                                                      ;
+;****************************************************************
+
+LoadElevatorsBack:
+
+  ; look in LookEnemiesForward for the logic
+  
+  .unloadElevators:
+    LDA scroll + $01
+    CLC
+    ADC #$02
+    STA b                             ; b = screen + 1
+    JSR UnloadElevators               ; unload elevators
+ 
+  .loadElevatorsAndUpdatePointer:
+    JSR MoveElevatorsPointerBack
+    JSR MoveElevatorsPointerBack      ; move pointer back twice
+    JSR LoadElevators                 ; load elevators
+    JSR MoveElevatorsPointerForward   ; move pointer forward
+  
+  RTS
+  
+;****************************************************************
+; Name:                                                         ;
+;   LoadElevators                                               ;
+;                                                               ;
+; Description:                                                  ;
+;   Load elevators from elevatorsPointer                        ;
+;                                                               ;
+; Input variables:                                              ;
+;   elevatorsPointer - elevators to load                        ;
+;                                                               ;
+; Used variables:                                               ;
+;   {todo}                                                      ;    
+;                                                               ;
+; Remarks:                                                      ;
+;   depends_on_elevator_in_level_data_format                    ;
+;   depends_on_elevator_in_memory_format                        ;
+;****************************************************************
+
+LoadElevators:
+  ; todo implement 
+  RTS
+  
+;****************************************************************
+; Name:                                                         ;
+;   UnloadElevators                                             ;
+;                                                               ;
+; Description:                                                  ;
+;   Unloads elevators for given screen                          ;
+;                                                               ;
+; Input variables:                                              ;
+;   b - screen to unload the elevators for                      ;
+;                                                               ;
+; Used variables:                                               ;
+;   b                                                           ;
+;   {todo}                                                      ;
+;                                                               ;
+; Remarks:                                                      ;
+;   depends_on_elevator_in_memory_format                        ;
+;****************************************************************
+
+UnloadElevators:
+  ; {todo}
+  RTS
+  
+;****************************************************************
+; Name:                                                         ;
+;   MoveElevatorsPointerForward                                 ;
+;                                                               ;
+; Description:                                                  ;
+;   Moves the elevators pointer forward                         ;
+;                                                               ;
+; Used variables:                                               ;
+;   Y                                                           ;
+;****************************************************************
+
+MoveElevatorsPointerForward:
+  LDY #$00
+  LDA [elevatorsPointer], y
+  CLC
+  ADC elevatorsPointer
+  STA elevatorsPointer
+  LDA elevatorsPointer + $01
+  ADC #$00
+  STA elevatorsPointer + $01
+  RTS
+  
+;****************************************************************
+; Name:                                                         ;
+;   MoveElevatorsPointerBack                                    ;
+;                                                               ;
+; Description:                                                  ;
+;   Moves the elevators pointer back                            ;
+;                                                               ;
+; Used variables:                                               ;
+;   Y                                                           ;
+;   i                                                           ;
+; POI - possible optimization - is the 'i' var needed?          ;
+;****************************************************************
+
+MoveElevatorsPointerBack:
+  LDA elevatorsPointer
+  SEC
+  SBC #$01
+  STA elevatorsPointer
+  LDA elevatorsPointer + $01
+  SBC #$00
+  STA elevatorsPointer + $01
+  LDY #$00
+  LDA [elevatorsPointer], y
+  STA i
+  LDA elevatorsPointer
+  SEC
+  SBC i
+  STA elevatorsPointer
+  LDA elevatorsPointer + $01
+  SBC #$00
+  STA elevatorsPointer + $01
+  RTS
+
+;****************************************************************
+; Name:                                                         ;
 ;   RenderElevator                                              ;
 ;                                                               ;
 ; Description:                                                  ;

@@ -67,3 +67,11 @@ bullets           .rs 60    ; 4 x PLAYER_BULLET_LIMIT + 4 x ENEMY_BULLET_LIMIT; 
 
 gameState           .rs 1   ; current gamestate
 currentLevel        .rs 1   ; current level
+
+;****************************************************************
+; Level exit                                                    ;
+;****************************************************************
+
+levelExitScreen     .rs 1
+levelExitX          .rs 1 
+levelExitY          .rs 1 

@@ -1078,13 +1078,13 @@ UpdateEnemies:
 ;   LoadEnemiesInitial                                          ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Load enemies for screen 0 and 1, sets the enemiesPointer    ;
+;   Loads enemies for screen 0 and 1, sets the enemiesPointer   ;
 ;                                                               ;
 ; Input variables:                                              ;
 ;   genericPointer - set to the start of the enemies data       ;
 ;                                                               ;
 ; Output variables:                                             ;
-;   enemiesPointer - set to the enemies data for screen 1 (!)   ;
+;   enemiesPointer - set to the enemies data for screen 1       ;
 ;   genericPointer - set to the first byte after enemies data   ;
 ;                                                               ;
 ; Used variables:                                               ;
@@ -1151,6 +1151,7 @@ LoadEnemiesInitial:
 ;   also moves the enemies pointer forward                      ;
 ;                                                               ;
 ; Used variables:                                               ;
+;   {todo}                                                      ;
 ;****************************************************************
 
 LoadEnemiesForward:
@@ -1183,6 +1184,7 @@ LoadEnemiesForward:
 ;   also moves the enemies pointer back                         ;
 ;                                                               ;
 ; Used variables:                                               ;
+;   {todo}                                                      ;
 ;****************************************************************
 
 LoadEnemiesBack:
@@ -1381,6 +1383,7 @@ MoveEnemiesPointerForward:
 ; Used variables:                                               ;
 ;   Y                                                           ;
 ;   i                                                           ;
+; POI - possible optimization - is the 'i' var needed?          ;
 ;****************************************************************
 
 MoveEnemiesPointerBack:

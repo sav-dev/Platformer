@@ -45,6 +45,9 @@ LoadLevel:
   ; load enemies - input is genericPointer, sets enemiesPointer and genericPointer (to 1st byte after enemy data)
   JSR LoadEnemiesInitial
   
+  ; load enemies - input is genericPointer, sets elevators and genericPointer (to 1st byte after enemy data)
+  JSR LoadElevatorsInitial
+  
   ; everything has been loaded, only thing left is player starting position and exit position. format:
   ;  - starting position x (genericPointer points here)
   ;  - starting position y
@@ -59,18 +62,16 @@ LoadLevel:
   LDA [genericPointer], y
   STA playerY
   
-  ; {todo load and store exit screen/x/y, probably not need to put it in zero page if we check it on dpad up}
+  INY
+  LDA [genericPointer], y
+  STA levelExitScreen
   
   INY
   LDA [genericPointer], y
-  ; STA levelExitScreen
+  STA levelExitX
   
   INY
   LDA [genericPointer], y
-  ; STA levelExitX
-  
-  INY
-  LDA [genericPointer], y
-  ; STA levelExitY   
+  STA levelExitY   
   
 RTS
