@@ -35,17 +35,22 @@ rightTiles        .rs 128   ; last 128 bytes of the tile dictionary
 ; ...
 
 ;****************************************************************
-; Enemies                                                       ;
+; Enemies and elevators                                         ;
 ;****************************************************************
 
  .rsset $0400
  
-; POI - possible optimization - these sizes can be lowered
-; size of enemies must be "max enemies on screen * enemy size"
-; size of destroyedEnemies must be "max enemies in a level / 8"
+; size of enemies must be "max enemies loaded" (currently 10) * "enemy size" (currently 16)
+; size of destroyedEnemies must be "max enemies in a level" (currently 80) / 8
 
-enemies           .rs 200
+enemies           .rs 160
 destroyedEnemies  .rs 10
+
+; size of elevators must be "max elevators loaded" (currently 6) * "elevator size" (currently 8)
+
+elevators         .rs 48
+
+; 38 bytes free here
 
 ;****************************************************************
 ; Bullets                                                       ;
@@ -53,7 +58,9 @@ destroyedEnemies  .rs 10
 
  .rsset $0500
 
-bullets           .rs 60    ; 4 x PLAYER_BULLET_LIMIT + 4 x ENEMY_BULLET_LIMIT; see constants.asm for format
+; size of bullets must be 4 * PLAYER_BULLET_LIMIT + 4 (currently 5) * ENEMY_BULLET_LIMIT (currently 10)
+ 
+bullets           .rs 60
 
 ;****************************************************************
 ; Other variables                                               ;
