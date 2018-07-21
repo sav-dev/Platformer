@@ -38,6 +38,8 @@ rightTiles        .rs 128   ; last 128 bytes of the tile dictionary
 ; Enemies and elevators                                         ;
 ;****************************************************************
 
+; if this is moved anywhere else, .clearEnemiesAndElevators in game.asm must be updated
+
  .rsset $0400
  
 ; depends_on_enemy_in_memory_format

@@ -168,10 +168,10 @@ LoadElevatorsBack:
 LoadElevators:
   
   ; first Y += 1 to skip the pointer to the next screen.
-  ; then load the number of enemies, exit if 0, store in b
+  ; then load the number of elevators, exit if 0, store in b
   .loadElevatorsCount:  
     LDY #$01
-    LDA [enemiesPointer], y
+    LDA [elevatorsPointer], y
     BEQ .loadElevatorsExit
     STA b
   
@@ -244,7 +244,7 @@ UnloadElevators:
     .loopCondition:
       TXA
       SEC
-      SBC #ENEMY_SIZE
+      SBC #ELEVATOR_SIZE
       TAX                          ; decrement the pointer 
       DEC c                        ; decrement the loop counter
       BNE .unloadElevatorLoop         
