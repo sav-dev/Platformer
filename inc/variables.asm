@@ -50,6 +50,8 @@ destroyedEnemies  .rs 10
 
 elevators         .rs 48
 
+TOTAL_EN_EL_DATA_SIZE   = $DA
+
 ; 38 bytes free here
 
 ;****************************************************************
@@ -61,6 +63,9 @@ elevators         .rs 48
 ; size of bullets must be 4 * PLAYER_BULLET_LIMIT + 4 (currently 5) * ENEMY_BULLET_LIMIT (currently 10)
  
 bullets           .rs 60
+
+PLAYER_BULLET_LIMIT     = $05
+ENEMIES_BULLET_LIMIT    = $0A
 
 ;****************************************************************
 ; Other variables                                               ;

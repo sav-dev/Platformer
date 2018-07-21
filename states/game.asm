@@ -125,7 +125,31 @@ LoadGame:
     JSR WaitForFrame              ; wait for values to be written
   .setVramAddressingTo32Done:
  
-  .loadLevel:
+  .clearMemory:                   ; clear all loaded enemies, elevators and bullets data
+  
+    .clearBullets:                ; clear bullets
+      LDX #TOTAL_BULLET_VAR_SIZE    
+      .clearBulletLoop:
+        DEX
+        LDA #$00
+        STA bullets, x
+        TXA
+        BNE .clearBulletLoop
+    .clearBulletsDone:
+    
+    .clearEnemiesAndElevators:    ; clear all enemies and elevators data
+      LDX #TOTAL_EN_EL_DATA_SIZE    
+      .clearEnemyElevatorDataLoop:
+        DEX
+        LDA #$00
+        STA $0400, x
+        TXA
+        BNE .clearEnemyElevatorDataLoop
+    .clearEnemiesAndElevatorsDone:
+    
+  .clearMemoryDone:
+ 
+  .loadLevel:                     ; load level
     LDA currentLevel
     ASL A
     TAX                           ; X = currentLevel * 2
@@ -155,17 +179,5 @@ LoadGame:
     STA soft2001                  
     INC needPpuReg
   .enablePPUDone:
-  
-  .clearMemory:
-    .clearBullets:
-      LDX #TOTAL_BULLET_VAR_SIZE    
-      .clearBulletLoop:
-        DEX
-        LDA #$00
-        STA bullets, x
-        TXA
-        BNE .clearBulletLoop
-    .clearBulletsDone:      
-  .clearMemoryDone:
   
   JMP WaitForFrame 

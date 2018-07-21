@@ -1096,14 +1096,6 @@ UpdateEnemies:
 
 LoadEnemiesInitial:
   
-  .clearDestroyedEnemies:              ; set all bytes in destroyed enemies to 0
-    LDA #$00
-    LDX #$0A                           ; 10 = size of destroyed enemies in bytes
-    .clearDestroyedEnemiesLoop:
-      STA destroyedEnemies, x
-      DEX
-      BNE .clearDestroyedEnemiesLoop
-  
   .screensToSkip:
     LDA maxScroll + $01                ; see LoadPlatformsAndThreats for explanation of this logic
     CLC

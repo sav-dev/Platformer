@@ -185,10 +185,6 @@ BULLET_HEIGHT           = $04   ; these are for horizontal bullet (5x8), it's 8x
         
 BULLET_SPEED            = $04
 
-; max. number of bullets for player and enemies
-PLAYER_BULLET_LIMIT     = $05
-ENEMIES_BULLET_LIMIT    = $0A
-
 ; size in memory for player bullets, enemy bullets, and the two combined.
 ; player bullets come before enemy bullets in the combined var.
 PLAYER_BULLET_VAR_SIZE  = PLAYER_BULLET_LIMIT * BULLET_MEMORY_BYTES
