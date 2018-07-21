@@ -27,24 +27,11 @@ GameFrame:
   .incrementFrameCounter:
     INC frameCount
     
+  .updateElevators:
+    JSR UpdateElevators             ; move all elevators, move player if standing on elevator, render
+    
   .updatePlayer:
-    JSR UpdatePlayer                ; move player, check for collisions with platforms and threats, render
-   
-  ; how to do moving platforms? easy way:
-  ;
-  ;   in UpdatePlayer, check for collision with moving platforms.
-  ;   if collision is when going down, mark the platform as "player stands on this".
-  ;   don't render the player in UpdatePlayer, instead cache the animation.
-  ;   
-  ;   in UpdateMovingPlatforms, move each platform, then check for collisions again  
-  ;   if going up, again mark the platform as "player stands on this". change animation to standing
-  ;   no animation update is needed in any other case.
-  ;   move player along with "player stands on this" platform
-  ;
-  ;   finally, render the player as player's position is fixed by now
-  
-  ;.updateMovingPlatforms:
-  ;  JSR UpdateMovingPlatforms
+    JSR UpdatePlayer                ; move player, check for collisions with platforms and threats, render  
    
   .spawnPlayerBullets:
     JSR SpawnPlayerBullets          ; spawn a player bullet if needed
@@ -52,11 +39,11 @@ GameFrame:
   .updatePlayerBullets:
     JSR UpdatePlayerBullets         ; move all player bullets, check for collisions with platforms and threats, render
    
-  ;.updateEnemies:
-  ;  JSR UpdateEnemies               ; move all enemies, spawn enemy bullets, check for collisions with player and player bullets, render
-  ;
-  ;.updateEnemyBullets:
-  ;  JSR UpdateEnemyBullets          ; move all enemy bullets, check for collisions with platforms and threats, check for collision with player, render
+  .updateEnemies:
+    JSR UpdateEnemies               ; move all enemies, spawn enemy bullets, check for collisions with player and player bullets, render
+  
+  .updateEnemyBullets:
+    JSR UpdateEnemyBullets          ; move all enemy bullets, check for collisions with platforms and threats, check for collision with player, render
     
   .setNmiFlags:
     .dma:

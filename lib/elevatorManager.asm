@@ -24,6 +24,25 @@
 
 ;****************************************************************
 ; Name:                                                         ;
+;   UpdateElevators                                             ;
+;                                                               ;
+; Description:                                                  ;
+;   Updates all elevators:                                      ;
+;     {todo description}                                        ;
+;                                                               ;
+; Used variables:                                               ;
+;     {todo used vars}                                          ;
+;                                                               ;
+; Remarks:                                                      ;
+;   depends_on_elevator_in_memory_format                        ;
+;****************************************************************
+
+UpdateElevators:
+  ; {todo implement}
+  RTS
+
+;****************************************************************
+; Name:                                                         ;
 ;   LoadElevatorsInitial                                        ;
 ;                                                               ;
 ; Description:                                                  ;
