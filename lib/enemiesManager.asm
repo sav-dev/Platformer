@@ -1536,7 +1536,7 @@ RenderEnemy:
       STA renderXPos            ; set renderXPos
       BCS .tileOffScreen        ; if carry is not set it means the tile is on screen. Otherwise it's off screen      
                                 
-      .tileOnScreen:            ; tile on screen, first check if it's not partially on screen
+      .tileOnScreen:
         LDA genericOffScreen    ; if we got here it means tile is fully on screen
         BNE .loopCheck          ; only render it if genericOffScreen == 0
         JMP .renderTile

@@ -401,6 +401,7 @@ RenderSprite:
   .include "lib\explosionsController.asm"
   .include "lib\bulletController.asm"
   .include "lib\enemiesManager.asm"
+  .include "lib\elevatorManager.asm"
   
   .include "states\game.asm"
 

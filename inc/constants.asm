@@ -71,7 +71,7 @@ GAMESTATE_NONE = $FF
 ; Physics related constans                                      ;
 ;****************************************************************
 
-GRAVITY = $03                   ; how much the gravity pulls down per frame
+GRAVITY = $04                   ; how much the gravity pulls down per frame
 
 DIRECTION_LEFT    = $00         ; constants, do not change
 DIRECTION_RIGHT   = $01
@@ -254,3 +254,10 @@ ENEMY_STATE_EXPLODING   = $02
 ENEMY_MOVE_HORIZONTAL   = $05
 ENEMY_MOVE_VERTICAL     = $06
 
+;****************************************************************
+; Elevators                                                     ;
+;****************************************************************
+
+ELEVATOR_SPRITE         = $F9
+ELEVATOR_END_SPRITE     = $FA
+ELEVATOR_ATTS           = $02
