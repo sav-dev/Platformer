@@ -2528,6 +2528,16 @@
       <InitialFlip>true</InitialFlip>
     </Elevator>
     <Elevator>
+      <X>208</X>
+      <Y>48</Y>
+      <Size>2</Size>
+      <MovementType>Vertical</MovementType>
+      <Speed>4</Speed>
+      <MinPosition>44</MinPosition>
+      <MaxPosition>52</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+    </Elevator>
+    <Elevator>
       <X>240</X>
       <Y>184</Y>
       <Size>2</Size>
@@ -2541,8 +2551,8 @@
       <X>288</X>
       <Y>128</Y>
       <Size>4</Size>
-      <MovementType>Horizontal</MovementType>
-      <Speed>1</Speed>
+      <MovementType>None</MovementType>
+      <Speed>0</Speed>
       <MinPosition>288</MinPosition>
       <MaxPosition>320</MaxPosition>
       <InitialFlip>false</InitialFlip>
@@ -2551,8 +2561,8 @@
       <X>416</X>
       <Y>128</Y>
       <Size>4</Size>
-      <MovementType>Horizontal</MovementType>
-      <Speed>1</Speed>
+      <MovementType>None</MovementType>
+      <Speed>0</Speed>
       <MinPosition>400</MinPosition>
       <MaxPosition>479</MaxPosition>
       <InitialFlip>true</InitialFlip>

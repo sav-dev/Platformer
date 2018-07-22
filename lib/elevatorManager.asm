@@ -31,15 +31,210 @@
 ;     {todo description}                                        ;
 ;                                                               ;
 ; Used variables:                                               ;
-;     {todo used vars}                                          ;
+;     X                                                         ;
+;     xPointerCache                                             ;
+;     enemy vars (!)                                            ;
+;     generic vars                                              ;
+;     render vars                                               ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_elevator_in_memory_format                        ;
 ;****************************************************************
 
 UpdateElevators:
-  ; {todo implement}
-  RTS
+  
+  ; main loop - loop all elevators going down
+  ; load the place pointing to after the last elevator, store it in xPointerCache
+  ; the loop expects value in the A register to point to the elevator after the one we want to process
+  ; POI - possible optimization - this may not be the optimal way of doing this?
+  LDA #AFTER_LAST_ELEVATOR
+  .updateElevatorLoop:  
+    
+    ; move A to point to the next elevator we want to process. Cache that value in xPointerCache and store it in X
+    SEC
+    SBC #ELEVATOR_SIZE
+    STA xPointerCache
+    TAX                  
+    
+    ; X now points to the size. if it's 0, elevator is inactive - exit.
+    ; otherwise, cache the size in genericFrame.
+    LDA elevators, x
+    BNE .setSize
+    JMP .updateElevatorLoopCondition
+    
+    .setSize:
+      STA genericFrame
+    
+    ; X += 1 to point to the screen, load it, store it in enemyScreen (no need to add new vars for elevators)
+    INX
+    LDA elevators, X
+    STA enemyScreen
+    
+    ; X += 1 to point to the speed, load it, if it's 0 - skip the whole movement section.
+    ; otherwise, cache it in enemySpeed
+    INX
+    LDA elevators, X
+    BEQ .elevatorNoMovement
+    STA enemySpeed
+    
+    ; X += 1 to point to the max movement distance, cache it in enemyMaxDistance
+    INX 
+    LDA elevators, X    
+    STA enemyMaxDistance
+    
+    ; preset genericDirection to 0, then X += 1 to point to the movement distance left. 
+    ; load it. if it's 0, it means the extreme was met the previous frame - 
+    ; update it with enemyMaxDistance, and INC genericFrame to tell us we must update the direction.
+    ; note - when updating enemies, we update the direction and update distance left as soon as it reaches 0
+    ; (so it never stays at 0). We don't do this for elevators since we want to know the direction it went
+    ; later when processing the frame.
+    LDA #$00
+    STA genericDirection
+    INX
+    LDA elevators, x
+    BNE .someDistanceLeft
+    
+    .zeroDistanceReachedLastFrame:
+      INC genericDirection
+      LDA enemyMaxDistance
+      
+    .someDistanceLeft:
+      SEC
+      SBC enemySpeed
+      STA elevators, x
+      
+    ; X += 1 to point to the direction.
+    ; if genericDirection != 0, it means it must be updated.
+    ;   GENERIC_DIR_UP    = $02 = %00000010
+    ;   GENERIC_DIR_DOWN  = $03 = %00000011
+    ; so to update the direction, simply EOR #$01
+    INX
+    LDA genericDirection
+    BEQ .directionOK
+    
+    .directionNeedsUpdate:
+      LDA elevators, x
+      EOR #$01
+      STA elevators, x
+      JMP .directionLoaded
+      
+    .directionOK:
+      LDA elevators, x
+    
+    ; once we get here, X points to the direction, and it has been loaded into A.
+    ; compare it to UP and DOWN and set the DY to a right value
+    ; POI - possible optimization - skip the CMP (requires updates in consts, one vertical dir must be 0)
+    .directionLoaded:
+      CMP #GENERIC_DIR_UP
+      BEQ .elevatorGoingUp
+      
+    .elevatorGoingDown:
+      LDA enemySpeed
+      STA genericDY
+      JMP .updatePosition
+    
+    .elevatorGoingUp:
+      LDA #$00
+      SEC
+      SBC enemySpeed
+      STA genericDY
+    
+    ; genericDY is set, X still points to the direction.
+    ; X += 1 to point to the X position, store that in genericX
+    ; X += 1 to point to the Y position, update it, store it in genericY
+    .updatePosition:
+      INX
+      LDA elevators, x
+      STA genericX
+      INX
+      LDA elevators, x
+      CLC
+      ADC genericDY
+      STA elevators, x
+      STA genericY
+      JMP .transposeX
+    
+    ; we get here if elevator doesn't move. X still points to the speed.
+    ; X += 4 to point to the X position, store that in genericX
+    ; X += 1 to point to the Y position, store that in genericY
+    .elevatorNoMovement:
+      INX
+      INX
+      INX
+      INX
+      LDA elevators, x
+      STA genericX
+      INX
+      LDA elevators, x
+      STA genericY
+  
+    ; once we get here, these are set:
+    ;  - genericFrame = elevator size
+    ;  - genericScreen = elevator the screen is on
+    ;  - genericX, genericY = elevator position
+    ; time to transpose X. first set genericOffScreen to 0,
+    ; then check if the elevator is on the current or next screen.
+    .transposeX:
+      LDA #$00
+      STA genericOffScreen
+      LDA enemyScreen
+      CMP scroll + $01
+      BEQ .currentScreen
+  
+      ; elevator is on the next screen. Transpose logic:
+      ;   - x' = x - low byte of scroll + 256
+      ;   - first calculate A = 255 - scroll + 1. If this overflows,
+      ;     it means scroll = 0, i.e. elevator is off screen
+      ;   - then calculate A = A + x. Again, overflow means enemy off screen
+      ;   - if enemy is off screen, processing is done.
+      .nextScreen:
+        LDA #SCREEN_WIDTH
+        SEC
+        SBC scroll
+        CLC
+        ADC #$01
+        BCS .updateElevatorLoopCondition
+        ADC genericX
+        BCS .updateElevatorLoopCondition
+        STA genericX
+        JMP .renderElevator
+        
+      ; elevator is on the current screen. Transpose logic:
+      ;   - x' = x - low byte of scroll
+      ;   - if x' < 0 (carry cleared after the subtraction), set genericOffScreen to 1
+      ;     - we then have to check the width from the const data to see if elevator is truly on screen
+      ;     - logic: A = width + generic X
+      ;     - if carry not set - off screen
+      ;     - else if result < 8 (sprite width) - off screen
+      ;     - else - on screen
+      .currentScreen:
+        LDA genericX
+        SEC
+        SBC scroll
+        STA genericX
+        BCS .renderElevator
+        INC genericOffScreen
+        LDY genericFrame
+        CLC
+        ADC ElevatorWidth, y
+        BCC .updateElevatorLoopCondition
+        CMP #SPRITE_DIMENSION
+        BCC .updateElevatorLoopCondition
+  
+      ; once we get here, everything needed to render the elevator is set:
+      ;  - genericFrame, genericOffScreen, genericX, genericY
+      .renderElevator:
+        JSR RenderElevator
+  
+    ; loop condition - if we've not just processed the last elevator, loop.   
+    ; otherwise exit
+    .updateElevatorLoopCondition:
+      LDA xPointerCache
+      BEQ .updateElevatorLoopDone
+      JMP .updateElevatorLoop
+    
+    .updateElevatorLoopDone:
+      RTS
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -421,3 +616,19 @@ RenderElevator:
       BNE .renderTileLoop
          
   RTS
+
+;****************************************************************
+; Hardcoded elevator widths                                     ;
+;****************************************************************
+  
+ElevatorWidth:
+  .byte $00 * $00
+  .byte $00 * $01
+  .byte $08 * $02
+  .byte $08 * $03
+  .byte $08 * $04
+  .byte $08 * $05
+  .byte $08 * $06
+  .byte $08 * $07
+  .byte $08 * $08
+  

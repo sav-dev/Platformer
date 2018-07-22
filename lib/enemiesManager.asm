@@ -265,7 +265,7 @@ UpdateActiveEnemy:
     ; enemy is on the next  screen. Transpose logic:
     ;   - x' = x - low byte of scroll + 256
     ;   - first calculate A = 255 - scroll + 1. If this overflows,
-    ;     it means scroll = 0, i.e. ememy is off screen
+    ;     it means scroll = 0, i.e. enemy is off screen
     ;   - then calculate A = A + x. Again, overflow means enemy off screen
     ;   - if enemy is off screen, jump to processShooting - we can skip everything until then
     .nextScreen:
@@ -288,7 +288,7 @@ UpdateActiveEnemy:
     ; enemy is on the current screen. Transpose logic:
     ;   - x' = x - low byte of scroll
     ;   - if x' < 0 (carry cleared after the subtraction), set genericOffScreen to 1
-    ;     - we then have to check the width from the const data to see if enemy is trully on screen
+    ;     - we then have to check the width from the const data to see if enemy is truly on screen
     ;     - logic: A = width + generic X
     ;     - if carry not set - off screen
     ;     - else if result < 8 (sprite width) - off screen
@@ -1066,12 +1066,12 @@ UpdateEnemies:
     ; enemy empty - do nothing, let flow into the loop condition
     .enemyEmpty:      
     
-    ; loop condition - if we've not just processed the last enemy, loop.   
-    ; otherwise exit
-    .updateEnemyLoopCondition:
-      LDA xPointerCache      
-      BNE .updateEnemyLoop
-      RTS
+      ; loop condition - if we've not just processed the last enemy, loop.   
+      ; otherwise exit
+      .updateEnemyLoopCondition:
+        LDA xPointerCache      
+        BNE .updateEnemyLoop
+        RTS
     
 ;****************************************************************
 ; Name:                                                         ;
