@@ -28,7 +28,9 @@
 ;                                                               ;
 ; Description:                                                  ;
 ;   Updates all elevators:                                      ;
-;     {todo description}                                        ;
+;     - move                                                    ;
+;     - move player if on an elevator                           ;
+;     - render                                                  ;
 ;                                                               ;
 ; Used variables:                                               ;
 ;     X                                                         ;
@@ -152,6 +154,18 @@ UpdateElevators:
       ADC genericDY
       STA elevators, x
       STA genericY
+      
+    ; check if player is standing on the current elevator.    
+    .checkIfPlayerOnElevator:
+      LDA playerOnElevator
+      BEQ .transposeX
+      LDA playerElevatorId
+      CMP xPointerCache
+      BNE .transposeX
+      
+    ; player on elevator, move by genericDY
+    .playerOnElevator:
+      JSR MovePlayerVertically
       JMP .transposeX
     
     ; we get here if elevator doesn't move. X still points to the speed.
@@ -296,6 +310,10 @@ LoadElevatorsInitial:
     JSR MoveElevatorsPointerForward
     JSR LoadElevators                  ; load elevators for screen 1
 
+  .playerOnElevator:
+    LDA #$00
+    STA playerOnElevator               ; initially player is not on an elevator
+    
   RTS                                  ; elevators loaded, pointer points to screen 1 as expected
 
 ;****************************************************************
@@ -307,7 +325,10 @@ LoadElevatorsInitial:
 ;   also moves the elevators pointer forward                    ;
 ;                                                               ;
 ; Used variables:                                               ;
-;   {todo}                                                      ;
+;   X                                                           ;
+;   Y                                                           ;
+;   b                                                           ;
+;   c                                                           ;
 ;****************************************************************
 
 LoadElevatorsForward:
@@ -336,7 +357,10 @@ LoadElevatorsForward:
 ;   also moves the elevators pointer back                       ;
 ;                                                               ;
 ; Used variables:                                               ;
-;   {todo}                                                      ;
+;   X                                                           ;
+;   Y                                                           ;
+;   b                                                           ;
+;   c                                                           ;
 ;****************************************************************
 
 LoadElevatorsBack:

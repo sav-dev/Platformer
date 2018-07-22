@@ -142,6 +142,14 @@ enemyCollisions         .rs 1  ; set to 1 if a collision check is needed
 removeEnemy             .rs 1  ; whether enemy should be exploded / removed from the game
 
 ;****************************************************************
+; Elevators                                                     ;
+;****************************************************************
+
+; POI - possible optimization - to save zero page bytes, vars below could be combined into 1
+playerOnElevator        .rs 1  ; whether player is standing on an elevator
+playerElevatorId        .rs 1  ; points to the elevator player is standing on
+
+;****************************************************************
 ; Collision checks                                              ;
 ;****************************************************************
 
