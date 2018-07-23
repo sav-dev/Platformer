@@ -194,13 +194,16 @@ UpdatePlayerNormal:
       .checkADone:
       
       ; check if player wants to crouch, update animation if yes
-      ; todo - we must also update the threat box here
+      ; also set DY to 0 and 'move' player to update the threat box.
       .checkDown:  
         LDA controllerDown 
         AND #CONTROLLER_DOWN
         BEQ .checkDownDone
         LDA #PLAYER_CROUCH
         STA playerAnimation
+        LDA #$00
+        STA genericDY
+        JSR MovePlayerVertically
         JMP .verticalMovementDone
       .checkDownDone:
       
