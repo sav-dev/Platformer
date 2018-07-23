@@ -437,7 +437,7 @@ UpdateBullets:
                 
       ; if we get here, a collision has been detected. X still points to the Y position.
       ; if it was just spawn, just clear it. otherwise we must update it's position
-      .collision:
+      .collisionWithPlatOrTh:
         LDA genericFrame
         CMP #BULLET_S_JUST_SPAWNED
         BNE .collisionCheckDirection
@@ -505,8 +505,25 @@ UpdateBullets:
         JMP .renderBullet
         
       ; we get here if no collision with platforms or threats was detected.
-      ; check for collisions with player for enemy bullets.
+      ; check for collisions with elevators.      
       .noCollisionWithPlatAndTh:        
+        JSR CheckForElevatorCollision
+        LDA collision
+        BEQ .noCollisionWithElevators
+        
+      ; collision with elevator detected.
+      ; if bullet has just been spawned, clear it.
+      ; otherwise explode the bullet.
+      ; todo - move the bullet? not easy with moving elevators
+      .collisionWithElevator:
+        LDA genericFrame
+        CMP #BULLET_S_JUST_SPAWNED
+        BNE .collisionUpdateState
+        JMP .clearBullet
+        
+      ; we get here if no collision with platforms, threats or elevators was detected.  
+      ; check for collisions with player for enemy bullets.
+      .noCollisionWithElevators:
         LDA l
         BEQ .noCollision
         

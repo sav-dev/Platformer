@@ -2528,13 +2528,13 @@
       <InitialFlip>true</InitialFlip>
     </Elevator>
     <Elevator>
-      <X>208</X>
-      <Y>48</Y>
+      <X>212</X>
+      <Y>176</Y>
       <Size>2</Size>
       <MovementType>Vertical</MovementType>
       <Speed>4</Speed>
-      <MinPosition>44</MinPosition>
-      <MaxPosition>52</MaxPosition>
+      <MinPosition>172</MinPosition>
+      <MaxPosition>180</MaxPosition>
       <InitialFlip>false</InitialFlip>
     </Elevator>
     <Elevator>

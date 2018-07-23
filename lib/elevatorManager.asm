@@ -15,8 +15,8 @@
 ;        - max movement distance (1 byte)            
 ;        - (initial) movement left (1 byte)
 ;        - (initial) flip + movement direction (1 byte)
-;        - x position (1 byte)
 ;        - y position (1 byte)
+;        - x position (1 byte) (y comes before x!)
 ;   - pointer to the previous screen (from here): (n x 9) + 2 (1 byte)
 ;
 ; - elevators in memory: same but starting at size (8 bytes each)
@@ -48,7 +48,6 @@ UpdateElevators:
   ; main loop - loop all elevators going down
   ; load the place pointing to after the last elevator, store it in xPointerCache
   ; the loop expects value in the A register to point to the elevator after the one we want to process
-  ; POI - possible optimization - this may not be the optimal way of doing this?
   LDA #AFTER_LAST_ELEVATOR
   .updateElevatorLoop:  
     
@@ -67,7 +66,7 @@ UpdateElevators:
     .setSize:
       STA genericFrame
     
-    ; X += 1 to point to the screen, load it, store it in enemyScreen (no need to add new vars for elevators)
+    ; X += 1 to point to the screen, load it, store it in enemyScreen
     INX
     LDA elevators, X
     STA enemyScreen
@@ -142,12 +141,8 @@ UpdateElevators:
       STA genericDY
     
     ; genericDY is set, X still points to the direction.
-    ; X += 1 to point to the X position, store that in genericX
     ; X += 1 to point to the Y position, update it, store it in genericY
     .updatePosition:
-      INX
-      LDA elevators, x
-      STA genericX
       INX
       LDA elevators, x
       CLC
@@ -158,29 +153,32 @@ UpdateElevators:
     ; check if player is standing on the current elevator.    
     .checkIfPlayerOnElevator:
       LDA playerOnElevator
-      BEQ .transposeX
+      BEQ .setGenericX
       LDA playerElevatorId
       CMP xPointerCache
-      BNE .transposeX
+      BNE .setGenericX
       
     ; player on elevator, move by genericDY
     .playerOnElevator:
       JSR MovePlayerVertically
-      JMP .transposeX
+      JMP .setGenericX
     
     ; we get here if elevator doesn't move. X still points to the speed.
-    ; X += 4 to point to the X position, store that in genericX
-    ; X += 1 to point to the Y position, store that in genericY
+    ; X += 4 to point to the Y position, store that in genericY
     .elevatorNoMovement:
       INX
       INX
       INX
       INX
       LDA elevators, x
-      STA genericX
+      STA genericY
+  
+    ; when we get here, X points to y position. X += 1 to point to x position,
+    ; load it and store in genericX
+    .setGenericX:
       INX
       LDA elevators, x
-      STA genericY
+      STA genericX
   
     ; once we get here, these are set:
     ;  - genericFrame = elevator size
@@ -199,8 +197,8 @@ UpdateElevators:
       ;   - x' = x - low byte of scroll + 256
       ;   - first calculate A = 255 - scroll + 1. If this overflows,
       ;     it means scroll = 0, i.e. elevator is off screen
-      ;   - then calculate A = A + x. Again, overflow means enemy off screen
-      ;   - if enemy is off screen, processing is done.
+      ;   - then calculate A = A + x. Again, overflow means elevator off screen
+      ;   - if elevator is off screen, processing is done.
       .nextScreen:
         LDA #SCREEN_WIDTH
         SEC
@@ -250,6 +248,169 @@ UpdateElevators:
     .updateElevatorLoopDone:
       RTS
 
+;****************************************************************
+; Name:                                                         ;
+;   CheckForElevatorCollision                                   ;
+;                                                               ;
+; Description:                                                  ;
+;   Checks for a collision between the 'b' box                  ;
+;   and all elevators                                           ;
+;                                                               ;
+; Input variables:                                              ;
+;   'b' box                                                     ;
+;                                                               ;
+; Output variables:                                             ;
+;   collision - set to 1 if collision was detected              ;
+;   'a' box - set to the box of the elevator that was hit       ;
+;   yPointerCache - points to the elevator that was hit         ;
+;                                                               ;
+; Used variables:                                               ;
+;   Y                                                           ;
+;   yPointerCache                                               ;
+;   enemyScreen                                                 ;
+;   genericFrame                                                ;
+;   collision vars                                              ;
+;                                                               ;
+; Remarks:                                                      ;
+;   depends_on_elevator_in_memory_format                        ;
+;****************************************************************
+
+CheckForElevatorCollision:
+  
+  ; main loop - loop all elevators going down
+  ; load the place pointing to after the last elevator, store it in yPointerCache
+  ; the loop expects value in the A register to point to the elevator after the one we want to process
+  LDA #AFTER_LAST_ELEVATOR
+  .checkCollisionLoop:  
+    
+    ; move A to point to the next elevator we want to process. Cache that value in yPointerCache and store it in Y
+    SEC
+    SBC #ELEVATOR_SIZE
+    STA yPointerCache
+    TAY                
+    
+    ; Y now points to the size. if it's 0, elevator is inactive - exit.
+    ; otherwise, cache the size in genericFrame.
+    LDA elevators, y
+    BNE .setSize
+    JMP .checkCollisionLoopCondition ; todo - see if this can be updated to BEQ
+    
+    .setSize:
+      STA genericFrame
+
+    ; Y += 1 to point to the screen, load it, store it in enemyScreen
+    INY
+    LDA elevators, y
+    STA enemyScreen
+    
+    ; Y += 5 to point to the y position, load it, store it in ay1
+    TYA
+    CLC
+    ADC #$05
+    TAY
+    LDA elevators, y
+    STA ay1
+    
+    ; Y += 1 to point to the x position, load it, store it in ax1
+    INY
+    LDA elevators, y
+    STA ax1
+    
+    ; ax1 is set, time to transpose the elevator.
+    ; first check if the elevator is on the current or next screen.
+    .transposeXAndSetAX2:    
+      LDA enemyScreen
+      CMP scroll + $01
+      BEQ .currentScreen
+   
+      ; elevator is on the next screen. Transpose logic:
+      ;   - x' = x - low byte of scroll + 256
+      ;     - first calculate A = 255 - scroll + 1. If this overflows, it means scroll = 0, i.e. elevator is off screen
+      ;     - then calculate A = A + x. Again, overflow means elevator off screen
+      ;     - if elevator is off screen, processing is done.
+      ;   - if ax1 is on screen, proceed to ax1OnScreen
+      .nextScreen:
+        LDA #SCREEN_WIDTH
+        SEC
+        SBC scroll
+        CLC
+        ADC #$01
+        BCS .checkCollisionLoopCondition
+        ADC ax1
+        BCS .checkCollisionLoopCondition
+        
+        ; ax1 is on screen. set updated ax1, then lookup the width (use Y, not needed anymore), add it
+        ; if carry clear, just set ax2. otherwise cap it at screen_width
+        .ax1OnScreen:
+          STA ax1
+          LDY genericFrame
+          CLC
+          ADC ElevatorWidth, y
+          BCS .capX2AtMax
+          STA ax2
+          JMP .setAY2        
+          .capX2AtMax:
+            LDA #SCREEN_WIDTH
+            STA ax2
+            JMP .setAY2
+        
+      ; elevator is on the current screen. Transpose logic:
+      ;   - x' = x - low byte of scroll
+      ;     - if x' >= 0 (carry set after the subtraction), it means ax1 is on screen, go to ax1OnScreen
+      ;     - otherwise, go to ax1OffScreenToTheLeft      
+      .currentScreen:
+        LDA ax1
+        SEC
+        SBC scroll
+        BCS .ax1OnScreen
+        
+        ; elevator starts off-screen to the left. add width from the consts.
+        ; if carry is not set, it means elevator is fully off-screen - exit
+        ; otherwise, set ax2 to the result, and set ax1 to 0      
+        .ax1OffScreenToTheLeft:
+          LDY genericFrame
+          CLC
+          ADC ElevatorWidth, y
+          BCC .checkCollisionLoopCondition
+          ; todo uncomment this? otherwise bullets may hit 'nothing'
+          ; CMP #SPRITE_DIMENSION
+          ; BCC .checkCollisionLoopCondition
+          STA ax2
+          LDA #$00
+          STA ax1
+      
+    ; When we get here, it means elevator is on screen, and ax1, ax2 and ay1 are set.
+    ; We must now set ay2 - just add the elevator height
+    .setAY2:
+      LDA ay1
+      CLC
+      ADC #ELEVATOR_HEIGHT
+      STA ay2
+      
+    ; When we get here, all boxes are set. Check for collision.
+    .checkCollision:    
+      JSR CheckForCollision
+      LDA collision
+      BEQ .checkCollisionLoopCondition
+      
+    ; Collision found.
+    ; Just exit, we'll have:
+    ;  - collision set to 1
+    ;  - 'a' boxes set to the right elevator
+    ;  - yPointerCache pointing to the elevator that was hit
+    .collisionFound:
+      RTS
+      
+    ; loop condition - if we've not just processed the last elevator, loop.   
+    ; otherwise exit
+    .checkCollisionLoopCondition:
+      LDA yPointerCache
+      BEQ .checkCollisionLoopDone
+      JMP .checkCollisionLoop
+    
+    .checkCollisionLoopDone:
+      RTS
+      
 ;****************************************************************
 ; Name:                                                         ;
 ;   LoadElevatorsInitial                                        ;
