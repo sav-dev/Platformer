@@ -277,6 +277,10 @@ UpdateElevators:
 ;****************************************************************
 
 CheckForElevatorCollision:
+
+  ; preset collision to 0
+  LDA #$00
+  STA collision
   
   ; main loop - loop all elevators going down
   ; load the place pointing to after the last elevator, store it in yPointerCache
@@ -291,108 +295,14 @@ CheckForElevatorCollision:
     TAY                
     
     ; Y now points to the size. if it's 0, elevator is inactive - exit.
-    ; otherwise, cache the size in elevatorSize.
+    ; otherwise, check for a collision.
     LDA elevators, y
-    BNE .setSize
-    JMP .checkCollisionLoopCondition ; todo - see if this can be updated to BEQ
+    BEQ .checkCollisionLoopCondition    
     
-    .setSize:
-      STA elevatorSize
-
-    ; Y += 1 to point to the screen, load it, store it in enemyScreen
-    INY
-    LDA elevators, y
-    STA enemyScreen
-    
-    ; Y += 5 to point to the y position, load it, store it in ay1
-    TYA
-    CLC
-    ADC #$05
-    TAY
-    LDA elevators, y
-    STA ay1
-    
-    ; Y += 1 to point to the x position, load it, store it in ax1
-    INY
-    LDA elevators, y
-    STA ax1
-    
-    ; ax1 is set, time to transpose the elevator.
-    ; first check if the elevator is on the current or next screen.
-    .transposeXAndSetAX2:    
-      LDA enemyScreen
-      CMP scroll + $01
-      BEQ .currentScreen
-   
-      ; elevator is on the next screen. Transpose logic:
-      ;   - x' = x - low byte of scroll + 256
-      ;     - first calculate A = 255 - scroll + 1. If this overflows, it means scroll = 0, i.e. elevator is off screen
-      ;     - then calculate A = A + x. Again, overflow means elevator off screen
-      ;     - if elevator is off screen, processing is done.
-      ;   - if ax1 is on screen, proceed to ax1OnScreen
-      .nextScreen:
-        LDA #SCREEN_WIDTH
-        SEC
-        SBC scroll
-        CLC
-        ADC #$01
-        BCS .checkCollisionLoopCondition
-        ADC ax1
-        BCS .checkCollisionLoopCondition
-        
-        ; ax1 is on screen. set updated ax1, then lookup the width (use Y, not needed anymore), add it
-        ; if carry clear, just set ax2. otherwise cap it at screen_width
-        .ax1OnScreen:
-          STA ax1
-          LDY elevatorSize
-          CLC
-          ADC ElevatorWidth, y
-          BCS .capX2AtMax
-          STA ax2
-          JMP .setAY2        
-          .capX2AtMax:
-            LDA #SCREEN_WIDTH
-            STA ax2
-            JMP .setAY2
-        
-      ; elevator is on the current screen. Transpose logic:
-      ;   - x' = x - low byte of scroll
-      ;     - if x' >= 0 (carry set after the subtraction), it means ax1 is on screen, go to ax1OnScreen
-      ;     - otherwise, go to ax1OffScreenToTheLeft      
-      .currentScreen:
-        LDA ax1
-        SEC
-        SBC scroll
-        BCS .ax1OnScreen
-        
-        ; elevator starts off-screen to the left. add width from the consts.
-        ; if carry is not set, it means elevator is fully off-screen - exit
-        ; otherwise, set ax2 to the result, and set ax1 to 0      
-        .ax1OffScreenToTheLeft:
-          LDY elevatorSize
-          CLC
-          ADC ElevatorWidth, y
-          BCC .checkCollisionLoopCondition
-          ; todo uncomment this? otherwise bullets may hit 'nothing'
-          ; CMP #SPRITE_DIMENSION
-          ; BCC .checkCollisionLoopCondition
-          STA ax2
-          LDA #$00
-          STA ax1
-      
-    ; When we get here, it means elevator is on screen, and ax1, ax2 and ay1 are set.
-    ; We must now set ay2 - just add the elevator height
-    .setAY2:
-      LDA ay1
-      CLC
-      ADC #ELEVATOR_HEIGHT
-      STA ay2
-      
-    ; When we get here, all boxes are set. Check for collision.
-    .checkCollision:    
-      JSR CheckForCollision
-      LDA collision
-      BEQ .checkCollisionLoopCondition
+    ; Check for a collision, exit if found
+    JSR SingleElevatorCollision
+    LDA collision
+    BEQ .checkCollisionLoopCondition
       
     ; Collision found.
     ; Just exit, we'll have:
@@ -406,11 +316,140 @@ CheckForElevatorCollision:
     ; otherwise exit
     .checkCollisionLoopCondition:
       LDA yPointerCache
-      BEQ .checkCollisionLoopDone
-      JMP .checkCollisionLoop
-    
-    .checkCollisionLoopDone:
+      BNE .checkCollisionLoop
       RTS
+
+;****************************************************************
+; Name:                                                         ;
+;   SingleElevatorCollision                                     ;
+;                                                               ;
+; Description:                                                  ;
+;   Checks for a collision between the 'b' box                  ;
+;   and a single elevator                                       ;
+;                                                               ;
+; Input variables:                                              ;
+;   'b' box                                                     ;
+;   Y - must point to the elevator to check                     ;
+;   collision - on input must be 0                              ;
+;                                                               ;
+; Output variables:                                             ;
+;   collision - set to 1 if collision was detected              ;
+;   'a' box - set to the box of the elevator that was hit       ;
+;                                                               ;
+; Used variables:                                               ;
+;   Y                                                           ;
+;   yPointerCache                                               ;
+;   enemyScreen                                                 ;
+;   elevatorSize                                                ;
+;   collision vars                                              ;
+;                                                               ;
+; Remarks:                                                      ;
+;   depends_on_elevator_in_memory_format                        ;
+;****************************************************************
+
+SingleElevatorCollision:
+
+  ; Y points to the size, load it, store it in elevatorSize
+  LDA elevators, y
+  STA elevatorSize
+
+  ; Y += 1 to point to the screen, load it, store it in enemyScreen
+  INY
+  LDA elevators, y
+  STA enemyScreen
+  
+  ; Y += 5 to point to the y position, load it, store it in ay1
+  TYA
+  CLC
+  ADC #$05
+  TAY
+  LDA elevators, y
+  STA ay1
+  
+  ; Y += 1 to point to the x position, load it, store it in ax1
+  INY
+  LDA elevators, y
+  STA ax1
+  
+  ; ax1 is set, time to transpose the elevator.
+  ; first check if the elevator is on the current or next screen.
+  .transposeXAndSetAX2:    
+    LDA enemyScreen
+    CMP scroll + $01
+    BEQ .currentScreen
+  
+    ; elevator is on the next screen. Transpose logic:
+    ;   - x' = x - low byte of scroll + 256
+    ;     - first calculate A = 255 - scroll + 1. If this overflows, it means scroll = 0, i.e. elevator is off screen
+    ;     - then calculate A = A + x. Again, overflow means elevator off screen
+    ;     - if elevator is off screen, processing is done.
+    ;   - if ax1 is on screen, proceed to ax1OnScreen
+    .nextScreen:
+      LDA #SCREEN_WIDTH
+      SEC
+      SBC scroll
+      CLC
+      ADC #$01
+      BCS .noCollision
+      ADC ax1
+      BCS .noCollision
+      
+      ; ax1 is on screen. set updated ax1, then lookup the width (use Y, not needed anymore), add it
+      ; if carry clear, just set ax2. otherwise cap it at screen_width
+      .ax1OnScreen:
+        STA ax1
+        LDY elevatorSize
+        CLC
+        ADC ElevatorWidth, y
+        BCS .capX2AtMax
+        STA ax2
+        JMP .setAY2        
+        .capX2AtMax:
+          LDA #SCREEN_WIDTH
+          STA ax2
+          JMP .setAY2
+      
+    ; elevator is on the current screen. Transpose logic:
+    ;   - x' = x - low byte of scroll
+    ;     - if x' >= 0 (carry set after the subtraction), it means ax1 is on screen, go to ax1OnScreen
+    ;     - otherwise, go to ax1OffScreenToTheLeft      
+    .currentScreen:
+      LDA ax1
+      SEC
+      SBC scroll
+      BCS .ax1OnScreen
+      
+      ; elevator starts off-screen to the left. add width from the consts.
+      ; if carry is not set, it means elevator is fully off-screen - exit
+      ; otherwise, set ax2 to the result, and set ax1 to 0      
+      .ax1OffScreenToTheLeft:
+        LDY elevatorSize
+        CLC
+        ADC ElevatorWidth, y
+        BCC .noCollision
+        ; todo uncomment this? otherwise bullets may hit 'nothing'
+        ; CMP #SPRITE_DIMENSION
+        ; BCC .noCollision
+        STA ax2
+        LDA #$00
+        STA ax1
+    
+  ; When we get here, it means elevator is on screen, and ax1, ax2 and ay1 are set.
+  ; We must now set ay2 - just add the elevator height
+  .setAY2:
+    LDA ay1
+    CLC
+    ADC #ELEVATOR_HEIGHT
+    STA ay2
+    
+  ; When we get here, all boxes are set. Check for collision and exit.
+  .checkCollision:    
+    JMP CheckForCollision
+
+  ; We get here if we figure out no collision is possible.
+  ; Just exit without updating the collision var.
+  .noCollision:
+    RTS
       
 ;****************************************************************
 ; Name:                                                         ;

@@ -395,14 +395,31 @@ UpdatePlayerNormal:
 
   ; now that player has been moved, check if the player is still on an elevator and clear the flag if not
   ; if player is not on an elevator, just skip.
-  ; otherwise, 
+  ; otherwise, set the 'b' boxes to player platform box, but increment by2 by 1 to check for collision.
+  ; then check for collision with the elevator the player was on, if none found clear the flag.
+  ; POI - possible optimization - are the 'b' boxes still set from before?
   .checkIfPlayerStillOnElevator:
     LDA playerOnElevator
     BEQ .renderPlayer
-    
+    LDA playerPlatformBoxX1
+    STA bx1
+    LDA playerPlatformBoxX2
+    STA bx2
+    LDA playerPlatformBoxY1
+    STA by1
+    LDA playerPlatformBoxY2
+    STA by2
+    INC by2    
+    LDA #$00
+    STA collision
+    LDY playerElevatorId
+    JSR SingleElevatorCollision
+    LDA collision
+    BNE .renderPlayer
+    LDA #$00
+    STA playerOnElevator
   
   ; we can render the player now.
-  ; todo - move this somewhere else? later in the frame?
   .renderPlayer:
     JSR RenderPlayer
 
@@ -1401,7 +1418,7 @@ RenderPlayer:
       CLC
       ADC playerY                 ; yOffs are always negative, so if tile is off screen, e.g. if player Y = 3
       BCC .loopCheck              ; and yOff= -8 (F8), then carry won't be set and tile should be ignored
-      STA renderYPos              ; todo - this loopCheck is untested
+      STA renderYPos              ; POI - possible issue - this loopCheck is untested
       LDA [d], y
       STA renderTile
       LDA [f], y
