@@ -2524,7 +2524,7 @@
       <MovementType>Vertical</MovementType>
       <Speed>2</Speed>
       <MinPosition>48</MinPosition>
-      <MaxPosition>128</MaxPosition>
+      <MaxPosition>164</MaxPosition>
       <InitialFlip>true</InitialFlip>
     </Elevator>
     <Elevator>
@@ -2551,10 +2551,10 @@
       <X>416</X>
       <Y>128</Y>
       <Size>4</Size>
-      <MovementType>None</MovementType>
-      <Speed>0</Speed>
-      <MinPosition>400</MinPosition>
-      <MaxPosition>479</MaxPosition>
+      <MovementType>Vertical</MovementType>
+      <Speed>5</Speed>
+      <MinPosition>68</MinPosition>
+      <MaxPosition>128</MaxPosition>
       <InitialFlip>true</InitialFlip>
     </Elevator>
   </Elevators>

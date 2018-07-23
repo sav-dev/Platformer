@@ -269,7 +269,7 @@ UpdateElevators:
 ;   Y                                                           ;
 ;   yPointerCache                                               ;
 ;   enemyScreen                                                 ;
-;   elevatorSize                                                  ;
+;   elevatorSize                                                ;
 ;   collision vars                                              ;
 ;                                                               ;
 ; Remarks:                                                      ;

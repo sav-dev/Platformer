@@ -152,7 +152,7 @@ UpdatePlayerNormal:
           LDA jumpLookupTable, x          
           STA genericDY
                                     
-    ; check for vertical collision - this will update genericDY and set collision and b (b = 1 means was going down).
+    ; check for vertical collision - this will update genericDY and set collision and b (b = 1 means player is not standing on something).
     ; apply movement (with updated DY), and then, if collision was detected, go process the collision.
     .checkVerticalCollision:
       JSR CheckCollisionVertical
@@ -168,61 +168,63 @@ UpdatePlayerNormal:
         
     ; we get here when vertical collision was detected. Check if it was going up or going down.
     .processCollision:  
-      LDA b 
+      LDA b
       BNE .collisionGoingDown
       
-      ; todo - update all of the below
+     ; collision was when going up, cancel the jump (set to peak) and exit.
+     .collisionGoingUp:  
+       LDA #JUMP_PEAK
+       STA playerJump
+       LDA #PLAYER_JUMP
+       STA playerAnimation
+       JMP .verticalMovementDone
        
-          ; collision was when going up, cancel the jump (set to peak) and exit.
-          .collisionGoingUp:  
-            LDA #JUMP_PEAK
-            STA playerJump
-            LDA #PLAYER_JUMP
-            STA playerAnimation
-            JMP .verticalMovementDone
-            
-          ; collision going down, cancel jump.
-          ; player is on the ground now, can either jump or crouch
-          .collisionGoingDown:
-            LDA #$00  
-            STA playerJump
+     ; collision going down, cancel jump.
+     ; player is on the ground now, can either jump or crouch
+     .collisionGoingDown:
+       LDA #$00  
+       STA playerJump
+
+      ; if we get here it means the player is either on a platform or an elevator.
+      .playerOnTheGround:
       
-      ; todo - update all of the above
-      
-      ; check if player wants to jump, update jump var and animation if yes.
-      .checkA:  
-        LDA controllerPressed
-        AND #CONTROLLER_A 
-        BEQ .checkADone
-        LDA #JUMP_FRAMES
-        STA playerJump
-        LDA #PLAYER_JUMP
-        STA playerAnimation
-        JMP .verticalMovementDone
-      .checkADone:
-      
-      ; check if player wants to crouch, update animation if yes
-      ; also set DY to 0 and 'move' player to update the threat box.
-      .checkDown:  
-        LDA controllerDown 
-        AND #CONTROLLER_DOWN
-        BEQ .checkDownDone
-        LDA #PLAYER_CROUCH
-        STA playerAnimation
-        LDA #$00
-        STA genericDY
-        JSR MovePlayerVertically
-        JMP .verticalMovementDone
-      .checkDownDone:
-      
-      ; no jump or crouch input.
-      ; if state is RUN leave it as so, otherwise set to STAND.
-      .noInput:
-        LDA playerAnimation
-        CMP #PLAYER_RUN
-        BEQ .verticalMovementDone
-        LDA #PLAYER_STAND
-        STA playerAnimation
+        ; check if player wants to jump, update jump var and animation if yes.
+        ; also by jumping player gets off a platform.
+        .checkA:  
+          LDA controllerPressed
+          AND #CONTROLLER_A 
+          BEQ .checkADone
+          LDA #JUMP_FRAMES
+          STA playerJump
+          LDA #PLAYER_JUMP
+          STA playerAnimation
+          LDA #$00
+          STA playerOnElevator
+          JMP .verticalMovementDone
+        .checkADone:
+        
+        ; check if player wants to crouch, update animation if yes
+        ; also set DY to 0 and 'move' player to update the threat box.
+        .checkDown:  
+          LDA controllerDown 
+          AND #CONTROLLER_DOWN
+          BEQ .checkDownDone
+          LDA #PLAYER_CROUCH
+          STA playerAnimation
+          LDA #$00
+          STA genericDY
+          JSR MovePlayerVertically
+          JMP .verticalMovementDone
+        .checkDownDone:
+        
+        ; no jump or crouch input.
+        ; if state is RUN leave it as so, otherwise set to STAND.
+        .noInput:
+          LDA playerAnimation
+          CMP #PLAYER_RUN
+          BEQ .verticalMovementDone
+          LDA #PLAYER_STAND
+          STA playerAnimation
   
   ; vertical movement has now been processed.
   .verticalMovementDone:
@@ -553,7 +555,7 @@ SpawnPlayerBullets:
 ; Description:                                                  ;
 ;   Check for vertical collisions, updates genericDY            ;
 ;   collision = 1 set on output if collision detected           ;
-;   b = 1 set on output if player was going down                ;
+;   b = 1 set on output if player is now standing on something  ;
 ;                                                               ;
 ; Used variables:                                               ;
 ;   Y                                                           ;
@@ -570,12 +572,13 @@ SpawnPlayerBullets:
 
 CheckCollisionVertical:
  
-  ; check move direction, set b to 0 (up) or 1 (down).
-  ; note that this is never called with DY == 0  
+  ; check move direction, set b to 0 (static or up) or 1 (down).
+  ; if player is not moving, skip the bounds check and go straight to .setBox
   .directionCheck:
     LDA #$00
     STA b                                                                     
-    LDA genericDY                      
+    LDA genericDY
+    BEQ .setBox
     CMP #$80                          
     BCS .directionCheckDone
     INC b
@@ -653,12 +656,20 @@ CheckCollisionVertical:
     LDA collision
     BEQ .checkCollisionsWithPlatforms
     
-    ; {todo process collision with elevator}
+    ; POI - possible optimization - don't have a separate subroutine?
+    JMP ProcessElevatorVerticalCollision
   
   ; check for collisions with platforms.
+  ; first check if player is moving - if no, we can skip this.
   ; check first screen first (c == 0), then second screen (c == 1) if no collisions found.
   ; if any collisions found, go to adjustMovement. Otherwise exit (leaving collision at 0).
   .checkCollisionsWithPlatforms:
+    
+    .checkPlayerDY:
+      LDA genericDY
+      BNE .checkFirstScreen
+      RTS
+  
     .checkFirstScreen:
       LDA #$00
       STA c
@@ -682,6 +693,7 @@ CheckCollisionVertical:
       LDA collision
       BNE .adjustMovement
       RTS
+      
   .checkCollisionsDone:
 
   ; collision has been detected, adjust movement.  
@@ -714,7 +726,7 @@ CheckCollisionVertical:
 ; Description:                                                  ;
 ;   Check for horizontal collisions, updates genericDX          ;
 ;   collision = 1 set on output if collision detected           ;
-;   b = 1 set on output if player was going right               ;
+;   b = 1 set on output if player was going right, 0 if left    ;
 ;                                                               ;
 ; Used variables:                                               ;
 ;   Y                                                           ;
@@ -807,14 +819,18 @@ CheckCollisionHorizontal:
     STA bx2  
   .setBoxDone:
 
-  ; check for collisions with elevators.
+  ; don't check collisions with other elevators if player is already on an elevator.
+  ; (POI - possible issue with elevators)
+  .playerOnElevator:
+    LDA playerOnElevator
+    BNE .checkCollisionsWithPlatforms
+  
+  ; check for collisions with elevators.  
   ; if none found, go check collisions with platforms.
   .checkCollisionsWithElevators:
     JSR CheckForElevatorCollision
     LDA collision
-    BEQ .checkCollisionsWithPlatforms
-    
-    ; {todo process collision with elevator}
+    BNE .adjustMovement
   
   ; check for collisions with platforms.
   ; check first screen first (c == 0), then second screen (c == 1) if no collisions found.
@@ -853,6 +869,7 @@ CheckCollisionHorizontal:
     STA genericDX
     RTS
     
+    ; below is tested for platforms but not for elevators
     ;LDA b
     ;BNE .adjustMovingRight
     ;
@@ -874,6 +891,162 @@ CheckCollisionHorizontal:
     ;  DEC genericDX
     ;  RTS
     
+;****************************************************************
+; Name:                                                         ;
+;   ProcessElevatorVerticalCollision                            ;
+;                                                               ;
+; Description:                                                  ;
+;   Process a vertical collision with an elevator               ;
+;                                                               ;
+; Input variables:                                              ;
+;   yPointerCache - points to the elevator                      ;
+;   b - 0 means player was moving up or is static, 1 means down ;
+;   'a' boxes - elevator's box                                  ;
+;   genericDY (which will be updated)                           ;
+;                                                               ;
+; Output variables:                                             ;
+;   Updates genericDY                                           ;
+;   b = 1 if player is standing on something, 0 otherwise       ;
+;                                                               ;
+; Used variables:                                               ;
+;   Y                                                           ;
+;   {todo}                                                      ;
+;                                                               ;
+; Remarks:                                                      ;
+;   depends_on_elevator_in_memory_format                        ;
+;****************************************************************
+    
+ProcessElevatorVerticalCollision:
+
+    ; player can either collide with the elevator from the top or the bottom.
+    ; we can tell by the direction they are moving in and their speeds.
+    ; if player collides with the elevator from the top, the player should be marked as standing on that elevator.
+    ; 
+    ; possible combinations which can let us figure this out:
+    ;
+    ; elevator moving | player moving | player speed vs elevator speed | result
+    ; --------------------------------------------------------------------------
+    ;       up        |      no       |               -                |  top   
+    ;       up        |     down      |               -                |  top   
+    ;       up        |      up       |               <                |  top   
+    ;       up        |      up       |               >                | bottom  
+    ;      down       |      no       |               -                | bottom
+    ;      down       |      up       |               -                | bottom
+    ;      down       |     down      |               <                | bottom
+    ;      down       |     down      |               >                |  top 
+    ;       no        |     down      |               -                |  top 
+    ;       no        |      up       |               -                | bottom  
+    ;
+    
+    ; first check the direction the elevator is moving in - Y = yPointerCache + 5 to point to the direction
+    .checkElevatorDirection:
+      LDA yPointerCache
+      CLC
+      ADC #$05
+      TAY
+      LDA elevators, y
+      BEQ .elevatorStatic
+      CMP #GENERIC_DIR_UP
+      BEQ .elevatorMovingUp
+      
+    ; elevator is moving down
+    ;
+    ; elevator moving | player moving | player speed vs elevator speed | result
+    ; --------------------------------------------------------------------------
+    ;      down       |      no       |               -                | bottom
+    ;      down       |      up       |               -                | bottom
+    ;      down       |     down      |               <                | bottom
+    ;      down       |     down      |               >                |  top 
+    ;
+    ; if player is static, collision from the bottom.
+    ; if player is moving up, collision from the bottom.
+    ; if player is moving down:
+    ;   if player's speed is less than elevator's speed, collision from the bottom
+    ;   if player's speed is more than elevator's speed, collision from the top
+    .elevatorMovingDown:
+
+      ; player static?
+      LDA genericDY
+      BEQ .collisionBottom
+      
+      ; player moving up?
+      LDA b
+      BEQ .collisionBottom
+      
+      ; both platform and player are moving down, check speeds
+      .playerMovingDown:
+        ; {todo}
+    
+    ; elevator is moving up
+    ;
+    ; elevator moving | player moving | player speed vs elevator speed | result
+    ; --------------------------------------------------------------------------
+    ;       up        |      no       |               -                |  top   
+    ;       up        |     down      |               -                |  top   
+    ;       up        |      up       |               <                |  top   
+    ;       up        |      up       |               >                | bottom  
+    ;
+    ; if player is static, collision from the top.
+    ; if player is moving down, collision from the top.
+    ; if player is moving up:
+    ;   if player's speed is less than elevator's speed, collision from the top
+    ;   if player's speed is more than elevator's speed, collision from the bottom
+    .elevatorMovingUp:
+
+      ; player static?
+      LDA genericDY
+      BEQ .collisionTop
+      
+      ; player moving down?
+      LDA b
+      BEQ .playerMovingUp
+      JMP .collisionTop
+      
+      ; both platform and player are moving up, check speeds
+      .playerMovingUp:
+        ; {todo}
+    
+    ; elevator is static.
+    ;
+    ; elevator moving | player moving | player speed vs elevator speed | result
+    ; --------------------------------------------------------------------------
+    ;       no        |     down      |               -                |  top 
+    ;       no        |      up       |               -                | bottom  
+    ;
+    ; if player moving down, collision from the top.
+    ; if player moving down, collision from the bottom.
+    ; we'll never hit this if player is also static.
+    .elevatorStatic:     
+      LDA b
+      BNE .collisionTop
+    
+    ; collision from the bottom, same logic as in CheckCollisionVertical.adjustMovement
+    ; in addition, set b to 0
+    .collisionBottom:      
+      LDA ay2
+      SEC
+      SBC playerPlatformBoxY1
+      STA genericDY
+      INC genericDY
+      LDA #$00
+      STA b
+      RTS
+      
+    ; collision from the top, same logic as in CheckCollisionVertical.adjustMovement
+    ; in addition, set b to 1 and mark the platform as "player standing on this"
+    .collisionTop:      
+      LDA ay1
+      SEC
+      SBC playerPlatformBoxY2
+      STA genericDY
+      DEC genericDY
+      LDA #$01
+      STA b
+      INC playerOnElevator
+      LDA yPointerCache
+      STA playerElevatorId
+      RTS  
+
 ;****************************************************************
 ; Name:                                                         ;
 ;   CheckForThreatCollisions                                    ;
@@ -946,7 +1119,6 @@ MovePlayerHorizontally:
   
   .applyMovement:
     LDA genericDX
-    ;BEQ .noMovement            no need for this check currently
     CLC
     ADC playerX
     STA playerX    
@@ -966,8 +1138,7 @@ MovePlayerHorizontally:
     CLC
     ADC #PLAYER_THR_BOX_WIDTH      
     STA playerThreatBoxX2       ; don't cap here either
-    
-  .noMovement:
+
     RTS
   
 ;****************************************************************
@@ -987,7 +1158,6 @@ MovePlayerVertically:
   
   .applyMovement:
     LDA genericDY
-    ;BEQ .noMovement            no need for this check currently
     CLC   
     ADC playerY    
     STA playerY
@@ -1040,8 +1210,7 @@ MovePlayerVertically:
     .capY1AtMin:
       LDA #$00
       STA playerThreatBoxY1      
-  
-  .noMovement:
+
     RTS   
     
 ;****************************************************************
