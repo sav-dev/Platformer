@@ -36,6 +36,7 @@
 ;     X                                                         ;
 ;     xPointerCache                                             ;
 ;     enemy vars (!)                                            ;
+;     elevator vars                                             ;
 ;     generic vars                                              ;
 ;     render vars                                               ;
 ;                                                               ;
@@ -58,13 +59,13 @@ UpdateElevators:
     TAX                  
     
     ; X now points to the size. if it's 0, elevator is inactive - exit.
-    ; otherwise, cache the size in genericFrame.
+    ; otherwise, cache the size in elevatorSize.
     LDA elevators, x
     BNE .setSize
     JMP .updateElevatorLoopCondition
     
     .setSize:
-      STA genericFrame
+      STA elevatorSize
     
     ; X += 1 to point to the screen, load it, store it in enemyScreen
     INX
@@ -85,7 +86,7 @@ UpdateElevators:
     
     ; preset genericDirection to 0, then X += 1 to point to the movement distance left. 
     ; load it. if it's 0, it means the extreme was met the previous frame - 
-    ; update it with enemyMaxDistance, and INC genericFrame to tell us we must update the direction.
+    ; update it with enemyMaxDistance, and INC genericDirection to tell us we must update the direction.
     ; note - when updating enemies, we update the direction and update distance left as soon as it reaches 0
     ; (so it never stays at 0). We don't do this for elevators since we want to know the direction it went
     ; later when processing the frame.
@@ -181,7 +182,7 @@ UpdateElevators:
       STA genericX
   
     ; once we get here, these are set:
-    ;  - genericFrame = elevator size
+    ;  - elevatorSize = elevator size
     ;  - genericScreen = elevator the screen is on
     ;  - genericX, genericY = elevator position
     ; time to transpose X. first set genericOffScreen to 0,
@@ -226,7 +227,7 @@ UpdateElevators:
         STA genericX
         BCS .renderElevator
         INC genericOffScreen
-        LDY genericFrame
+        LDY elevatorSize
         CLC
         ADC ElevatorWidth, y
         BCC .updateElevatorLoopCondition
@@ -234,7 +235,7 @@ UpdateElevators:
         BCC .updateElevatorLoopCondition
   
       ; once we get here, everything needed to render the elevator is set:
-      ;  - genericFrame, genericOffScreen, genericX, genericY
+      ;  - elevatorSize, genericOffScreen, genericX, genericY
       .renderElevator:
         JSR RenderElevator
   
@@ -268,7 +269,7 @@ UpdateElevators:
 ;   Y                                                           ;
 ;   yPointerCache                                               ;
 ;   enemyScreen                                                 ;
-;   genericFrame                                                ;
+;   elevatorSize                                                  ;
 ;   collision vars                                              ;
 ;                                                               ;
 ; Remarks:                                                      ;
@@ -290,13 +291,13 @@ CheckForElevatorCollision:
     TAY                
     
     ; Y now points to the size. if it's 0, elevator is inactive - exit.
-    ; otherwise, cache the size in genericFrame.
+    ; otherwise, cache the size in elevatorSize.
     LDA elevators, y
     BNE .setSize
     JMP .checkCollisionLoopCondition ; todo - see if this can be updated to BEQ
     
     .setSize:
-      STA genericFrame
+      STA elevatorSize
 
     ; Y += 1 to point to the screen, load it, store it in enemyScreen
     INY
@@ -343,7 +344,7 @@ CheckForElevatorCollision:
         ; if carry clear, just set ax2. otherwise cap it at screen_width
         .ax1OnScreen:
           STA ax1
-          LDY genericFrame
+          LDY elevatorSize
           CLC
           ADC ElevatorWidth, y
           BCS .capX2AtMax
@@ -368,7 +369,7 @@ CheckForElevatorCollision:
         ; if carry is not set, it means elevator is fully off-screen - exit
         ; otherwise, set ax2 to the result, and set ax1 to 0      
         .ax1OffScreenToTheLeft:
-          LDY genericFrame
+          LDY elevatorSize
           CLC
           ADC ElevatorWidth, y
           BCC .checkCollisionLoopCondition
@@ -714,13 +715,14 @@ MoveElevatorsPointerBack:
 ;                                                               ;
 ; Input variables:                                              ;
 ;   genericX, genericY, genericOffScreen - position             ;
-;   genericFrame - size                                         ;
+;   elevatorSize - size                                         ;
 ;                                                               ;
 ; Used variables:                                               ;
-;   updates genericX, genericY, genericFrame                    ;
+;   updates genericX, genericY, elevatorSize                    ;
 ;   b - used to track current x offset                          ;
 ;****************************************************************
     
+; todo - have different size of elevators have different palette (also update AddEditElevatorDialog)
 RenderElevator:
   
   ; preset b (x offset) to 0
@@ -753,14 +755,14 @@ RenderElevator:
       
     ; if we got here we want to render the tile. renderXPos and renderYPos is already set.
     ; if b == 0 it means we're rendering the left end.
-    ; if genericFrame == 1 it means we're rendering the right end.
+    ; if elevatorSize == 1 it means we're rendering the right end.
     ; but first set the atts.
     .setAttsAndTile:
       LDA #ELEVATOR_ATTS
       STA renderAtts
       LDA b
       BEQ .renderingLeftEnd
-      LDA genericFrame
+      LDA elevatorSize
       CMP #$01
       BEQ .renderingRightEnd
       
@@ -791,13 +793,13 @@ RenderElevator:
     .renderSprite:
       JSR RenderSprite      
     
-    ; loop check - b += 8, genericFrame -= 1, genericFrame == 0 means exit
+    ; loop check - b += 8, elevatorSize -= 1, elevatorSize == 0 means exit
     .loopCheck:
       LDA b
       CLC
       ADC #$08
       STA b
-      DEC genericFrame
+      DEC elevatorSize
       BNE .renderTileLoop
          
   RTS

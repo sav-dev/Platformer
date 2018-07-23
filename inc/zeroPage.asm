@@ -149,6 +149,9 @@ removeEnemy             .rs 1  ; whether enemy should be exploded / removed from
 playerOnElevator        .rs 1  ; whether player is standing on an elevator
 playerElevatorId        .rs 1  ; points to the elevator player is standing on
 
+; POI - possible optimization - to save zero page bytes, use some other var for this
+elevatorSize            .rs 1  ; size of an elevator
+
 ;****************************************************************
 ; Collision checks                                              ;
 ;****************************************************************
