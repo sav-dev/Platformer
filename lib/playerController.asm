@@ -85,81 +85,107 @@ UpdatePlayerNotVisible:
 ;   h                                                           ;
 ;   i                                                           ;
 ;   collision vars                                              ;
+;   elevator vars                                               ;
 ;****************************************************************
 
 UpdatePlayerNormal:
 
-  .verticalMovement:                  ; process vertical movement first
+  ; process vertical movement first
+  .verticalMovement:
     
-    .calculateDY:                     ; calculate DY   
+    ; calculate DY based on either player jumping or gravity
+    .calculateDY:       
+
+      ; playerJump != 0 means the player is mid-jump animation, go to .processJump in that case
       .checkJump:
         LDA playerJump
-        BNE .processJump              ; playerJump != 0 means the player is mid-jump animation
+        BNE .processJump
                                       
+      ; if not mid-jump, apply gravity, then go to check vertical collision
       .applyGravity:                  
         LDA #GRAVITY                    
-        STA genericDY                 ; if not mid-jump, apply gravity
+        STA genericDY                 
         JMP .checkVerticalCollision        
-                                      
+     
+      ; process jump 
+      ; (note - remove everything from here up to and including  JMP .lookupJumpDistance to get rid of the 'keep A to jump' mechanic)      
       .processJump:
-
-        ; remove everything from here up to and including JMP .lookupJumpDistance to get rid of the 'keep A to jump' mechanic
       
-        CMP #JUMP_PRESS               ; check if we're at a point where we require A to be pressed to continue the jump
+        ; first check if we're at a point where we require A to be pressed to continue the jump (jump var > jump counter)
+        CMP #JUMP_PRESS               
         BCS .updateJumpCounter
       
+        ; we require A to be pressed, see if it's down.
+        ; if it is, process the jump normally
         .jumpCheckA:
           LDA controllerDown
           AND #CONTROLLER_A 
-          BNE .updateJumpCounter      ; if A is still pressed, process the jump normally
+          BNE .updateJumpCounter
           
-          .jumpANotDown:              ; A is no longer pressed                  
-            LDA playerJump            ; if player jump is past (<=) the slowdown, continue normally.
-            CMP #JUMP_SLOWDOWN + $01  ; otherwise, move the jump to the slowdown point.
+          ; A is no longer pressed.
+          ; if player jump is past (<=) the slowdown, continue normally.
+          ; otherwise, move the jump to the slowdown point.
+          .jumpANotDown:
+            LDA playerJump
+            CMP #JUMP_SLOWDOWN + $01
             BCC .updateJumpCounter
             LDA #JUMP_SLOWDOWN
             STA playerJump
             JMP .lookupJumpDistance
-          
+        
+        ; we get here when jump is processed naturally.
+        ; decrement the jump counter.
         .updateJumpCounter:
-          DEC playerJump              ; decrease the jump counter
+          DEC playerJump
           
+        ; we get here when the jump counter has been updated (via any way).
+        ; lookup the distance. 0, player is suspended mid air, no more checks required.
+        ; otherwise, set genericDY.
         .lookupJumpDistance:
           LDX playerJump              
           LDA jumpLookupTable, x      
-          BEQ .playerMidAir           ; no vertical movement, player is suspended mid air, no more checks required
-          STA genericDY               ; load the jump value        
+          BEQ .playerMidAir ; todo remove this
+          STA genericDY
                                     
-    .checkVerticalCollision:          ; DY calculated, now check for a vertical collision
-      JSR CheckCollisionVertical      ; this will update genericDY and set collision and b (b = 1 means was going down)
-      JSR MovePlayerVertically        ; apply movement
+    ; we get here when DY is set to something.
+    ; check for vertical collision - this will update genericDY and set collision and b (b = 1 means was going down).
+    ; apply movement (with updated DY), and then, if collision was detected, go process the collision.
+    .checkVerticalCollision:
+      JSR CheckCollisionVertical
+      JSR MovePlayerVertically
       LDA collision 
-      BNE .processCollision           ; process collision
+      BNE .processCollision
       
+    ; we get here when no vertical collision was found - that means player is mid-air, set the animation to JUMP.
     .playerMidAir:
-      LDA #PLAYER_JUMP                ; no collision, player is mid-air, no more checks required
+      LDA #PLAYER_JUMP
       STA playerAnimation
       JMP .verticalMovementDone       
         
+    ; we get here when vertical collision was detected. Check if it was going up or going down.
     .processCollision:  
       LDA b 
       BNE .collisionGoingDown
         
+      ; collision was when going up, cancel the jump (set to peak) and exit.
       .collisionGoingUp:  
-        LDA #JUMP_PEAK                ; collision was when going up, treat it as the jumps peak, then exit
+        LDA #JUMP_PEAK
         STA playerJump
         LDA #PLAYER_JUMP
         STA playerAnimation
         JMP .verticalMovementDone
         
+      ; collision going down, cancel jump.
+      ; player is on the ground now, can either jump or crouch
       .collisionGoingDown:
         LDA #$00  
-        STA playerJump                ; collision going down, cancel jump, player is on the ground now, can jump or crouch
+        STA playerJump
         
+      ; check if player wants to jump, update jump var and animation if yes.
       .checkA:  
         LDA controllerPressed
         AND #CONTROLLER_A 
-        BEQ .checkADone               ; check if player wants to jump
+        BEQ .checkADone
         LDA #JUMP_FRAMES
         STA playerJump
         LDA #PLAYER_JUMP
@@ -167,72 +193,87 @@ UpdatePlayerNormal:
         JMP .verticalMovementDone
       .checkADone:
       
+      ; check if player wants to crouch, update animation if yes
+      ; todo - we must also update the threat box here
       .checkDown:  
         LDA controllerDown 
         AND #CONTROLLER_DOWN
-        BEQ .checkDownDone            ; check if player wants to crouch
+        BEQ .checkDownDone
         LDA #PLAYER_CROUCH
         STA playerAnimation
         JMP .verticalMovementDone
       .checkDownDone:
       
-      .noInput:                       ; no input, set state to either STAND or RUN
+      ; no jump or crouch input.
+      ; if state is RUN leave it as so, otherwise set to STAND.
+      .noInput:
         LDA playerAnimation
         CMP #PLAYER_RUN
-        BEQ .verticalMovementDone     ; player is already running, leave animation as RUN
+        BEQ .verticalMovementDone
         LDA #PLAYER_STAND
-        STA playerAnimation           ; set state to STAND        
+        STA playerAnimation
   
-  .verticalMovementDone:              ; vertical movement processed
+  ; vertical movement has now been processed.
+  .verticalMovementDone:
      
-  .horizontalMovement:                ; process horizontal movement now
+  ; process horizontal movement now
+  .horizontalMovement:
     
+    ; check if left is pressed, if yes update player's direction and - if not crouching - set DX.
     .checkLeft:
       LDA controllerDown
       AND #CONTROLLER_LEFT
-      BEQ .checkLeftDone              ; check if left is pressed
+      BEQ .checkLeftDone
       LDA #DIRECTION_LEFT
-      STA playerDirection             ; set player direction to left
+      STA playerDirection
       LDA playerAnimation
       CMP #PLAYER_CROUCH
-      BEQ .notMovingHorizontally      ; if player is crouching horizontal movement not possible      
+      BEQ .notMovingHorizontally
       LDA #PLAYER_SPEED_NEGATIVE
-      STA genericDX                   ; set DX
-      JMP .movingHorizontally         ; player will move vertically
+      STA genericDX
+      JMP .movingHorizontally
     .checkLeftDone:
     
+    ; check if right is pressed, if yes update player's direction and - if not crouching - set DX.
     .checkRight:
       LDA controllerDown
       AND #CONTROLLER_RIGHT
-      BEQ .checkRightDone             ; check if right is pressed
+      BEQ .checkRightDone
       LDA #DIRECTION_RIGHT
-      STA playerDirection             ; set player direction to right
+      STA playerDirection
       LDA playerAnimation
       CMP #PLAYER_CROUCH
-      BEQ .notMovingHorizontally      ; if player is crouching horizontal movement not possible      
+      BEQ .notMovingHorizontally
       LDA #PLAYER_SPEED_POSITIVE
-      STA genericDX                   ; set DX
-      JMP .movingHorizontally         ; player will move vertically
+      STA genericDX
+      JMP .movingHorizontally
     .checkRightDone:
     
+    ; if we get here it means player is not moving vertically.
+    ; if player is in the RUN state, replace it with the STAND State, and exit.
     .notMovingHorizontally:
-      LDA playerAnimation             ; if we got here it means player is not moving vertically
+      LDA playerAnimation
       CMP #PLAYER_RUN                 
       BEQ .changeStateToStand
       JMP .horizontalMovementDone
-      .changeStateToStand:            ; if player is in the RUN state, replace it with the STAND State
+      .changeStateToStand:
         LDA #PLAYER_STAND
         STA playerAnimation
         JMP .horizontalMovementDone
     
+    ; if we get here it means player is moving vertically.
+    ; first update the animation:
+    ;   - if player in the JUMP animation, no updates needed
+    ;   - if player is in the STAND animation, change to RUN
+    ;   - if player is in the RUN animation, update the animation 
     .movingHorizontally:
       LDA playerAnimation
       CMP #PLAYER_JUMP
-      BEQ .checkHorizontalCollision   ; player in the jumping animation, no updates needed
+      BEQ .checkHorizontalCollision
       CMP #PLAYER_STAND
-      BEQ .startRunning               ; player is standing and wants to move, start running
+      BEQ .startRunning
       DEC playerCounter
-      BNE .checkHorizontalCollision   ; counter is counting down
+      BNE .checkHorizontalCollision
       LDA #PLAYER_ANIM_SPEED
       STA playerCounter
       DEC playerAnimationFrame
@@ -249,56 +290,79 @@ UpdatePlayerNormal:
       LDA #PLAYER_ANIM_FRAMES
       STA playerAnimationFrame  
     
+    ; animation has been updated, now check for a horizontal collision. 
+    ; this updates DX. it may have been updated to 0, just exit in that case.
     .checkHorizontalCollision:
       JSR CheckCollisionHorizontal
-      
-    .applyHorizontalMovement:
       LDA genericDX   
-      BEQ .horizontalMovementDone     ; no horizontal movement
-                                       
-      LDA scroll + $01                ; load scroll  high byte
-      CMP maxScroll + $01             ; compare with max scroll high byte
-      BEQ .highBytesMatch             
+      BEQ .horizontalMovementDone
+    
+    ; now apply the movement after collision checks.
+    ; depending on the player's position and scroll we want to either move the player or scroll the screen.
+    .applyHorizontalMovement:          
                                       
-      LDA scroll                      
-      BNE .scrollHorizontally         ; high bytes don't match, and low byte isn't 0 - intermediate scroll, continue scrolling
-                                      
+      ; load scroll high byte, compare with max scroll high byte
       LDA scroll + $01                
-      BEQ .leftMost                   ; scroll == 0
-      JMP .scrollHorizontally         ; high bytes don't match, scroll != 0 - 
+      CMP maxScroll + $01
+      BEQ .highBytesMatch             
+                         
+      ; high bytes don't match.
+      ; check if low byte isn't 0 - in that case we should scroll
+      LDA scroll                      
+      BNE .scrollHorizontally
                                       
+      ; high bytes don't match, low byte is 0.
+      ; check if high byte is 0, in that case we're on the left end.
+      ; otherwise we should scroll.
+      LDA scroll + $01                
+      BEQ .leftMost
+      JMP .scrollHorizontally
+
+      ; high bytes match, check if scroll == max scroll - in that case we're at the right end.
+      ; otherwise we should scroll.
       .highBytesMatch:                
-        LDA scroll                    
-        CMP maxScroll                 
-        BEQ .rightMost                ; scroll == max scroll
-        JMP .scrollHorizontally       ; intermediate scroll, continue scrolling
-                                      
+        LDA scroll
+        CMP maxScroll
+        BEQ .rightMost
+        JMP .scrollHorizontally
+
+      ; we're on the left most screen.
+      ; check if player is on the left side of the screen (position != screen center). in such case, move the player.
+      ; otherwise, check which direction player is going - if going right, scroll, otherwise move.
       .leftMost:                      
         LDA playerX
         CMP #PLAYER_SCREEN_CENTER
-        BNE .moveHorizontally         ; player not centered, meaning player is in the left part, move
+        BNE .moveHorizontally
         LDA genericDX                  
         CMP #$80                      
-        BCC .scrollRight              ; carry cleared, genericDX < #$80 -> genericDX > 0 -> scroll right
-        JMP .moveHorizontally         ; moving left
-                                      
+        BCC .scrollRight
+        JMP .moveHorizontally
+                             
+      ; we're on the right most screen.
+      ; check if player is on the right side of the screen (position != screen center). in such case, move the player.
+      ; otherwise, check which direction player is going - if going left, scroll, otherwise move.
       .rightMost:                     
         LDA playerX
         CMP #PLAYER_SCREEN_CENTER
-        BNE .moveHorizontally         ; player not centered, meaning player is in the right part, move      
+        BNE .moveHorizontally
         LDA genericDX                  
         CMP #$80                      
-        BCS .scrollLeft               ; carry set, genericDX >= #$80 -> genericDX < 0 -> scroll left
-        JMP .moveHorizontally         ; moving right
-                                      
+        BCS .scrollLeft
+        JMP .moveHorizontally
+                             
+      ; if we get here it means we want to move the player.
       .moveHorizontally:              
         JSR MovePlayerHorizontally
         JMP .horizontalMovementDone
-                                      
-      .scrollHorizontally:            ; scrolling assumes horizontal speed will always be 2
+                        
+      ; if we get here it means we want to scroll the screen.
+      ; check which direction player is going, and scroll.
+      ; note - we only check if DX > 0 or < 0 - we don't look at the actual values
+      ; (we expect scroll to be constant always, and scroll speed to == player speed)
+      .scrollHorizontally:
         LDA genericDX                  
         CMP #$80                      
-        BCC .scrollRight              ; carry cleared, genericDX < #$80 -> genericDX > 0 -> scroll right
+        BCC .scrollRight
                                        
         .scrollLeft:                   
           JSR DecrementScroll          
@@ -313,11 +377,15 @@ UpdatePlayerNormal:
           STA b
           JSR ScrollBullets
           
+  ; horizontal movement has now been processed.
   .horizontalMovementDone: 
 
+  ; we can render the player now.
+  ; todo - move this somewhere else? later in the frame?
   .renderPlayer:
     JSR RenderPlayer
 
+  ; the player has been moved, check if player is falling off screen, change the state in that case.
   .checkIfFallingOffScreen:
     LDA playerY
     CMP #PLAYER_Y_MAX
@@ -326,12 +394,14 @@ UpdatePlayerNormal:
     STA playerState
     RTS
     
+  ; check for collisions with threats, explode player if any detected.
   .checkThreats:
     JSR CheckForThreatCollisions
     LDA collision
     BEQ .updatePlayerDone
     JMP ExplodePlayer
   
+  ; updates done
   .updatePlayerDone:
     RTS
   
