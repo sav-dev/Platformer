@@ -2518,11 +2518,11 @@
   </Enemies>
   <Elevators>
     <Elevator>
-      <X>56</X>
+      <X>24</X>
       <Y>64</Y>
       <Size>8</Size>
       <MovementType>Vertical</MovementType>
-      <Speed>2</Speed>
+      <Speed>1</Speed>
       <MinPosition>48</MinPosition>
       <MaxPosition>164</MaxPosition>
       <InitialFlip>true</InitialFlip>
@@ -2549,12 +2549,12 @@
     </Elevator>
     <Elevator>
       <X>416</X>
-      <Y>128</Y>
+      <Y>120</Y>
       <Size>4</Size>
       <MovementType>Vertical</MovementType>
       <Speed>5</Speed>
-      <MinPosition>68</MinPosition>
-      <MaxPosition>128</MaxPosition>
+      <MinPosition>70</MinPosition>
+      <MaxPosition>120</MaxPosition>
       <InitialFlip>true</InitialFlip>
     </Elevator>
   </Elevators>

@@ -407,16 +407,6 @@ RenderSprite:
 
 Bank2End:
   
-  .bank 3
-  .org $E000
-  
-Bank3Start:
- 
-  .include "data\levels.asm"
-  .include "data\enemies.asm"
- 
-Bank3End:
- 
   .bank 0
   .org $8000
     
@@ -428,6 +418,16 @@ Bank0End:
 
 Bank1Start:
 Bank1End:
+  
+  .bank 3
+  .org $E000
+  
+Bank3Start:
+ 
+  .include "data\levels.asm"
+  .include "data\enemies.asm"
+ 
+Bank3End:
   
 ;****************************************************************
 ; Vectors                                                       ;

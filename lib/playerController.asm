@@ -173,7 +173,7 @@ UpdatePlayerNormal:
       
      ; collision was when going up, cancel the jump (set to peak) and exit.
      .collisionGoingUp:  
-       LDA #JUMP_PEAK
+       LDA #$00
        STA playerJump
        LDA #PLAYER_JUMP
        STA playerAnimation
@@ -394,8 +394,12 @@ UpdatePlayerNormal:
   .horizontalMovementDone: 
 
   ; now that player has been moved, check if the player is still on an elevator and clear the flag if not
+  ; if player is not on an elevator, just skip.
+  ; otherwise, 
   .checkIfPlayerStillOnElevator:
-    ; {todo implement}
+    LDA playerOnElevator
+    BEQ .renderPlayer
+    
   
   ; we can render the player now.
   ; todo - move this somewhere else? later in the frame?
@@ -910,7 +914,6 @@ CheckCollisionHorizontal:
 ;                                                               ;
 ; Used variables:                                               ;
 ;   Y                                                           ;
-;   {todo}                                                      ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_elevator_in_memory_format                        ;
@@ -974,8 +977,17 @@ ProcessElevatorVerticalCollision:
       BEQ .collisionBottom
       
       ; both platform and player are moving down, check speeds
+      ; LDY yPointerCache, Y += 2 to point to speed, load to A, compare with genericDY
+      ; cache clear if elevator speed < player speed => collision from the top
+      ; otherwise collision from the bottom
       .playerMovingDown:
-        ; {todo}
+        LDY yPointerCache
+        INY
+        INY
+        LDA elevators, y
+        CMP genericDY
+        BCC .collisionTop
+        JMP .collisionBottom
     
     ; elevator is moving up
     ;
@@ -1003,8 +1015,23 @@ ProcessElevatorVerticalCollision:
       JMP .collisionTop
       
       ; both platform and player are moving up, check speeds
+      ; we must first get the absolute player speed: genericDY = FF - genericDY + 1
+      ; then LDY yPointerCache, Y += 2 to point to speed, load to A
+      ; cache clear if elevator speed < player speed => collision from the bottom
+      ; otherwise collision from the top
       .playerMovingUp:
-        ; {todo}
+        LDA #$FF
+        SEC
+        SBC genericDY
+        STA genericDY
+        INC genericDY
+        LDY yPointerCache
+        INY
+        INY
+        LDA elevators, y
+        CMP genericDY
+        BCC .collisionBottom
+        JMP .collisionTop
     
     ; elevator is static.
     ;
@@ -1480,7 +1507,6 @@ RenderPlayerFalling:
 ;   Lookup table with jump DY values                            ;
 ;****************************************************************
 
-JUMP_PEAK = $04       ; =  4, if a platform is hit going up, go to this point in the jump
 JUMP_SLOWDOWN = $08   ; =  8, id A is not down, go to this point in the jump (unless already there)
 JUMP_PRESS = $16      ; = 22, require A to be pressed when jump counter < this
 
