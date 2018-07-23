@@ -2528,16 +2528,6 @@
       <InitialFlip>true</InitialFlip>
     </Elevator>
     <Elevator>
-      <X>212</X>
-      <Y>176</Y>
-      <Size>2</Size>
-      <MovementType>Vertical</MovementType>
-      <Speed>4</Speed>
-      <MinPosition>172</MinPosition>
-      <MaxPosition>180</MaxPosition>
-      <InitialFlip>false</InitialFlip>
-    </Elevator>
-    <Elevator>
       <X>240</X>
       <Y>184</Y>
       <Size>2</Size>
@@ -2566,16 +2556,6 @@
       <MinPosition>400</MinPosition>
       <MaxPosition>479</MaxPosition>
       <InitialFlip>true</InitialFlip>
-    </Elevator>
-    <Elevator>
-      <X>928</X>
-      <Y>200</Y>
-      <Size>2</Size>
-      <MovementType>Vertical</MovementType>
-      <Speed>4</Speed>
-      <MinPosition>200</MinPosition>
-      <MaxPosition>220</MaxPosition>
-      <InitialFlip>false</InitialFlip>
     </Elevator>
   </Elevators>
   <PlayerStartingPosition>
