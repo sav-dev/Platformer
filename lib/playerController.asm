@@ -93,6 +93,12 @@ UpdatePlayerNormal:
   ; process vertical movement first
   .verticalMovement:
     
+    ; first check if player is riding on an elevator.
+    ; in such case, no collision checks are needed, just go to collisionGoingDown
+    .checkIfPlayerOnElevator:
+      LDA playerOnElevator
+      BNE .collisionGoingDown
+    
     ; calculate DY based on either player jumping or gravity
     .calculateDY:       
 
@@ -108,7 +114,8 @@ UpdatePlayerNormal:
         JMP .checkVerticalCollision        
      
       ; process jump 
-      ; (note - remove everything from here up to and including  JMP .lookupJumpDistance to get rid of the 'keep A to jump' mechanic)      
+      ; note - remove everything from here up to and including
+      ; JMP .lookupJumpDistance to get rid of the 'keep A to jump' mechanic)      
       .processJump:
       
         ; first check if we're at a point where we require A to be pressed to continue the jump (jump var > jump counter)
@@ -139,15 +146,12 @@ UpdatePlayerNormal:
           DEC playerJump
           
         ; we get here when the jump counter has been updated (via any way).
-        ; lookup the distance. 0, player is suspended mid air, no more checks required.
-        ; otherwise, set genericDY.
+        ; lookup the distance, set genericDY and go check for collisions.        
         .lookupJumpDistance:
           LDX playerJump              
-          LDA jumpLookupTable, x      
-          BEQ .playerMidAir ; todo remove this
+          LDA jumpLookupTable, x          
           STA genericDY
                                     
-    ; we get here when DY is set to something.
     ; check for vertical collision - this will update genericDY and set collision and b (b = 1 means was going down).
     ; apply movement (with updated DY), and then, if collision was detected, go process the collision.
     .checkVerticalCollision:
@@ -166,21 +170,25 @@ UpdatePlayerNormal:
     .processCollision:  
       LDA b 
       BNE .collisionGoingDown
-        
-      ; collision was when going up, cancel the jump (set to peak) and exit.
-      .collisionGoingUp:  
-        LDA #JUMP_PEAK
-        STA playerJump
-        LDA #PLAYER_JUMP
-        STA playerAnimation
-        JMP .verticalMovementDone
-        
-      ; collision going down, cancel jump.
-      ; player is on the ground now, can either jump or crouch
-      .collisionGoingDown:
-        LDA #$00  
-        STA playerJump
-        
+      
+      ; todo - update all of the below
+       
+          ; collision was when going up, cancel the jump (set to peak) and exit.
+          .collisionGoingUp:  
+            LDA #JUMP_PEAK
+            STA playerJump
+            LDA #PLAYER_JUMP
+            STA playerAnimation
+            JMP .verticalMovementDone
+            
+          ; collision going down, cancel jump.
+          ; player is on the ground now, can either jump or crouch
+          .collisionGoingDown:
+            LDA #$00  
+            STA playerJump
+      
+      ; todo - update all of the above
+      
       ; check if player wants to jump, update jump var and animation if yes.
       .checkA:  
         LDA controllerPressed
@@ -383,6 +391,10 @@ UpdatePlayerNormal:
   ; horizontal movement has now been processed.
   .horizontalMovementDone: 
 
+  ; now that player has been moved, check if the player is still on an elevator and clear the flag if not
+  .checkIfPlayerStillOnElevator:
+    ; {todo implement}
+  
   ; we can render the player now.
   ; todo - move this somewhere else? later in the frame?
   .renderPlayer:
@@ -541,78 +553,84 @@ SpawnPlayerBullets:
 ; Description:                                                  ;
 ;   Check for vertical collisions, updates genericDY            ;
 ;   collision = 1 set on output if collision detected           ;
-;   b = 1 set on output if was going down                       ;
+;   b = 1 set on output if player was going down                ;
 ;                                                               ;
 ; Used variables:                                               ;
 ;   Y                                                           ;
+;   yPointerCache                                               ;
 ;   b                                                           ;
 ;   c                                                           ;
 ;   d                                                           ;
 ;   i                                                           ;
+;   enemyScreen                                                 ;
+;   elevatorSize                                                ;
 ;   collision vars                                              ;
 ;   genericPointer                                              ;
 ;****************************************************************
 
 CheckCollisionVertical:
  
-  ; check move direction
-  
-  LDA #$00
-  STA b                               ; b = 0 means moving up, b <> 0 means moving down
-                                      
-  .directionCheck:                    
+  ; check move direction, set b to 0 (up) or 1 (down).
+  ; note that this is never called with DY == 0  
+  .directionCheck:
+    LDA #$00
+    STA b                                                                     
     LDA genericDY                      
-    ;BEQ .notMoving                   ; not moving at all - commented out, this will never be called with DY == 0
     CMP #$80                          
-    BCS .directionCheckDone           ; carry set, genericDY >= #$80 -> genericDY < 0 -> moving up, b stays as 0
-    INC b                             ; moving down
-    JMP .directionCheckDone    
-    .notMoving:
-      RTS  
+    BCS .directionCheckDone
+    INC b
   .directionCheckDone:
   
-  ; check bounds
-  ; POI - possible optimization - some of these checks may not be required  
-  
+  ; check if after the movement player will be in screen bounds
   .checkBounds:
     LDA b
-    BNE .checkBottomBound             ; moving down
-                                      
+    BNE .checkBottomBound
+                         
+    ; check top screen bound.
+    ; carry clear after adding means playerY + genericDY < 0 - cap at Y_MIN 
+    ; then compare to Y_MIN, again carry clear means playerY + genericDY < Y_MIN - cap at Y_MIN
+    ; in either case cap and just exit
+    ; note - important - never put elevators high enough that this could be an issue
+    ; (POI - possible issue with elevators)
     .checkTopBound:                   
       LDA playerY                     
       CLC                             
       ADC genericDY                    
-      BCC .offTop                     ; carry clear means playerY + genericDY < 0 - cap at Y_MIN 
+      BCC .offTop
       CMP #PLAYER_Y_MIN               
-      BCC .offTop                     ; carry clear means playerY + genericDY < Y_MIN - cap at Y_MIN
+      BCC .offTop
       JMP .checkBoundsDone            
       .offTop:                        
         LDA #PLAYER_Y_MIN             
-        SEC                           ; set DY to Y_MIN - playerY, i.e. stop at min
+        SEC
         SBC playerY                   
         STA genericDY                  
-        INC collision                 ; collision with screen edge
-        RTS                           ; can just exit since there is no possibility of collision
+        INC collision
+        RTS
     .checkTopBoundDone:               
-                                      
-    .checkBottomBound:                 
+
+    ; check bottom screen bound.
+    ; carry clear after adding means playerY + genericDY < Y_MAX - continue
+    ; otherwise cap at max and just exit
+    ; note - important - never put elevators low enough that this could be an issue
+    ; (POI - possible issue with elevators)
+    .checkBottomBound:
       LDA playerY                     
       CLC                             
       ADC genericDY                    
       CMP #PLAYER_Y_MAX               
-      BCC .checkBottomBoundDone       ; carry clear means playerY + genericDY < Y_MAX - continue
+      BCC .checkBottomBoundDone
       .offBottom:                     
         LDA #PLAYER_Y_MAX             
-        SEC                           ; set DY to Y_MAX - playerY, i.e. stop at max
+        SEC
         SBC playerY                   
         STA genericDY                  
-        INC collision                 ; collision with screen edge
-        RTS                           ; can just exit since there is no possibility of collision
+        INC collision
+        RTS
     .checkBottomBoundDone:   
   .checkBoundsDone:
 
-  ; set new player box. POI - possible memory optimization - calculate boxes here instead of storing them in zero page
-  
+  ; set new player box.
   .setBox:
     LDA playerPlatformBoxX1
     STA bx1
@@ -628,22 +646,32 @@ CheckCollisionVertical:
     STA by2  
   .setBoxDone:
 
-  ; check for collisions with platforms
-
-  .checkCollisions:
+  ; check for collisions with elevators.
+  ; if none found, go check collisions with platforms.
+  .checkCollisionsWithElevators:
+    JSR CheckForElevatorCollision
+    LDA collision
+    BEQ .checkCollisionsWithPlatforms
+    
+    ; {todo process collision with elevator}
+  
+  ; check for collisions with platforms.
+  ; check first screen first (c == 0), then second screen (c == 1) if no collisions found.
+  ; if any collisions found, go to adjustMovement. Otherwise exit (leaving collision at 0).
+  .checkCollisionsWithPlatforms:
     .checkFirstScreen:
       LDA #$00
-      STA c                           ; c = 0 means check 1st screen
+      STA c
       LDA platformsPointer
       STA genericPointer
       LDA platformsPointer + $01
       STA genericPointer + $01
       JSR CheckForPlatformOneScreen
       LDA collision
-      BNE .adjustMovement             ; collision detected
+      BNE .adjustMovement
                                       
     .checkSecondScreen:               
-      INC c                           ; c = 1 means check 2nd screen
+      INC c
       JSR MovePlatformsPointerForward
       LDA platformsPointer
       STA genericPointer
@@ -652,18 +680,17 @@ CheckCollisionVertical:
       JSR CheckForPlatformOneScreen
       JSR MovePlatformsPointerBack
       LDA collision
-      BNE .adjustMovement             ; collision detected
-      RTS                             ; no collision, just exit
+      BNE .adjustMovement
+      RTS
   .checkCollisionsDone:
 
-  ; adjust movement if needed
-  
+  ; collision has been detected, adjust movement.  
   .adjustMovement:   
     LDA b
     BNE .adjustMovingDown
     
-    .adjustMovingUp:
-      ; dy => boxY1 + dy - 1 = ay2 => dy = ay2 - boxY1 + 1
+    ; dy => boxY1 + dy - 1 = ay2 => dy = ay2 - boxY1 + 1
+    .adjustMovingUp:      
       LDA ay2
       SEC
       SBC playerPlatformBoxY1
@@ -671,8 +698,8 @@ CheckCollisionVertical:
       INC genericDY
       RTS
       
-    .adjustMovingDown:
-      ; dy => boxY2 + dy + 1 = ay1 => dy = ay1 - boxY2 - 1
+    ; dy => boxY2 + dy + 1 = ay1 => dy = ay1 - boxY2 - 1
+    .adjustMovingDown:      
       LDA ay1
       SEC
       SBC playerPlatformBoxY2
@@ -687,77 +714,84 @@ CheckCollisionVertical:
 ; Description:                                                  ;
 ;   Check for horizontal collisions, updates genericDX          ;
 ;   collision = 1 set on output if collision detected           ;
-;   b = 1 set on output if was going right                      ;
+;   b = 1 set on output if player was going right               ;
 ;                                                               ;
 ; Used variables:                                               ;
 ;   Y                                                           ;
+;   yPointerCache                                               ;
 ;   b                                                           ;
 ;   c                                                           ;
 ;   d                                                           ;
 ;   i                                                           ;
+;   enemyScreen                                                 ;
+;   elevatorSize                                                ;
 ;   collision vars                                              ;
 ;   genericPointer                                              ;
 ;****************************************************************
 
 CheckCollisionHorizontal:
 
-  ; check move direction
-
-  LDA #$00
-  STA b                             ; b = 0 means moving left, b <> 0 means moving right
- 
+  ; check move direction, set b to 0 (left) or 1 (right).
+  ; note that this is never called with DX == 0  
   .directionCheck: 
+    LDA #$00
+    STA b
     LDA genericDX
-    ;BEQ .notMoving                 ; not moving at all - commented out, this will never be called with DX == 0
     CMP #$80
-    BCS .directionCheckDone         ; carry set, genericDX >= #$80 -> genericDX < 0 -> moving left, b stays as 0
-    INC b                           ; moving down
-    JMP .directionCheckDone    
-    .notMoving:
-      RTS  
+    BCS .directionCheckDone
+    INC b
   .directionCheckDone:
   
-  ; check bounds
-  ; POI - possible optimization - some of these checks may not be required
-  
+  ; check if after the movement player will be in screen bounds
   .checkBounds:
     LDA b
-    BNE .checkRightBound            ; moving right
+    BNE .checkRightBound
     
+    ; check left screen bound.
+    ; carry clear after adding means playerX + genericDX < 0 - cap at X_MIN 
+    ; then compare to Y_MIN, again carry clear means playerX + genericDX < X_MIN - cap at X_MIN
+    ; in either case cap and just exit
+    ; note - important - never put elevators left enough that this could be an issue
+    ; (POI - possible issue with elevators)
     .checkLeftBound:
       LDA playerX
       CLC
       ADC genericDX
-      BCC .offLeft                  ; carry clear means playerX + genericDX < 0 - cap at X_MIN 
+      BCC .offLeft
       CMP #PLAYER_X_MIN
-      BCC .offLeft                  ; carry clear means playerX + genericDX < X_MIN - cap at X_MIN
+      BCC .offLeft
       JMP .checkBoundsDone
       .offLeft:
         LDA #PLAYER_X_MIN
-        SEC                         ; set DX to X_MIN - playerX, i.e. stop at min
+        SEC
         SBC playerX
         STA genericDX       
-        RTS                         ; can just exit since there is no possibility of collision
+        RTS
     .checkLeftBoundDone:            
          
+    ; check right screen bound.
+    ; carry set after adding means playerX + genericDX > 255 - cap at X_MAX
+    ; then compare to X_MAX, carry clear means playerX + genericDX < X_MAX - continue
+    ; otherwise cap at X_MAX. if capping at X_MAX just exit.
+    ; note - important - never put elevators right enough that this could be an issue
+    ; (POI - possible issue with elevators)
     .checkRightBound:               
       LDA playerX
       CLC                           
       ADC genericDX
-      BCS .offRight                 ; carry set means playerX + genericDX > 255 - cap at X_MAX
+      BCS .offRight
       CMP #PLAYER_X_MAX
-      BCC .checkRightBoundDone      ; carry clear means playerX + genericDX < X_MAX - continue
+      BCC .checkRightBoundDone
       .offRight:
         LDA #PLAYER_X_MAX
-        SEC                         ; set DX to X_MAX - playerX, i.e. stop at max
+        SEC
         SBC playerX
         STA genericDX
-        RTS                         ; can just exit since there is no possibility of collision
+        RTS
     .checkRightBoundDone:   
   .checkBoundsDone:
   
-  ; set new player box. POI - possible memory optimization - calculate boxes here instead of storing them in zero page
-  
+  ; set new player box.  
   .setBox:
     LDA playerPlatformBoxY1
     STA by1
@@ -773,22 +807,32 @@ CheckCollisionHorizontal:
     STA bx2  
   .setBoxDone:
 
-  ; check for collisions with platforms
-
-  .checkCollisions:
+  ; check for collisions with elevators.
+  ; if none found, go check collisions with platforms.
+  .checkCollisionsWithElevators:
+    JSR CheckForElevatorCollision
+    LDA collision
+    BEQ .checkCollisionsWithPlatforms
+    
+    ; {todo process collision with elevator}
+  
+  ; check for collisions with platforms.
+  ; check first screen first (c == 0), then second screen (c == 1) if no collisions found.
+  ; if any collisions found, go to adjustMovement. Otherwise exit (leaving collision at 0).
+  .checkCollisionsWithPlatforms:
     .checkFirstScreen:
       LDA #$00
-      STA c                           ; c = 0 means check 1st screen
+      STA c
       LDA platformsPointer
       STA genericPointer
       LDA platformsPointer + $01
       STA genericPointer + $01
       JSR CheckForPlatformOneScreen
       LDA collision
-      BNE .adjustMovement             ; collision detected
+      BNE .adjustMovement
                                       
     .checkSecondScreen:               
-      INC c                           ; c = 1 means check 2nd screen
+      INC c
       JSR MovePlatformsPointerForward
       LDA platformsPointer
       STA genericPointer
@@ -797,11 +841,11 @@ CheckCollisionHorizontal:
       JSR CheckForPlatformOneScreen
       JSR MovePlatformsPointerBack
       LDA collision
-      BNE .adjustMovement             ; collision detected
-      RTS                             ; no collision, just exit
+      BNE .adjustMovement
+      RTS
   .checkCollisionsDone:
 
-  ; adjust movement if needed  
+  ; adjust movement 
   .adjustMovement:   
     
     ; just zero out the speed, it can stay like that assuming horizontal speed will always be 2
@@ -812,8 +856,8 @@ CheckCollisionHorizontal:
     ;LDA b
     ;BNE .adjustMovingRight
     ;
+    ; ; dx => boxX1 + dx - 1 = ax2 => dx = ax2 - boxX1 + 1
     ;.adjustMovingLeft:
-    ;  ; dx => boxX1 + dx - 1 = ax2 => dx = ax2 - boxX1 + 1
     ;  LDA ax2
     ;  SEC
     ;  SBC playerPlatformBoxX1
@@ -821,8 +865,8 @@ CheckCollisionHorizontal:
     ;  INC genericDX
     ;  RTS
     ;  
+    ; ; dx => boxX2 + dx + 1 = ax1 => dx = ax1 - boxX2 - 1
     ;.adjustMovingRight:
-    ;  ; dx => boxX2 + dx + 1 = ax1 => dx = ax1 - boxX2 - 1
     ;  LDA ax1
     ;  SEC
     ;  SBC playerPlatformBoxX2
