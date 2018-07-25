@@ -47,9 +47,13 @@ UpdatePlayer:
 ;****************************************************************
 
 UpdatePlayerNotVisible:
-  DEC playerCounter
-  LDA levelBeaten
-  BEQ .resetLevel
+  DEC playerCounter  
+  BEQ .counterAt0
+  RTS
+  
+  .counterAt0:
+    LDA levelBeaten
+    BEQ .resetLevel
   
   .nextLevel:
     ; {todo - start the next level}
