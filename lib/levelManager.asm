@@ -53,7 +53,7 @@ LoadLevel:
   ;  - starting position y
   ;  - exit screen
   ;  - exit x
-  ;  - exit y
+  ;  - exit y1 and y2 (calculate)
   LDY #$00
   LDA [genericPointer], y
   STA playerX
@@ -72,6 +72,9 @@ LoadLevel:
   
   INY
   LDA [genericPointer], y
-  STA levelExitY   
+  STA levelExitY1
+  CLC
+  ADC #EXIT_HEIGHT
+  STA levelExitY2
   
 RTS

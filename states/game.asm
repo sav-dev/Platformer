@@ -134,6 +134,11 @@ LoadGame:
         BNE .clearEnemyElevatorDataLoop
     .clearEnemiesAndElevatorsDone:
     
+    .clearLevelBeaten:            ; clear the level beat flag
+      LDA #$00
+      STA levelBeaten
+    .clearLevelBeatenDone:
+    
   .clearMemoryDone:
  
   .loadLevel:                     ; load level

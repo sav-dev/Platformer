@@ -125,8 +125,8 @@ PLAYER_NOT_VISIBLE      = $03   ; player has died and is timing out
 PLAYER_ANIM_FRAMES      = $04   ; frames are counting down so 4 -> 3 -> 2 -> 1
 PLAYER_ANIM_SPEED       = $08
                         
-PLAYER_DEAD_COOLDOWN    = $60   ; how much time should pass after player is dead before the screen fades out
-PLAYER_DEAD_FADED_OUT   = $22   ; how much time should pass after the screen fades out before the game is restarted
+PLAYER_NOT_V_COOLDOWN   = $60   ; how much time should pass after player is dead/level has been beaten before the screen fades out
+PLAYER_NOT_V_FADED_OUT  = $22   ; how much time should pass after the screen fades out before the game is restarted/next level starts
                     
 SPRITES_PLAYER          = SPRITES_ADDRESS
 PLAYER_SPRITES_COUNT    = $09   ; for iterating all sprites
@@ -274,3 +274,10 @@ LAST_ELEVATOR                = AFTER_LAST_ELEVATOR - ELEVATOR_SIZE
 LAST_ELEVATOR_SCREEN         = LAST_ELEVATOR + ELEVATOR_SCREEN
 
 ELEVATOR_HEIGHT              = $06
+
+;****************************************************************
+; Exit                                                          ;
+;****************************************************************
+
+EXIT_HEIGHT                  = $24 ; 36 - but really 35 because we do a <
+EXIT_WIDTH                   = $19 ; 25 - but really 24 because we do a <

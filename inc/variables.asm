@@ -97,4 +97,6 @@ currentLevel        .rs 1   ; current level
 
 levelExitScreen     .rs 1
 levelExitX          .rs 1 
-levelExitY          .rs 1 
+levelExitY1         .rs 1
+levelExitY2         .rs 1
+levelBeaten         .rs 1

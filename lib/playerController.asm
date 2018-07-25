@@ -48,12 +48,16 @@ UpdatePlayer:
 
 UpdatePlayerNotVisible:
   DEC playerCounter
+  LDA levelBeaten
   BEQ .resetLevel
-  RTS
+  
+  .nextLevel:
+    ; {todo - start the next level}
+  
   .resetLevel:
     JSR WaitForFrame
     JSR FadeOut
-    LDX #PLAYER_DEAD_FADED_OUT
+    LDX #PLAYER_NOT_V_FADED_OUT
     JSR SleepForXFrames
     JSR LoadGame
     JMP GameLoopDone
@@ -436,12 +440,17 @@ UpdatePlayerNormal:
   .checkThreats:
     JSR CheckForThreatCollisions
     LDA collision
-    BEQ .updatePlayerDone
+    BEQ .checkExit
     JMP ExplodePlayer
   
-  ; updates done
-  .updatePlayerDone:
+  ; check if player wants to exit the stage and whether is at the exit.
+  .checkExit:
+    LDA controllerPressed
+    AND #CONTROLLER_UP
+    BNE .doCheckExit
     RTS
+    .doCheckExit:
+      JMP CheckExit      
   
 ;****************************************************************
 ; Name:                                                         ;
@@ -469,7 +478,7 @@ UpdatePlayerFalling:
     BCS .render                   ; if playerY is >= 128, keep rendering the player
   
   .playerOffScreen:               ; if we get here it means playerY >= 64 && playerY < 128, meaning player is well off screen
-    LDA #PLAYER_DEAD_COOLDOWN
+    LDA #PLAYER_NOT_V_COOLDOWN
     STA playerCounter
     LDA #PLAYER_NOT_VISIBLE
     STA playerState
@@ -502,7 +511,7 @@ UpdatePlayerExploding:
     BNE .renderExplosion
     
   .animationEnded:  
-    LDA #PLAYER_DEAD_COOLDOWN
+    LDA #PLAYER_NOT_V_COOLDOWN
     STA playerCounter
     LDA #PLAYER_NOT_VISIBLE
     STA playerState
@@ -541,6 +550,113 @@ ExplodePlayer:
   STA playerCounter
   RTS   
 
+;****************************************************************
+; Name:                                                         ;
+;   CheckExit                                                   ;
+;                                                               ;
+; Description:                                                  ;
+;   Check whether up is pressed and if player is at the exit    ;
+;                                                               ;
+; Used variables:                                               ;
+;   ax1                                                         ;
+;   ax2                                                         ;
+;****************************************************************
+  
+CheckExit:
+
+  ; first check if player's Y is correct.
+  ; check whether:
+  ;   - playerY1 >= exitY1
+  ;     - i.e. CMP playerY1 to exitY1
+  ;     - carry clear means playerY1 < exitY1 - exit in that case
+  ;   - playerY2 <= exitY2
+  ;     - but we add 1 to exitY2 ahead of time, so check playerY2 < exitY2
+  ;     - i.e CMP playerY2 to exitY2
+  ;     - carry set means exitY2 >= playerY2 - exit in that case
+  .checkY:
+    LDA playerPlatformBoxY1
+    CMP levelExitY1
+    BCC .playerNotAtExit
+    CMP levelExitY2
+    BCS .playerNotAtExit
+    
+  ; now check if player's X is correct.
+  ; first we must transpose exit X.
+  ; check the screen.
+  .transposeX:
+    LDA levelExitScreen
+    CMP scroll + $01
+    BEQ .currentScreen
+    SEC
+    SBC #$01
+    CMP scroll + $01
+    BNE .playerNotAtExit ; not current screen nor the next screen
+    
+    ; exit is on the next screen. Transpose logic:
+    ;   - x' = x - low byte of scroll + 256
+    ;   - first calculate A = 255 - scroll + 1. If this overflows, it means scroll = 0, i.e. exit is off screen
+    ;   - then calculate A = A + x. Again, overflow means exit off screen
+    ;   - if exit off screen, player not at exit. Otherwise, store the result in ax1
+    .nextScreen:
+      LDA #SCREEN_WIDTH
+      SEC
+      SBC scroll
+      CLC
+      ADC #$01
+      BCS .playerNotAtExit
+      ADC levelExitX
+      BCS .playerNotAtExit
+      STA ax1
+      JMP .playerExitX1Set
+    
+    ; exit is on the current screen. Transpose logic:
+    ;   - x' = x - low byte of scroll
+    ;   - if x' < 0 (carry cleared after the subtraction), it means exit is partially of screen.
+    ;     no need to check anything then - player cannot be at the exit in that case.
+    .currentScreen:
+      LDA levelExitX
+      SEC
+      SBC scroll
+      BCC .playerNotAtExit
+      STA ax1
+    
+    ; ax1 has been set, not calculate ax2 by adding exit width.
+    ; if it overflows it means player not at exit.
+    ; also ax1 is loaded when we get here so no need to load.
+    .playerExitX1Set:
+      CLC
+      ADC #EXIT_WIDTH
+      BCS .playerNotAtExit
+      STA ax2
+      
+  ; now check if player's X is correct.
+  ; check whether:
+  ;   - playerX1 >= exitX1
+  ;     - i.e. CMP playerX1 to exitX1
+  ;     - carry clear means playerX1 < exitX1 - exit in that case
+  ;   - playerX2 <= exitX2
+  ;     - but we add 1 to exitX2 ahead of time, so check playerX2 < exitX2
+  ;     - i.e CMP playerX2 to exitX2
+  ;     - carry set means exitX2 >= playerX2 - exit in that case
+  .checkX:
+    LDA playerPlatformBoxX1
+    CMP ax1
+    BCC .playerNotAtExit
+    CMP ax2
+    BCS .playerNotAtExit
+    
+  ; if we get here, it means player is at exit.
+  ; change the state to not visible, and INC levelBeaten
+  .playerAtExit:
+    LDA #PLAYER_NOT_V_COOLDOWN
+    STA playerCounter
+    LDA #PLAYER_NOT_VISIBLE
+    STA playerState
+    INC levelBeaten
+    
+  .playerNotAtExit:
+    RTS
+  
 ;****************************************************************
 ; Name:                                                         ;
 ;   SpawnPlayerBullets                                          ;

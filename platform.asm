@@ -394,8 +394,7 @@ RenderSprite:
 
   .include "lib\backgroundManager.asm"
   .include "lib\levelManager.asm"
-  .include "lib\controllerManager.asm"
-  .include "lib\paletteManager.asm"  
+  .include "lib\controllerManager.asm"  
   .include "lib\collisionManager.asm"
   .include "lib\playerController.asm"
   .include "lib\explosionsController.asm"
@@ -409,6 +408,8 @@ Bank2End:
   
   .bank 0
   .org $8000
+    
+  .include "lib\paletteManager.asm"  
     
 Bank0Start:
 Bank0End:
