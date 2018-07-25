@@ -2283,11 +2283,11 @@
       <string>0-1-0-3</string>
       <string>0-1-2-0</string>
       <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
+      <string>2-0-0-0</string>
+      <string>2-0-2-1</string>
+      <string>1-1-4-0</string>
+      <string>1-1-4-1</string>
+      <string>1-1-4-1</string>
       <string>2-0-0-0</string>
       <string>2-0-0-1</string>
       <string>2-0-2-1</string>
@@ -2300,45 +2300,45 @@
       <string>0-1-2-0</string>
       <string>0-1-2-0</string>
       <string>0-1-2-0</string>
+      <string>2-0-1-0</string>
+      <string>1-1-4-0</string>
+      <string>1-1-4-1</string>
+      <string>1-1-4-1</string>
+      <string>1-1-4-1</string>
+      <string>2-0-1-0</string>
+      <string>1-0-1-3</string>
+      <string>1-0-0-3</string>
+      <string>1-0-0-3</string>
+      <string>1-0-1-3</string>
+      <string>1-0-0-3</string>
+      <string>1-0-2-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
       <string>0-1-2-0</string>
+      <string>0-1-2-0</string>
+      <string>0-1-2-0</string>
+      <string>2-0-1-0</string>
+      <string>1-1-4-0</string>
+      <string>2-1-2-3</string>
+      <string>2-1-2-4</string>
+      <string>2-1-2-4</string>
+      <string>2-0-1-0</string>
+      <string>1-0-0-3</string>
+      <string>1-0-2-3</string>
+      <string>1-0-1-3</string>
+      <string>1-0-0-3</string>
+      <string>1-0-0-3</string>
+      <string>1-0-0-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
       <string>0-1-2-0</string>
       <string>0-1-2-0</string>
       <string>0-1-0-4</string>
-      <string>0-1-2-0</string>
       <string>2-0-1-0</string>
-      <string>1-0-1-3</string>
-      <string>1-0-0-3</string>
-      <string>1-0-0-3</string>
-      <string>1-0-1-3</string>
-      <string>1-0-0-3</string>
-      <string>1-0-2-3</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
-      <string>2-0-1-0</string>
-      <string>1-0-0-3</string>
-      <string>1-0-2-3</string>
-      <string>1-0-1-3</string>
-      <string>1-0-0-3</string>
-      <string>1-0-0-3</string>
-      <string>1-0-0-3</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
-      <string>0-1-0-4</string>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
+      <string>1-1-4-0</string>
+      <string>2-1-3-3</string>
+      <string>2-1-3-4</string>
+      <string>2-1-3-4</string>
       <string>2-0-1-0</string>
       <string>1-0-0-3</string>
       <string>1-0-1-3</string>
@@ -2351,11 +2351,11 @@
       <string>0-1-2-0</string>
       <string>0-1-2-0</string>
       <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
-      <string>0-1-0-3</string>
-      <string>0-1-2-0</string>
-      <string>0-1-2-0</string>
+      <string>2-0-1-0</string>
+      <string>1-1-4-0</string>
+      <string>1-1-4-1</string>
+      <string>1-1-4-1</string>
+      <string>1-1-4-1</string>
       <string>2-0-1-0</string>
       <string>1-0-1-3</string>
       <string>1-0-2-3</string>
@@ -2366,9 +2366,9 @@
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-2-0</string>
-      <string>2-0-0-0</string>
-      <string>2-0-2-1</string>
-      <string>2-0-0-1</string>
+      <string>0-1-2-0</string>
+      <string>0-1-2-0</string>
+      <string>2-0-2-0</string>
       <string>2-0-2-1</string>
       <string>2-0-0-1</string>
       <string>2-0-2-1</string>
@@ -2536,26 +2536,6 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
-    </Elevator>
-    <Elevator>
-      <X>288</X>
-      <Y>128</Y>
-      <Size>4</Size>
-      <MovementType>None</MovementType>
-      <Speed>0</Speed>
-      <MinPosition>288</MinPosition>
-      <MaxPosition>320</MaxPosition>
-      <InitialFlip>false</InitialFlip>
-    </Elevator>
-    <Elevator>
-      <X>416</X>
-      <Y>120</Y>
-      <Size>4</Size>
-      <MovementType>Vertical</MovementType>
-      <Speed>5</Speed>
-      <MinPosition>70</MinPosition>
-      <MaxPosition>120</MaxPosition>
-      <InitialFlip>true</InitialFlip>
     </Elevator>
   </Elevators>
   <PlayerStartingPosition>
