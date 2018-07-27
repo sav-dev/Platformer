@@ -401,15 +401,14 @@ RenderSprite:
   .include "lib\bulletController.asm"
   .include "lib\enemiesManager.asm"
   .include "lib\elevatorManager.asm"
-  
-  .include "states\game.asm"
+  .include "lib\paletteManager.asm"   
 
 Bank2End:
   
   .bank 0
   .org $8000
     
-  .include "lib\paletteManager.asm"  
+  .include "states\game.asm"
     
 Bank0Start:
 Bank0End:

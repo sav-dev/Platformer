@@ -5,9 +5,9 @@
 
 ;
 ; - enemies in level data the following format:
-;   - pointer to next screen (from here): (n x 14) + 3 (1 byte)
+;   - pointer to next screen (from here): (n x 15) + 3 (1 byte)
 ;   - number of enemies (1 byte)
-;   - n times the enemy data (14 bytes)
+;   - n times the enemy data (15 bytes)
 ;        - 1st byte of id - pointer to the right variable (1 byte)
 ;        - 2nd byte of id - a mask in the right variable (1 byte) 
 ;        - slot to put enemy in (1 byte)
@@ -23,7 +23,7 @@
 ;        - initial life (1 byte)
 ;        - shooting frequency initial (1 byte)
 ;        - shooting frequency (1 byte)
-;   - pointer to the previous screen (from here): (n x 14) + 2 (1 byte)
+;   - pointer to the previous screen (from here): (n x 15) + 2 (1 byte)
 ;
 ; - enemies in memory in the following format (16 bytes):
 ;    - state (1 byte)
@@ -77,8 +77,6 @@
 ; Remarks:                                                      ;
 ;   depends_on_enemy_in_memory_format                           ;
 ;****************************************************************
- 
-; todo: change all labels to locals
  
 UpdateActiveEnemy:
 
@@ -1025,13 +1023,20 @@ UpdateEnemies:
           LDA #ENEMY_STATE_EXPLODING
           STA enemies, x        
       
-        ; { todo - mark the enemy as destroyed }
-      
-        ; X += 3 to point at the consts pointer
+        ; mark the enemy as destroyed
+        ; X += 1 to point to the first byte of id, load that in Y, then load the right byte
+        ; X += 1 to point to the second byte of id, ORA, store destroyedEnemies
+        .markEnemyAsDestroyed:
+          INX
+          LDY enemies, x
+          LDA destroyedEnemies, y
+          INX
+          ORA enemies, x
+          STA destroyedEnemies, y
+          
+        ; X += 1 to point at the consts pointer
         ; load the pointer then do += 13 to point to the consts data. store in Y.
         .loadConstsPointer:
-          INX
-          INX
           INX
           LDA enemies, x
           CLC
@@ -1181,7 +1186,10 @@ LoadEnemiesInitial:
 ;   also moves the enemies pointer forward                      ;
 ;                                                               ;
 ; Used variables:                                               ;
-;   {todo}                                                      ;
+;   X                                                           ;
+;   Y                                                           ;
+;   b                                                           ;
+;   c                                                           ;
 ;****************************************************************
 
 LoadEnemiesForward:
@@ -1214,7 +1222,11 @@ LoadEnemiesForward:
 ;   also moves the enemies pointer back                         ;
 ;                                                               ;
 ; Used variables:                                               ;
-;   {todo}                                                      ;
+;   X                                                           ;
+;   Y                                                           ;
+;   b                                                           ;
+;   c                                                           ;
+;   i                                                           ;
 ;****************************************************************
 
 LoadEnemiesBack:
@@ -1289,7 +1301,21 @@ LoadEnemies:
       LDA [enemiesPointer], y
       STA d
       
-      ; { todo - check if the enemy has been destroyed }
+    ; check if the enemy has been destroyed.
+    ; we can use X here as it's not used until .getSlot.
+    ; load the right byte for the enemy, then AND it with the mask.
+    ; result == 1 means the enemy has been destroyed - skip the enemy.
+    ; we must do Y += 13 though to make sure we point to the right place.
+    .checkId:
+      LDX c
+      LDA destroyedEnemies, x
+      AND d
+      BEQ .getSlot
+      TYA
+      CLC
+      ADC #$0D
+      TAY
+      JMP .loadEnemiesLoopCondition
     
     ; load the slot the enemy should be put it, and store it in X = the pointer in memory.
     .getSlot:
@@ -1335,8 +1361,9 @@ LoadEnemies:
       STA enemies, x
     
     ; loop if needed
-    DEC b
-    BNE .loadEnemiesLoop
+    .loadEnemiesLoopCondition:
+      DEC b
+      BNE .loadEnemiesLoop
           
   .loadEnemiesExit:
     RTS
