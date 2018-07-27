@@ -8,7 +8,8 @@
 ;   - pointer to next screen (from here): (n x 14) + 3 (1 byte)
 ;   - number of enemies (1 byte)
 ;   - n times the enemy data (14 bytes)
-;        - id (1 byte)
+;        - 1st byte of id - pointer to the right variable (1 byte)
+;        - 2nd byte of id - a mask in the right variable (1 byte) 
 ;        - slot to put enemy in (1 byte)
 ;        - pointer to const. data (1 byte)
 ;        - screen the enemy is on (1 byte)
@@ -105,10 +106,11 @@ UpdateActiveEnemy:
   
   ; X still points to the state.
   ; cache the const data pointer in Y and the screen the enemy is on in enemyScreen
-  ; first do X += 2 to skip state and id. we'll point to the const data.
+  ; first do X += 3 to skip state and id. we'll point to the const data.
   ; then do X += 1 to point to the screen.
   ; then to X += 1 to point to the next byte after the screen (speed).
   .cachePointerAndScreen:
+    INX
     INX
     INX
     LDA enemies, x
@@ -836,8 +838,9 @@ UpdateActiveEnemy:
     
 UpdateExplodingEnemy:
   
-  ; X += 3 to point to the screen the enemy is on, load it and put it in enemyScren
+  ; X += 4 to point to the screen the enemy is on, load it and put it in enemyScren
   .loadScreen:
+    INX
     INX
     INX
     INX
@@ -1024,9 +1027,10 @@ UpdateEnemies:
       
         ; { todo - mark the enemy as destroyed }
       
-        ; X += 2 to point at the consts pointer
+        ; X += 3 to point at the consts pointer
         ; load the pointer then do += 13 to point to the consts data. store in Y.
         .loadConstsPointer:
+          INX
           INX
           INX
           LDA enemies, x
@@ -1252,6 +1256,7 @@ LoadEnemiesBack:
 ;   X                                                           ;
 ;   b                                                           ;
 ;   c                                                           ;
+;   d                                                           ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_enemy_in_level_data_format                       ;
@@ -1271,13 +1276,18 @@ LoadEnemies:
    ; loop for loading enemies
   .loadEnemiesLoop:
   
-    ; Y += 1 to point to the id of the enemy.
+    ; Y += 1 to point to the first id byte.
     ; load it, then cache it in c
+    ; Y += 1 to point to the second id byte.
+    ; load it, then cache it in d
     ; then check if the enemy should be loaded
     .cacheId:
       INY
       LDA [enemiesPointer], y
       STA c
+      INY
+      LDA [enemiesPointer], y
+      STA d
       
       ; { todo - check if the enemy has been destroyed }
     
@@ -1292,10 +1302,14 @@ LoadEnemies:
       LDA #ENEMY_STATE_ACTIVE
       STA enemies, x
     
-    ; X += 1 to point to the id, then set it to the value cached in c
+    ; X += 1 to point to the first id byte, then set it to the value cached in c
+    ; then X += 1 to point to the second id byte, then set it to the value cached in d
     .setId:
       INX
       LDA c
+      STA enemies, x
+      INX
+      LDA d
       STA enemies, x
     
     ; next 12 bytes are the sane in both definitions:

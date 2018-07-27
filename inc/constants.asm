@@ -219,21 +219,22 @@ SCROLL_SPEED = PLAYER_SPEED_POSITIVE ; scroll speed synchronized with player spe
 ; format in enemiesManager.asm
 ; depends_on_enemy_in_memory_format
 ENEMY_STATE               = $00
-ENEMY_ID                  = $01
-ENEMY_POINTER             = $02
-ENEMY_SCREEN              = $03
-ENEMY_SPEED               = $04
-ENEMY_MAX_DISTANCE        = $05
-ENEMY_MOVEMENT_DIRECTION  = $06
-ENEMY_CURRENT_DISTANCE    = $07
-ENEMY_FLIP                = $08
-ENEMY_X                   = $09
-ENEMY_Y                   = $0A
-ENEMY_LIFE                = $0B
-ENEMY_SHOOTING_FREQ       = $0C
-ENEMY_SHOOTING_TIMER      = $0D
-ENEMY_ANIMATION_TIMER     = $0E
-ENEMY_ANIMATION_FRAME     = $0F
+ENEMY_ID_1                = $01 + ENEMY_STATE             
+ENEMY_ID_2                = $01 + ENEMY_ID_1              
+ENEMY_POINTER             = $01 + ENEMY_ID_2              
+ENEMY_SCREEN              = $01 + ENEMY_POINTER           
+ENEMY_SPEED               = $01 + ENEMY_SCREEN            
+ENEMY_MAX_DISTANCE        = $01 + ENEMY_SPEED             
+ENEMY_MOVEMENT_DIRECTION  = $01 + ENEMY_MAX_DISTANCE      
+ENEMY_CURRENT_DISTANCE    = $01 + ENEMY_MOVEMENT_DIRECTION
+ENEMY_FLIP                = $01 + ENEMY_CURRENT_DISTANCE  
+ENEMY_X                   = $01 + ENEMY_FLIP              
+ENEMY_Y                   = $01 + ENEMY_X                 
+ENEMY_LIFE                = $01 + ENEMY_Y                 
+ENEMY_SHOOTING_FREQ       = $01 + ENEMY_LIFE              
+ENEMY_SHOOTING_TIMER      = $01 + ENEMY_SHOOTING_FREQ     
+ENEMY_ANIMATION_TIMER     = $01 + ENEMY_SHOOTING_TIMER    
+ENEMY_ANIMATION_FRAME     = $01 + ENEMY_ANIMATION_TIMER   
 
 AFTER_LAST_ENEMY          = ENEMY_SIZE * ENEMIES_COUNT 
 LAST_ENEMY                = AFTER_LAST_ENEMY - ENEMY_SIZE
