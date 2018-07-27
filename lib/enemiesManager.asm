@@ -1374,9 +1374,11 @@ UnloadEnemies:
     .unloadEnemy:
       DEX
       DEX
+      DEX
       DEX                          ; x points to the state
       LDA #ENEMY_STATE_EMPTY
       STA enemies, x               ; unload the enemy
+      INX
       INX
       INX
       INX                          ; x points back to the screen
