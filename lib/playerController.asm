@@ -327,7 +327,9 @@ UpdatePlayerNormal:
     ; now apply the movement after collision checks.
     ; depending on the player's position and scroll we want to either move the player or scroll the screen.
     .applyHorizontalMovement:          
-                                      
+                    
+      ; POI - possible issue - this doesn't work if level is shorter than two screens
+                    
       ; load scroll high byte, compare with max scroll high byte
       LDA scroll + $01                
       CMP maxScroll + $01

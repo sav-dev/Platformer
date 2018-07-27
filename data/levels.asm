@@ -37,5 +37,5 @@ NUMBER_OF_LEVELS = $02
 ;****************************************************************
 
 levels:
-  .byte LOW(level01), HIGH(level01)
   .byte LOW(level00), HIGH(level00)
+  .byte LOW(level01), HIGH(level01)
