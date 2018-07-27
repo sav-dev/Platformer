@@ -240,8 +240,9 @@ LAST_ENEMY                = AFTER_LAST_ENEMY - ENEMY_SIZE
 LAST_ENEMY_SCREEN         = LAST_ENEMY + ENEMY_SCREEN
 
 ENEMY_STATE_EMPTY       = $00
-ENEMY_STATE_ACTIVE      = $01
-ENEMY_STATE_EXPLODING   = $02
+ENEMY_STATE_EXPLODING   = $01
+ENEMY_STATE_ACTIVE      = $02 ; and everything >=, odd means don't render
+ENEMY_STATE_HIT         = $0A
 
 ; see comment in EnemiesManager .calculateDiffs
 ENEMY_MOVE_HORIZONTAL   = $05

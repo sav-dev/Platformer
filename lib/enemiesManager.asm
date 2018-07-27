@@ -81,7 +81,29 @@
  
 UpdateActiveEnemy:
 
+  ; assume the enemy should be rendered.
+  ; also, while we're here, assume collision check is needed and enemy is not flashing
+  LDA #$01
+  STA enemyOnScreen
+  STA enemyCollisions
+  STA enemyNotFlashing
+
   ; at this point, X points to the state.
+  ; check if enemy is flashing - compare state to 3 (ENEMY_STATE_ACTIVE + 1),
+  ; if carry clear enemy is not flashing.
+  ; otherwise, check if state % 2 == 1, in that case DEC enemyNotFlashing.
+  ; finally, DEC the state.
+  .checkIfFlashing:
+    LDA enemies, x
+    CMP #ENEMY_STATE_ACTIVE + $01
+    BCC .cachePointerAndScreen
+    AND #$01
+    BEQ .decState
+    DEC enemyNotFlashing
+    .decState:
+      DEC enemies, x
+  
+  ; X still points to the state.
   ; cache the const data pointer in Y and the screen the enemy is on in enemyScreen
   ; first do X += 2 to skip state and id. we'll point to the const data.
   ; then do X += 1 to point to the screen.
@@ -249,18 +271,13 @@ UpdateActiveEnemy:
   ;   - genericOffScreen is set to 0
   ;
   ; we have to figure out if enemy should even be rendered. 
-  EnemyShouldRender:
-    
-    ; assume the enemy should be rendered.
-    ; also, while we're here, assume collision check is needed and enemy may shoot
-    LDA #$01
-    STA enemyRender
-    STA enemyCollisions
+  EnemyShouldRender:   
     
     ; transpose X. First check if enemy is on the current screen or the next
-    LDA enemyScreen
-    CMP scroll + $01
-    BEQ .currentScreen
+    .transposeX:
+      LDA enemyScreen
+      CMP scroll + $01
+      BEQ .currentScreen
     
     ; enemy is on the next  screen. Transpose logic:
     ;   - x' = x - low byte of scroll + 256
@@ -282,7 +299,7 @@ UpdateActiveEnemy:
       
       ; enemy off screen, no need to check for collisions
       .enemyOffScreen:
-        DEC enemyRender
+        DEC enemyOnScreen
         JMP EnemyProcessShooting
     
     ; enemy is on the current screen. Transpose logic:
@@ -575,11 +592,12 @@ UpdateActiveEnemy:
         ; collision detected
         .bulletCollision:
           
-          ; first check if remaining life > 0. decrement it if yes.
+          ; first check if remaining life > 0. decrement it if yes, and inc enemyHit
           ; set removeEnemy to 1 if remaining life decremented to 0
           .updateRemainingLife:
             LDA enemies, x
             BEQ .explodeBullet
+            INC enemyHit
             DEC enemies, x
             BNE .explodeBullet
             INC removeEnemy
@@ -627,7 +645,7 @@ UpdateActiveEnemy:
     
     ; check if we're even rendering the enemy, don't shoot if not
     .shootingEnemyOnScreen:
-      LDA enemyRender
+      LDA enemyOnScreen
       BEQ EnemyProcessAnimation
     
     ; enemyGunX and enemyGunY are currently set to gun offsets.
@@ -757,7 +775,7 @@ UpdateActiveEnemy:
   ; if we want to process animation for enemies off screen,
   ; the skip in .enemyOffScreen must be updated.
   EnemyProcessAnimation:
-    LDA enemyRender
+    LDA enemyOnScreen
     BEQ UpdateActiveEnemyDone
     DEC enemies, x
     BEQ .updateFrame
@@ -781,8 +799,10 @@ UpdateActiveEnemy:
       STA enemies, x
       STA genericFrame
   
-  ; render the enemy
+  ; render the enemy (only if not flashing)
   EnemyRender:
+    LDA enemyNotFlashing
+    BEQ UpdateActiveEnemyDone
     JSR RenderEnemy
    
   UpdateActiveEnemyDone:
@@ -971,14 +991,15 @@ UpdateEnemies:
     STA xPointerCache
     TAX                  
 
-    ; set removeEnemy to 0
+    ; set enemyHit and removeEnemy to 0
     LDA #$00
     STA removeEnemy
+    STA enemyHit
     
     ; X now points to the state. Check it:
     ;   0 == ENEMY_STATE_EMPTY
-    ;   2 == ENEMY_EXPLODING
-    ; else: 1 == ENEMY_STATE_ACTIVE
+    ;   1 == ENEMY_EXPLODING
+    ; else: 2+ == ENEMY_STATE_ACTIVE
     LDA enemies, x       
     BEQ .enemyEmpty
     CMP #ENEMY_STATE_EXPLODING
@@ -991,7 +1012,7 @@ UpdateEnemies:
       ; check if enemy should be exploded
       .checkRemoveEnemyActive:
         LDA removeEnemy
-        BEQ .updateEnemyLoopCondition
+        BEQ .checkIfEnemyHit
         
         ; explode the enemy.
         
@@ -1047,6 +1068,15 @@ UpdateEnemies:
         ; enemy exploded, jump to the loop condition
         JMP .updateEnemyLoopCondition
       
+        ; check if enemy was hit and state should be updated to flashing
+        .checkIfEnemyHit:
+          LDA enemyHit
+          BEQ .updateEnemyLoopCondition
+          LDX xPointerCache
+          LDA #ENEMY_STATE_HIT
+          STA enemies, x     
+          JMP .updateEnemyLoopCondition
+      
     ; enemy exploding - call into a subroutine, let flow to the empty clause
     .enemyExploding:
       JSR UpdateExplodingEnemy
@@ -1068,10 +1098,14 @@ UpdateEnemies:
     
       ; loop condition - if we've not just processed the last enemy, loop.   
       ; otherwise exit
+      ; POI - possible optimization - can this loop be done better?
       .updateEnemyLoopCondition:
         LDA xPointerCache      
-        BNE .updateEnemyLoop
-        RTS
+        BEQ .updateEnemyExit
+        JMP .updateEnemyLoop
+  
+  .updateEnemyExit:
+    RTS
     
 ;****************************************************************
 ; Name:                                                         ;

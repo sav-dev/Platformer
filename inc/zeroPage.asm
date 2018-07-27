@@ -136,9 +136,11 @@ enemyFrameCount         .rs 1  ; enemy frame count
 enemyGunX               .rs 1  ; enemy gun x position
 enemyGunY               .rs 1  ; enemy gun y position
 
-enemyRender             .rs 1  ; set to 1 if enemy should be rendered
+enemyOnScreen           .rs 1  ; set to 1 if enemy should be rendered
 enemyCollisions         .rs 1  ; set to 1 if a collision check is needed
+enemyNotFlashing        .rs 1  ; set to 1 if enemy is *NOT* flashing
 
+enemyHit                .rs 1  ; whether the enemy was hit
 removeEnemy             .rs 1  ; whether enemy should be exploded / removed from the game
 
 ;****************************************************************
