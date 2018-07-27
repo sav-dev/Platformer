@@ -30,7 +30,7 @@
 ; Constants                                                     ;                           
 ;****************************************************************
 
-NUMBER_OF_LEVELS = $01
+NUMBER_OF_LEVELS = $02
 
 ;****************************************************************
 ; Level List                                                    ;                           
@@ -38,10 +38,14 @@ NUMBER_OF_LEVELS = $01
 
 levels:
   .byte LOW(level00), HIGH(level00)
-
+  .byte LOW(level01), HIGH(level01)
+  
 ;****************************************************************
 ; Level Data                                                    ;                           
 ;****************************************************************
 
 level00:
   .incbin "data\levels\00.bin"
+  
+level01:
+  .incbin "data\levels\01.bin"

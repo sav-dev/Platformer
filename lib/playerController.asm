@@ -56,7 +56,13 @@ UpdatePlayerNotVisible:
     BEQ .resetLevel
   
   .nextLevel:
-    ; {todo - start the next level}
+    ; todo - this is temporary (going immediately to the next level)
+    INC currentLevel
+    LDA currentLevel
+    CMP #NUMBER_OF_LEVELS
+    BNE .resetLevel
+    LDA #$00
+    STA currentLevel
   
   .resetLevel:
     JSR WaitForFrame
