@@ -418,12 +418,23 @@ Bank0End:
   .org $A000
 
 Bank1Start:
+
+; todo - figure out a better place for these
+level00:
+  .incbin "data\levels\00.bin"
+level00End: 
+
 Bank1End:
   
   .bank 3
   .org $E000
   
 Bank3Start:
+ 
+; todo - figure out a better place for these
+level01:
+  .incbin "data\levels\01.bin"
+level01End:
  
   .include "data\levels.asm"
   .include "data\enemies.asm"
