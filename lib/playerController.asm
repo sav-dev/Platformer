@@ -806,7 +806,7 @@ CheckCollisionVertical:
     BEQ .checkCollisionsWithPlatforms
     
     ; POI - possible optimization - don't have a separate subroutine?
-    JMP ProcessElevatorVerticalCollision
+    JMP ProcessElevatorVerticalColl
   
   ; check for collisions with platforms.
   ; first check if player is moving - if no, we can skip this.
@@ -1042,7 +1042,7 @@ CheckCollisionHorizontal:
     
 ;****************************************************************
 ; Name:                                                         ;
-;   ProcessElevatorVerticalCollision                            ;
+;   ProcessElevatorVerticalColl                                 ;
 ;                                                               ;
 ; Description:                                                  ;
 ;   Process a vertical collision with an elevator               ;
@@ -1064,7 +1064,7 @@ CheckCollisionHorizontal:
 ;   depends_on_elevator_in_memory_format                        ;
 ;****************************************************************
     
-ProcessElevatorVerticalCollision:
+ProcessElevatorVerticalColl:
 
     ; player can either collide with the elevator from the top or the bottom.
     ; we can tell by the direction they are moving in and their speeds.
@@ -1120,6 +1120,9 @@ ProcessElevatorVerticalCollision:
       ; player moving up?
       LDA b
       BEQ .collisionBottom
+      
+      ; todo: issue - if player is standing on the ground, DY will be 4 and this won't work
+      ; check for platform collisions first?
       
       ; both platform and player are moving down, check speeds
       ; LDY yPointerCache, Y += 2 to point to speed, load to A, compare with genericDY

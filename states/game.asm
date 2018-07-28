@@ -27,12 +27,17 @@ GameFrame:
   .incrementFrameCounter:
     INC frameCount
     
+  ; POI - possible optimization - we iterate elevators way too many times
+    
   .updateElevators:
-    JSR UpdateElevators             ; move all elevators, move player if standing on elevator, render
+    JSR UpdateElevators             ; move all elevators, move player if standing on elevator, *DO NOT* render
     
   .updatePlayer:
     JSR UpdatePlayer                ; move player, check for collisions with platforms and threats, render  
-   
+  
+  .renderElevators:
+    JSR RenderElevators             ; scroll has been updated meaning we can now render the elevators
+  
   .spawnPlayerBullets:
     JSR SpawnPlayerBullets          ; spawn a player bullet if needed
   

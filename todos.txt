@@ -1,0 +1,10 @@
+Bugs:
+----------
+
+ - Elevator collision from the top when standing on the ground
+
+Todo:
+----------
+
+ - Tweak player shooting cooldown
+ - Build a few playable levels

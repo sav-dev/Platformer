@@ -401,7 +401,7 @@
       <string>0-1-2-0</string>
       <string>0-1-2-0</string>
       <string>2-0-1-0</string>
-      <string>3-0-5-1</string>
+      <string>0-1-2-0</string>
       <string>1-1-4-0</string>
       <string>1-1-4-1</string>
       <string>1-1-4-1</string>
@@ -969,6 +969,18 @@
     </Enemy>
     <Enemy>
       <Name>TurretV</Name>
+      <X>368</X>
+      <Y>128</Y>
+      <MovementType>None</MovementType>
+      <Speed>0</Speed>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>40</ShootingFrequency>
+      <ShootingInitialFrequency>40</ShootingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>TurretV</Name>
       <X>400</X>
       <Y>128</Y>
       <MovementType>None</MovementType>
@@ -976,8 +988,8 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>60</ShootingFrequency>
-      <ShootingInitialFrequency>60</ShootingInitialFrequency>
+      <ShootingFrequency>40</ShootingFrequency>
+      <ShootingInitialFrequency>20</ShootingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>TurretV</Name>
@@ -988,7 +1000,7 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>60</ShootingFrequency>
+      <ShootingFrequency>40</ShootingFrequency>
       <ShootingInitialFrequency>40</ShootingInitialFrequency>
     </Enemy>
     <Enemy>
@@ -1000,7 +1012,7 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>60</ShootingFrequency>
+      <ShootingFrequency>40</ShootingFrequency>
       <ShootingInitialFrequency>20</ShootingInitialFrequency>
     </Enemy>
     <Enemy>

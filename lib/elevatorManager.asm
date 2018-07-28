@@ -30,7 +30,6 @@
 ;   Updates all elevators:                                      ;
 ;     - move                                                    ;
 ;     - move player if on an elevator                           ;
-;     - render                                                  ;
 ;                                                               ;
 ; Used variables:                                               ;
 ;     X                                                         ;
@@ -38,7 +37,6 @@
 ;     enemy vars (!)                                            ;
 ;     elevator vars                                             ;
 ;     generic vars                                              ;
-;     render vars                                               ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_elevator_in_memory_format                        ;
@@ -72,11 +70,11 @@ UpdateElevators:
     LDA elevators, X
     STA enemyScreen
     
-    ; X += 1 to point to the speed, load it, if it's 0 - skip the whole movement section.
+    ; X += 1 to point to the speed, load it, if it's 0 - we can exit
     ; otherwise, cache it in enemySpeed
     INX
     LDA elevators, X
-    BEQ .elevatorNoMovement
+    BEQ .updateElevatorLoopCondition
     STA enemySpeed
     
     ; X += 1 to point to the max movement distance, cache it in enemyMaxDistance
@@ -154,33 +152,81 @@ UpdateElevators:
     ; check if player is standing on the current elevator.    
     .checkIfPlayerOnElevator:
       LDA playerOnElevator
-      BEQ .setGenericX
+      BEQ .updateElevatorLoopCondition
       LDA playerElevatorId
       CMP xPointerCache
-      BNE .setGenericX
+      BNE .updateElevatorLoopCondition
       
     ; player on elevator, move by genericDY
     .playerOnElevator:
       JSR MovePlayerVertically
-      JMP .setGenericX
+          
+    ; loop condition - if we've not just processed the last elevator, loop.   
+    ; otherwise exit
+    .updateElevatorLoopCondition:
+      LDA xPointerCache
+      BEQ .updateElevatorsDone
+      JMP .updateElevatorLoop
     
-    ; we get here if elevator doesn't move. X still points to the speed.
-    ; X += 4 to point to the Y position, store that in genericY
-    .elevatorNoMovement:
-      INX
-      INX
-      INX
-      INX
-      LDA elevators, x
-      STA genericY
+  .updateElevatorsDone:
+    RTS
+      
+;****************************************************************
+; Name:                                                         ;
+;   RenderElevators                                             ;
+;                                                               ;
+; Description:                                                  ;
+;   Renders all elevators                                       ;
+;                                                               ;
+; Used variables:                                               ;
+;     X                                                         ;
+;     xPointerCache                                             ;
+;     enemy vars (!)                                            ;
+;     elevator vars                                             ;
+;     generic vars                                              ;
+;     render vars                                               ;
+;                                                               ;
+; Remarks:                                                      ;
+;   depends_on_elevator_in_memory_format                        ;
+;****************************************************************
+
+RenderElevators:
   
-    ; when we get here, X points to y position. X += 1 to point to x position,
-    ; load it and store in genericX
-    .setGenericX:
-      INX
-      LDA elevators, x
-      STA genericX
-  
+  ; main loop - loop all elevators going down
+  ; load the place pointing to after the last elevator, store it in xPointerCache
+  ; the loop expects value in the A register to point to the elevator after the one we want to process
+  LDA #AFTER_LAST_ELEVATOR
+  .renderElevatorLoop:  
+    
+    ; move A to point to the next elevator we want to process. Cache that value in xPointerCache and store it in X
+    SEC
+    SBC #ELEVATOR_SIZE
+    STA xPointerCache
+    TAX                  
+    
+    ; X now points to the size. if it's 0, elevator is inactive - exit.
+    ; otherwise, cache the size in elevatorSize.
+    LDA elevators, x
+    BEQ .renderElevatorLoopCondition
+    STA elevatorSize
+    
+    ; X += 1 to point to the screen, load it, store it in enemyScreen
+    INX
+    LDA elevators, X
+    STA enemyScreen
+    
+    ; X += 5 to point to the Y position, load it, store it in genericY
+    ; X += 1 to point to the X position, load it, store it in genericX
+    TXA
+    CLC
+    ADC #$05
+    TAX
+    LDA elevators, X
+    STA genericY
+    INX
+    LDA elevators, X
+    STA genericX
+   
     ; once we get here, these are set:
     ;  - elevatorSize = elevator size
     ;  - genericScreen = elevator the screen is on
@@ -206,9 +252,9 @@ UpdateElevators:
         SBC scroll
         CLC
         ADC #$01
-        BCS .updateElevatorLoopCondition
+        BCS .renderElevatorLoopCondition
         ADC genericX
-        BCS .updateElevatorLoopCondition
+        BCS .renderElevatorLoopCondition
         STA genericX
         JMP .renderElevator
         
@@ -230,9 +276,9 @@ UpdateElevators:
         LDY elevatorSize
         CLC
         ADC ElevatorWidth, y
-        BCC .updateElevatorLoopCondition
+        BCC .renderElevatorLoopCondition
         CMP #SPRITE_DIMENSION
-        BCC .updateElevatorLoopCondition
+        BCC .renderElevatorLoopCondition
   
       ; once we get here, everything needed to render the elevator is set:
       ;  - elevatorSize, genericOffScreen, genericX, genericY
@@ -241,12 +287,9 @@ UpdateElevators:
   
     ; loop condition - if we've not just processed the last elevator, loop.   
     ; otherwise exit
-    .updateElevatorLoopCondition:
+    .renderElevatorLoopCondition:
       LDA xPointerCache
-      BEQ .updateElevatorLoopDone
-      JMP .updateElevatorLoop
-    
-    .updateElevatorLoopDone:
+      BNE .renderElevatorLoop
       RTS
 
 ;****************************************************************
