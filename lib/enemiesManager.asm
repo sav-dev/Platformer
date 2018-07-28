@@ -25,9 +25,10 @@
 ;        - shooting frequency (1 byte)
 ;   - pointer to the previous screen (from here): (n x 15) + 2 (1 byte)
 ;
-; - enemies in memory in the following format (16 bytes):
+; - enemies in memory in the following format (17 bytes):
 ;    - state (1 byte)
-;    - id (1 byte)
+;    - 1st byte of id - pointer to the right variable (1 byte)
+;    - 2nd byte of id - a mask in the right variable (1 byte) 
 ;    - pointer to const. data (1 byte)
 ;    - screen the enemy is on (1 byte)
 ;    - movement speed (1 byte)
@@ -843,6 +844,7 @@ UpdateExplodingEnemy:
     INX
     INX
     LDA enemies, x
+    STA enemyScreen
   
   ; X += 6 to point to the X position, load the X position and put it in genericX
   .loadX:
