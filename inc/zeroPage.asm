@@ -167,6 +167,7 @@ bx2                     .rs 1
 by1                     .rs 1      
 by2                     .rs 1      
 collision               .rs 1
+collisionCache          .rs 1  ; POI - possible optimization - to save zero page bytes, user a pseudo-register instead
 
 ;****************************************************************
 ; Sprite rendering                                              ;

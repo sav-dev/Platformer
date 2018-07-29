@@ -1,9 +1,3 @@
-Bugs:
-----------
-
- - Make sure to check collisions after the bound checks
- - Elevator going down and forcing player into a wall
-
 Todo:
 ----------
 

@@ -721,6 +721,10 @@ SpawnPlayerBullets:
 
 CheckCollisionVertical:
  
+  ; preset collisionCache to 0
+  LDA #$00
+  STA collisionCache
+ 
   ; check move direction, set b to 0 (static or up) or 1 (down).
   ; if player is not moving, skip the bounds check and go straight to .setBox
   .directionCheck:
@@ -735,15 +739,14 @@ CheckCollisionVertical:
   
   ; check if after the movement player will be in screen bounds
   .checkBounds:
+  
     LDA b
     BNE .checkBottomBound
                          
     ; check top screen bound.
     ; carry clear after adding means playerY + genericDY < 0 - cap at Y_MIN 
     ; then compare to Y_MIN, again carry clear means playerY + genericDY < Y_MIN - cap at Y_MIN
-    ; in either case cap and just exit
-    ; note - important - never put elevators high enough that this could be an issue
-    ; (POI - possible issue with elevators)
+    ; in either case also INC collisionCache
     .checkTopBound:                   
       LDA playerY                     
       CLC                             
@@ -757,15 +760,13 @@ CheckCollisionVertical:
         SEC
         SBC playerY                   
         STA genericDY                  
-        INC collision
-        RTS
-    .checkTopBoundDone:               
+        INC collisionCache
+        JMP .checkBoundsDone
 
     ; check bottom screen bound.
     ; carry clear after adding means playerY + genericDY < Y_MAX - continue
     ; otherwise cap at max and just exit
-    ; note - important - never put elevators low enough that this could be an issue
-    ; (POI - possible issue with elevators)
+    ; in either case also INC collisionCache
     .checkBottomBound:
       LDA playerY                     
       CLC                             
@@ -777,9 +778,8 @@ CheckCollisionVertical:
         SEC
         SBC playerY                   
         STA genericDY                  
-        INC collision
-        RTS
-    .checkBottomBoundDone:   
+        INC collisionCache
+    
   .checkBoundsDone:
 
   ; set new player box.
@@ -796,8 +796,7 @@ CheckCollisionVertical:
     CLC
     ADC genericDY
     STA by2  
-  .setBoxDone:
-
+ 
   ; check for collisions with platforms first to avoid issue where a player is standing on the ground
   ; and hit by en elevator from the top (POI - possible optimization - this can be changed back if it's guaranteed
   ; that scenario will never happen)
@@ -866,11 +865,14 @@ CheckCollisionVertical:
       RTS
   
   ; now check for collisions with elevators.
-  ; if collision found, go handle it. otherwise exit.
+  ; if collision found, go handle it. otherwise exit,
+  ; but first do collision = collisionCache to handle the out of bounds case
   .checkCollisionsWithElevators:
     JSR CheckForElevatorCollision
     LDA collision
     BNE .processElevatorVerticalColl
+    LDA collisionCache
+    STA collision
     RTS
     
   ; POI - possible optimization - don't have a separate subroutine?
@@ -901,6 +903,10 @@ CheckCollisionVertical:
 
 CheckCollisionHorizontal:
 
+  ; preset collisionCache to 0
+  LDA #$00
+  STA collisionCache
+
   ; check move direction, set b to 0 (left) or 1 (right).
   ; if player is not moving, skip the bounds check and go straight to .setBox
   .directionCheck: 
@@ -915,15 +921,14 @@ CheckCollisionHorizontal:
   
   ; check if after the movement player will be in screen bounds
   .checkBounds:
+  
     LDA b
     BNE .checkRightBound
     
     ; check left screen bound.
     ; carry clear after adding means playerX + genericDX < 0 - cap at X_MIN 
     ; then compare to Y_MIN, again carry clear means playerX + genericDX < X_MIN - cap at X_MIN
-    ; in either case cap and just exit
-    ; note - important - never put elevators left enough that this could be an issue
-    ; (POI - possible issue with elevators)
+    ; in either case also INC collisionCache
     .checkLeftBound:
       LDA playerX
       CLC
@@ -937,15 +942,14 @@ CheckCollisionHorizontal:
         SEC
         SBC playerX
         STA genericDX       
-        RTS
-    .checkLeftBoundDone:            
+        INC collisionCache
+        JMP .checkBoundsDone
          
     ; check right screen bound.
     ; carry set after adding means playerX + genericDX > 255 - cap at X_MAX
     ; then compare to X_MAX, carry clear means playerX + genericDX < X_MAX - continue
     ; otherwise cap at X_MAX. if capping at X_MAX just exit.
-    ; note - important - never put elevators right enough that this could be an issue
-    ; (POI - possible issue with elevators)
+    ; in either case also INC collisionCache
     .checkRightBound:               
       LDA playerX
       CLC                           
@@ -958,8 +962,8 @@ CheckCollisionHorizontal:
         SEC
         SBC playerX
         STA genericDX
-        RTS
-    .checkRightBoundDone:   
+        INC collisionCache
+    
   .checkBoundsDone:
   
   ; set new player box.  
@@ -976,7 +980,6 @@ CheckCollisionHorizontal:
     CLC
     ADC genericDX
     STA bx2  
-  .setBoxDone:
 
   ; don't check collisions with other elevators if player is already on an elevator.
   ; (POI - possible issue with elevators)
@@ -1024,6 +1027,11 @@ CheckCollisionHorizontal:
       JSR MovePlatformsPointerBack
       LDA collision
       BNE .adjustMovement
+      
+      ; no collision found with either platforms or elevators
+      ; but we may have had an out of bounds collision - do collision = collisionCache and exit
+      LDA collisionCache
+      STA collision
       RTS
       
   .checkCollisionsWithPlatformsDone:

@@ -158,6 +158,8 @@ UpdateElevators:
       BNE .updateElevatorLoopCondition
       
     ; player on elevator, move by genericDY
+    ; POI - possible issue - this can force player into the wall
+    ;       make sure that's never the case
     .playerOnElevator:
       JSR MovePlayerVertically
           

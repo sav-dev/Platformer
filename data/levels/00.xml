@@ -1095,7 +1095,7 @@
       <Size>4</Size>
       <MovementType>Vertical</MovementType>
       <Speed>1</Speed>
-      <MinPosition>112</MinPosition>
+      <MinPosition>120</MinPosition>
       <MaxPosition>184</MaxPosition>
       <InitialFlip>true</InitialFlip>
     </Elevator>
