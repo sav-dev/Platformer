@@ -772,7 +772,7 @@ CheckCollisionVertical:
       CLC                             
       ADC genericDY                    
       CMP #PLAYER_Y_MAX               
-      BCC .checkBottomBoundDone
+      BCC .checkBoundsDone
       .offBottom:                     
         LDA #PLAYER_Y_MAX             
         SEC
@@ -956,7 +956,7 @@ CheckCollisionHorizontal:
       ADC genericDX
       BCS .offRight
       CMP #PLAYER_X_MAX
-      BCC .checkRightBoundDone
+      BCC .checkBoundsDone
       .offRight:
         LDA #PLAYER_X_MAX
         SEC

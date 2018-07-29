@@ -1090,14 +1090,14 @@
   </Enemies>
   <Elevators>
     <Elevator>
-      <X>224</X>
-      <Y>184</Y>
-      <Size>4</Size>
+      <X>228</X>
+      <Y>176</Y>
+      <Size>3</Size>
       <MovementType>Vertical</MovementType>
       <Speed>1</Speed>
       <MinPosition>120</MinPosition>
       <MaxPosition>184</MaxPosition>
-      <InitialFlip>true</InitialFlip>
+      <InitialFlip>false</InitialFlip>
     </Elevator>
   </Elevators>
   <PlayerStartingPosition>
