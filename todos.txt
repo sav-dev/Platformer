@@ -1,7 +1,8 @@
 Bugs:
 ----------
 
- - Elevator collision from the top when standing on the ground
+ - Make sure to check collisions after the bound checks
+ - Elevator going down and forcing player into a wall
 
 Todo:
 ----------

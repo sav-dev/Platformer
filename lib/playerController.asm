@@ -798,26 +798,19 @@ CheckCollisionVertical:
     STA by2  
   .setBoxDone:
 
-  ; check for collisions with elevators.
-  ; if none found, go check collisions with platforms.
-  .checkCollisionsWithElevators:
-    JSR CheckForElevatorCollision
-    LDA collision
-    BEQ .checkCollisionsWithPlatforms
-    
-    ; POI - possible optimization - don't have a separate subroutine?
-    JMP ProcessElevatorVerticalColl
-  
-  ; check for collisions with platforms.
-  ; first check if player is moving - if no, we can skip this.
+  ; check for collisions with platforms first to avoid issue where a player is standing on the ground
+  ; and hit by en elevator from the top (POI - possible optimization - this can be changed back if it's guaranteed
+  ; that scenario will never happen)
+  ;
+  ; first check if player is moving - if no, we can skip this (go to .checkCollisionsWithElevators).
+  ; 
   ; check first screen first (c == 0), then second screen (c == 1) if no collisions found.
-  ; if any collisions found, go to adjustMovement. Otherwise exit (leaving collision at 0).
+  ; if any collisions found, go to adjustMovement. Otherwise go to .checkCollisionsWithElevators
   .checkCollisionsWithPlatforms:
     
     .checkPlayerDY:
       LDA genericDY
-      BNE .checkFirstScreen
-      RTS
+      BEQ .checkCollisionsWithElevators
   
     .checkFirstScreen:
       LDA #$00
@@ -841,12 +834,16 @@ CheckCollisionVertical:
       JSR MovePlatformsPointerBack
       LDA collision
       BNE .adjustMovement
-      RTS
+      JMP .checkCollisionsWithElevators
       
-  .checkCollisionsDone:
+  .checkCollisionsWithPlatformsDone:
 
-  ; collision has been detected, adjust movement.  
-  .adjustMovement:   
+  ; collision has been detected, adjust movement. 
+  ; do not check collisions with elevators.
+  ; POI - possible issue - this will be a possible issue if either gravity or a step in player's jump
+  ; will be greater than elevator's height, and elevator will come as close to a platform as possible.
+  ; make sure that's never the case.
+  .adjustMovement:
     LDA b
     BNE .adjustMovingDown
     
@@ -867,6 +864,18 @@ CheckCollisionVertical:
       STA genericDY
       DEC genericDY
       RTS
+  
+  ; now check for collisions with elevators.
+  ; if collision found, go handle it. otherwise exit.
+  .checkCollisionsWithElevators:
+    JSR CheckForElevatorCollision
+    LDA collision
+    BNE .processElevatorVerticalColl
+    RTS
+    
+  ; POI - possible optimization - don't have a separate subroutine?
+  .processElevatorVerticalColl:
+    JMP ProcessElevatorVerticalColl
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -893,11 +902,12 @@ CheckCollisionVertical:
 CheckCollisionHorizontal:
 
   ; check move direction, set b to 0 (left) or 1 (right).
-  ; note that this is never called with DX == 0  
+  ; if player is not moving, skip the bounds check and go straight to .setBox
   .directionCheck: 
     LDA #$00
     STA b
     LDA genericDX
+    BEQ .setBox
     CMP #$80
     BCS .directionCheckDone
     INC b
@@ -982,9 +992,16 @@ CheckCollisionHorizontal:
     BNE .adjustMovement
   
   ; check for collisions with platforms.
+  ; but first check if player is moving - exit if not.
   ; check first screen first (c == 0), then second screen (c == 1) if no collisions found.
   ; if any collisions found, go to adjustMovement. Otherwise exit (leaving collision at 0).
   .checkCollisionsWithPlatforms:
+   
+    .checkPlayerDX:
+      LDA genericDX
+      BNE .checkFirstScreen
+      RTS
+  
     .checkFirstScreen:
       LDA #$00
       STA c
@@ -1008,7 +1025,8 @@ CheckCollisionHorizontal:
       LDA collision
       BNE .adjustMovement
       RTS
-  .checkCollisionsDone:
+      
+  .checkCollisionsWithPlatformsDone:
 
   ; adjust movement 
   .adjustMovement:   
