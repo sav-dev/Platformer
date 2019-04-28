@@ -164,14 +164,30 @@ UpdateActiveEnemy:
     ; do X += 1 to point to movement left, then load it
     ; movementLeft == 0 means the enemy is static
     ; (it will never be 0 for moving enemies; in this case speed must be 0 and movement type must be none).
-    ; in that case, skip the updates. otherwise, update movement left
+    ; in that case, skip the updates.
     INX
     LDA enemies, x
     BEQ .calculateDiffs
-    SEC
-    SBC enemySpeed
-    STA enemies, x
-    BNE .calculateDiffs
+    
+    ; we got here which means the enemy is moving
+    ; check speed to see if it's any of the special values
+    ; X still points at movement left so we can load it
+    LDA enemySpeed
+    CMP #SMALLEST_SPECIAL_SPEED
+    BCC .updateMovementLeft
+      
+    ; call the special speed routine
+    ; POI - possible optimization - this could be in line
+    JSR ProcessSpecialSpeed
+    BEQ .calculateDiffs       ; A = enemySpeed after ProcessSpecialSpeed
+    
+    ; reload movement left, then update
+    .updateMovementLeft:
+      LDA enemies, x
+      SEC
+      SBC enemySpeed
+      STA enemies, x
+      BNE .calculateDiffs
     
     ; if we get here, it means an extreme has been met.
     ; we must:
@@ -249,6 +265,8 @@ UpdateActiveEnemy:
     ; do X += 1 and apply DX, caching the result in genericX
     ; then do X += 1 and apply DY, caching the result in genericY
     ; finally do a X += 1 to point the register to the next byte
+    ; note that for static enemies or enemies that don't move this frame, DX and DY will be 0.
+    ; but this is still needed to load the position
     .applyMovement:
       INX
       LDA enemies, x
@@ -808,6 +826,55 @@ UpdateActiveEnemy:
    
   UpdateActiveEnemyDone:
     RTS
+
+;****************************************************************
+; Name:                                                         ;
+;   ProcessSpecialSpeed                                         ;
+;                                                               ;
+; Description:                                                  ;
+;   Update enemySpeed variable based on its value and the       :
+;   current frame. Only called for a case where the speed       ;
+;   is set to a special value.                                  ;
+;                                                               ;
+; Input variables:                                              ;
+;   A - must be set to the speed value                          ;
+;                                                               ;
+; Output variables:                                             ;
+;   enemySpeed - set to either 0 or 1                           ;
+;   A - set to enemySpeed                                       ;
+;****************************************************************    
+
+ProcessSpecialSpeed:
+
+    ; check the value of special speed
+    CMP #SPEED_HALF
+    BEQ .speedHalf
+
+    ; only move if frame counter is a multiple of 4
+    .speedQuarter:
+      LDA frameCount
+      ROR A
+      BCS .specialMoveDoNotMove
+      ROR A
+      BCS .specialMoveDoNotMove
+      LDA #$01
+      STA enemySpeed
+      RTS
+      
+    ; only move if frame counter is even
+    .speedHalf:
+      LDA frameCount
+      ROR A
+      BCS .specialMoveDoNotMove
+      LDA #$01
+      STA enemySpeed
+      RTS
+    
+    ; if we get here it means we do not want to move
+    .specialMoveDoNotMove:
+      LDA #$00
+      STA enemySpeed
+      RTS
     
 ;****************************************************************
 ; Name:                                                         ;

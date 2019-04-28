@@ -100,6 +100,7 @@ UpdatePlayerNotVisible:
 ;   i                                                           ;
 ;   collision vars                                              ;
 ;   elevator vars                                               ;
+;   some enemy vars                                             ;
 ;****************************************************************
 
 UpdatePlayerNormal:
@@ -714,6 +715,7 @@ SpawnPlayerBullets:
 ;   d                                                           ;
 ;   i                                                           ;
 ;   enemyScreen                                                 ;
+;   enemySpeed                                                  ;
 ;   elevatorSize                                                ;
 ;   collision vars                                              ;
 ;   genericPointer                                              ;
@@ -1085,6 +1087,7 @@ CheckCollisionHorizontal:
 ;                                                               ;
 ; Used variables:                                               ;
 ;   Y                                                           ;
+;   enemySpeed                                                  ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_elevator_in_memory_format                        ;
@@ -1148,17 +1151,26 @@ ProcessElevatorVerticalColl:
       BEQ .collisionBottom
       
       ; todo: issue - if player is standing on the ground, DY will be 4 and this won't work
-      ; check for platform collisions first?
+      ; we could check for platform collisions first
+      ; however, a case where player is standing on the ground and collides with elevator moving down should not happen
       
       ; both platform and player are moving down, check speeds
-      ; LDY yPointerCache, Y += 2 to point to speed, load to A, compare with genericDY
-      ; cache clear if elevator speed < player speed => collision from the top
-      ; otherwise collision from the bottom
+      ; LDY yPointerCache, Y += 2 to point to speed, load to A, compare with genericDY      
       .playerMovingDown:
         LDY yPointerCache
         INY
         INY
         LDA elevators, y
+        CMP #SMALLEST_SPECIAL_SPEED
+        BCC .playerMovingDownCompare        
+        STA enemySpeed
+        JSR ProcessSpecialSpeed ; POI - possible optimization - if zero flag set, we could jump to collisionTop
+        
+      ; compare elevator speed with player speed.
+      ; A register should contain elevator speed.
+      ; after compare, cache clear if elevator speed < player speed => collision from the top
+      ; otherwise collision from the bottom
+      .playerMovingDownCompare:
         CMP genericDY
         BCC .collisionTop
         JMP .collisionBottom
@@ -1191,8 +1203,6 @@ ProcessElevatorVerticalColl:
       ; both platform and player are moving up, check speeds
       ; we must first get the absolute player speed: genericDY = FF - genericDY + 1
       ; then LDY yPointerCache, Y += 2 to point to speed, load to A
-      ; cache clear if elevator speed < player speed => collision from the bottom
-      ; otherwise collision from the top
       .playerMovingUp:
         LDA #$FF
         SEC
@@ -1203,6 +1213,16 @@ ProcessElevatorVerticalColl:
         INY
         INY
         LDA elevators, y
+        CMP #SMALLEST_SPECIAL_SPEED
+        BCC .playerMovingUpCompare        
+        STA enemySpeed
+        JSR ProcessSpecialSpeed ; POI - possible optimization - if zero flag set, we could jump to collisionBottom
+        
+      ; compare elevator speed with player speed.
+      ; A register should contain elevator speed.
+      ; after compare, cache clear if elevator speed < player speed => collision from the bottom
+      ; otherwise collision from the top
+      .playerMovingUpCompare:        
         CMP genericDY
         BCC .collisionBottom
         JMP .collisionTop

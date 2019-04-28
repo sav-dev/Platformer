@@ -211,7 +211,15 @@ ENEMY_BULLET_ATTS       = $02
 SCROLL_SPEED = PLAYER_SPEED_POSITIVE ; scroll speed synchronized with player speed, must be 1, 2 or 4
                                      ; could be 8 but then inc/dec logic must be updated (the 'e' var)
                                      ; POI - possible optimization - if set to 1, inc/dec logic may be optimized
-                                     
+
+;****************************************************************
+; Movement                                                      ;
+;****************************************************************
+
+SPEED_HALF               = $FF
+SPEED_QUARTER            = SPEED_HALF - $01
+SMALLEST_SPECIAL_SPEED   = SPEED_QUARTER
+
 ;****************************************************************
 ; Enemies                                                       ;
 ;****************************************************************

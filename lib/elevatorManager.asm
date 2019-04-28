@@ -71,16 +71,24 @@ UpdateElevators:
     STA enemyScreen
     
     ; X += 1 to point to the speed, load it, if it's 0 - we can exit
-    ; otherwise, cache it in enemySpeed
+    ; otherwise, cache it in enemySpeed then check if it's a special value
     INX
     LDA elevators, X
     BEQ .updateElevatorLoopCondition
     STA enemySpeed
+    CMP #SMALLEST_SPECIAL_SPEED
+    BCC .getMaxDistance
+    
+    ; special speed, call the routine to process it
+    ; POI - possible optimization - we process the special speed multiple times per frame
+    JSR ProcessSpecialSpeed    
+    BEQ .updateElevatorLoopCondition ; A = enemySpeed after ProcessSpecialSpeed
     
     ; X += 1 to point to the max movement distance, cache it in enemyMaxDistance
-    INX 
-    LDA elevators, X    
-    STA enemyMaxDistance
+    .getMaxDistance:
+      INX 
+      LDA elevators, X    
+      STA enemyMaxDistance
     
     ; preset genericDirection to 0, then X += 1 to point to the movement distance left. 
     ; load it. if it's 0, it means the extreme was met the previous frame - 
