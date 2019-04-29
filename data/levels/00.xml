@@ -1017,15 +1017,27 @@
     </Enemy>
     <Enemy>
       <Name>Bug</Name>
-      <X>544</X>
+      <X>608</X>
       <Y>192</Y>
       <MovementType>Horizontal</MovementType>
       <Speed>3</Speed>
-      <MinPosition>544</MinPosition>
-      <MaxPosition>715</MaxPosition>
+      <MinPosition>608</MinPosition>
+      <MaxPosition>716</MaxPosition>
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Sphere</Name>
+      <X>656</X>
+      <Y>165</Y>
+      <MovementType>None</MovementType>
+      <Speed>0</Speed>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>110</ShootingFrequency>
+      <ShootingInitialFrequency>110</ShootingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>Spikes</Name>
