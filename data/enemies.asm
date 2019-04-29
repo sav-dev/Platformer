@@ -120,6 +120,22 @@ TurretHConsts:
 .explosionOffset:
   .byte $00, $00
 
+SphereConsts:
+.width:
+  .byte $10
+.hitboxInfo:
+  .byte $01,$0D,$01,$0D
+.gunInfo:
+  .byte $0D,$06,$FA,$06
+.animationSpeed:
+  .byte $00
+.numberOfFrames:
+  .byte $01
+.renderingInfo:
+  .byte LOW(SphereRender), HIGH(SphereRender)
+.explosionOffset:
+  .byte $00, $00
+
 
 ;
 ;  all offsets for possible grids
@@ -242,4 +258,17 @@ TurretHRender:
 .TurretH:
   .byte $47,$49,$48,$49
 
-EnemiesEnd:
+SphereRender:
+.spriteCount:
+  .byte $04
+.offsets:
+  .byte LOW(XOff2x2), HIGH(XOff2x2), LOW(YOff2x2), HIGH(YOff2x2), LOW(XOff2x2H), HIGH(XOff2x2H), LOW(YOff2x2), HIGH(YOff2x2)
+.flipXor:
+  .byte %01000000
+.attributes:
+  .byte $01,$01,$01,$01
+.tiles:
+.Sphere:
+  .byte $4A,$4C,$4B,$4D
+
+
