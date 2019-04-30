@@ -136,7 +136,7 @@ SphereConsts:
 .explosionOffset:
   .byte $00, $00
 
-Flying robotConsts:
+FlyingRobotConsts:
 .width:
   .byte $18
 .hitboxInfo:
@@ -148,11 +148,11 @@ Flying robotConsts:
 .numberOfFrames:
   .byte $02
 .renderingInfo:
-  .byte LOW(Flying robotRender), HIGH(Flying robotRender)
+  .byte LOW(FlyingRobotRender), HIGH(FlyingRobotRender)
 .explosionOffset:
   .byte $04, $00
 
-Walking robotConsts:
+WalkingRobotConsts:
 .width:
   .byte $18
 .hitboxInfo:
@@ -164,7 +164,7 @@ Walking robotConsts:
 .numberOfFrames:
   .byte $04
 .renderingInfo:
-  .byte LOW(Walking robotRender), HIGH(Walking robotRender)
+  .byte LOW(WalkingRobotRender), HIGH(WalkingRobotRender)
 .explosionOffset:
   .byte $04, $04
 
@@ -315,7 +315,7 @@ SphereRender:
 .Sphere:
   .byte $4A,$4C,$4B,$4D
 
-Flying robotRender:
+FlyingRobotRender:
 .spriteCount:
   .byte $06
 .offsets:
@@ -325,12 +325,12 @@ Flying robotRender:
 .attributes:
   .byte $00,$00,$00,$00,$40,$00
 .tiles:
-.Flyingrobot1:
+.FlyingRobot1:
   .byte $4E,$53,$50,$52,$4E,$51
-.Flyingrobot0:
+.FlyingRobot0:
   .byte $4E,$51,$4F,$52,$4E,$53
 
-Walking robotRender:
+WalkingRobotRender:
 .spriteCount:
   .byte $09
 .offsets:
@@ -340,13 +340,13 @@ Walking robotRender:
 .attributes:
   .byte $00,$00,$01,$00,$00,$01,$40,$00,$01
 .tiles:
-.Walkingrobot3:
+.WalkingRobot3:
   .byte $4E,$53,$56,$50,$52,$55,$4E,$51,$54
-.Walkingrobot2:
+.WalkingRobot2:
   .byte $4E,$53,$54,$50,$52,$55,$4E,$51,$56
-.Walkingrobot1:
+.WalkingRobot1:
   .byte $4E,$51,$56,$4F,$52,$55,$4E,$53,$54
-.Walkingrobot0:
+.WalkingRobot0:
   .byte $4E,$51,$54,$4F,$52,$55,$4E,$53,$56
 
 
