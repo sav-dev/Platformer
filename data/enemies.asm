@@ -340,7 +340,7 @@ Walking robotRender:
 .attributes:
   .byte $00,$00,$01,$00,$00,$01,$40,$00,$01
 .tiles:
-.Walkingrobot2:
+.Walkingrobot3:
   .byte $4E,$53,$56,$50,$52,$55,$4E,$51,$54
 .Walkingrobot2:
   .byte $4E,$53,$54,$50,$52,$55,$4E,$51,$56
