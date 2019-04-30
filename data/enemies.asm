@@ -136,6 +136,38 @@ SphereConsts:
 .explosionOffset:
   .byte $00, $00
 
+Flying robotConsts:
+.width:
+  .byte $18
+.hitboxInfo:
+  .byte $01,$16,$02,$0D
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $14
+.numberOfFrames:
+  .byte $02
+.renderingInfo:
+  .byte LOW(Flying robotRender), HIGH(Flying robotRender)
+.explosionOffset:
+  .byte $04, $00
+
+Walking robotConsts:
+.width:
+  .byte $18
+.hitboxInfo:
+  .byte $01,$16,$02,$0D
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $0A
+.numberOfFrames:
+  .byte $04
+.renderingInfo:
+  .byte LOW(Walking robotRender), HIGH(Walking robotRender)
+.explosionOffset:
+  .byte $04, $04
+
 
 ;
 ;  all offsets for possible grids
@@ -159,6 +191,18 @@ XOff2x2H:
   .byte $08, $08, $00, $00
 YOff2x2V:
   .byte $08, $00, $08, $00
+XOff3x2:
+  .byte $00, $00, $08, $08, $10, $10
+YOff3x2:
+  .byte $00, $08, $00, $08, $00, $08
+XOff3x2H:
+  .byte $10, $10, $08, $08, $00, $00
+XOff3x3:
+  .byte $00, $00, $00, $08, $08, $08, $10, $10, $10
+YOff3x3:
+  .byte $00, $08, $10, $00, $08, $10, $00, $08, $10
+XOff3x3H:
+  .byte $10, $10, $10, $08, $08, $08, $00, $00, $00
 
 ;
 ;  all information needed to draw an enemy
@@ -270,5 +314,39 @@ SphereRender:
 .tiles:
 .Sphere:
   .byte $4A,$4C,$4B,$4D
+
+Flying robotRender:
+.spriteCount:
+  .byte $06
+.offsets:
+  .byte LOW(XOff3x2), HIGH(XOff3x2), LOW(YOff3x2), HIGH(YOff3x2), LOW(XOff3x2H), HIGH(XOff3x2H), LOW(YOff3x2), HIGH(YOff3x2)
+.flipXor:
+  .byte %01000000
+.attributes:
+  .byte $00,$00,$00,$00,$40,$00
+.tiles:
+.Flyingrobot1:
+  .byte $4E,$53,$50,$52,$4E,$51
+.Flyingrobot0:
+  .byte $4E,$51,$4F,$52,$4E,$53
+
+Walking robotRender:
+.spriteCount:
+  .byte $09
+.offsets:
+  .byte LOW(XOff3x3), HIGH(XOff3x3), LOW(YOff3x3), HIGH(YOff3x3), LOW(XOff3x3H), HIGH(XOff3x3H), LOW(YOff3x3), HIGH(YOff3x3)
+.flipXor:
+  .byte %01000000
+.attributes:
+  .byte $00,$00,$01,$00,$00,$01,$40,$00,$01
+.tiles:
+.Walkingrobot2:
+  .byte $4E,$53,$56,$50,$52,$55,$4E,$51,$54
+.Walkingrobot2:
+  .byte $4E,$53,$54,$50,$52,$55,$4E,$51,$56
+.Walkingrobot1:
+  .byte $4E,$51,$56,$4F,$52,$55,$4E,$53,$54
+.Walkingrobot0:
+  .byte $4E,$51,$54,$4F,$52,$55,$4E,$53,$56
 
 
