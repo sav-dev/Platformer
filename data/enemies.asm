@@ -326,7 +326,7 @@ FlyingRobotRender:
   .byte $00,$00,$00,$00,$40,$00
 .tiles:
 .FlyingRobot1:
-  .byte $4E,$53,$50,$52,$4E,$51
+  .byte $4E,$54,$50,$55,$4E,$56
 .FlyingRobot0:
   .byte $4E,$51,$4F,$52,$4E,$53
 
@@ -341,12 +341,12 @@ WalkingRobotRender:
   .byte $00,$00,$01,$00,$00,$01,$40,$00,$01
 .tiles:
 .WalkingRobot3:
-  .byte $4E,$53,$56,$50,$52,$55,$4E,$51,$54
+  .byte $4E,$54,$5A,$50,$55,$5B,$4E,$56,$5C
 .WalkingRobot2:
-  .byte $4E,$53,$54,$50,$52,$55,$4E,$51,$56
+  .byte $4E,$54,$57,$50,$55,$58,$4E,$56,$59
 .WalkingRobot1:
-  .byte $4E,$51,$56,$4F,$52,$55,$4E,$53,$54
+  .byte $4E,$51,$5A,$4F,$52,$5B,$4E,$53,$5C
 .WalkingRobot0:
-  .byte $4E,$51,$54,$4F,$52,$55,$4E,$53,$56
+  .byte $4E,$51,$57,$4F,$52,$58,$4E,$53,$59
 
 

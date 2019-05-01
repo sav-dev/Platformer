@@ -1634,7 +1634,7 @@ RenderEnemy:
     LDA #$00
     STA c                       ; set c to 0 (nothing to XOR with atts because no flip)   
     
-  .setAttsPointer:
+  .setAttsPointer:              ; POI - free sprites - have atts per frame
     INY                         ; Y points to the atts
     TYA                         ; move Y to A
     CLC
