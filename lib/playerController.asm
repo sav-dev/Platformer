@@ -1482,6 +1482,11 @@ LoadPlayer:
 ; Description:                                                  ;
 ;   Renders player.                                             ;
 ;                                                               ;
+; Input variables:                                              ;
+;   playerDirection (left/right)                                ;
+;   playerAnimation (courch/run/stand)                          ;                                                   
+;   playerY, playerX                                            ;
+;                                                               ;
 ; Used variables:                                               ;
 ;   Y                                                           ;
 ;   b ~ i used as pointers                                      ;
