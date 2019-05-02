@@ -5,14 +5,15 @@
 
 ;
 ; - enemies in level data the following format:
-;   - pointer to next screen (from here): (n x 15) + 3 (1 byte)
+;   - pointer to next screen (from here): (n x 17) + 3 (1 byte)
 ;   - number of enemies (1 byte)
-;   - n times the enemy data (15 bytes)
+;   - n times the enemy data (17 bytes)
 ;        - 1st byte of id - pointer to the right variable (1 byte)
 ;        - 2nd byte of id - a mask in the right variable (1 byte) 
 ;        - slot to put enemy in (1 byte)
 ;        - pointer to const. data (1 byte)
 ;        - screen the enemy is on (1 byte)
+;        - should flip (1 byte)
 ;        - movement speed (1 byte)
 ;        - max movement distance (1 byte)
 ;        - initial flip (1 byte)
@@ -23,7 +24,8 @@
 ;        - initial life (1 byte)
 ;        - shooting frequency initial (1 byte)
 ;        - shooting frequency (1 byte)
-;   - pointer to the previous screen (from here): (n x 15) + 2 (1 byte)
+;        - shooting direction (1 byte)
+;   - pointer to the previous screen (from here): (n x 17) + 2 (1 byte)
 ;
 ; - enemies in memory in the following format (17 bytes):
 ;    - state (1 byte)
@@ -31,6 +33,7 @@
 ;    - 2nd byte of id - a mask in the right variable (1 byte) 
 ;    - pointer to const. data (1 byte)
 ;    - screen the enemy is on (1 byte)
+;    - should flip (1 byte)
 ;    - movement speed (1 byte)
 ;    - max movement distance (1 byte)
 ;    - current flip (1 byte)
@@ -41,9 +44,12 @@
 ;    - remaining life (1 byte)  
 ;    - shooting timer (1 byte)
 ;    - shooting frequency (1 byte)
+;    - shooting direction (1 byte)
 ;    - animation timer (1 byte)
 ;    - animation frame (1 byte)
 ;
+; tags: depends_on_enemy_in_memory_format, depends_on_enemy_in_level_data_format
+; POI - memory save - some of the variables could be combined
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -107,7 +113,7 @@ UpdateActiveEnemy:
   ; cache the const data pointer in Y and the screen the enemy is on in enemyScreen
   ; first do X += 3 to skip state and id. we'll point to the const data.
   ; then do X += 1 to point to the screen.
-  ; then to X += 1 to point to the next byte after the screen (speed).
+  ; then to X += 1 to point to the next byte after the screen (should flip).
   .cachePointerAndScreen:
     INX
     INX
@@ -119,8 +125,9 @@ UpdateActiveEnemy:
     STA enemyScreen
     INX
     
-  ; the next 7 bytes are:
-  ;  - movement speed (currently pointed to by X)
+  ; the next 8 bytes are:
+  ;  - should flip (currently pointed to by X)
+  ;  - movement speed 
   ;  - max movement distance
   ;  - current flip
   ;  - movement left
@@ -135,6 +142,7 @@ UpdateActiveEnemy:
   ;  - y position
   ;
   ; we need these cached for later:
+  ;  - should flip
   ;  - current flip
   ;  - x position
   ;  - y position
@@ -146,6 +154,9 @@ UpdateActiveEnemy:
     STA genericDX
     STA genericDY
     STA genericOffScreen
+    
+    ; TODO for now skip the should flip
+    INX
     
     ; load and cache the speed
     LDA enemies, x
@@ -645,21 +656,31 @@ UpdateActiveEnemy:
     DEC enemies, x
     BEQ .enemyShoot
     
-    ; enemy doesn't shoot - X += 2 to point to the animation timer, then jump to EnemyProcessAnimation
+    ; enemy doesn't shoot - X += 2 to point to the shooting direction
     .enemyDoesntShoot:
       INX
+      INX
+      
+      ; TODO - process shooting direction
+      
+      ; X += 1 to point to the animation timer
       INX
       JMP EnemyProcessAnimation
 
     ; enemy should shoot.
-    ; first do X += 1 to point to the shooting frequency, load it, do X -= 1
-    ; and store it to reset the shooting timer. then do X += 2 to point to the animation timer.33
+    ; first do X += 1 to point to the shooting frequency, load it, do X -= 1 and store it to reset the shooting timer.
+    ; then do X += 2 to point to the shooting direction.
     .enemyShoot:
       INX
       LDA enemies, x
       DEX
       STA enemies, x
       INX
+      INX
+    
+      ; TODO - process shooting direction
+      
+      ; X += 1 to point to the animation timer
       INX
     
     ; check if we're even rendering the enemy, don't shoot if not
@@ -913,11 +934,11 @@ UpdateExplodingEnemy:
     LDA enemies, x
     STA enemyScreen
   
-  ; X += 6 to point to the X position, load the X position and put it in genericX
+  ; X += 7 to point to the X position, load the X position and put it in genericX
   .loadX:
     TXA
     CLC
-    ADC #$06
+    ADC #$07
     TAX
     LDA enemies, x
     STA genericX
@@ -978,12 +999,12 @@ UpdateExplodingEnemy:
     LDA enemies, x
     STA genericY
       
-  ; X += 4 to point to the animation timer, decrement it, check if 0
+  ; X += 5 to point to the animation timer, decrement it, check if 0
   .processAnimation:
-    INX
-    INX
-    INX
-    INX
+    TXA
+    CLC
+    ADC #$05
+    TAX    
     DEC enemies, x
     BEQ .timerIs0
     
@@ -1112,12 +1133,12 @@ UpdateEnemies:
           ADC #$0D
           TAY
           
-        ; X += 7 to point to the X position, update x using x off from consts.
+        ; X += 8 to point to the X position, update x using x off from consts.
         ; X += 1 to point to the Y position, Y += 1, update y using y off from consts
         .updatePosition:
           TXA
           CLC
-          ADC #$07
+          ADC #$08
           TAX
           LDA enemies, X
           CLC
@@ -1130,13 +1151,13 @@ UpdateEnemies:
           ADC EnemyConsts, y
           STA enemies, X
           
-        ; X += 4 to point to the animation timer, set it to the const expl. speed.
+        ; X += 5 to point to the animation timer, set it to the const expl. speed.
         ; X += 1 to point to the animation frame, set it to the const expl. frame count
         .updateAnimation:
-          INX
-          INX
-          INX
-          INX
+          TXA
+          CLC
+          ADC #$05
+          TAX
           LDA #EXPLOSION_ANIM_SPEED
           STA enemies, x
           INX
@@ -1407,10 +1428,10 @@ LoadEnemies:
       LDA d
       STA enemies, x
     
-    ; next 12 bytes are the sane in both definitions:
-    ; pointer, screen, speed, distance, direction, distance left, flip, x, y, life, shooting freq, shooting timer
-    ; c will be the loop pointer (no longer needed), copy the 12 bytes incrementing Y and X in each loop
-    LDA #$0C
+    ; next 14 bytes are the sane in both definitions:
+    ; pointer, screen, should flip, speed, distance, direction, distance left, flip, x, y, life, shooting timer, shooting freq, shooting dir
+    ; c will be the loop pointer (no longer needed), copy the 14 bytes incrementing Y and X in each loop
+    LDA #$0E
     STA c
     .copyLoop:
       INY

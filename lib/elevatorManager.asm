@@ -21,6 +21,7 @@
 ;
 ; - elevators in memory: same but starting at size (8 bytes each)
 ;
+; tags: depends_on_elevator_in_memory_format, depends_on_elevator_in_level_data_format
 
 ;****************************************************************
 ; Name:                                                         ;
