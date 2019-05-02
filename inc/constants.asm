@@ -77,15 +77,12 @@ DIRECTION_LEFT    = $00         ; constants, do not change
 DIRECTION_RIGHT   = $01
 DIRECTION_UP      = $00
 DIRECTION_DOWN    = $01
-DIRECTION_NONE    = $02
 
-; todo - update this? see comment in Elevator::Direction                  
 GENERIC_DIR_LEFT  = $00
 GENERIC_DIR_RIGHT = $01
 GENERIC_DIR_UP    = $02
 GENERIC_DIR_DOWN  = $03
-GENERIC_DIR_NONE  = $04                 
-                 
+ 
 ;****************************************************************
 ; Player related constans                                       ;
 ;****************************************************************
