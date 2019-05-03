@@ -956,11 +956,41 @@
   </Tiles>
   <Enemies>
     <Enemy>
+      <Name>Sphere</Name>
+      <X>48</X>
+      <Y>48</Y>
+      <MovementType>Horizontal</MovementType>
+      <Direction>Right</Direction>
+      <Speed>1</Speed>
+      <ShouldFlip>false</ShouldFlip>
+      <MinPosition>48</MinPosition>
+      <MaxPosition>176</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Sphere</Name>
+      <X>48</X>
+      <Y>72</Y>
+      <MovementType>Horizontal</MovementType>
+      <Direction>Right</Direction>
+      <Speed>1</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>48</MinPosition>
+      <MaxPosition>176</MaxPosition>
+      <InitialFlip>true</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+    </Enemy>
+    <Enemy>
       <Name>Spikes</Name>
       <X>96</X>
       <Y>192</Y>
       <MovementType>Horizontal</MovementType>
+      <Direction>Right</Direction>
       <Speed>3</Speed>
+      <ShouldFlip>false</ShouldFlip>
       <MinPosition>96</MinPosition>
       <MaxPosition>207</MaxPosition>
       <InitialFlip>false</InitialFlip>
@@ -972,7 +1002,9 @@
       <X>368</X>
       <Y>128</Y>
       <MovementType>None</MovementType>
+      <Direction>None</Direction>
       <Speed>0</Speed>
+      <ShouldFlip>false</ShouldFlip>
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
@@ -984,7 +1016,9 @@
       <X>400</X>
       <Y>128</Y>
       <MovementType>None</MovementType>
+      <Direction>None</Direction>
       <Speed>0</Speed>
+      <ShouldFlip>false</ShouldFlip>
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
@@ -996,7 +1030,9 @@
       <X>432</X>
       <Y>128</Y>
       <MovementType>None</MovementType>
+      <Direction>None</Direction>
       <Speed>0</Speed>
+      <ShouldFlip>false</ShouldFlip>
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
@@ -1008,7 +1044,9 @@
       <X>464</X>
       <Y>128</Y>
       <MovementType>None</MovementType>
+      <Direction>None</Direction>
       <Speed>0</Speed>
+      <ShouldFlip>false</ShouldFlip>
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
@@ -1020,7 +1058,9 @@
       <X>608</X>
       <Y>192</Y>
       <MovementType>Horizontal</MovementType>
+      <Direction>Right</Direction>
       <Speed>3</Speed>
+      <ShouldFlip>true</ShouldFlip>
       <MinPosition>608</MinPosition>
       <MaxPosition>716</MaxPosition>
       <InitialFlip>false</InitialFlip>
@@ -1032,7 +1072,9 @@
       <X>656</X>
       <Y>165</Y>
       <MovementType>None</MovementType>
+      <Direction>None</Direction>
       <Speed>0</Speed>
+      <ShouldFlip>false</ShouldFlip>
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
@@ -1044,7 +1086,9 @@
       <X>672</X>
       <Y>16</Y>
       <MovementType>Vertical</MovementType>
+      <Direction>Down</Direction>
       <Speed>2</Speed>
+      <ShouldFlip>false</ShouldFlip>
       <MinPosition>16</MinPosition>
       <MaxPosition>80</MaxPosition>
       <InitialFlip>false</InitialFlip>
@@ -1056,7 +1100,9 @@
       <X>704</X>
       <Y>80</Y>
       <MovementType>Vertical</MovementType>
+      <Direction>Up</Direction>
       <Speed>2</Speed>
+      <ShouldFlip>false</ShouldFlip>
       <MinPosition>16</MinPosition>
       <MaxPosition>80</MaxPosition>
       <InitialFlip>true</InitialFlip>
@@ -1068,7 +1114,9 @@
       <X>736</X>
       <Y>16</Y>
       <MovementType>Vertical</MovementType>
+      <Direction>Down</Direction>
       <Speed>2</Speed>
+      <ShouldFlip>false</ShouldFlip>
       <MinPosition>16</MinPosition>
       <MaxPosition>80</MaxPosition>
       <InitialFlip>false</InitialFlip>
@@ -1080,7 +1128,9 @@
       <X>832</X>
       <Y>56</Y>
       <MovementType>Horizontal</MovementType>
+      <Direction>Left</Direction>
       <Speed>1</Speed>
+      <ShouldFlip>false</ShouldFlip>
       <MinPosition>768</MinPosition>
       <MaxPosition>832</MaxPosition>
       <InitialFlip>true</InitialFlip>
@@ -1090,6 +1140,16 @@
   </Enemies>
   <Elevators>
     <Elevator>
+      <X>96</X>
+      <Y>149</Y>
+      <Size>4</Size>
+      <MovementType>None</MovementType>
+      <Speed>0</Speed>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <Direction>None</Direction>
+    </Elevator>
+    <Elevator>
       <X>228</X>
       <Y>176</Y>
       <Size>3</Size>
@@ -1097,7 +1157,7 @@
       <Speed>1</Speed>
       <MinPosition>120</MinPosition>
       <MaxPosition>184</MaxPosition>
-      <InitialFlip>false</InitialFlip>
+      <Direction>Down</Direction>
     </Elevator>
   </Elevators>
   <PlayerStartingPosition>
