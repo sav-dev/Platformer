@@ -5,7 +5,7 @@
 
 ;
 ; - enemies in level data the following format:
-;   - pointer to next screen (from here): (n x 17) + 3 (1 byte)
+;   - pointer to next screen (from here): (n x 18) + 3 (1 byte)
 ;   - number of enemies (1 byte)
 ;   - n times the enemy data (17 bytes)
 ;        - 1st byte of id - pointer to the right variable (1 byte)
@@ -27,7 +27,7 @@
 ;        - shooting direction (1 byte)
 ;   - pointer to the previous screen (from here): (n x 17) + 2 (1 byte)
 ;
-; - enemies in memory in the following format (17 bytes):
+; - enemies in memory in the following format (18 bytes):
 ;    - state (1 byte)
 ;    - 1st byte of id - pointer to the right variable (1 byte)
 ;    - 2nd byte of id - a mask in the right variable (1 byte) 
@@ -44,7 +44,6 @@
 ;    - remaining life (1 byte)  
 ;    - shooting timer (1 byte)
 ;    - shooting frequency (1 byte)
-;    - shooting direction (1 byte)
 ;    - animation timer (1 byte)
 ;    - animation frame (1 byte)
 ;
@@ -85,7 +84,7 @@
 ;   depends_on_enemy_in_memory_format                           ;
 ;****************************************************************
  
-UpdateActiveEnemy:
+UpdateActiveEnemy: ; todo update
 
   ; assume the enemy should be rendered.
   ; also, while we're here, assume collision check is needed and enemy is not flashing
@@ -155,10 +154,12 @@ UpdateActiveEnemy:
     STA genericDY
     STA genericOffScreen
     
-    ; TODO for now skip the should flip
-    INX
+    ; load and cache the should flip flag
+    LDA enemies, x
+    STA enemyShouldFlip
     
-    ; load and cache the speed
+    ; do X + 1 to point to the speed, load and cache it
+    INX
     LDA enemies, x
     STA enemySpeed
         
@@ -203,11 +204,14 @@ UpdateActiveEnemy:
     ; if we get here, it means an extreme has been met.
     ; we must:
     ;   - set movement left to max distance
-    ;   - X -= 1 to point to flip, update it but *do not* re-cache
-    ;   - x += 1 to point back to movement left
+    ;   - if enemyShouldFlip:
+    ;     - X -= 1 to point to flip, update it but *do not* re-cache
+    ;     - x += 1 to point back to movement left
     .extremeMet:
       LDA enemyMaxDistance
       STA enemies, x
+      LDA enemyShouldFlip
+      BEQ .calculateDiffs
       DEX
       LDA enemies, x
       EOR #%00000001
@@ -225,7 +229,7 @@ UpdateActiveEnemy:
     ;   5 = 00000101 - moving horizontal
     ;   6 = 00000110 - moving vertical
     ;
-    ; for sake of movement, anything < 5 means no movement - in that case, skip this section
+    ; for sake of movement, anything < 5 means no movement - in that case, skip this section TODO_SHOOTING_DIR update
     ; otherwise, based on the direction and flip (cached in genericDirection), set DX and DY
     ;
     ; POI - possible optimization - have separate vars for movement type and pointing direction?   
@@ -661,7 +665,7 @@ UpdateActiveEnemy:
       INX
       INX
       
-      ; TODO - process shooting direction
+      ; TODO_SHOOTING_DIR - process shooting direction
       
       ; X += 1 to point to the animation timer
       INX
@@ -678,7 +682,7 @@ UpdateActiveEnemy:
       INX
       INX
     
-      ; TODO - process shooting direction
+      ; TODO_SHOOTING_DIR - process shooting direction
       
       ; X += 1 to point to the animation timer
       INX
@@ -999,12 +1003,12 @@ UpdateExplodingEnemy:
     LDA enemies, x
     STA genericY
       
-  ; X += 5 to point to the animation timer, decrement it, check if 0
+  ; X += 4 to point to the animation timer, decrement it, check if 0
   .processAnimation:
-    TXA
-    CLC
-    ADC #$05
-    TAX    
+    INX
+    INX
+    INX
+    INX
     DEC enemies, x
     BEQ .timerIs0
     
@@ -1151,13 +1155,13 @@ UpdateEnemies:
           ADC EnemyConsts, y
           STA enemies, X
           
-        ; X += 5 to point to the animation timer, set it to the const expl. speed.
+        ; X += 4 to point to the animation timer, set it to the const expl. speed.
         ; X += 1 to point to the animation frame, set it to the const expl. frame count
         .updateAnimation:
-          TXA
-          CLC
-          ADC #$05
-          TAX
+          INX
+          INX
+          INX
+          INX
           LDA #EXPLOSION_ANIM_SPEED
           STA enemies, x
           INX
@@ -1428,10 +1432,10 @@ LoadEnemies:
       LDA d
       STA enemies, x
     
-    ; next 14 bytes are the sane in both definitions:
-    ; pointer, screen, should flip, speed, distance, direction, distance left, flip, x, y, life, shooting timer, shooting freq, shooting dir
+    ; next 13 bytes are the sane in both definitions:
+    ; pointer, screen, should flip, speed, distance, direction, distance left, flip, x, y, life, shooting timer, shooting freq
     ; c will be the loop pointer (no longer needed), copy the 14 bytes incrementing Y and X in each loop
-    LDA #$0E
+    LDA #$0D ; = 13
     STA c
     .copyLoop:
       INY

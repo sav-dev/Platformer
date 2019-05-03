@@ -140,6 +140,8 @@ enemyOnScreen           .rs 1  ; set to 1 if enemy should be rendered
 enemyCollisions         .rs 1  ; set to 1 if a collision check is needed
 enemyNotFlashing        .rs 1  ; set to 1 if enemy is *NOT* flashing
 
+enemyShouldFlip         .rs 1  ; set to 1 if enemy should flip
+
 enemyHit                .rs 1  ; whether the enemy was hit
 removeEnemy             .rs 1  ; whether enemy should be exploded / removed from the game
 

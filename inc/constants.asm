@@ -82,6 +82,7 @@ GENERIC_DIR_LEFT  = $00
 GENERIC_DIR_RIGHT = $01
 GENERIC_DIR_UP    = $02
 GENERIC_DIR_DOWN  = $03
+GENERIC_DIR_NONE  = $04
  
 ;****************************************************************
 ; Player related constans                                       ;
