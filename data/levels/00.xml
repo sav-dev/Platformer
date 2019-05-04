@@ -956,34 +956,6 @@
   </Tiles>
   <Enemies>
     <Enemy>
-      <Name>Sphere</Name>
-      <X>48</X>
-      <Y>48</Y>
-      <MovementType>Horizontal</MovementType>
-      <Direction>Right</Direction>
-      <Speed>1</Speed>
-      <ShouldFlip>false</ShouldFlip>
-      <MinPosition>48</MinPosition>
-      <MaxPosition>176</MaxPosition>
-      <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>0</ShootingFrequency>
-      <ShootingInitialFrequency>0</ShootingInitialFrequency>
-    </Enemy>
-    <Enemy>
-      <Name>Sphere</Name>
-      <X>48</X>
-      <Y>72</Y>
-      <MovementType>Horizontal</MovementType>
-      <Direction>Right</Direction>
-      <Speed>1</Speed>
-      <ShouldFlip>true</ShouldFlip>
-      <MinPosition>48</MinPosition>
-      <MaxPosition>176</MaxPosition>
-      <InitialFlip>true</InitialFlip>
-      <ShootingFrequency>0</ShootingFrequency>
-      <ShootingInitialFrequency>0</ShootingInitialFrequency>
-    </Enemy>
-    <Enemy>
       <Name>Spikes</Name>
       <X>96</X>
       <Y>192</Y>
@@ -1139,16 +1111,6 @@
     </Enemy>
   </Enemies>
   <Elevators>
-    <Elevator>
-      <X>96</X>
-      <Y>149</Y>
-      <Size>4</Size>
-      <MovementType>None</MovementType>
-      <Speed>0</Speed>
-      <MinPosition>0</MinPosition>
-      <MaxPosition>0</MaxPosition>
-      <Direction>None</Direction>
-    </Elevator>
     <Elevator>
       <X>228</X>
       <Y>176</Y>
