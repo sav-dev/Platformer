@@ -399,8 +399,7 @@ RenderSprite:
   .include "lib\playerController.asm"
   .include "lib\explosionsController.asm"
   .include "lib\bulletController.asm"
-  .include "lib\enemiesManager.asm"
-  .include "lib\elevatorManager.asm"
+  .include "lib\enemiesManager.asm"  
 
 Bank2End:
   
@@ -408,7 +407,8 @@ Bank2End:
   .org $8000
     
   .include "lib\paletteManager.asm"   
-
+  .include "lib\elevatorManager.asm"
+  
   .include "states\game.asm"
     
 Bank0Start:

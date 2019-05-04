@@ -10,6 +10,7 @@
 ;    hitbox width    : 1 byte (inclusive)
 ;    hitbox y off    : 1 byte
 ;    hitbox height   : 1 byte (inclusive)
+;    shooting dir.   : 1 byte (see SHOOT_DIR_* consts)
 ;    gun x off       : 1 byte (signed, 0 for non shooting)
 ;    gun y off       : 1 byte (signed, 0 for non shooting)
 ;    gun x off flip  : 1 byte (signed, 0 for non shooting)
@@ -21,6 +22,7 @@
 ;
 ;  ordered by animation id
 ;
+;  tag: depends_on_enemy_consts_format
 
 EnemyConsts:
 
@@ -29,6 +31,8 @@ BeetleConsts:
   .byte $20
 .hitboxInfo:
   .byte $02,$1B,$04,$10
+.shootingDir:
+  .byte $01
 .gunInfo:
   .byte $1E,$03,$F9,$03
 .animationSpeed:
@@ -45,6 +49,8 @@ BugConsts:
   .byte $10
 .hitboxInfo:
   .byte $02,$0B,$04,$0A
+.shootingDir:
+  .byte $02
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -61,6 +67,8 @@ EyeConsts:
   .byte $10
 .hitboxInfo:
   .byte $03,$09,$02,$0B
+.shootingDir:
+  .byte $02
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -77,6 +85,8 @@ SpikesConsts:
   .byte $10
 .hitboxInfo:
   .byte $02,$0A,$02,$0A
+.shootingDir:
+  .byte $02
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -93,6 +103,8 @@ TurretVConsts:
   .byte $10
 .hitboxInfo:
   .byte $01,$0D,$01,$0D
+.shootingDir:
+  .byte $00
 .gunInfo:
   .byte $0A,$0F,$0A,$F8
 .animationSpeed:
@@ -109,6 +121,8 @@ TurretHConsts:
   .byte $10
 .hitboxInfo:
   .byte $01,$0D,$01,$0D
+.shootingDir:
+  .byte $01
 .gunInfo:
   .byte $0F,$01,$F8,$01
 .animationSpeed:
@@ -125,6 +139,8 @@ SphereConsts:
   .byte $10
 .hitboxInfo:
   .byte $01,$0D,$01,$0D
+.shootingDir:
+  .byte $01
 .gunInfo:
   .byte $0D,$06,$FA,$06
 .animationSpeed:
@@ -141,6 +157,8 @@ FlyingRobotConsts:
   .byte $18
 .hitboxInfo:
   .byte $01,$16,$02,$0D
+.shootingDir:
+  .byte $02
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -157,6 +175,8 @@ WalkingRobotConsts:
   .byte $18
 .hitboxInfo:
   .byte $01,$16,$02,$0D
+.shootingDir:
+  .byte $02
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:

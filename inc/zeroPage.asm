@@ -125,7 +125,7 @@ genericDY               .rs 1
 ; POI - possible optimization - to save zero page bytes, the vars below could be replaced with the use of pseudo-registers
 enemyScreen             .rs 1  ; screen the enemy is on
 
-enemyOrientation        .rs 1  ; enemy orientation
+enemyDirection          .rs 1  ; enemy direction
 
 enemySpeed              .rs 1  ; enemy speed
 enemyMaxDistance        .rs 1  ; max distance
@@ -133,6 +133,7 @@ enemyMaxDistance        .rs 1  ; max distance
 enemyAnimationSpeed     .rs 1  ; enemy animation speed
 enemyFrameCount         .rs 1  ; enemy frame count
 
+enemyShootingDirection  .rs 1  ; enemy shooting direction (vert or hor)
 enemyGunX               .rs 1  ; enemy gun x position
 enemyGunY               .rs 1  ; enemy gun y position
 

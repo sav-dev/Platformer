@@ -5,9 +5,9 @@
 
 ;
 ; - enemies in level data the following format:
-;   - pointer to next screen (from here): (n x 18) + 3 (1 byte)
+;   - pointer to next screen (from here): (n x 16) + 3 (1 byte)
 ;   - number of enemies (1 byte)
-;   - n times the enemy data (17 bytes)
+;   - n times the enemy data (16 bytes)
 ;        - 1st byte of id - pointer to the right variable (1 byte)
 ;        - 2nd byte of id - a mask in the right variable (1 byte) 
 ;        - slot to put enemy in (1 byte)
@@ -17,15 +17,14 @@
 ;        - movement speed (1 byte)
 ;        - max movement distance (1 byte)
 ;        - initial flip (1 byte)
-;        - initial movement left (1 byte)
-;        - movement direction (1 byte)
+;        - initial movement direction (1 byte)
+;        - initial movement left (1 byte)            
 ;        - x position (1 byte)
 ;        - y position (1 byte)            
 ;        - initial life (1 byte)
 ;        - shooting frequency initial (1 byte)
 ;        - shooting frequency (1 byte)
-;        - shooting direction (1 byte)
-;   - pointer to the previous screen (from here): (n x 17) + 2 (1 byte)
+;   - pointer to the previous screen (from here): (n x 16) + 2 (1 byte)
 ;
 ; - enemies in memory in the following format (18 bytes):
 ;    - state (1 byte)
@@ -37,8 +36,8 @@
 ;    - movement speed (1 byte)
 ;    - max movement distance (1 byte)
 ;    - current flip (1 byte)
-;    - movement left (1 byte)
 ;    - movement direction (1 byte)
+;    - movement left (1 byte)
 ;    - x position (1 byte)
 ;    - y position (1 byte)
 ;    - remaining life (1 byte)  
@@ -49,6 +48,8 @@
 ;
 ; tags: depends_on_enemy_in_memory_format, depends_on_enemy_in_level_data_format
 ; POI - memory save - some of the variables could be combined
+;
+; todo: change pointer to const. data to two bytes if we add too many enemies
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -82,9 +83,10 @@
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_enemy_in_memory_format                           ;
+;   depends_on_enemy_consts_format                              ;
 ;****************************************************************
  
-UpdateActiveEnemy: ; todo update
+UpdateActiveEnemy:
 
   ; assume the enemy should be rendered.
   ; also, while we're here, assume collision check is needed and enemy is not flashing
@@ -135,13 +137,13 @@ UpdateActiveEnemy: ; todo update
   ;  - y position
   ;
   ; use them to move the enemy, updating:
-  ;  - current movement distance
-  ;  - current flip (potentially)
+  ;  - current flip
+  ;  - movement left
+  ;  - movement direction
   ;  - x position
   ;  - y position
   ;
   ; we need these cached for later:
-  ;  - should flip
   ;  - current flip
   ;  - x position
   ;  - y position
@@ -173,6 +175,11 @@ UpdateActiveEnemy: ; todo update
     LDA enemies, x
     STA genericDirection
     
+    ; do X += 1 to point to the enemy direction, then cache it in enemyDirection
+    INX
+    LDA enemies, x
+    STA enemyDirection
+    
     ; do X += 1 to point to movement left, then load it
     ; movementLeft == 0 means the enemy is static
     ; (it will never be 0 for moving enemies; in this case speed must be 0 and movement type must be none).
@@ -202,79 +209,73 @@ UpdateActiveEnemy: ; todo update
       BNE .calculateDiffs
     
     ; if we get here, it means an extreme has been met.
+    ; X points to movement left.
     ; we must:
     ;   - set movement left to max distance
-    ;   - if enemyShouldFlip:
-    ;     - X -= 1 to point to flip, update it but *do not* re-cache
-    ;     - x += 1 to point back to movement left
+    ;   - X -= 1 to point to movement direction, update it (but *do not* re-cache in enemyDirection)
+    ;   - if enemyShouldFlip is false, x += 1 to point back to movement left and go to calculateDiffs
+    ;   - if enemyShouldFlip is true:
+    ;     - X -= 1 to point to flip, update it (do not re-cache, but it doesn't really matter)
+    ;     - X += 2 to point back to movement left
     .extremeMet:
       LDA enemyMaxDistance
       STA enemies, x
-      LDA enemyShouldFlip
-      BEQ .calculateDiffs
       DEX
       LDA enemies, x
+      
+      ; to update direction, just flip the first bit (left = 00, right = 01, up = 10, down = 11)
       EOR #%00000001
       STA enemies, x
-      INX
+      
+      LDA enemyShouldFlip
+      BNE .shouldFlip
+      
+      .dontFlip:
+        INX
+        JMP .calculateDiffs      
+      
+      .shouldFlip:
+        DEX
+        LDA enemies, x
+        EOR #%00000001
+        STA enemies, x
+        INX
+        INX
     
     ; once we get here, x is still pointing to movement left, but everything has been updated.
-    ; first do a X += 1 to point at movement direction, load it, and cache it in enemyOrientation
-    ;
-    ; that var is a bit complicated.
-    ; possible values:
-    ;   0 = 00000000 - none
-    ;   1 = 00000001 - static horizontal
-    ;   2 = 00000010 - static vertical
-    ;   5 = 00000101 - moving horizontal
-    ;   6 = 00000110 - moving vertical
-    ;
-    ; for sake of movement, anything < 5 means no movement - in that case, skip this section TODO_SHOOTING_DIR update
-    ; otherwise, based on the direction and flip (cached in genericDirection), set DX and DY
-    ;
-    ; POI - possible optimization - have separate vars for movement type and pointing direction?   
+    ; based on enemyDirection update genericDX or genericDY
     .calculateDiffs:
-      INX
-      LDA enemies, x
-      STA enemyOrientation
-      CMP #ENEMY_MOVE_HORIZONTAL
-      BCC .applyMovement
-      BEQ .horizontalMovement
+      LDA enemyDirection
+      BEQ .movingLeft ; GENERIC_DIR_LEFT = 0
+      CMP #GENERIC_DIR_NONE
+      BEQ .applyMovement
+      CMP #GENERIC_DIR_RIGHT
+      BEQ .movingRight
+      CMP #GENERIC_DIR_UP
+      BEQ .movingUp
       
-      ; in the verticalMovement and horizontalMovement sections we:
-      ;   - check genericDirection
-      ;   - if it's 0 (no flip) we set DX/DY to enemySpeed
-      ;   - if it's 1 (flip) we set DX/DY to -enemySpeed
-      .verticalMovement:
-        LDA genericDirection
-        BEQ .verticalNoFlip
+      .movingDown:
+        LDA enemySpeed
+        STA genericDY
+        JMP .applyMovement
       
-        .verticalFlip:
-          LDA #$00
-          SEC
-          SBC enemySpeed
-          STA genericDY
-          JMP .applyMovement
-        
-        .verticalNoFlip:
-          LDA enemySpeed
-          STA genericDY
-          JMP .applyMovement
+      .movingUp:
+        LDA #$00
+        SEC
+        SBC enemySpeed
+        STA genericDY
+        JMP .applyMovement
       
-      .horizontalMovement:
-        LDA genericDirection
-        BEQ .horizontalNoFlip
-      
-        .horizontalFlip:
-          LDA #$00
-          SEC
-          SBC enemySpeed
-          STA genericDX
-          JMP .applyMovement
-        
-        .horizontalNoFlip:
-          LDA enemySpeed
-          STA genericDX
+      .movingRight:
+        LDA enemySpeed
+        STA genericDX
+        JMP .applyMovement
+            
+      .movingLeft:
+        LDA #$00
+        SEC
+        SBC enemySpeed
+        STA genericDX        
           
     ; once we get here, x is still pointing to movement direction, and diffs are set.
     ; do X += 1 and apply DX, caching the result in genericX
@@ -415,7 +416,7 @@ UpdateActiveEnemy: ; todo update
           INY
           INY
           DEC enemyCollisions
-          JMP .gunPosition
+          JMP .shootingDirection
       
       ; if on screen:
       ;   - load generic X
@@ -455,18 +456,24 @@ UpdateActiveEnemy: ; todo update
       CLC
       ADC EnemyConsts, y
       STA ay2      
-      
+    
     ; get the position of the gun.
     ; we expect Y to point to the hitbox height when we get here
     ;
-    ; the next 4 const bytes are:
+    ; the next 5 const bytes are:
+    ;  - shooting direction
     ;  - gun x off
     ;  - gun y off
     ;  - gun x off (flip)
     ;  - gun y off (flip)
     ;    
-    ; first do Y += 1 to point to x off
-    ; then check direction, and set enemyGunX and enemyGunY to a right const value.
+    ; first do Y += 1 to point to shooting direction, load    
+    .shootingDirection:
+      INY
+      LDA EnemyConsts, y
+      STA enemyShootingDirection
+    
+    ; then do Y += 1 to point to gun x off, then check direction, and set enemyGunX and enemyGunY to a right const value.
     ; make sure we do Y += 4 (5 including the initial one) to point to animation speed.
     .gunPosition:
       INY
@@ -648,164 +655,159 @@ UpdateActiveEnemy: ; todo update
           BEQ EnemyProcessShooting
           JMP .collisionWithBulletsLoop
         
-    
-  ; When we get here, we expect X to point to remaining life.
-  ; X += 1 to point to the current shooting timer
-  ; load it, if it's 0 it means the enemy doesn't shoot
-  ; otherwise DEC the timer, if it's 0 the enemy should shoot
-  EnemyProcessShooting:
+   EnemyProcessShooting: 
     INX
-    LDA enemies, x
-    BEQ .enemyDoesntShoot
-    DEC enemies, x
-    BEQ .enemyShoot
+    INX
+    INX
+    JMP EnemyProcessAnimation
     
-    ; enemy doesn't shoot - X += 2 to point to the shooting direction
-    .enemyDoesntShoot:
-      INX
-      INX
-      
-      ; TODO_SHOOTING_DIR - process shooting direction
-      
-      ; X += 1 to point to the animation timer
-      INX
-      JMP EnemyProcessAnimation
-
-    ; enemy should shoot.
-    ; first do X += 1 to point to the shooting frequency, load it, do X -= 1 and store it to reset the shooting timer.
-    ; then do X += 2 to point to the shooting direction.
-    .enemyShoot:
-      INX
-      LDA enemies, x
-      DEX
-      STA enemies, x
-      INX
-      INX
-    
-      ; TODO_SHOOTING_DIR - process shooting direction
-      
-      ; X += 1 to point to the animation timer
-      INX
-    
-    ; check if we're even rendering the enemy, don't shoot if not
-    .shootingEnemyOnScreen:
-      LDA enemyOnScreen
-      BEQ EnemyProcessAnimation
-    
-    ; enemyGunX and enemyGunY are currently set to gun offsets.
-    ; add genericX and genericY to them to get the actual position to spawn the bullet.
-    ; when calculating enemyGunX, make sure the gun is on screen.    
-    .calculateGunX:    
-      LDA genericOffScreen
-      BEQ .calculateGunXEnemyOnScreen
-      
-      ; enemy is off screen
-      ;  - if gunXOff < 0 (BMI), don't spawn the bullet
-      ;  - otherwise, make sure carry is set (i.e. overflow happens and gun is on screen)
-      .calculateGunXEnemyOffScreen:
-        LDA enemyGunX
-        BMI EnemyProcessAnimation
-        
-      .addMakeSureCarrySet:
-        CLC
-        ADC genericX
-        BCC EnemyProcessAnimation
-        STA enemyGunX
-        JMP .calculateGunY
-      
-      ; enemy is on screen
-      ;  - if gunXOff < 0 (BMI), make sure carry is set (it's not set if e.g. genericX = 5 and gunXOff = -10 = F6, F6 + 5 = FB = -5)
-      ;  - otherwise, make sure carry is not set (i.e. overflow doesn't happen and gun stays on screen)
-      .calculateGunXEnemyOnScreen:
-        LDA enemyGunX
-        BMI .addMakeSureCarrySet
-        
-        .addMakeSureCarryNotSet:
-          CLC
-          ADC genericX
-          BCS EnemyProcessAnimation
-          STA enemyGunX
-            
-    ; calculating gun y is straightforward - make sure an enemy is never put high enough on the screen to shoot off screen
-    .calculateGunY:
-      LDA enemyGunY
-      CLC
-      ADC genericY
-      STA enemyGunY
-      
-    ; spawn enemy bullet using enemyGunX, enemyGunY, enemyOrientation, genericDirection:
-    ;   - enemyGunX, enemyGunY - point to spawn the bullet at
-    ;   - enemyOrientation - first bit set means shoot horizontally, else shoot vertically (see comment in .calculateDiffs)
-    ;   - genericDirection - 0 means shoot right or down, 1 means shoot left or up (depending on orientation)
-    SpawnEnemyBullet:
-      
-      ; first find a free slot, look for BULLET_S_NOT_EXIST == 0
-      LDY #ENEMY_BULLET_LAST
-      .findFreeSlotLoop:    
-        LDA bullets, y
-        BEQ .freeSlotFound
-        CPY #ENEMY_BULLET_FIRST
-        BEQ EnemyProcessAnimation
-        DEY
-        DEY
-        DEY
-        DEY
-        JMP .findFreeSlotLoop
-
-      ; free slot found, Y points to it
-      ; memory layout: state, direction, x, y
-      .freeSlotFound:
-        
-        ; state = just spawned
-        .setBulletState:
-          LDA #BULLET_S_JUST_SPAWNED
-          STA bullets, y
-          
-        ; get bullet direction based on enemyOrientation and genericDirection (see comment above)
-        .setBulletDirection:
-          INY
-          LDA enemyOrientation
-          AND #%00000001
-          BEQ .bulletDirectionVertical
-          
-          .bulletDirectionHorizontal:
-            LDA genericDirection
-            BEQ .bulletDirectionRight
-            
-            .bulletDirectionLeft:
-              LDA #GENERIC_DIR_LEFT
-              JMP .setBulletDirectionValue
-          
-            .bulletDirectionRight:
-              LDA #GENERIC_DIR_RIGHT
-              JMP .setBulletDirectionValue
-          
-          .bulletDirectionVertical:
-            LDA genericDirection
-            BEQ .bulletDirectionDown
-            
-            .bulletDirectionUp:
-              LDA #GENERIC_DIR_UP
-              JMP .setBulletDirectionValue
-            
-            .bulletDirectionDown:
-              LDA #GENERIC_DIR_DOWN
-          
-          ; A = direction when we get here
-          .setBulletDirectionValue:
-            STA bullets, y
-        
-        ; set x position
-        .setBulletX:
-          INY
-          LDA enemyGunX
-          STA bullets, y
-
-        ; set y position
-        .setBulletY:
-          INY
-          LDA enemyGunY
-          STA bullets, y          
+  ;; When we get here, we expect X to point to remaining life.
+  ;; X += 1 to point to the current shooting timer
+  ;; load it, if it's 0 it means the enemy doesn't shoot
+  ;; otherwise DEC the timer, if it's 0 the enemy should shoot
+  ;EnemyProcessShooting:
+  ;  INX
+  ;  LDA enemies, x
+  ;  BEQ .enemyDoesntShoot
+  ;  DEC enemies, x
+  ;  BEQ .enemyShoot
+  ;  
+  ;  ; enemy doesn't shoot - X += 2 to point to the animation timer
+  ;  .enemyDoesntShoot:
+  ;    INX
+  ;    INX
+  ;    JMP EnemyProcessAnimation
+  ;
+  ;  ; enemy should shoot.
+  ;  ; first do X += 1 to point to the shooting frequency, load it, do X -= 1 and store it to reset the shooting timer.
+  ;  ; then do X += 2 to point to the animation timer.
+  ;  .enemyShoot:
+  ;    INX
+  ;    LDA enemies, x
+  ;    DEX
+  ;    STA enemies, x
+  ;    INX
+  ;    INX
+  ;  
+  ;  ; check if we're even rendering the enemy, don't shoot if not
+  ;  .shootingEnemyOnScreen:
+  ;    LDA enemyOnScreen
+  ;    BEQ EnemyProcessAnimation
+  ;  
+  ;  ; enemyGunX and enemyGunY are currently set to gun offsets.
+  ;  ; add genericX and genericY to them to get the actual position to spawn the bullet.
+  ;  ; when calculating enemyGunX, make sure the gun is on screen.    
+  ;  .calculateGunX:    
+  ;    LDA genericOffScreen
+  ;    BEQ .calculateGunXEnemyOnScreen
+  ;    
+  ;    ; enemy is off screen
+  ;    ;  - if gunXOff < 0 (BMI), don't spawn the bullet
+  ;    ;  - otherwise, make sure carry is set (i.e. overflow happens and gun is on screen)
+  ;    .calculateGunXEnemyOffScreen:
+  ;      LDA enemyGunX
+  ;      BMI EnemyProcessAnimation
+  ;      
+  ;    .addMakeSureCarrySet:
+  ;      CLC
+  ;      ADC genericX
+  ;      BCC EnemyProcessAnimation
+  ;      STA enemyGunX
+  ;      JMP .calculateGunY
+  ;    
+  ;    ; enemy is on screen
+  ;    ;  - if gunXOff < 0 (BMI), make sure carry is set (it's not set if e.g. genericX = 5 and gunXOff = -10 = F6, F6 + 5 = FB = -5)
+  ;    ;  - otherwise, make sure carry is not set (i.e. overflow doesn't happen and gun stays on screen)
+  ;    .calculateGunXEnemyOnScreen:
+  ;      LDA enemyGunX
+  ;      BMI .addMakeSureCarrySet
+  ;      
+  ;      .addMakeSureCarryNotSet:
+  ;        CLC
+  ;        ADC genericX
+  ;        BCS EnemyProcessAnimation
+  ;        STA enemyGunX
+  ;          
+  ;  ; calculating gun y is straightforward - make sure an enemy is never put high enough on the screen to shoot off screen
+  ;  .calculateGunY:
+  ;    LDA enemyGunY
+  ;    CLC
+  ;    ADC genericY
+  ;    STA enemyGunY
+  ;    
+  ;  ; spawn enemy bullet using enemyGunX, enemyGunY, enemyOrientation, enemyShootingDirection, genericDirection: TODO_SHOOTING_DIR update this
+  ;  ;   - enemyGunX, enemyGunY - point to spawn the bullet at
+  ;  ;   - enemyOrientation - first bit set means shoot horizontally, else shoot vertically (see comment in .calculateDiffs)
+  ;  ;   - genericDirection - 0 means shoot right or down, 1 means shoot left or up (depending on orientation)
+  ;  SpawnEnemyBullet:
+  ;    
+  ;    ; first find a free slot, look for BULLET_S_NOT_EXIST == 0
+  ;    LDY #ENEMY_BULLET_LAST
+  ;    .findFreeSlotLoop:    
+  ;      LDA bullets, y
+  ;      BEQ .freeSlotFound
+  ;      CPY #ENEMY_BULLET_FIRST
+  ;      BEQ EnemyProcessAnimation
+  ;      DEY
+  ;      DEY
+  ;      DEY
+  ;      DEY
+  ;      JMP .findFreeSlotLoop
+  ;
+  ;    ; free slot found, Y points to it
+  ;    ; memory layout: state, direction, x, y
+  ;    .freeSlotFound:
+  ;      
+  ;      ; state = just spawned
+  ;      .setBulletState:
+  ;        LDA #BULLET_S_JUST_SPAWNED
+  ;        STA bullets, y
+  ;        
+  ;      ; get bullet direction based on enemyOrientation and genericDirection (see comment above)
+  ;      .setBulletDirection:
+  ;        INY
+  ;        LDA enemyOrientation
+  ;        AND #%00000001
+  ;        BEQ .bulletDirectionVertical
+  ;        
+  ;        .bulletDirectionHorizontal:
+  ;          LDA genericDirection
+  ;          BEQ .bulletDirectionRight
+  ;          
+  ;          .bulletDirectionLeft:
+  ;            LDA #GENERIC_DIR_LEFT
+  ;            JMP .setBulletDirectionValue
+  ;        
+  ;          .bulletDirectionRight:
+  ;            LDA #GENERIC_DIR_RIGHT
+  ;            JMP .setBulletDirectionValue
+  ;        
+  ;        .bulletDirectionVertical:
+  ;          LDA genericDirection
+  ;          BEQ .bulletDirectionDown
+  ;          
+  ;          .bulletDirectionUp:
+  ;            LDA #GENERIC_DIR_UP
+  ;            JMP .setBulletDirectionValue
+  ;          
+  ;          .bulletDirectionDown:
+  ;            LDA #GENERIC_DIR_DOWN
+  ;        
+  ;        ; A = direction when we get here
+  ;        .setBulletDirectionValue:
+  ;          STA bullets, y
+  ;      
+  ;      ; set x position
+  ;      .setBulletX:
+  ;        INY
+  ;        LDA enemyGunX
+  ;        STA bullets, y
+  ;
+  ;      ; set y position
+  ;      .setBulletY:
+  ;        INY
+  ;        LDA enemyGunY
+  ;        STA bullets, y          
         
   ; when we get here, X points to the animation timer.
   ; next byte is the current animation frame.
@@ -1070,6 +1072,7 @@ UpdateExplodingEnemy:
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_enemy_in_memory_format                           ;
+;   depends_on_enemy_consts_format                              ;
 ;****************************************************************
 
 UpdateEnemies:
@@ -1129,12 +1132,12 @@ UpdateEnemies:
           STA destroyedEnemies, y
           
         ; X += 1 to point at the consts pointer
-        ; load the pointer then do += 13 to point to the consts data. store in Y.
+        ; load the pointer then do += 14 to point to the explosion offsets. store in Y.
         .loadConstsPointer:
           INX
           LDA enemies, x
           CLC
-          ADC #$0D
+          ADC #$0E
           TAY
           
         ; X += 8 to point to the X position, update x using x off from consts.
@@ -1399,7 +1402,7 @@ LoadEnemies:
     ; we can use X here as it's not used until .getSlot.
     ; load the right byte for the enemy, then AND it with the mask.
     ; result == 1 means the enemy has been destroyed - skip the enemy.
-    ; we must do Y += 13 though to make sure we point to the right place.
+    ; we must do Y += 14 though to make sure we point to the right place.
     .checkId:
       LDX c
       LDA destroyedEnemies, x
@@ -1407,7 +1410,7 @@ LoadEnemies:
       BEQ .getSlot
       TYA
       CLC
-      ADC #$0D
+      ADC #$0E ; = 14, update when lvl format changes
       TAY
       JMP .loadEnemiesLoopCondition
     
@@ -1433,9 +1436,9 @@ LoadEnemies:
       STA enemies, x
     
     ; next 13 bytes are the sane in both definitions:
-    ; pointer, screen, should flip, speed, distance, direction, distance left, flip, x, y, life, shooting timer, shooting freq
+    ; pointer, screen, should flip, speed, max distance, flip, direction, distance left, x, y, life, shooting timer, shooting freq
     ; c will be the loop pointer (no longer needed), copy the 14 bytes incrementing Y and X in each loop
-    LDA #$0D ; = 13
+    LDA #$0D ; = 13, update when lvl format changes (?)
     STA c
     .copyLoop:
       INY
