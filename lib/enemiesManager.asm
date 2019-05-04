@@ -655,159 +655,152 @@ UpdateActiveEnemy:
           BEQ EnemyProcessShooting
           JMP .collisionWithBulletsLoop
         
-   EnemyProcessShooting: 
+  ; When we get here, we expect X to point to remaining life.
+  ; X += 1 to point to the current shooting timer
+  ; load it, if it's 0 it means the enemy doesn't shoot
+  ; otherwise DEC the timer, if it's 0 the enemy should shoot
+  EnemyProcessShooting:
     INX
-    INX
-    INX
-    JMP EnemyProcessAnimation
+    LDA enemies, x
+    BEQ .enemyDoesntShoot
+    DEC enemies, x
+    BEQ .enemyShoot
     
-  ;; When we get here, we expect X to point to remaining life.
-  ;; X += 1 to point to the current shooting timer
-  ;; load it, if it's 0 it means the enemy doesn't shoot
-  ;; otherwise DEC the timer, if it's 0 the enemy should shoot
-  ;EnemyProcessShooting:
-  ;  INX
-  ;  LDA enemies, x
-  ;  BEQ .enemyDoesntShoot
-  ;  DEC enemies, x
-  ;  BEQ .enemyShoot
-  ;  
-  ;  ; enemy doesn't shoot - X += 2 to point to the animation timer
-  ;  .enemyDoesntShoot:
-  ;    INX
-  ;    INX
-  ;    JMP EnemyProcessAnimation
-  ;
-  ;  ; enemy should shoot.
-  ;  ; first do X += 1 to point to the shooting frequency, load it, do X -= 1 and store it to reset the shooting timer.
-  ;  ; then do X += 2 to point to the animation timer.
-  ;  .enemyShoot:
-  ;    INX
-  ;    LDA enemies, x
-  ;    DEX
-  ;    STA enemies, x
-  ;    INX
-  ;    INX
-  ;  
-  ;  ; check if we're even rendering the enemy, don't shoot if not
-  ;  .shootingEnemyOnScreen:
-  ;    LDA enemyOnScreen
-  ;    BEQ EnemyProcessAnimation
-  ;  
-  ;  ; enemyGunX and enemyGunY are currently set to gun offsets.
-  ;  ; add genericX and genericY to them to get the actual position to spawn the bullet.
-  ;  ; when calculating enemyGunX, make sure the gun is on screen.    
-  ;  .calculateGunX:    
-  ;    LDA genericOffScreen
-  ;    BEQ .calculateGunXEnemyOnScreen
-  ;    
-  ;    ; enemy is off screen
-  ;    ;  - if gunXOff < 0 (BMI), don't spawn the bullet
-  ;    ;  - otherwise, make sure carry is set (i.e. overflow happens and gun is on screen)
-  ;    .calculateGunXEnemyOffScreen:
-  ;      LDA enemyGunX
-  ;      BMI EnemyProcessAnimation
-  ;      
-  ;    .addMakeSureCarrySet:
-  ;      CLC
-  ;      ADC genericX
-  ;      BCC EnemyProcessAnimation
-  ;      STA enemyGunX
-  ;      JMP .calculateGunY
-  ;    
-  ;    ; enemy is on screen
-  ;    ;  - if gunXOff < 0 (BMI), make sure carry is set (it's not set if e.g. genericX = 5 and gunXOff = -10 = F6, F6 + 5 = FB = -5)
-  ;    ;  - otherwise, make sure carry is not set (i.e. overflow doesn't happen and gun stays on screen)
-  ;    .calculateGunXEnemyOnScreen:
-  ;      LDA enemyGunX
-  ;      BMI .addMakeSureCarrySet
-  ;      
-  ;      .addMakeSureCarryNotSet:
-  ;        CLC
-  ;        ADC genericX
-  ;        BCS EnemyProcessAnimation
-  ;        STA enemyGunX
-  ;          
-  ;  ; calculating gun y is straightforward - make sure an enemy is never put high enough on the screen to shoot off screen
-  ;  .calculateGunY:
-  ;    LDA enemyGunY
-  ;    CLC
-  ;    ADC genericY
-  ;    STA enemyGunY
-  ;    
-  ;  ; spawn enemy bullet using enemyGunX, enemyGunY, enemyOrientation, enemyShootingDirection, genericDirection: TODO_SHOOTING_DIR update this
-  ;  ;   - enemyGunX, enemyGunY - point to spawn the bullet at
-  ;  ;   - enemyOrientation - first bit set means shoot horizontally, else shoot vertically (see comment in .calculateDiffs)
-  ;  ;   - genericDirection - 0 means shoot right or down, 1 means shoot left or up (depending on orientation)
-  ;  SpawnEnemyBullet:
-  ;    
-  ;    ; first find a free slot, look for BULLET_S_NOT_EXIST == 0
-  ;    LDY #ENEMY_BULLET_LAST
-  ;    .findFreeSlotLoop:    
-  ;      LDA bullets, y
-  ;      BEQ .freeSlotFound
-  ;      CPY #ENEMY_BULLET_FIRST
-  ;      BEQ EnemyProcessAnimation
-  ;      DEY
-  ;      DEY
-  ;      DEY
-  ;      DEY
-  ;      JMP .findFreeSlotLoop
-  ;
-  ;    ; free slot found, Y points to it
-  ;    ; memory layout: state, direction, x, y
-  ;    .freeSlotFound:
-  ;      
-  ;      ; state = just spawned
-  ;      .setBulletState:
-  ;        LDA #BULLET_S_JUST_SPAWNED
-  ;        STA bullets, y
-  ;        
-  ;      ; get bullet direction based on enemyOrientation and genericDirection (see comment above)
-  ;      .setBulletDirection:
-  ;        INY
-  ;        LDA enemyOrientation
-  ;        AND #%00000001
-  ;        BEQ .bulletDirectionVertical
-  ;        
-  ;        .bulletDirectionHorizontal:
-  ;          LDA genericDirection
-  ;          BEQ .bulletDirectionRight
-  ;          
-  ;          .bulletDirectionLeft:
-  ;            LDA #GENERIC_DIR_LEFT
-  ;            JMP .setBulletDirectionValue
-  ;        
-  ;          .bulletDirectionRight:
-  ;            LDA #GENERIC_DIR_RIGHT
-  ;            JMP .setBulletDirectionValue
-  ;        
-  ;        .bulletDirectionVertical:
-  ;          LDA genericDirection
-  ;          BEQ .bulletDirectionDown
-  ;          
-  ;          .bulletDirectionUp:
-  ;            LDA #GENERIC_DIR_UP
-  ;            JMP .setBulletDirectionValue
-  ;          
-  ;          .bulletDirectionDown:
-  ;            LDA #GENERIC_DIR_DOWN
-  ;        
-  ;        ; A = direction when we get here
-  ;        .setBulletDirectionValue:
-  ;          STA bullets, y
-  ;      
-  ;      ; set x position
-  ;      .setBulletX:
-  ;        INY
-  ;        LDA enemyGunX
-  ;        STA bullets, y
-  ;
-  ;      ; set y position
-  ;      .setBulletY:
-  ;        INY
-  ;        LDA enemyGunY
-  ;        STA bullets, y          
+    ; enemy doesn't shoot - X += 2 to point to the animation timer
+    .enemyDoesntShoot:
+      INX
+      INX
+      JMP EnemyProcessAnimation
+  
+    ; enemy should shoot.
+    ; first do X += 1 to point to the shooting frequency, load it, do X -= 1 and store it to reset the shooting timer.
+    ; then do X += 2 to point to the animation timer.
+    .enemyShoot:
+      INX
+      LDA enemies, x
+      DEX
+      STA enemies, x
+      INX
+      INX
+    
+    ; check if we're even rendering the enemy, don't shoot if not
+    .shootingEnemyOnScreen:
+      LDA enemyOnScreen
+      BEQ EnemyProcessAnimation
+    
+    ; enemyGunX and enemyGunY are currently set to gun offsets.
+    ; add genericX and genericY to them to get the actual position to spawn the bullet.
+    ; when calculating enemyGunX, make sure the gun is on screen.    
+    .calculateGunX:    
+      LDA genericOffScreen
+      BEQ .calculateGunXEnemyOnScreen
+      
+      ; enemy is off screen
+      ;  - if gunXOff < 0 (BMI), don't spawn the bullet
+      ;  - otherwise, make sure carry is set (i.e. overflow happens and gun is on screen)
+      .calculateGunXEnemyOffScreen:
+        LDA enemyGunX
+        BMI EnemyProcessAnimation
+        
+      .addMakeSureCarrySet:
+        CLC
+        ADC genericX
+        BCC EnemyProcessAnimation
+        STA enemyGunX
+        JMP .calculateGunY
+      
+      ; enemy is on screen
+      ;  - if gunXOff < 0 (BMI), make sure carry is set (it's not set if e.g. genericX = 5 and gunXOff = -10 = F6, F6 + 5 = FB = -5)
+      ;  - otherwise, make sure carry is not set (i.e. overflow doesn't happen and gun stays on screen)
+      .calculateGunXEnemyOnScreen:
+        LDA enemyGunX
+        BMI .addMakeSureCarrySet
+        
+        .addMakeSureCarryNotSet:
+          CLC
+          ADC genericX
+          BCS EnemyProcessAnimation
+          STA enemyGunX
+            
+    ; calculating gun y is straightforward - make sure an enemy is never put high enough on the screen to shoot off screen
+    .calculateGunY:
+      LDA enemyGunY
+      CLC
+      ADC genericY
+      STA enemyGunY
+      
+    ; spawn enemy bullet using enemyGunX, enemyGunY, enemyShootingDirection, genericDirection: 
+    ;   - enemyGunX, enemyGunY - point to spawn the bullet at
+    ;   - enemyShootingDirection - a SHOOTING_DIR_* const value
+    ;   - genericDirection - current flip (0 means shoot right or down, 1 means shoot left or up)
+    SpawnEnemyBullet:
+      
+      ; first find a free slot, look for BULLET_S_NOT_EXIST == 0
+      LDY #ENEMY_BULLET_LAST
+      .findFreeSlotLoop:    
+        LDA bullets, y
+        BEQ .freeSlotFound
+        CPY #ENEMY_BULLET_FIRST
+        BEQ EnemyProcessAnimation
+        DEY
+        DEY
+        DEY
+        DEY
+        JMP .findFreeSlotLoop
+  
+      ; free slot found, Y points to it
+      ; memory layout: state, direction, x, y
+      .freeSlotFound:
+        
+        ; state = just spawned
+        .setBulletState:
+          LDA #BULLET_S_JUST_SPAWNED
+          STA bullets, y
+          
+        ; get bullet direction based on enemyOrientation and genericDirection (see comment above)
+        .setBulletDirection:
+          INY
+          LDA enemyShootingDirection
+          BEQ .bulletDirectionVertical ; SHOOT_DIR_VERT = 0
+          
+          .bulletDirectionHorizontal:
+            LDA genericDirection
+            BEQ .bulletDirectionRight
+            
+            .bulletDirectionLeft:
+              LDA #GENERIC_DIR_LEFT
+              JMP .setBulletDirectionValue
+          
+            .bulletDirectionRight:
+              LDA #GENERIC_DIR_RIGHT
+              JMP .setBulletDirectionValue
+          
+          .bulletDirectionVertical:
+            LDA genericDirection
+            BEQ .bulletDirectionDown
+            
+            .bulletDirectionUp:
+              LDA #GENERIC_DIR_UP
+              JMP .setBulletDirectionValue
+            
+            .bulletDirectionDown:
+              LDA #GENERIC_DIR_DOWN
+          
+          ; A = direction when we get here
+          .setBulletDirectionValue:
+            STA bullets, y
+        
+        ; set x position
+        .setBulletX:
+          INY
+          LDA enemyGunX
+          STA bullets, y
+  
+        ; set y position
+        .setBulletY:
+          INY
+          LDA enemyGunY
+          STA bullets, y          
         
   ; when we get here, X points to the animation timer.
   ; next byte is the current animation frame.
