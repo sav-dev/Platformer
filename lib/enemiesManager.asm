@@ -5,9 +5,9 @@
 
 ;
 ; - enemies in level data the following format:
-;   - pointer to next screen (from here): (n x 16) + 3 (1 byte)
+;   - pointer to next screen (from here): (n x 18) + 3 (1 byte)
 ;   - number of enemies (1 byte)
-;   - n times the enemy data (16 bytes)
+;   - n times the enemy data (18 bytes)
 ;        - 1st byte of id - pointer to the right variable (1 byte)
 ;        - 2nd byte of id - a mask in the right variable (1 byte) 
 ;        - slot to put enemy in (1 byte)
@@ -15,18 +15,20 @@
 ;        - screen the enemy is on (1 byte)
 ;        - should flip (1 byte)
 ;        - movement speed (1 byte)
+;        - special movement type (1 byte)
 ;        - max movement distance (1 byte)
 ;        - initial flip (1 byte)
 ;        - initial movement direction (1 byte)
 ;        - initial movement left (1 byte)            
+;        - initial special movement var (1 byte)
 ;        - x position (1 byte)
 ;        - y position (1 byte)            
 ;        - initial life (1 byte)
 ;        - shooting frequency initial (1 byte)
 ;        - shooting frequency (1 byte)
-;   - pointer to the previous screen (from here): (n x 16) + 2 (1 byte)
+;   - pointer to the previous screen (from here): (n x 18) + 2 (1 byte)
 ;
-; - enemies in memory in the following format (18 bytes):
+; - enemies in memory in the following format (20 bytes):
 ;    - state (1 byte)
 ;    - 1st byte of id - pointer to the right variable (1 byte)
 ;    - 2nd byte of id - a mask in the right variable (1 byte) 
@@ -34,10 +36,12 @@
 ;    - screen the enemy is on (1 byte)
 ;    - should flip (1 byte)
 ;    - movement speed (1 byte)
+;    - special movement type (1 byte)
 ;    - max movement distance (1 byte)
 ;    - current flip (1 byte)
 ;    - movement direction (1 byte)
 ;    - movement left (1 byte)
+;    - special movement var (1 byte)
 ;    - x position (1 byte)
 ;    - y position (1 byte)
 ;    - remaining life (1 byte)  
@@ -48,6 +52,7 @@
 ;
 ; tags: depends_on_enemy_in_memory_format, depends_on_enemy_in_level_data_format
 ; POI - memory save - some of the variables could be combined
+; POI - ROM save - some of the fields in lvl data can be removed (e.g. init. special var)
 ;
 ; todo: change pointer to const. data to two bytes if we add too many enemies
 
@@ -126,13 +131,15 @@ UpdateActiveEnemy:
     STA enemyScreen
     INX
     
-  ; the next 8 bytes are:
+  ; the next 10 bytes are:
   ;  - should flip (currently pointed to by X)
   ;  - movement speed 
+  ;  - special movement type
   ;  - max movement distance
   ;  - current flip
-  ;  - movement left
   ;  - movement direction
+  ;  - movement left
+  ;  - special movement var
   ;  - x position
   ;  - y position
   ;
@@ -164,6 +171,9 @@ UpdateActiveEnemy:
     INX
     LDA enemies, x
     STA enemySpeed
+        
+    ; todo for now skip special movement type
+    INX
         
     ; do X += 1 to point to the max distance, then load it and cache it
     INX
@@ -245,6 +255,10 @@ UpdateActiveEnemy:
     ; once we get here, x is still pointing to movement left, but everything has been updated.
     ; based on enemyDirection update genericDX or genericDY
     .calculateDiffs:
+    
+      ; todo for now skip special movement var
+      INX
+    
       LDA enemyDirection
       BEQ .movingLeft ; GENERIC_DIR_LEFT = 0
       CMP #GENERIC_DIR_NONE
@@ -277,7 +291,7 @@ UpdateActiveEnemy:
         SBC enemySpeed
         STA genericDX        
           
-    ; once we get here, x is still pointing to movement direction, and diffs are set.
+    ; once we get here, x is still pointing to movement left, and diffs are set. todo update
     ; do X += 1 and apply DX, caching the result in genericX
     ; then do X += 1 and apply DY, caching the result in genericY
     ; finally do a X += 1 to point the register to the next byte
@@ -813,6 +827,8 @@ UpdateActiveEnemy:
   ; but makes sure we don't have to load consts for enemies off screen.
   ; if we want to process animation for enemies off screen,
   ; the skip in .enemyOffScreen must be updated.
+  ;
+  ; todo: don't process animation if enemy doesn't move
   EnemyProcessAnimation:
     LDA enemyOnScreen
     BEQ UpdateActiveEnemyDone
@@ -933,11 +949,11 @@ UpdateExplodingEnemy:
     LDA enemies, x
     STA enemyScreen
   
-  ; X += 7 to point to the X position, load the X position and put it in genericX
+  ; X += 9 to point to the X position, load the X position and put it in genericX
   .loadX:
     TXA
     CLC
-    ADC #$07
+    ADC #$09
     TAX
     LDA enemies, x
     STA genericX
@@ -1133,12 +1149,12 @@ UpdateEnemies:
           ADC #$0E
           TAY
           
-        ; X += 8 to point to the X position, update x using x off from consts.
+        ; X += 10 to point to the X position, update x using x off from consts.
         ; X += 1 to point to the Y position, Y += 1, update y using y off from consts
         .updatePosition:
           TXA
           CLC
-          ADC #$08
+          ADC #$0A
           TAX
           LDA enemies, X
           CLC
@@ -1403,7 +1419,7 @@ LoadEnemies:
       BEQ .getSlot
       TYA
       CLC
-      ADC #$0E ; = 14, update when lvl format changes
+      ADC #$10 ; = 16, update when lvl format changes
       TAY
       JMP .loadEnemiesLoopCondition
     
@@ -1428,10 +1444,10 @@ LoadEnemies:
       LDA d
       STA enemies, x
     
-    ; next 13 bytes are the sane in both definitions:
-    ; pointer, screen, should flip, speed, max distance, flip, direction, distance left, x, y, life, shooting timer, shooting freq
+    ; next 15 bytes are the same in both definitions:
+    ; pointer, screen, should flip, speed, special mov, max distance, flip, direction, distance left, special mov var, x, y, life, shooting timer, shooting freq
     ; c will be the loop pointer (no longer needed), copy the 14 bytes incrementing Y and X in each loop
-    LDA #$0D ; = 13, update when lvl format changes (?)
+    LDA #$0F ; = 15, update when lvl format changes (usually)
     STA c
     .copyLoop:
       INY

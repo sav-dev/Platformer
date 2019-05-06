@@ -43,14 +43,14 @@ rightTiles        .rs 128   ; last 128 bytes of the tile dictionary
  .rsset $0400
  
 ; depends_on_enemy_in_memory_format
-; size of enemies must be "max enemies loaded" (currently 10) * "enemy size" (currently 18)
+; size of enemies must be "max enemies loaded" (currently 10) * "enemy size" (currently 20)
 ; size of destroyedEnemies must be "max enemies in a level" (currently 128) / 8
 
-enemies           .rs 180
+enemies           .rs 200
 destroyedEnemies  .rs 16
 
 ENEMIES_COUNT           = $0A ; = 10
-ENEMY_SIZE              = $12 ; = 18
+ENEMY_SIZE              = $14 ; = 20
 MAX_ENEMIES             = $80 ; = 128
 
 ; depends_on_elevator_in_memory_format
@@ -61,15 +61,9 @@ elevators         .rs 48
 ELEVATORS_COUNT         = $06 ; = 6
 ELEVATOR_SIZE           = $08 ; = 8  
 
-TOTAL_EN_EL_DATA_SIZE   = (ENEMY_SIZE * ENEMIES_COUNT) + (MAX_ENEMIES / $08) + (ELEVATORS_COUNT * ELEVATOR_SIZE)
-
-; 12 bytes free here
-
 ;****************************************************************
 ; Bullets                                                       ;
 ;****************************************************************
-
- .rsset $0500
 
 ; size of bullets must be 4 * PLAYER_BULLET_LIMIT + 4 (currently 5) * ENEMY_BULLET_LIMIT (currently 10)
  
@@ -78,11 +72,13 @@ bullets           .rs 60
 PLAYER_BULLET_LIMIT     = $05 ; = 5
 ENEMIES_BULLET_LIMIT    = $0A ; = 10
 
+BYTES_TO_CLEAR_IN_500   = $43 ; total size of arrays - 256 - 1
+
 ;****************************************************************
 ; Other variables - free up to $0700                            ;
 ;****************************************************************
 
- .rsset $0560
+ .rsset $0544 ; 444 bytes available
  
 ;****************************************************************
 ; Game state                                                    ;

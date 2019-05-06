@@ -233,18 +233,20 @@ ENEMY_ID_1                = $01 + ENEMY_STATE
 ENEMY_ID_2                = $01 + ENEMY_ID_1              
 ENEMY_POINTER             = $01 + ENEMY_ID_2              
 ENEMY_SCREEN              = $01 + ENEMY_POINTER           
-ENEMY_SHOULD_FLIP         = $01 + ENEMY_SCREEN
-ENEMY_SPEED               = $01 + ENEMY_SHOULD_FLIP            
-ENEMY_MAX_DISTANCE        = $01 + ENEMY_SPEED             
-ENEMY_MOVEMENT_DIRECTION  = $01 + ENEMY_MAX_DISTANCE      
+ENEMY_SHOULD_FLIP         = $01 + ENEMY_SCREEN            
+ENEMY_SPEED               = $01 + ENEMY_SHOULD_FLIP       
+ENEMY_SPECIAL_MOV_TYPE    = $01 + ENEMY_SPEED             
+ENEMY_MAX_DISTANCE        = $01 + ENEMY_SPECIAL_MOV_TYPE  
+ENEMY_CURRENT_FLIP        = $01 + ENEMY_MAX_DISTANCE      
+ENEMY_MOVEMENT_DIRECTION  = $01 + ENEMY_CURRENT_FLIP      
 ENEMY_CURRENT_DISTANCE    = $01 + ENEMY_MOVEMENT_DIRECTION
-ENEMY_FLIP                = $01 + ENEMY_CURRENT_DISTANCE  
-ENEMY_X                   = $01 + ENEMY_FLIP              
+ENEMY_SPECIAL_MOV_VAR     = $01 + ENEMY_CURRENT_DISTANCE  
+ENEMY_X                   = $01 + ENEMY_SPECIAL_MOV_VAR   
 ENEMY_Y                   = $01 + ENEMY_X                 
 ENEMY_LIFE                = $01 + ENEMY_Y                 
-ENEMY_SHOOTING_FREQ       = $01 + ENEMY_LIFE
-ENEMY_SHOOTING_TIMER      = $01 + ENEMY_SHOOTING_FREQ
-ENEMY_ANIMATION_TIMER     = $01 + ENEMY_SHOOTING_TIMER
+ENEMY_SHOOTING_FREQ       = $01 + ENEMY_LIFE              
+ENEMY_SHOOTING_TIMER      = $01 + ENEMY_SHOOTING_FREQ     
+ENEMY_ANIMATION_TIMER     = $01 + ENEMY_SHOOTING_TIMER    
 ENEMY_ANIMATION_FRAME     = $01 + ENEMY_ANIMATION_TIMER   
 
 AFTER_LAST_ENEMY          = ENEMY_SIZE * ENEMIES_COUNT 
@@ -259,6 +261,13 @@ ENEMY_STATE_HIT         = $0A
 ; see comment in EnemiesManager .calculateDiffs
 ENEMY_MOVE_HORIZONTAL   = $05
 ENEMY_MOVE_VERTICAL     = $06
+
+SPECIAL_MOV_NONE        = $00
+SPECIAL_MOV_STOP15      = $01
+SPECIAL_MOV_STOP30      = $02
+SPECIAL_MOV_STOP60      = $03
+SPECIAL_MOV_SINUS8      = $0A
+SPECIAL_MOV_SINUS16     = $0B
 
 ;****************************************************************
 ; Elevators                                                     ;

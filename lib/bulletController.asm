@@ -514,7 +514,7 @@ UpdateBullets:
       ; collision with elevator detected.
       ; if bullet has just been spawned, clear it.
       ; otherwise explode the bullet.
-      ; todo - move the bullet? not easy with moving elevators
+      ; todo (???) - move the bullet? not easy with moving elevators
       .collisionWithElevator:
         LDA genericFrame
         CMP #BULLET_S_JUST_SPAWNED

@@ -1,5 +1,0 @@
-Todo:
-----------
-
- - Tweak player shooting cooldown
- - Build a few playable levels

@@ -481,7 +481,7 @@ SingleElevatorCollision:
         CLC
         ADC ElevatorWidth, y
         BCC .noCollision
-        ; todo uncomment this? otherwise bullets may hit 'nothing'
+        ; todo (???) uncomment this? otherwise bullets may hit 'nothing'
         ; CMP #SPRITE_DIMENSION
         ; BCC .noCollision
         STA ax2

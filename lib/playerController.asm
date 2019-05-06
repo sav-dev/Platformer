@@ -1150,7 +1150,7 @@ ProcessElevatorVerticalColl:
       LDA b
       BEQ .collisionBottom
       
-      ; todo: issue - if player is standing on the ground, DY will be 4 and this won't work
+      ; todo (not really?): issue - if player is standing on the ground, DY will be 4 and this won't work
       ; we could check for platform collisions first
       ; however, a case where player is standing on the ground and collides with elevator moving down should not happen
       

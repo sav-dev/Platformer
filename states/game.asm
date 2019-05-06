@@ -119,25 +119,26 @@ LoadGame:
  
   .clearMemory:                   ; clear all loaded enemies, elevators and bullets data
   
-    .clearBullets:                ; clear bullets
-      LDX #TOTAL_BULLET_VAR_SIZE    
-      .clearBulletLoop:
-        DEX
-        LDA #$00
-        STA bullets, x
-        TXA
-        BNE .clearBulletLoop
-    .clearBulletsDone:
-    
-    .clearEnemiesAndElevators:    ; clear all enemies and elevators data
-      LDX #TOTAL_EN_EL_DATA_SIZE    
-      .clearEnemyElevatorDataLoop:
-        DEX
+    .clearArrays:                 ; clear bullets, enemies and elevators data
+      LDX #$FF
+      .clear400Loop:
         LDA #$00
         STA $0400, x
         TXA
-        BNE .clearEnemyElevatorDataLoop
-    .clearEnemiesAndElevatorsDone:
+        BEQ .clear400LoopDone        
+        DEX
+      .clear400LoopDone:
+        
+      LDX #BYTES_TO_CLEAR_IN_500
+      .clear500Loop:
+        LDA #$00
+        STA $0500, x
+        TXA
+        BEQ .clear500LoopDone
+        DEX
+      .clear500LoopDone:
+      
+    .clearArraysDone:
     
     .clearLevelBeaten:            ; clear the level beat flag
       LDA #$00
