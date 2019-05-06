@@ -961,6 +961,7 @@
       <Y>192</Y>
       <MovementType>Horizontal</MovementType>
       <Direction>Right</Direction>
+      <SpecialMovement>None</SpecialMovement>
       <Speed>3</Speed>
       <ShouldFlip>false</ShouldFlip>
       <MinPosition>96</MinPosition>
@@ -975,6 +976,7 @@
       <Y>128</Y>
       <MovementType>None</MovementType>
       <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
       <Speed>0</Speed>
       <ShouldFlip>false</ShouldFlip>
       <MinPosition>0</MinPosition>
@@ -989,6 +991,7 @@
       <Y>128</Y>
       <MovementType>None</MovementType>
       <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
       <Speed>0</Speed>
       <ShouldFlip>false</ShouldFlip>
       <MinPosition>0</MinPosition>
@@ -1003,6 +1006,7 @@
       <Y>128</Y>
       <MovementType>None</MovementType>
       <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
       <Speed>0</Speed>
       <ShouldFlip>false</ShouldFlip>
       <MinPosition>0</MinPosition>
@@ -1017,6 +1021,7 @@
       <Y>128</Y>
       <MovementType>None</MovementType>
       <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
       <Speed>0</Speed>
       <ShouldFlip>false</ShouldFlip>
       <MinPosition>0</MinPosition>
@@ -1031,6 +1036,7 @@
       <Y>192</Y>
       <MovementType>Horizontal</MovementType>
       <Direction>Right</Direction>
+      <SpecialMovement>None</SpecialMovement>
       <Speed>3</Speed>
       <ShouldFlip>true</ShouldFlip>
       <MinPosition>608</MinPosition>
@@ -1045,6 +1051,7 @@
       <Y>165</Y>
       <MovementType>None</MovementType>
       <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
       <Speed>0</Speed>
       <ShouldFlip>false</ShouldFlip>
       <MinPosition>0</MinPosition>
@@ -1059,6 +1066,7 @@
       <Y>16</Y>
       <MovementType>Vertical</MovementType>
       <Direction>Down</Direction>
+      <SpecialMovement>None</SpecialMovement>
       <Speed>2</Speed>
       <ShouldFlip>false</ShouldFlip>
       <MinPosition>16</MinPosition>
@@ -1073,6 +1081,7 @@
       <Y>80</Y>
       <MovementType>Vertical</MovementType>
       <Direction>Up</Direction>
+      <SpecialMovement>None</SpecialMovement>
       <Speed>2</Speed>
       <ShouldFlip>false</ShouldFlip>
       <MinPosition>16</MinPosition>
@@ -1087,6 +1096,7 @@
       <Y>16</Y>
       <MovementType>Vertical</MovementType>
       <Direction>Down</Direction>
+      <SpecialMovement>None</SpecialMovement>
       <Speed>2</Speed>
       <ShouldFlip>false</ShouldFlip>
       <MinPosition>16</MinPosition>
@@ -1101,6 +1111,7 @@
       <Y>56</Y>
       <MovementType>Horizontal</MovementType>
       <Direction>Left</Direction>
+      <SpecialMovement>None</SpecialMovement>
       <Speed>1</Speed>
       <ShouldFlip>false</ShouldFlip>
       <MinPosition>768</MinPosition>
