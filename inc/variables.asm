@@ -72,7 +72,7 @@ bullets           .rs 60
 PLAYER_BULLET_LIMIT     = $05 ; = 5
 ENEMIES_BULLET_LIMIT    = $0A ; = 10
 
-BYTES_TO_CLEAR_IN_500   = $43 ; total size of arrays - 256 - 1
+BYTES_TO_CLEAR_IN_500   = $44 ; total size of arrays - 256
 
 ;****************************************************************
 ; Other variables - free up to $0700                            ;

@@ -119,25 +119,25 @@ LoadGame:
  
   .clearMemory:                   ; clear all loaded enemies, elevators and bullets data
   
-    .clearArrays:                 ; clear bullets, enemies and elevators data
-      LDX #$FF
-      .clear400Loop:
-        LDA #$00
-        STA $0400, x
-        TXA
-        BEQ .clear400LoopDone        
-        DEX
-      .clear400LoopDone:
-        
-      LDX #BYTES_TO_CLEAR_IN_500
-      .clear500Loop:
-        LDA #$00
-        STA $0500, x
-        TXA
-        BEQ .clear500LoopDone
-        DEX
-      .clear500LoopDone:
+    .clearArrays:                 ; clear bullets, enemies and elevators data - todo this doesn't work???
       
+      LDA #$00
+      LDX #$00
+      
+      .clear400Loop:        
+        STA $0400, x
+        INX
+        BNE .clear400Loop
+                  
+      ; A still contains 0
+      ; X reset to 0 by the loop above
+                  
+      .clear500Loop:
+        STA $0500, x
+        INX
+        CPX #BYTES_TO_CLEAR_IN_500
+        BNE .clear500Loop
+        
     .clearArraysDone:
     
     .clearLevelBeaten:            ; clear the level beat flag

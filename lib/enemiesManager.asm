@@ -1830,16 +1830,9 @@ sinus16Movement:
  
 SINUS8_LENGTH = $20 ; = 32
  
-sinus8Movement: ; todo update
+sinus8Movement:
   .byte $02
   .byte $02
-  .byte $02
-  .byte $01
-  .byte $01
-  .byte $01
-  .byte $01
-  .byte $01
-  .byte $01
   .byte $01
   .byte $01
   .byte $01
@@ -1847,15 +1840,7 @@ sinus8Movement: ; todo update
   .byte $00
   .byte $00
   .byte $00
-  .byte $00
-  .byte $00
-  .byte $00
-  .byte $FF
-  .byte $FF
-  .byte $FF
-  .byte $FF
-  .byte $FF
-  .byte $FF
+  .byte $00   
   .byte $FF
   .byte $FF
   .byte $FF
@@ -1863,3 +1848,18 @@ sinus8Movement: ; todo update
   .byte $FE
   .byte $FE
   .byte $FE
+  .byte $FE
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $02
+  .byte $02
