@@ -126,7 +126,8 @@ genericDY               .rs 1
 enemyScreen             .rs 1  ; screen the enemy is on
 
 enemyDirection          .rs 1  ; enemy direction
-
+enemySpecialMovType     .rs 1  ; enemy special movement type
+enemySpecialMovVar      .rs 1  ; enemy special movement var
 enemySpeed              .rs 1  ; enemy speed
 enemyMaxDistance        .rs 1  ; max distance
 

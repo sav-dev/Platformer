@@ -171,9 +171,11 @@ UpdateActiveEnemy:
     INX
     LDA enemies, x
     STA enemySpeed
-        
-    ; todo for now skip special movement type
+    
+    ; do X + 1 to point to the special movement type, load and cache it
     INX
+    LDA enemies, x
+    STA enemySpecialMovType
         
     ; do X += 1 to point to the max distance, then load it and cache it
     INX
@@ -252,12 +254,12 @@ UpdateActiveEnemy:
         INX
         INX
     
-    ; once we get here, x is still pointing to movement left, but everything has been updated.
-    ; based on enemyDirection update genericDX or genericDY
+    ; once we get here, x is still pointing to movement left.
+    ; based on enemyDirection update genericDX or genericDY.
     .calculateDiffs:
     
-      ; todo for now skip special movement var
-      INX
+      
+      INX 
     
       LDA enemyDirection
       BEQ .movingLeft ; GENERIC_DIR_LEFT = 0
@@ -828,7 +830,7 @@ UpdateActiveEnemy:
   ; if we want to process animation for enemies off screen,
   ; the skip in .enemyOffScreen must be updated.
   ;
-  ; todo: don't process animation if enemy doesn't move
+  ; todo: don't process animation if enemy doesn't move in shootable direction (todo: set shooting dir for all enemies, even those that don't shoot. rename?)
   EnemyProcessAnimation:
     LDA enemyOnScreen
     BEQ UpdateActiveEnemyDone
@@ -940,20 +942,20 @@ ProcessSpecialSpeed:
     
 UpdateExplodingEnemy:
   
-  ; X += 4 to point to the screen the enemy is on, load it and put it in enemyScren
+  ; X += ENEMY_SCREEN to point to the screen the enemy is on, load it and put it in enemyScren
   .loadScreen:
-    INX
-    INX
-    INX
-    INX
+    TXA
+    CLC
+    ADC #ENEMY_SCREEN
+    TAX
     LDA enemies, x
     STA enemyScreen
   
-  ; X += 9 to point to the X position, load the X position and put it in genericX
+  ; X += (ENEMY_X - ENEMY_SCREEN) to point to the X position, load the X position and put it in genericX
   .loadX:
     TXA
     CLC
-    ADC #$09
+    ADC #(ENEMY_X - ENEMY_SCREEN)
     TAX
     LDA enemies, x
     STA genericX
@@ -1014,12 +1016,12 @@ UpdateExplodingEnemy:
     LDA enemies, x
     STA genericY
       
-  ; X += 4 to point to the animation timer, decrement it, check if 0
+  ; X += (ENEMY_ANIMATION_TIMER - ENEMY_Y) to point to the animation timer, decrement it, check if 0
   .processAnimation:
-    INX
-    INX
-    INX
-    INX
+    TXA
+    CLC
+    ADC #(ENEMY_ANIMATION_TIMER - ENEMY_Y)
+    TAX
     DEC enemies, x
     BEQ .timerIs0
     
@@ -1141,20 +1143,20 @@ UpdateEnemies:
           STA destroyedEnemies, y
           
         ; X += 1 to point at the consts pointer
-        ; load the pointer then do += 14 to point to the explosion offsets. store in Y.
+        ; load the pointer then do += CONST_ENEMY_EXPL_OFF to point to the explosion offsets. store in Y.
         .loadConstsPointer:
           INX
           LDA enemies, x
           CLC
-          ADC #$0E
+          ADC #CONST_ENEMY_EXPL_OFF
           TAY
           
-        ; X += 10 to point to the X position, update x using x off from consts.
+        ; X += (ENEMY_X - ENEMY_POINTER) to point to the X position, update x using x off from consts.
         ; X += 1 to point to the Y position, Y += 1, update y using y off from consts
         .updatePosition:
           TXA
           CLC
-          ADC #$0A
+          ADC #(ENEMY_X - ENEMY_POINTER)
           TAX
           LDA enemies, X
           CLC
@@ -1167,13 +1169,13 @@ UpdateEnemies:
           ADC EnemyConsts, y
           STA enemies, X
           
-        ; X += 4 to point to the animation timer, set it to the const expl. speed.
+        ; X += (ENEMY_ANIMATION_TIMER - ENEMY_Y) to point to the animation timer, set it to the const expl. speed.
         ; X += 1 to point to the animation frame, set it to the const expl. frame count
         .updateAnimation:
-          INX
-          INX
-          INX
-          INX
+          TXA
+          CLC
+          ADC #(ENEMY_ANIMATION_TIMER - ENEMY_Y)
+          TAX
           LDA #EXPLOSION_ANIM_SPEED
           STA enemies, x
           INX
@@ -1411,7 +1413,7 @@ LoadEnemies:
     ; we can use X here as it's not used until .getSlot.
     ; load the right byte for the enemy, then AND it with the mask.
     ; result == 1 means the enemy has been destroyed - skip the enemy.
-    ; we must do Y += 14 though to make sure we point to the right place.
+    ; we must do Y += (LVL_ENEMY_LAST - LVL_ENEMY_ID_2) though to make sure we point to the right place.
     .checkId:
       LDX c
       LDA destroyedEnemies, x
@@ -1419,7 +1421,7 @@ LoadEnemies:
       BEQ .getSlot
       TYA
       CLC
-      ADC #$10 ; = 16, update when lvl format changes
+      ADC #(LVL_ENEMY_LAST - LVL_ENEMY_ID_2)
       TAY
       JMP .loadEnemiesLoopCondition
     
@@ -1443,11 +1445,10 @@ LoadEnemies:
       INX
       LDA d
       STA enemies, x
-    
-    ; next 15 bytes are the same in both definitions:
-    ; pointer, screen, should flip, speed, special mov, max distance, flip, direction, distance left, special mov var, x, y, life, shooting timer, shooting freq
+        
+    ; next (ENEMY_SHOOTING_TIMER - ENEMY_POINTER + 1) bytes are the same in both definitions.
     ; c will be the loop pointer (no longer needed), copy the 14 bytes incrementing Y and X in each loop
-    LDA #$0F ; = 15, update when lvl format changes (usually)
+    LDA #(ENEMY_SHOOTING_TIMER - ENEMY_POINTER + $01)
     STA c
     .copyLoop:
       INY
@@ -1742,4 +1743,123 @@ RenderEnemy:
         BNE .renderTileLoop     ; more tiles to render
          
   RTS
+ 
+;****************************************************************
+; Name:                                                         ;
+;   sinus16Movement                                             ;
+;                                                               ;
+; Description:                                                  ;
+;   Lookup table for the sinus16 movement type                  ;
+;****************************************************************
+ 
+SINUS16_LENGTH = $40 ; = 64
+ 
+sinus16Movement:
+  .byte $02
+  .byte $02
+  .byte $02
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FE
+  .byte $FE
+  .byte $FE
+  .byte $FE
+  .byte $FE
+  .byte $FE
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $02
+  .byte $02
+  .byte $02
   
+;****************************************************************
+; Name:                                                         ;
+;   sinus8Movement                                              ;
+;                                                               ;
+; Description:                                                  ;
+;   Lookup table for the sinus8 movement type                   ;
+;****************************************************************
+ 
+SINUS8_LENGTH = $20 ; = 32
+ 
+sinus8Movement: ; todo update
+  .byte $02
+  .byte $02
+  .byte $02
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FE
+  .byte $FE
+  .byte $FE
