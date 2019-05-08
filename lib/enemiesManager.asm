@@ -85,6 +85,7 @@
 ;   genericDY                                                   ;
 ;   removeEnemy - incremented if enemy should be exploded       ;
 ;   render vars                                                 ;
+;   b                                                           ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_enemy_in_memory_format                           ;
@@ -270,11 +271,39 @@ UpdateActiveEnemy:
       BEQ .sinus16Movement
       JMP .normalMovement
       
-      .sinus8Movement:
-        JMP .checkDirection
-        
+      ; sinus movement.
+      ; first cache y in b
+      ; then load the special movement var to y
+      ; load the value from the table and put it in genericDOther
+      ; decrement the special movement var in memory
+      ; if 0 reset to the default value
+      ; then restore y from b
+      .sinus8Movement:        
+        STY b
+        LDY enemies, x
+        LDA sinus8MovementTable, y
+        STA genericDOther
+        DEC enemies, x
+        BNE .sinus8MovementRestoreY
+        LDA #SINUS8_LENGTH
+        STA enemies, x
+        .sinus8MovementRestoreY:
+          LDY b
+          JMP .checkDirection
+      
+      ; same as sinus 8 but uses the 16 table
       .sinus16Movement:
-        JMP .checkDirection
+        STY b
+        LDY enemies, x
+        LDA sinus16MovementTable, y
+        STA genericDOther
+        DEC enemies, x
+        BNE .sinus16MovementRestoreY
+        LDA #SINUS16_LENGTH
+        STA enemies, x
+        .sinus16MovementRestoreY:
+          LDY b
+          JMP .checkDirection
       
       .normalMovement:
         LDA #$00
@@ -1782,6 +1811,7 @@ RenderEnemy:
 SINUS16_LENGTH = $40 ; = 64
  
 sinus16MovementTable:
+  .byte $00 ; this will never be used
   .byte $02
   .byte $02
   .byte $02
@@ -1858,6 +1888,7 @@ sinus16MovementTable:
 SINUS8_LENGTH = $20 ; = 32
  
 sinus8MovementTable:
+  .byte $00 ; this will never be used
   .byte $02
   .byte $02
   .byte $01
