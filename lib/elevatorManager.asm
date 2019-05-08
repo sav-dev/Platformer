@@ -816,6 +816,7 @@ MoveElevatorsPointerBack:
 ;****************************************************************
     
 ; todo - have different size of elevators have different palette (also update AddEditElevatorDialog)
+;        OR - add an option for elevator color in the level data/memory
 RenderElevator:
   
   ; preset b (x offset) to 0

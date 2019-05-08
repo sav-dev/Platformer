@@ -229,6 +229,8 @@ UpdateActiveEnemy:
     ;   - if enemyShouldFlip is true:
     ;     - X -= 1 to point to flip, update it (do not re-cache, but it doesn't really matter)
     ;     - X += 2 to point back to movement left
+    ;
+    ; todo: use enemySpecialMovType here
     .extremeMet:
       LDA enemyMaxDistance
       STA enemies, x
@@ -258,42 +260,68 @@ UpdateActiveEnemy:
     ; based on enemyDirection update genericDX or genericDY.
     .calculateDiffs:
     
-      
+      ; first do X += 1 to point to the special movement var. then check the special movement type.
       INX 
+      LDA enemySpecialMovType
+      BEQ .normalMovement ; SPECIAL_MOV_NONE = 0
+      CMP #SPECIAL_MOV_SINUS8
+      BEQ .sinus8Movement
+      CMP #SPECIAL_MOV_SINUS16
+      BEQ .sinus16Movement
+      JMP .normalMovement
+      
+      .sinus8Movement:
+        JMP .checkDirection
+        
+      .sinus16Movement:
+        JMP .checkDirection
+      
+      .normalMovement:
+        LDA #$00
+        STA genericDOther
     
-      LDA enemyDirection
-      BEQ .movingLeft ; GENERIC_DIR_LEFT = 0
-      CMP #GENERIC_DIR_NONE
-      BEQ .applyMovement
-      CMP #GENERIC_DIR_RIGHT
-      BEQ .movingRight
-      CMP #GENERIC_DIR_UP
-      BEQ .movingUp
-      
-      .movingDown:
-        LDA enemySpeed
-        STA genericDY
-        JMP .applyMovement
-      
-      .movingUp:
-        LDA #$00
-        SEC
-        SBC enemySpeed
-        STA genericDY
-        JMP .applyMovement
-      
-      .movingRight:
-        LDA enemySpeed
-        STA genericDX
-        JMP .applyMovement
-            
-      .movingLeft:
-        LDA #$00
-        SEC
-        SBC enemySpeed
-        STA genericDX        
+      .checkDirection:
+        LDA enemyDirection
+        BEQ .movingLeft ; GENERIC_DIR_LEFT = 0
+        CMP #GENERIC_DIR_NONE
+        BEQ .applyMovement
+        CMP #GENERIC_DIR_RIGHT
+        BEQ .movingRight
+        CMP #GENERIC_DIR_UP
+        BEQ .movingUp
+        
+        .movingDown:
+          LDA enemySpeed
+          STA genericDY
+          LDA genericDOther
+          STA genericDX
+          JMP .applyMovement
+        
+        .movingUp:
+          LDA #$00
+          SEC
+          SBC enemySpeed
+          STA genericDY
+          LDA genericDOther
+          STA genericDX
+          JMP .applyMovement
+        
+        .movingRight:
+          LDA enemySpeed
+          STA genericDX
+          LDA genericDOther
+          STA genericDY
+          JMP .applyMovement
+              
+        .movingLeft:
+          LDA #$00
+          SEC
+          SBC enemySpeed
+          STA genericDX
+          LDA genericDOther
+          STA genericDY
           
-    ; once we get here, x is still pointing to movement left, and diffs are set. todo update
+    ; once we get here, x is still pointing to special movement var, and diffs are set.
     ; do X += 1 and apply DX, caching the result in genericX
     ; then do X += 1 and apply DY, caching the result in genericY
     ; finally do a X += 1 to point the register to the next byte
@@ -483,11 +511,11 @@ UpdateActiveEnemy:
     ;  - gun x off (flip)
     ;  - gun y off (flip)
     ;    
-    ; first do Y += 1 to point to shooting direction, load    
+    ; first do Y += 1 to point to orientation, load    
     .shootingDirection:
       INY
       LDA EnemyConsts, y
-      STA enemyShootingDirection
+      STA enemyOrientation
     
     ; then do Y += 1 to point to gun x off, then check direction, and set enemyGunX and enemyGunY to a right const value.
     ; make sure we do Y += 4 (5 including the initial one) to point to animation speed.
@@ -745,9 +773,9 @@ UpdateActiveEnemy:
       ADC genericY
       STA enemyGunY
       
-    ; spawn enemy bullet using enemyGunX, enemyGunY, enemyShootingDirection, genericDirection: 
+    ; spawn enemy bullet using enemyGunX, enemyGunY, enemyOrientation, genericDirection: 
     ;   - enemyGunX, enemyGunY - point to spawn the bullet at
-    ;   - enemyShootingDirection - a SHOOTING_DIR_* const value
+    ;   - enemyOrientation - a ORIENTATION_* const value
     ;   - genericDirection - current flip (0 means shoot right or down, 1 means shoot left or up)
     SpawnEnemyBullet:
       
@@ -776,8 +804,8 @@ UpdateActiveEnemy:
         ; get bullet direction based on enemyOrientation and genericDirection (see comment above)
         .setBulletDirection:
           INY
-          LDA enemyShootingDirection
-          BEQ .bulletDirectionVertical ; SHOOT_DIR_VERT = 0
+          LDA enemyOrientation
+          BEQ .bulletDirectionVertical ; ORIENTATION_VERT = 0
           
           .bulletDirectionHorizontal:
             LDA genericDirection
@@ -1123,10 +1151,9 @@ UpdateEnemies:
         LDA removeEnemy
         BEQ .checkIfEnemyHit
         
-        ; explode the enemy.
-        
-        ; update state:
-        .explodeEnemyState:
+        ; explode the enemy.        
+        ; first update state:
+        .explodeEnemy:
           LDX xPointerCache
           LDA #ENEMY_STATE_EXPLODING
           STA enemies, x        
@@ -1746,7 +1773,7 @@ RenderEnemy:
  
 ;****************************************************************
 ; Name:                                                         ;
-;   sinus16Movement                                             ;
+;   sinus16MovementTable                                        ;
 ;                                                               ;
 ; Description:                                                  ;
 ;   Lookup table for the sinus16 movement type                  ;
@@ -1754,7 +1781,7 @@ RenderEnemy:
  
 SINUS16_LENGTH = $40 ; = 64
  
-sinus16Movement:
+sinus16MovementTable:
   .byte $02
   .byte $02
   .byte $02
@@ -1822,7 +1849,7 @@ sinus16Movement:
   
 ;****************************************************************
 ; Name:                                                         ;
-;   sinus8Movement                                              ;
+;   sinus8MovementTable                                         ;
 ;                                                               ;
 ; Description:                                                  ;
 ;   Lookup table for the sinus8 movement type                   ;
@@ -1830,7 +1857,7 @@ sinus16Movement:
  
 SINUS8_LENGTH = $20 ; = 32
  
-sinus8Movement:
+sinus8MovementTable:
   .byte $02
   .byte $02
   .byte $01

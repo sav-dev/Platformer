@@ -118,6 +118,8 @@ genericOffScreen        .rs 1  ; 1 means object is off screen (so x = $FE means 
 genericDX               .rs 1  ; how much to move, used for player and enemies
 genericDY               .rs 1
 
+genericDOther           .rs 1  ; how much to move in the 'other' plane (POI - save zero page - remove this and use a pseudo-register
+
 ;****************************************************************
 ; Enemy processing                                              ;
 ;****************************************************************
@@ -127,14 +129,14 @@ enemyScreen             .rs 1  ; screen the enemy is on
 
 enemyDirection          .rs 1  ; enemy direction
 enemySpecialMovType     .rs 1  ; enemy special movement type
-enemySpecialMovVar      .rs 1  ; enemy special movement var
 enemySpeed              .rs 1  ; enemy speed
 enemyMaxDistance        .rs 1  ; max distance
 
 enemyAnimationSpeed     .rs 1  ; enemy animation speed
 enemyFrameCount         .rs 1  ; enemy frame count
 
-enemyShootingDirection  .rs 1  ; enemy shooting direction (vert or hor)
+enemyOrientation        .rs 1  ; enemy orientation
+
 enemyGunX               .rs 1  ; enemy gun x position
 enemyGunY               .rs 1  ; enemy gun y position
 
