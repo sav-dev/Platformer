@@ -248,9 +248,9 @@ UpdateActiveEnemy:
         INX
         DEC enemies, x
         BNE .stopMovementStop
-        DEX
         LDA #STOP60_DEFAULT
         STA enemies, x
+        DEX        
         JMP .updateAfterExtreme
               
       ; same as above but for stop120
@@ -258,9 +258,9 @@ UpdateActiveEnemy:
         INX
         DEC enemies, x
         BNE .stopMovementStop
-        DEX
         LDA #STOP120_DEFAULT
         STA enemies, x
+        DEX
         JMP .updateAfterExtreme
       
       ; we don't want to rotate yet.
