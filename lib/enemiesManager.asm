@@ -51,10 +51,10 @@
 ;    - animation frame (1 byte)
 ;
 ; tags: depends_on_enemy_in_memory_format, depends_on_enemy_in_level_data_format
+;
 ; POI - memory save - some of the variables could be combined
 ; POI - ROM save - some of the fields in lvl data can be removed (e.g. init. special var)
-;
-; todo: change pointer to const. data to two bytes if we add too many enemies
+; POI - possible issue - change pointer to const. data to two bytes if we add too many enemies
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -224,6 +224,7 @@ UpdateActiveEnemy:
     ; if we get here, it means an extreme has been met.
     ; X points to movement left.
     ; we must:
+    ;   - process special movement type if it's stopX. If should stop, don't do anything
     ;   - set movement left to max distance
     ;   - X -= 1 to point to movement direction, update it (but *do not* re-cache in enemyDirection)
     ;   - if enemyShouldFlip is false, x += 1 to point back to movement left and go to calculateDiffs
@@ -231,31 +232,73 @@ UpdateActiveEnemy:
     ;     - X -= 1 to point to flip, update it (do not re-cache, but it doesn't really matter)
     ;     - X += 2 to point back to movement left
     ;
-    ; todo: use enemySpecialMovType here
     .extremeMet:
-      LDA enemyMaxDistance
-      STA enemies, x
-      DEX
-      LDA enemies, x
-      
-      ; to update direction, just flip the first bit (left = 00, right = 01, up = 10, down = 11)
-      EOR #%00000001
-      STA enemies, x
-      
-      LDA enemyShouldFlip
-      BNE .shouldFlip
-      
-      .dontFlip:
+    
+      LDA enemySpecialMovType
+      BEQ .updateAfterExtreme ; SPECIAL_MOV_NONE = 0
+      CMP #SPECIAL_MOV_STOP60
+      BEQ .stop60Movement
+      CMP #SPECIAL_MOV_STOP120
+      BEQ .stop120Movement
+      JMP .updateAfterExtreme
+    
+      ; X += 1 to point to the special movement var and dec it.
+      ; if result is 0 reset it, X -= 1 to point back to movement left, and go to updateAfterExtreme
+      .stop60Movement:
         INX
-        JMP .calculateDiffs      
+        DEC enemies, x
+        BNE .stopMovementStop
+        DEX
+        LDA #STOP60_DEFAULT
+        STA enemies, x
+        JMP .updateAfterExtreme
+              
+      ; same as above but for stop120
+      .stop120Movement:
+        INX
+        DEC enemies, x
+        BNE .stopMovementStop
+        DEX
+        LDA #STOP120_DEFAULT
+        STA enemies, x
+        JMP .updateAfterExtreme
       
-      .shouldFlip:
+      ; we don't want to rotate yet.
+      ; first do X -= 1 to point back to movement left
+      ; then set it to enemySpeed so the next frame lowers it to 0 again
+      ; but then set enemySpeed to 0 so we don't move this frame
+      .stopMovementStop:
+        DEX
+        LDA enemySpeed
+        STA enemies, x
+        LDA #$00
+        STA enemySpeed
+        JMP .calculateDiffs
+    
+      .updateAfterExtreme:
+        LDA enemyMaxDistance
+        STA enemies, x
         DEX
         LDA enemies, x
+        
+        ; to update direction, just flip the first bit (left = 00, right = 01, up = 10, down = 11)
         EOR #%00000001
         STA enemies, x
-        INX
-        INX
+        
+        LDA enemyShouldFlip
+        BNE .shouldFlip
+        
+        .dontFlip:
+          INX
+          JMP .calculateDiffs      
+        
+        .shouldFlip:
+          DEX
+          LDA enemies, x
+          EOR #%00000001
+          STA enemies, x
+          INX
+          INX
     
     ; once we get here, x is still pointing to movement left.
     ; based on enemyDirection update genericDX or genericDY.
@@ -887,7 +930,7 @@ UpdateActiveEnemy:
   ; if we want to process animation for enemies off screen,
   ; the skip in .enemyOffScreen must be updated.
   ;
-  ; todo: don't process animation if enemy doesn't move in shootable direction (todo: set shooting dir for all enemies, even those that don't shoot. rename?)
+  ; todo: don't process animation if enemy doesn't move in the orientation plane
   EnemyProcessAnimation:
     LDA enemyOnScreen
     BEQ UpdateActiveEnemyDone
