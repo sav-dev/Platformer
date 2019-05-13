@@ -1123,7 +1123,7 @@ ProcessElevatorVerticalColl:
       TAY
       LDA elevators, y
       BEQ .elevatorStatic
-      CMP #GENERIC_DIR_UP
+      CMP #DIRECTION_UP
       BEQ .elevatorMovingUp
       
     ; elevator is moving down

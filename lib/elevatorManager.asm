@@ -114,8 +114,8 @@ UpdateElevators:
       
     ; X += 1 to point to the direction.
     ; if genericDirection != 0, it means it must be updated.
-    ;   GENERIC_DIR_UP    = $02 = %00000010
-    ;   GENERIC_DIR_DOWN  = $03 = %00000011
+    ;   DIRECTION_UP    = $02 = %00000010
+    ;   DIRECTION_DOWN  = $03 = %00000011
     ; so to update the direction, simply EOR #$01
     INX
     LDA genericDirection
@@ -134,7 +134,7 @@ UpdateElevators:
     ; compare it to UP and DOWN and set the DY to a right value
     ; POI - possible optimization - skip the CMP (requires updates in consts, one vertical dir must be 0)
     .directionLoaded:
-      CMP #GENERIC_DIR_UP
+      CMP #DIRECTION_UP
       BEQ .elevatorGoingUp
       
     .elevatorGoingDown:

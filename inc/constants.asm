@@ -73,20 +73,15 @@ GAMESTATE_NONE = $FF
 
 GRAVITY = $04                   ; how much the gravity pulls down per frame
 
-DIRECTION_LEFT    = $00         ; constants, do not change
+DIRECTION_LEFT    = $00
 DIRECTION_RIGHT   = $01
-DIRECTION_UP      = $00
-DIRECTION_DOWN    = $01
+DIRECTION_UP      = $02
+DIRECTION_DOWN    = $03
+DIRECTION_NONE    = $04
 
 ORIENTATION_VERT  = $00
 ORIENTATION_HOR   = $01
 ORIENTATION_NONE  = $02
-
-GENERIC_DIR_LEFT  = $00
-GENERIC_DIR_RIGHT = $01
-GENERIC_DIR_UP    = $02
-GENERIC_DIR_DOWN  = $03
-GENERIC_DIR_NONE  = $04
  
 ;****************************************************************
 ; Player related constans                                       ;

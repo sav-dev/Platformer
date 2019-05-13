@@ -55,7 +55,7 @@ SpawnPlayerBullet:
       CLC                             
       ADC #PLAYER_GUN_OFF_X_R         
       STA genericX
-      LDA #GENERIC_DIR_RIGHT
+      LDA #DIRECTION_RIGHT
       STA genericDirection
       JMP .spawnBullet
                                       
@@ -64,7 +64,7 @@ SpawnPlayerBullet:
       CLC                             
       ADC #PLAYER_GUN_OFF_X_L         
       STA genericX
-      LDA #GENERIC_DIR_LEFT
+      LDA #DIRECTION_LEFT
       STA genericDirection
       
   .spawnBullet:
@@ -270,13 +270,13 @@ UpdateBullets:
       STA genericDirection
     
     ; move the bullet (unless just spawned) and set all render vars.
-    ; if we go there we still have direction loaded, so first check if it's left (GENERIC_DIR_LEFT = 0),
+    ; if we go there we still have direction loaded, so first check if it's left (DIRECTION_LEFT = 0),
     ; then compare with other directions.
     .moveAndPreset:
       BEQ .goingLeft
-      CMP #GENERIC_DIR_RIGHT  
+      CMP #DIRECTION_RIGHT  
       BEQ .goingRight  
-      CMP #GENERIC_DIR_DOWN 
+      CMP #DIRECTION_DOWN 
       BEQ .goingDown
       JMP .goingUp
                   
@@ -447,10 +447,10 @@ UpdateBullets:
       ; to update the position we'll use the fact that 'a' boxes contain the position of whatever we hit
       .collisionCheckDirection:
         LDA genericDirection
-        BEQ .collisionLeft              ; GENERIC_DIR_LEFT = 0
-        CMP #GENERIC_DIR_RIGHT  
+        BEQ .collisionLeft              ; DIRECTION_LEFT = 0
+        CMP #DIRECTION_RIGHT  
         BEQ .collisionRight
-        CMP #GENERIC_DIR_DOWN 
+        CMP #DIRECTION_DOWN 
         BEQ .collisionDown
         
         ; collision going up, meaning bullet y should be set to ay2 + 1

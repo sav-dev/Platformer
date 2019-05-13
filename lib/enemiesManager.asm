@@ -354,12 +354,12 @@ UpdateActiveEnemy:
     
       .checkDirection:
         LDA enemyDirection
-        BEQ .movingLeft ; GENERIC_DIR_LEFT = 0
-        CMP #GENERIC_DIR_NONE
+        BEQ .movingLeft ; DIRECTIOn_LEFT = 0
+        CMP #DIRECTION_NONE
         BEQ .applyMovement
-        CMP #GENERIC_DIR_RIGHT
+        CMP #DIRECTION_RIGHT
         BEQ .movingRight
-        CMP #GENERIC_DIR_UP
+        CMP #DIRECTION_UP
         BEQ .movingUp
         
         .movingDown:
@@ -692,12 +692,12 @@ UpdateActiveEnemy:
         BCS .collisionWithBulletsLoopCheck
         
         ; bullet is active. Load it's hitbox into 'b' vars.
-        ; first Y += 1 to point to direction, then branch off that (GENERIC_DIR_LEFT = 0).
+        ; first Y += 1 to point to direction, then branch off that (DIRECTION_LEFT = 0).
         ; we only care about vertical/horizontal
         INY
         LDA bullets, y
         BEQ .bulletGoingHorizontally
-        CMP #GENERIC_DIR_RIGHT  
+        CMP #DIRECTION_RIGHT  
         BEQ .bulletGoingHorizontally
         
         ; based on the direction, set hitbox width and height.
@@ -884,11 +884,11 @@ UpdateActiveEnemy:
             BEQ .bulletDirectionRight
             
             .bulletDirectionLeft:
-              LDA #GENERIC_DIR_LEFT
+              LDA #DIRECTION_LEFT
               JMP .setBulletDirectionValue
           
             .bulletDirectionRight:
-              LDA #GENERIC_DIR_RIGHT
+              LDA #DIRECTION_RIGHT
               JMP .setBulletDirectionValue
           
           .bulletDirectionVertical:
@@ -896,11 +896,11 @@ UpdateActiveEnemy:
             BEQ .bulletDirectionDown
             
             .bulletDirectionUp:
-              LDA #GENERIC_DIR_UP
+              LDA #DIRECTION_UP
               JMP .setBulletDirectionValue
             
             .bulletDirectionDown:
-              LDA #GENERIC_DIR_DOWN
+              LDA #DIRECTION_DOWN
           
           ; A = direction when we get here
           .setBulletDirectionValue:
@@ -930,16 +930,44 @@ UpdateActiveEnemy:
   ; if we want to process animation for enemies off screen,
   ; the skip in .enemyOffScreen must be updated.
   ;
-  ; todo: don't process animation if enemy doesn't move in the orientation plane
+  ; also check if enemy is moving, and if it's moving in the correct plane - don't animate if not
   EnemyProcessAnimation:
-    LDA enemyOnScreen
-    BEQ UpdateActiveEnemyDone
-    DEC enemies, x
-    BEQ .updateFrame
-    INX
-    LDA enemies, x
-    STA genericFrame
-    JMP EnemyRender
+    
+    .checkIfOnScreen:
+      LDA enemyOnScreen
+      BEQ UpdateActiveEnemyDone
+    
+    .checkIfShouldAnimate:
+      LDA enemySpeed
+      BEQ .loadFrame
+      LDA enemyOrientation
+      BEQ .verticalOrientation ; ORIENTATION_VERT = 0
+      CMP #ORIENTATION_NONE
+      BEQ .updateTimer ; always animate enemies without an orientation
+      
+      ; only animate if direction is left (0) or right (1), i.e. if 2nd byte = 0
+      .horizontalOrientation:
+        LDA enemyDirection
+        AND #%00000010
+        BNE .loadFrame
+        JMP .updateTimer
+        
+      ; only animate if direction is up (2) or down (3), i.e. if 2nd byte = 1
+      .verticalOrientation:
+        LDA enemyDirection
+        AND #%00000010
+        BEQ .loadFrame
+        JMP .updateTimer   
+    
+    .updateTimer:
+      DEC enemies, x
+      BEQ .updateFrame
+      
+    .loadFrame:
+      INX
+      LDA enemies, x
+      STA genericFrame
+      JMP EnemyRender
     
     .updateFrame:
       LDA enemyAnimationSpeed

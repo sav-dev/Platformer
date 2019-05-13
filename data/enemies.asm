@@ -10,7 +10,7 @@
 ;    hitbox width    : 1 byte (inclusive)
 ;    hitbox y off    : 1 byte
 ;    hitbox height   : 1 byte (inclusive)
-;    shooting dir.   : 1 byte (see SHOOT_DIR_* consts)
+;    orientation     : 1 byte (see ORIENTATION_* consts)
 ;    gun x off       : 1 byte (signed, 0 for non shooting)
 ;    gun y off       : 1 byte (signed, 0 for non shooting)
 ;    gun x off flip  : 1 byte (signed, 0 for non shooting)
@@ -31,7 +31,7 @@ BeetleConsts:
   .byte $20
 .hitboxInfo:
   .byte $02,$1B,$04,$10
-.shootingDir:
+.orientation:
   .byte $01
 .gunInfo:
   .byte $1E,$03,$F9,$03
@@ -49,8 +49,8 @@ BugConsts:
   .byte $10
 .hitboxInfo:
   .byte $02,$0B,$04,$0A
-.shootingDir:
-  .byte $02
+.orientation:
+  .byte $01
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -67,8 +67,8 @@ EyeConsts:
   .byte $10
 .hitboxInfo:
   .byte $03,$09,$02,$0B
-.shootingDir:
-  .byte $02
+.orientation:
+  .byte $01
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -85,7 +85,7 @@ SpikesConsts:
   .byte $10
 .hitboxInfo:
   .byte $02,$0A,$02,$0A
-.shootingDir:
+.orientation:
   .byte $02
 .gunInfo:
   .byte $00,$00,$00,$00
@@ -103,7 +103,7 @@ TurretVConsts:
   .byte $10
 .hitboxInfo:
   .byte $01,$0D,$01,$0D
-.shootingDir:
+.orientation:
   .byte $00
 .gunInfo:
   .byte $0A,$0F,$0A,$F8
@@ -121,7 +121,7 @@ TurretHConsts:
   .byte $10
 .hitboxInfo:
   .byte $01,$0D,$01,$0D
-.shootingDir:
+.orientation:
   .byte $01
 .gunInfo:
   .byte $0F,$01,$F8,$01
@@ -139,7 +139,7 @@ SphereConsts:
   .byte $10
 .hitboxInfo:
   .byte $01,$0D,$01,$0D
-.shootingDir:
+.orientation:
   .byte $01
 .gunInfo:
   .byte $0D,$06,$FA,$06
@@ -157,7 +157,7 @@ FlyingRobotConsts:
   .byte $18
 .hitboxInfo:
   .byte $01,$16,$02,$0D
-.shootingDir:
+.orientation:
   .byte $02
 .gunInfo:
   .byte $00,$00,$00,$00
@@ -175,7 +175,7 @@ WalkingRobotConsts:
   .byte $18
 .hitboxInfo:
   .byte $01,$16,$02,$0D
-.shootingDir:
+.orientation:
   .byte $02
 .gunInfo:
   .byte $00,$00,$00,$00
@@ -215,14 +215,10 @@ XOff3x2:
   .byte $00, $00, $08, $08, $10, $10
 YOff3x2:
   .byte $00, $08, $00, $08, $00, $08
-XOff3x2H:
-  .byte $10, $10, $08, $08, $00, $00
 XOff3x3:
   .byte $00, $00, $00, $08, $08, $08, $10, $10, $10
 YOff3x3:
   .byte $00, $08, $10, $00, $08, $10, $00, $08, $10
-XOff3x3H:
-  .byte $10, $10, $10, $08, $08, $08, $00, $00, $00
 
 ;
 ;  all information needed to draw an enemy
@@ -339,9 +335,9 @@ FlyingRobotRender:
 .spriteCount:
   .byte $06
 .offsets:
-  .byte LOW(XOff3x2), HIGH(XOff3x2), LOW(YOff3x2), HIGH(YOff3x2), LOW(XOff3x2H), HIGH(XOff3x2H), LOW(YOff3x2), HIGH(YOff3x2)
+  .byte LOW(XOff3x2), HIGH(XOff3x2), LOW(YOff3x2), HIGH(YOff3x2), LOW(XOff3x2), HIGH(XOff3x2), LOW(YOff3x2), HIGH(YOff3x2)
 .flipXor:
-  .byte %01000000
+  .byte %00000000
 .attributes:
   .byte $00,$00,$00,$00,$40,$00
 .tiles:
@@ -354,9 +350,9 @@ WalkingRobotRender:
 .spriteCount:
   .byte $09
 .offsets:
-  .byte LOW(XOff3x3), HIGH(XOff3x3), LOW(YOff3x3), HIGH(YOff3x3), LOW(XOff3x3H), HIGH(XOff3x3H), LOW(YOff3x3), HIGH(YOff3x3)
+  .byte LOW(XOff3x3), HIGH(XOff3x3), LOW(YOff3x3), HIGH(YOff3x3), LOW(XOff3x3), HIGH(XOff3x3), LOW(YOff3x3), HIGH(YOff3x3)
 .flipXor:
-  .byte %01000000
+  .byte %00000000
 .attributes:
   .byte $00,$00,$01,$00,$00,$01,$40,$00,$01
 .tiles:
