@@ -199,19 +199,22 @@ UpdateActiveEnemy:
     ; in that case, skip the updates.
     INX
     LDA enemies, x
-    BEQ .calculateDiffs
+    BNE .checkIfSpecialSpeed
+    JMP .calculateDiffs
     
     ; we got here which means the enemy is moving
     ; check speed to see if it's any of the special values
     ; X still points at movement left so we can load it
-    LDA enemySpeed
-    CMP #SMALLEST_SPECIAL_SPEED
-    BCC .updateMovementLeft
+    .checkIfSpecialSpeed:
+      LDA enemySpeed
+      CMP #SMALLEST_SPECIAL_SPEED
+      BCC .updateMovementLeft
       
-    ; call the special speed routine
-    ; POI - possible optimization - this could be in line
-    JSR ProcessSpecialSpeed
-    BEQ .calculateDiffs       ; A = enemySpeed after ProcessSpecialSpeed
+      ; call the special speed routine
+      ; POI - possible optimization - this could be in line
+      JSR ProcessSpecialSpeed
+      BNE .updateMovementLeft 
+      JMP .calculateDiffs ; A = enemySpeed after ProcessSpecialSpeed
     
     ; reload movement left, then update
     .updateMovementLeft:
@@ -219,7 +222,8 @@ UpdateActiveEnemy:
       SEC
       SBC enemySpeed
       STA enemies, x
-      BNE .calculateDiffs
+      BEQ .extremeMet
+      JMP .calculateDiffs
     
     ; if we get here, it means an extreme has been met.
     ; X points to movement left.
@@ -235,15 +239,19 @@ UpdateActiveEnemy:
     .extremeMet:
     
       LDA enemySpecialMovType
-      BEQ .updateAfterExtreme ; SPECIAL_MOV_NONE = 0
+      BEQ .resetMovementLeft ; SPECIAL_MOV_NONE = 0
       CMP #SPECIAL_MOV_STOP60
       BEQ .stop60Movement
       CMP #SPECIAL_MOV_STOP120
       BEQ .stop120Movement
-      JMP .updateAfterExtreme
+      CMP #SPECIAL_MOV_CLOCK
+      BEQ .clockwiseMovement
+      CMP #SPECIAL_MOV_COUNT_C
+      BEQ .counterClockwiseMovement
+      JMP .resetMovementLeft
     
       ; X += 1 to point to the special movement var and dec it.
-      ; if result is 0 reset it, X -= 1 to point back to movement left, and go to updateAfterExtreme
+      ; if result is 0 reset it, X -= 1 to point back to movement left, and go to .resetMovementLeft
       .stop60Movement:
         INX
         DEC enemies, x
@@ -251,7 +259,7 @@ UpdateActiveEnemy:
         LDA #STOP60_DEFAULT
         STA enemies, x
         DEX        
-        JMP .updateAfterExtreme
+        JMP .resetMovementLeft
               
       ; same as above but for stop120
       .stop120Movement:
@@ -261,7 +269,7 @@ UpdateActiveEnemy:
         LDA #STOP120_DEFAULT
         STA enemies, x
         DEX
-        JMP .updateAfterExtreme
+        JMP .resetMovementLeft
       
       ; we don't want to rotate yet.
       ; first do X -= 1 to point back to movement left
@@ -274,17 +282,58 @@ UpdateActiveEnemy:
         LDA #$00
         STA enemySpeed
         JMP .calculateDiffs
-    
-      .updateAfterExtreme:
+      
+      ; clockwise movement. first reset movement left. then X -= 1 to point to direction.
+      ; cache Y in b,  load the next direction, update direction, restory Y. finally go to the flip logic.
+      .clockwiseMovement:
         LDA enemyMaxDistance
         STA enemies, x
         DEX
-        LDA enemies, x
-        
-        ; to update direction, just flip the first bit (left = 00, right = 01, up = 10, down = 11)
-        EOR #%00000001
+        STY b
+        LDY enemyDirection
+        LDA clockwiseMovementTable, y
         STA enemies, x
+        LDY b
+        JMP .rectangleFlipLogic
+      
+      ; same as clockwise but with different table.
+      .counterClockwiseMovement:
+        LDA enemyMaxDistance
+        STA enemies, x
+        DEX
+        STY b
+        LDY enemyDirection
+        LDA counterClockwiseMovementTable, y
+        STA enemies, x
+        LDY b
+      
+      ; flip logic for the rectangle movement.
+      ; when we get here, X points to the direction.
+      ; check if enemy should flip, if not go to the common dontFlip.
+      .rectangleFlipLogic:
+        LDA enemyShouldFlip
+        BEQ .dontFlip
         
+        ; todo: only flip if enemy was *not* moving in their orientation plane
+        ;       but we don't know what is its orientation plane yet
+        ;       we can store that value in special movement var?
+        ;       or have more special movement types?
+      
+        
+        JMP .shouldFlip
+    
+      ; when we get here, X still points to movement left. Reset it. X -= 1 to point to enemy direction.
+      .resetMovementLeft:
+        LDA enemyMaxDistance
+        STA enemies, x
+        DEX
+              
+      ; X points to enemy direction. 
+      ; Update direction and (maybe) flip.
+      .updateDirectionAndFlip:
+        LDA enemyDirection                
+        EOR #%00000001 ; to update direction, just flip the first bit 
+        STA enemies, x ; (left = 00, right = 01, up = 10, down = 11)        
         LDA enemyShouldFlip
         BNE .shouldFlip
         
@@ -1992,3 +2041,39 @@ sinus8MovementTable:
   .byte $01
   .byte $02
   .byte $02
+  
+;****************************************************************
+; Name:                                                         ;
+;   clockwiseMovementTable                                      ;
+;                                                               ;
+; Description:                                                  ;
+;   Lookup table for the clockwise movement type                ;
+;****************************************************************
+
+clockwiseMovementTable:
+  ; after LEFT (=0) comes
+  .byte DIRECTION_UP
+  ; after RIGHT (=1) comes
+  .byte DIRECTION_DOWN
+  ; after UP (=2) comes
+  .byte DIRECTION_RIGHT
+  ; after DOWN (=3) comes
+  .byte DIRECTION_LEFT
+  
+;****************************************************************
+; Name:                                                         ;
+;   counterClockwiseMovementTable                               ;
+;                                                               ;
+; Description:                                                  ;
+;   Lookup table for the counter clockwise movement type        ;
+;****************************************************************
+
+counterClockwiseMovementTable:
+  ; after LEFT (=0) comes
+  .byte DIRECTION_DOWN
+  ; after RIGHT (=1) comes
+  .byte DIRECTION_UP
+  ; after UP (=2) comes
+  .byte DIRECTION_LEFT
+  ; after DOWN (=3) comes
+  .byte DIRECTION_RIGHT
