@@ -239,7 +239,7 @@ UpdateActiveEnemy:
     .extremeMet:
     
       LDA enemySpecialMovType
-      BEQ .resetMovementLeft ; SPECIAL_MOV_NONE = 0
+      BEQ .goToResetMovementLeft ; SPECIAL_MOV_NONE = 0
       CMP #SPECIAL_MOV_STOP60
       BEQ .stop60Movement
       CMP #SPECIAL_MOV_STOP120
@@ -248,7 +248,9 @@ UpdateActiveEnemy:
       BEQ .clockwiseMovement
       CMP #SPECIAL_MOV_COUNT_C
       BEQ .counterClockwiseMovement
-      JMP .resetMovementLeft
+      
+      .goToResetMovementLeft:
+        JMP .resetMovementLeft
     
       ; X += 1 to point to the special movement var and dec it.
       ; if result is 0 reset it, X -= 1 to point back to movement left, and go to .resetMovementLeft
@@ -314,13 +316,23 @@ UpdateActiveEnemy:
         LDA enemyShouldFlip
         BEQ .dontFlip
         
-        ; todo: only flip if enemy was *not* moving in their orientation plane
-        ;       but we don't know what is its orientation plane yet
-        ;       we can store that value in special movement var?
-        ;       or have more special movement types?
-      
-        
-        JMP .shouldFlip
+        ; only flip if enemy was *not* moving in their orientation plane
+        ; but we don't know what is its orientation plane yet
+        ; HACK - special movement var contains a useful value: we must AND the old direction with 0000 0010
+        ; if result is equal to the special var, we should flip.
+        ; X += 2 to point to the special var. load it and store it in b. X -= 2 to point back where we were.
+        ; AND last direction with 0000 0010 and compare with b to decide on the flip.
+        INX
+        INX
+        LDA enemies, x
+        STA b
+        DEX
+        DEX
+        LDA enemyDirection
+        AND #%00000010
+        CMP b
+        BEQ .shouldFlip
+        JMP .dontFlip
     
       ; when we get here, X still points to movement left. Reset it. X -= 1 to point to enemy direction.
       .resetMovementLeft:
