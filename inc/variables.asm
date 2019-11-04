@@ -54,12 +54,12 @@ ENEMY_SIZE              = $14 ; = 20
 MAX_ENEMIES             = $80 ; = 128
 
 ; depends_on_elevator_in_memory_format
-; size of elevators must be "max elevators loaded" (currently 6) * "elevator size" (currently 9)
+; size of elevators must be "max elevators loaded" (currently 6) * "elevator size" (currently 8)
 
-elevators         .rs 54
+elevators         .rs 48
 
 ELEVATORS_COUNT         = $06 ; = 6
-ELEVATOR_SIZE           = $09 ; = 9  
+ELEVATOR_SIZE           = $08 ; = 8  
 
 ;****************************************************************
 ; Bullets                                                       ;
@@ -78,7 +78,7 @@ BYTES_TO_CLEAR_IN_500   = $44 ; total size of arrays - 256
 ; Other variables - free up to $0700                            ;
 ;****************************************************************
 
- .rsset $054A ; depends_on_enemy_in_memory_format, depends_on_enemy_in_memory_format = set to sum of everything > 0x400
+ .rsset $0544 ; 444 bytes available
  
 ;****************************************************************
 ; Game state                                                    ;

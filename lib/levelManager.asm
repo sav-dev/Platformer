@@ -36,8 +36,6 @@
 
 LoadLevel:
 
-  ; todo: add bg palette
-
   ; load level background - input is levelPointer, sets max scroll and genericPointer (to 1st byte after background data)
   JSR LoadLevelBackground    
 
@@ -49,8 +47,6 @@ LoadLevel:
   
   ; load enemies - input is genericPointer, sets elevators and genericPointer (to 1st byte after enemy data)
   JSR LoadElevatorsInitial
-  
-  ; todo: add level type, different victory conditions
   
   ; everything has been loaded, only thing left is player starting position and exit position. format:
   ;  - starting position x (genericPointer points here)

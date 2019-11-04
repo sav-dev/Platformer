@@ -30,7 +30,7 @@ GameFrame:
   ; POI - possible optimization - we iterate elevators way too many times
     
   .updateElevators:
-    JSR UpdateElevators             ; move all elevators, move player if standing on elevator, *DO NOT* render (todo: why?)
+    JSR UpdateElevators             ; move all elevators, move player if standing on elevator, *DO NOT* render
     
   .updatePlayer:
     JSR UpdatePlayer                ; move player, check for collisions with platforms and threats, render  
@@ -100,7 +100,7 @@ LoadGame:
     STA genericPointer
     LDA #HIGH(pal_bg_0)
     STA genericPointer + $01
-    JSR LoadBgPalette             ; todo: bg palette should come from the level data
+    JSR LoadBgPalette  
     LDA #LOW(pal_spr_0)
     STA genericPointer
     LDA #HIGH(pal_spr_0)
