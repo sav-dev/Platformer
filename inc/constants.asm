@@ -322,11 +322,12 @@ ELEVATOR_ATTS                = $02
 ELEVATOR_EL_SIZE             = $00
 ELEVATOR_SCREEN              = $01
 ELEVATOR_SPEED               = $02
-ELEVATOR_MAX_DISTANCE        = $03
-ELEVATOR_CURRENT_DISTANCE    = $04
-ELEVATOR_MOVEMENT_DIRECTION  = $05
-ELEVATOR_Y                   = $06
-ELEVATOR_X                   = $07
+ELECATOR_MOVEMENT_TYPE       = $03
+ELEVATOR_MAX_DISTANCE        = $04
+ELEVATOR_CURRENT_DISTANCE    = $05
+ELEVATOR_MOVEMENT_DIRECTION  = $06
+ELEVATOR_Y                   = $07
+ELEVATOR_X                   = $08
 
 ; elevator size == 0 means elevator is not loaded
 ELEVATOR_EL_SIZE_EMPTY       = $00
@@ -336,6 +337,11 @@ LAST_ELEVATOR                = AFTER_LAST_ELEVATOR - ELEVATOR_SIZE
 LAST_ELEVATOR_SCREEN         = LAST_ELEVATOR + ELEVATOR_SCREEN
 
 ELEVATOR_HEIGHT              = $06
+
+; MovementType.cs
+ELEVATOR_MOVEMENT_NONE       = $00
+ELEVATOR_MOVEMENT_HORIZONTAL = $01
+ELEVATOR_MOVEMENT_VERTICAL   = $02
 
 ;****************************************************************
 ; Exit                                                          ;

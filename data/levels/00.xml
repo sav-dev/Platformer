@@ -1123,6 +1123,16 @@
   </Enemies>
   <Elevators>
     <Elevator>
+      <X>64</X>
+      <Y>64</Y>
+      <Size>4</Size>
+      <MovementType>Horizontal</MovementType>
+      <Speed>2</Speed>
+      <MinPosition>64</MinPosition>
+      <MaxPosition>96</MaxPosition>
+      <Direction>Left</Direction>
+    </Elevator>
+    <Elevator>
       <X>228</X>
       <Y>176</Y>
       <Size>3</Size>

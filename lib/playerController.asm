@@ -330,6 +330,8 @@ UpdatePlayerNormal:
     .applyHorizontalMovement:          
                     
       ; POI - possible issue - this doesn't work if level is shorter than two screens
+      
+      ; todo - change this for horizontal elevators
                     
       ; load scroll high byte, compare with max scroll high byte
       LDA scroll + $01                
@@ -1115,11 +1117,11 @@ ProcessElevatorVerticalColl:
     ;       no        |      up       |               -                | bottom  
     ;
     
-    ; first check the direction the elevator is moving in - Y = yPointerCache + 5 to point to the direction
+    ; first check the direction the elevator is moving in - Y = yPointerCache + 6 to point to the direction
     .checkElevatorDirection:
       LDA yPointerCache
       CLC
-      ADC #$05
+      ADC #$06
       TAY
       LDA elevators, y
       BEQ .elevatorStatic

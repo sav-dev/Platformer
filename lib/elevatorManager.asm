@@ -4,22 +4,23 @@
 ;****************************************************************
 
 ;
-; - elevators in level data in the following format:
-;   - pointer to next screen (from here): (n x 9) + 3 (1 byte)
+; - elevators in the following format:
+;   - pointer to next screen (from here): (n x 10) + 3 (1 byte)
 ;   - number of elevators (1 byte)
-;   - n times the elevator data (9 bytes)
+;   - n times the elevator data (10 bytes)
 ;        - slot to put elevator in (1 byte)
 ;        - elevator size (1 byte)
-;        - screen the elevator is on (1 byte)
+;        - screen the elevator is on (1 byte)            
 ;        - movement speed (1 byte)
+;        - movement type (1 byte)
 ;        - max movement distance (1 byte)            
 ;        - (initial) movement left (1 byte)
-;        - (initial) flip + movement direction (1 byte)
+;        - (initial) movement direction (1 byte)            
 ;        - y position (1 byte)
 ;        - x position (1 byte) (y comes before x!)
-;   - pointer to the previous screen (from here): (n x 9) + 2 (1 byte)
+;   - pointer to the previous screen (from here): (n x 10) + 2 (1 byte)
 ;
-; - elevators in memory: same but starting at size (8 bytes each)
+; - elevators in memory: same but starting at size (9 bytes each)
 ;
 ; tags: depends_on_elevator_in_memory_format, depends_on_elevator_in_level_data_format
 
@@ -78,18 +79,26 @@ UpdateElevators:
     BEQ .updateElevatorLoopCondition
     STA enemySpeed
     CMP #SMALLEST_SPECIAL_SPEED
-    BCC .getMaxDistance
+    BCC .getMovementType
     
     ; special speed, call the routine to process it
     ; POI - possible optimization - we process the special speed multiple times per frame
     JSR ProcessSpecialSpeed    
     BEQ .updateElevatorLoopCondition ; A = enemySpeed after ProcessSpecialSpeed
     
+    ; X += 1 to point to the movement type.
+    ; todo: temp. for now check the movement type, only proceed if VERTICAL
+    .getMovementType:
+      INX
+      LDA elevators, X
+      CMP #ELEVATOR_MOVEMENT_VERTICAL
+      BNE .updateElevatorLoopCondition
+    
     ; X += 1 to point to the max movement distance, cache it in enemyMaxDistance
     .getMaxDistance:
       INX 
       LDA elevators, X    
-      STA enemyMaxDistance
+      STA enemyMaxDistance   
     
     ; preset genericDirection to 0, then X += 1 to point to the movement distance left. 
     ; load it. if it's 0, it means the extreme was met the previous frame - 
@@ -226,11 +235,11 @@ RenderElevators:
     LDA elevators, X
     STA enemyScreen
     
-    ; X += 5 to point to the Y position, load it, store it in genericY
+    ; X += 6 to point to the Y position, load it, store it in genericY
     ; X += 1 to point to the X position, load it, store it in genericX
     TXA
     CLC
-    ADC #$05
+    ADC #$06
     TAX
     LDA elevators, X
     STA genericY
@@ -336,7 +345,7 @@ CheckForElevatorCollision:
   LDA #$00
   STA collision
   
-  ; main loop - loop all elevators going down
+  ; main loop - loop all elevators going down from the last one
   ; load the place pointing to after the last elevator, store it in yPointerCache
   ; the loop expects value in the A register to point to the elevator after the one we want to process
   LDA #AFTER_LAST_ELEVATOR
@@ -412,10 +421,10 @@ SingleElevatorCollision:
   LDA elevators, y
   STA enemyScreen
   
-  ; Y += 5 to point to the y position, load it, store it in ay1
+  ; Y += 6 to point to the y position, load it, store it in ay1
   TYA
   CLC
-  ADC #$05
+  ADC #$06
   TAY
   LDA elevators, y
   STA ay1
@@ -676,9 +685,9 @@ LoadElevators:
     LDA [elevatorsPointer], y
     TAX
       
-    ; remaining 8 bytes are the same.
+    ; remaining 9 bytes are the same.
     ; use c as the loop counter.
-    LDA #$08
+    LDA #$09
     STA c
     .copyLoop:
       INY
