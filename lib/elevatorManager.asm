@@ -12,8 +12,8 @@
 ;        - elevator size (1 byte)
 ;        - screen the elevator is on (1 byte)            
 ;        - movement speed (1 byte)
-;        - max movement distance (1 byte)            
 ;        - movement type (1 byte)
+;        - max movement distance (1 byte)            
 ;        - (initial) movement left (1 byte)
 ;        - (initial) movement direction (1 byte)            
 ;        - y position (1 byte)
@@ -85,26 +85,25 @@ UpdateElevators:
     ; POI - possible optimization - we process the special speed multiple times per frame
     JSR ProcessSpecialSpeed    
     BEQ .updateElevatorLoopCondition ; A = enemySpeed after ProcessSpecialSpeed
-             
+    
     ; X += 1 to point to the movement type.
     ; todo: temp. for now check the movement type, only proceed if VERTICAL
     .getMovementType:
       INX
       LDA elevators, X
-      CMP #ELEVATOR_MOVEMENT_HORIZONTAL
-      BEQ .updateElevatorLoopCondition
-      ; BEQ .updateElevatorLoopCondition ; ELEVATOR_MOVEMENT_NONE = 0, not needed since speed will always be 0 in that case
-             
+      CMP #ELEVATOR_MOVEMENT_VERTICAL
+      BNE .updateElevatorLoopCondition
+    
     ; X += 1 to point to the max movement distance, cache it in enemyMaxDistance
     .getMaxDistance:
       INX 
       LDA elevators, X    
-      STA enemyMaxDistance      
+      STA enemyMaxDistance   
     
-    ; preset genericDirection to 0, then X += 1 to point to the movement distance left. Load it. 
-    ; If it's 0, it means the extreme was met the previous frame -  update it with enemyMaxDistance, 
-    ; and INC genericDirection to tell us we must update the direction.
-    ; Note - when updating enemies, we update the direction and update distance left as soon as it reaches 0
+    ; preset genericDirection to 0, then X += 1 to point to the movement distance left. 
+    ; load it. if it's 0, it means the extreme was met the previous frame - 
+    ; update it with enemyMaxDistance, and INC genericDirection to tell us we must update the direction.
+    ; note - when updating enemies, we update the direction and update distance left as soon as it reaches 0
     ; (so it never stays at 0). We don't do this for elevators since we want to know the direction it went
     ; later when processing the frame.
     LDA #$00
@@ -177,7 +176,8 @@ UpdateElevators:
       BNE .updateElevatorLoopCondition
       
     ; player on elevator, move by genericDY
-    ; POI - possible issue - this can force player into the wall, make sure that's never the case
+    ; POI - possible issue - this can force player into the wall
+    ;       make sure that's never the case
     .playerOnElevator:
       JSR MovePlayerVertically
           

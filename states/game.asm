@@ -30,7 +30,7 @@ GameFrame:
   ; POI - possible optimization - we iterate elevators way too many times
     
   .updateElevators:
-    JSR UpdateElevators             ; move all elevators, move player if standing on elevator, *DO NOT* render (because we may scroll in UpdatePlayer)
+    JSR UpdateElevators             ; move all elevators, move player if standing on elevator, *DO NOT* render (todo: why?)
     
   .updatePlayer:
     JSR UpdatePlayer                ; move player, check for collisions with platforms and threats, render  
