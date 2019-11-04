@@ -79,13 +79,19 @@ UpdateElevators:
     BEQ .updateElevatorLoopCondition
     STA enemySpeed
     CMP #SMALLEST_SPECIAL_SPEED
-    BCC .getMovementType
+    BCC .getMaxDistance
     
     ; special speed, call the routine to process it
     ; POI - possible optimization - we process the special speed multiple times per frame
     JSR ProcessSpecialSpeed    
     BEQ .updateElevatorLoopCondition ; A = enemySpeed after ProcessSpecialSpeed
-             
+                          
+    ; X += 1 to point to the max movement distance, cache it in enemyMaxDistance
+    .getMaxDistance:
+      INX 
+      LDA elevators, X    
+      STA enemyMaxDistance      
+    
     ; X += 1 to point to the movement type.
     ; todo: temp. for now check the movement type, only proceed if VERTICAL
     .getMovementType:
@@ -94,12 +100,6 @@ UpdateElevators:
       CMP #ELEVATOR_MOVEMENT_HORIZONTAL
       BEQ .updateElevatorLoopCondition
       ; BEQ .updateElevatorLoopCondition ; ELEVATOR_MOVEMENT_NONE = 0, not needed since speed will always be 0 in that case
-             
-    ; X += 1 to point to the max movement distance, cache it in enemyMaxDistance
-    .getMaxDistance:
-      INX 
-      LDA elevators, X    
-      STA enemyMaxDistance      
     
     ; preset genericDirection to 0, then X += 1 to point to the movement distance left. Load it. 
     ; If it's 0, it means the extreme was met the previous frame -  update it with enemyMaxDistance, 
