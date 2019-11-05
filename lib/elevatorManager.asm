@@ -75,15 +75,19 @@ UpdateElevators:
     ; otherwise, cache it in enemySpeed then check if it's a special value
     INX
     LDA elevators, X
-    BEQ .updateElevatorLoopCondition
-    STA enemySpeed
-    CMP #SMALLEST_SPECIAL_SPEED
-    BCC .getMaxDistance
+    BNE .speedGreaterThanZero
+    JMP .updateElevatorLoopCondition
+    
+    .speedGreaterThanZero:
+      STA enemySpeed
+      CMP #SMALLEST_SPECIAL_SPEED
+      BCC .getMaxDistance
     
     ; special speed, call the routine to process it
     ; POI - possible optimization - we process the special speed multiple times per frame
     JSR ProcessSpecialSpeed    
-    BEQ .updateElevatorLoopCondition ; A = enemySpeed after ProcessSpecialSpeed
+    BNE .getMaxDistance
+    JMP .updateElevatorLoopCondition ; A = enemySpeed after ProcessSpecialSpeed
     
     ; X += 1 to point to the max movement distance, cache it in enemyMaxDistance
     .getMaxDistance:
@@ -114,6 +118,8 @@ UpdateElevators:
       
     ; X += 1 to point to the direction.
     ; if genericDirection != 0, it means it must be updated.
+    ;   DIRECTION_LEFT  = $00 = %00000000
+    ;   DIRECTION_RIGHT = $01 = %00000001
     ;   DIRECTION_UP    = $02 = %00000010
     ;   DIRECTION_DOWN  = $03 = %00000011
     ; so to update the direction, simply EOR #$01
@@ -131,25 +137,46 @@ UpdateElevators:
       LDA elevators, x
     
     ; once we get here, X points to the direction, and it has been loaded into A.
-    ; compare it to UP and DOWN and set the DY to a right value
-    ; POI - possible optimization - skip the CMP (requires updates in consts, one vertical dir must be 0)
+    ; check the direction and set DX or DY to the right value
     .directionLoaded:
+      BEQ .elevatorGoingLeft ; DIRECTION_LEFT = 0
+      CMP #DIRECTION_RIGHT
+      BEQ .elevatorGoingRight
       CMP #DIRECTION_UP
       BEQ .elevatorGoingUp
-      
+                  
     .elevatorGoingDown:
       LDA enemySpeed
       STA genericDY
+      LDA #$00
+      STA genericDX
       JMP .updatePosition
     
     .elevatorGoingUp:
       LDA #$00
+      STA genericDX
       SEC
       SBC enemySpeed
       STA genericDY
+      JMP .updatePosition
     
-    ; genericDY is set, X still points to the direction.
-    ; X += 1 to point to the Y position, update it, store it in genericY
+    .elevatorGoingLeft:
+      LDA #$00
+      STA genericDY
+      SEC
+      SBC enemySpeed
+      STA genericDX
+      JMP .updatePosition
+    
+    .elevatorGoingRight:
+      LDA enemySpeed  
+      STA genericDX
+      LDA #$00
+      STA genericDY
+      
+    ; genericDX and genericDY are set, X still points to the direction.
+    ; X += 1 to point to the Y position, update it, store it in genericY.
+    ; X += 1 to point to the X position, update it, store it in genericX.
     .updatePosition:
       INX
       LDA elevators, x
@@ -157,6 +184,12 @@ UpdateElevators:
       ADC genericDY
       STA elevators, x
       STA genericY
+      INX
+      LDA elevators, x
+      CLC
+      ADC genericDX
+      STA elevators, x
+      STA genericX
       
     ; check if player is standing on the current elevator.    
     .checkIfPlayerOnElevator:
@@ -167,8 +200,7 @@ UpdateElevators:
       BNE .updateElevatorLoopCondition
       
     ; player on elevator, move by genericDY
-    ; POI - possible issue - this can force player into the wall
-    ;       make sure that's never the case
+    ; POI - possible issue - this can force player into the wall, make sure that's never the case
     .playerOnElevator:
       JSR MovePlayerVertically
           
