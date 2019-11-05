@@ -78,11 +78,7 @@ BYTES_TO_CLEAR_IN_500   = $44 ; total size of arrays - 256
 ; Other variables - free up to $0700                            ;
 ;****************************************************************
 
-; 444 bytes available; 
-; depends_on_elevator_in_memory_format
-; depends_on_enemy_in_memory_format
-; must be set to x400 + sum of everything above
- .rsset $0544 ; 
+ .rsset $0544 ; 444 bytes available
  
 ;****************************************************************
 ; Game state                                                    ;

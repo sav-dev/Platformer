@@ -322,16 +322,12 @@ UpdatePlayerNormal:
     ; this updates DX. it may have been updated to 0, just exit in that case.
     .checkHorizontalCollision:
       JSR CheckCollisionHorizontal
+      LDA genericDX   
+      BEQ .horizontalMovementDone
     
     ; now apply the movement after collision checks.
     ; depending on the player's position and scroll we want to either move the player or scroll the screen.
-    ; update the position by 1 at a time.
     .applyHorizontalMovement:          
-      
-      ; if genericDX is 0 it means the movement update is done
-      ; it's also possible it will be 0 initially after checking for horizontal collisions.
-      LDA genericDX   
-      BEQ .horizontalMovementDone
                     
       ; POI - possible issue - this doesn't work if level is shorter than two screens
                     
@@ -387,10 +383,12 @@ UpdatePlayerNormal:
       ; if we get here it means we want to move the player.
       .moveHorizontally:              
         JSR MovePlayerHorizontally
-        JMP .applyHorizontalMovement
+        JMP .horizontalMovementDone
                         
-      ; if we get here it means we want to scroll the screen. 
+      ; if we get here it means we want to scroll the screen.
       ; check which direction player is going, and scroll.
+      ; note - we only check if DX > 0 or < 0 - we don't look at the actual values
+      ; (we expect scroll to be constant always, and scroll speed to == player speed)
       .scrollHorizontally:
         LDA genericDX                  
         CMP #$80                      
@@ -400,25 +398,18 @@ UpdatePlayerNormal:
           JSR DecrementScroll          
           LDA #$01
           STA b
-          JSR ScrollBullets
-          INC genericDX
-          JMP .applyHorizontalMovement  
+          JSR ScrollBullets          
+          JMP .horizontalMovementDone  
           
         .scrollRight:
           JSR IncrementScroll          
           LDA #$00
           STA b
           JSR ScrollBullets
-          DEC genericDX
-          JMP .applyHorizontalMovement
           
   ; horizontal movement has now been processed.
   .horizontalMovementDone: 
 
-    ; POI - possible optimization? - this is a waste if player hasn't moved horizontally.
-    ; but probably still worth doing once on each frame than multiple times on some frames.
-    JSR SetPlayerBoxesHorizontal
-  
   ; now that player has been moved, check if the player is still on an elevator and clear the flag if not
   ; if player is not on an elevator, just skip.
   ; otherwise, set the 'b' boxes to player platform box, but increment by2 by 1 to check for collision.
@@ -1337,37 +1328,22 @@ CheckForThreatCollisions:
 ;   MovePlayerHorizontally                                      ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Moves the player horizontally based on genericDX.           ;
+;   Moves the player horizontally based on genericDX            ;
+;   Updates position, boxes etc.                                ;
 ;                                                               ;
-; Output values :                                               ;
-;   genericDX is updated (moved closer to 0 by 1).              ;
+; Used variables:                                               ;
+;   Y                                                           ;
+;   X                                                           ;
 ;****************************************************************
 
 MovePlayerHorizontally:
   
-  LDA genericDX                  
-  CMP #$80                      
-  BCS .goingLeft
+  .applyMovement:
+    LDA genericDX
+    CLC
+    ADC playerX
+    STA playerX    
   
-  .goingRight:
-    INC playerX
-    DEC genericDX
-    RTS
-  
-  .goingLeft:
-    DEC playerX
-    INC genericDX
-    RTS
-
-;****************************************************************
-; Name:                                                         ;
-;   SetPlayerBoxesHorizontal                                    ;
-;                                                               ;
-; Description:                                                  ;
-;   Sets the coordtinates of player's horizontal boxes.         ;
-;****************************************************************
-    
-SetPlayerBoxesHorizontal:
   .plaformBoxX:
     LDA playerX
     STA playerPlatformBoxX1
@@ -1471,12 +1447,15 @@ MovePlayerVertically:
 LoadPlayer:
 
   .setBoxes:
-    JSR SetPlayerBoxesHorizontal
-    LDA #$01                      ; move player by +1 and -1 to set the vertical boxes
+    LDA #PLAYER_SPEED_POSITIVE    ; move player by +2 and -2 to set the boxes
+    STA genericDX
     STA genericDY
+    JSR MovePlayerHorizontally
     JSR MovePlayerVertically
-    LDA #$FF
+    LDA #PLAYER_SPEED_NEGATIVE
+    STA genericDX
     STA genericDY
+    JSR MovePlayerHorizontally
     JSR MovePlayerVertically    
   
   .presetState:
