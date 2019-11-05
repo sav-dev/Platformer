@@ -1050,32 +1050,26 @@ CheckCollisionHorizontal:
   ; adjust movement 
   .adjustMovement:   
     
-    ; just zero out the speed, it can stay like that assuming horizontal speed will always be 2
-    LDA #$00
-    STA genericDX
-    RTS
+    LDA b
+    BNE .adjustMovingRight
     
-    ; below is tested for platforms but not for elevators
-    ;LDA b
-    ;BNE .adjustMovingRight
-    ;
-    ; ; dx => boxX1 + dx - 1 = ax2 => dx = ax2 - boxX1 + 1
-    ;.adjustMovingLeft:
-    ;  LDA ax2
-    ;  SEC
-    ;  SBC playerPlatformBoxX1
-    ;  STA genericDX
-    ;  INC genericDX
-    ;  RTS
-    ;  
-    ; ; dx => boxX2 + dx + 1 = ax1 => dx = ax1 - boxX2 - 1
-    ;.adjustMovingRight:
-    ;  LDA ax1
-    ;  SEC
-    ;  SBC playerPlatformBoxX2
-    ;  STA genericDX
-    ;  DEC genericDX
-    ;  RTS
+     ; dx => boxX1 + dx - 1 = ax2 => dx = ax2 - boxX1 + 1
+    .adjustMovingLeft:
+      LDA ax2
+      SEC
+      SBC playerPlatformBoxX1
+      STA genericDX
+      INC genericDX
+      RTS
+      
+     ; dx => boxX2 + dx + 1 = ax1 => dx = ax1 - boxX2 - 1
+    .adjustMovingRight:
+      LDA ax1
+      SEC
+      SBC playerPlatformBoxX2
+      STA genericDX
+      DEC genericDX
+      RTS
     
 ;****************************************************************
 ; Name:                                                         ;
