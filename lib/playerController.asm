@@ -277,17 +277,19 @@ UpdatePlayerNormal:
       JMP .movingHorizontally
     .checkRightDone:
     
-    ; if we get here it means player is not moving vertically.
-    ; if player is in the RUN state, replace it with the STAND State, and exit.
+    ; if we get here it means player is not moving vertically. set genericDX to 0.
+    ; if player is in the RUN state, replace it with the STAND State.
     .notMovingHorizontally:
+      LDA #$00
+      STA genericDX
       LDA playerAnimation
       CMP #PLAYER_RUN                 
       BEQ .changeStateToStand
-      JMP .horizontalMovementDone
+      JMP .checkHorizontalCollision
       .changeStateToStand:
         LDA #PLAYER_STAND
         STA playerAnimation
-        JMP .horizontalMovementDone
+        JMP .checkHorizontalCollision
     
     ; if we get here it means player is moving vertically.
     ; first update the animation:
@@ -318,8 +320,7 @@ UpdatePlayerNormal:
       LDA #PLAYER_ANIM_FRAMES
       STA playerAnimationFrame  
     
-    ; animation has been updated, now check for a horizontal collision. 
-    ; this updates DX. it may have been updated to 0, just exit in that case.
+    ; animation has been updated, now check for a horizontal collision. this updates DX.
     .checkHorizontalCollision:
       JSR CheckCollisionHorizontal
     
@@ -713,6 +714,8 @@ SpawnPlayerBullets:
 ;                                                               ;
 ; Description:                                                  ;
 ;   Check for vertical collisions, updates genericDY            ;
+;                                                               ;
+; Output:                                                       ;
 ;   collision = 1 set on output if collision detected           ;
 ;   b = 1 set on output if player is now standing on something  ;
 ;                                                               ;
@@ -896,8 +899,9 @@ CheckCollisionVertical:
 ;                                                               ;
 ; Description:                                                  ;
 ;   Check for horizontal collisions, updates genericDX          ;
+;                                                               ;
+; Output:                                                       ;
 ;   collision = 1 set on output if collision detected           ;
-;   b = 1 set on output if player was going right, 0 if left    ;
 ;                                                               ;
 ; Used variables:                                               ;
 ;   Y                                                           ;
@@ -907,9 +911,13 @@ CheckCollisionVertical:
 ;   d                                                           ;
 ;   i                                                           ;
 ;   enemyScreen                                                 ;
+;   enemySpeed                                                  ;
 ;   elevatorSize                                                ;
 ;   collision vars                                              ;
 ;   genericPointer                                              ;
+;                                                               ;
+; Remarks:                                                      ;
+;   depends_on_elevator_in_memory_format                        ;
 ;****************************************************************
 
 CheckCollisionHorizontal:
@@ -993,7 +1001,6 @@ CheckCollisionHorizontal:
     STA bx2  
 
   ; don't check collisions with other elevators if player is already on an elevator.
-  ; (POI - possible issue with elevators)
   .playerOnElevator:
     LDA playerOnElevator
     BNE .checkCollisionsWithPlatforms
@@ -1003,7 +1010,7 @@ CheckCollisionHorizontal:
   .checkCollisionsWithElevators:
     JSR CheckForElevatorCollision
     LDA collision
-    BNE .adjustMovement
+    BNE .handleHorizontalCollisionWithElevator
   
   ; check for collisions with platforms.
   ; but first check if player is moving - exit if not.
@@ -1025,7 +1032,7 @@ CheckCollisionHorizontal:
       STA genericPointer + $01
       JSR CheckForPlatformOneScreen
       LDA collision
-      BNE .adjustMovement
+      BNE .adjustMovementForPlatforms
                                       
     .checkSecondScreen:               
       INC c
@@ -1037,7 +1044,7 @@ CheckCollisionHorizontal:
       JSR CheckForPlatformOneScreen
       JSR MovePlatformsPointerBack
       LDA collision
-      BNE .adjustMovement
+      BNE .adjustMovementForPlatforms
       
       ; no collision found with either platforms or elevators
       ; but we may have had an out of bounds collision - do collision = collisionCache and exit
@@ -1045,32 +1052,120 @@ CheckCollisionHorizontal:
       STA collision
       RTS
       
-  .checkCollisionsWithPlatformsDone:
-
-  ; adjust movement 
-  .adjustMovement:   
-    
-    LDA b
-    BNE .adjustMovingRight
-    
-     ; dx => boxX1 + dx - 1 = ax2 => dx = ax2 - boxX1 + 1
-    .adjustMovingLeft:
-      LDA ax2
-      SEC
-      SBC playerPlatformBoxX1
-      STA genericDX
-      INC genericDX
-      RTS
+    ; adjust movement
+    .adjustMovementForPlatforms:   
       
-     ; dx => boxX2 + dx + 1 = ax1 => dx = ax1 - boxX2 - 1
-    .adjustMovingRight:
-      LDA ax1
-      SEC
-      SBC playerPlatformBoxX2
-      STA genericDX
-      DEC genericDX
-      RTS
+      ; b = 0 means player was going left (genericDX < 0)
+      ; b > 0 means player was going right (genericDX > 0)
+      LDA b
+      BNE .putPlayerOnTheLeft      
+      JMP .putPlayerOnTheRight     
+  
+  ; We had a horizontal collision with an elevator. We must adjust the genericDX.
+  ;
+  ; If we get here:
+  ;   'a' box is set to the box of the elevator that was hit
+  ;   yPointerCache points to the elevator that was hit
+  ;
+  ; This is the logic to handle these collisions:
+  ;
+  ;   Elevator direction is stationary horizontally:
+  ;       genericDX < 0 -> put on the RIGHT
+  ;       genericDX > 0 -> put on the LEFT 
+  ;       
+  ;   Elevator is going left:
+  ;       genericDX == 0 -> put on the LEFT
+  ;       genericDX > 0 -> put on the LEFT
+  ;       genericDX < 0:
+  ;           elevatorSpeed > playerSpeed -> put on the LEFT
+  ;           elevatorSpeed < playerSpeed -> put on the RIGHT
+  ;
+  ;   Elevator is going right:
+  ;       genericDX == 0 -> put on the RIGHT
+  ;       genericDX < 0 -> put on the RIGHT
+  ;       genericDX > 0:
+  ;           elevatorSpeed > playerSpeed -> put on the RIGHT
+  ;           elevatorSpeed < playerSpeed -> put on the LEFT  
+  ;
+  .handleHorizontalCollisionWithElevator:
     
+    ; first step is to check the direction of the elevator - Y = yPointerCache + 5 to point to the direction
+    .checkElevatorDirection:
+      LDA yPointerCache
+      CLC
+      ADC #$05
+      TAY
+      LDA elevators, y
+      BEQ .elevatorGoingLeft ; DIRECTION_LEFT = 0
+      CMP #DIRECTION_RIGHT
+      BEQ .elevatorGoingRight
+        
+      .elevatorStaticHorizontally:
+        ; we can just reuse the same logic we use for platforms here
+        JMP .adjustMovementForPlatforms
+                
+      .elevatorGoingLeft:
+        LDA genericDX
+        BEQ .putPlayerOnTheLeft
+        LDA b ; b > 0 means genericDX > 0
+        BNE .putPlayerOnTheLeft        
+        
+        ; must compare speeds. Y = yPointerCache + 2 to point to the elevator speed
+        ; load it and cache it in enemySpeed
+        LDY yPointerCache
+        INY
+        INY
+        LDA elevators, y
+        JSR ProcessSpecialSpeed
+        
+        ; we now must get the absolute value of playerDX.
+        LDA #$00
+        SEC
+        SBC genericDX
+        
+        ; A now contains absolute value of player speed. compare with elevator speed.
+        CMP enemySpeed
+        
+        ; carry set means player speed > elevator speed - put on the right. otherwise put on the left
+        BCS .putPlayerOnTheRight
+        JMP .putPlayerOnTheLeft
+        
+      .elevatorGoingRight:
+        LDA b ; b == 0 means genericDX <= 0
+        BEQ .putPlayerOnTheRight
+        
+        ; must compare speeds. Y = yPointerCache + 2 to point to the elevator speed. load it and compare with player's speed
+        LDY yPointerCache
+        INY
+        INY
+        LDA elevators, y
+        JSR ProcessSpecialSpeed
+        CMP genericDX
+
+        ; carry set means elevator speed > player speed - put on the right. otherwise put on the left
+        BCS .putPlayerOnTheRight
+        JMP .putPlayerOnTheLeft
+  
+  ; routines below put player on the left or the right of the a box
+  
+  ; dx => boxX1 + dx - 1 = ax2 => dx = ax2 - boxX1 + 1
+  .putPlayerOnTheRight:
+    LDA ax2
+    SEC
+    SBC playerPlatformBoxX1
+    STA genericDX
+    INC genericDX
+    RTS
+    
+  ; dx => boxX2 + dx + 1 = ax1 => dx = ax1 - boxX2 - 1
+  .putPlayerOnTheLeft:
+    LDA ax1
+    SEC
+    SBC playerPlatformBoxX2
+    STA genericDX
+    DEC genericDX
+    RTS
+        
 ;****************************************************************
 ; Name:                                                         ;
 ;   ProcessElevatorVerticalColl                                 ;
@@ -1104,18 +1199,19 @@ ProcessElevatorVerticalColl:
     ; 
     ; possible combinations which can let us figure this out:
     ;
-    ; elevator moving | player moving | player speed vs elevator speed | result
-    ; --------------------------------------------------------------------------
-    ;       up        |      no       |               -                |  top   
-    ;       up        |     down      |               -                |  top   
-    ;       up        |      up       |               <                |  top   
-    ;       up        |      up       |               >                | bottom  
-    ;      down       |      no       |               -                | bottom
-    ;      down       |      up       |               -                | bottom
-    ;      down       |     down      |               <                | bottom
-    ;      down       |     down      |               >                |  top 
-    ;       no        |     down      |               -                |  top 
-    ;       no        |      up       |               -                | bottom  
+    ; elevator moving | player moving | player speed vs  | result
+    ;    vertically   |               | elevator speed   |
+    ; -----------------------------------------------------------
+    ;       up        |      no       |         -        |  top   
+    ;       up        |     down      |         -        |  top   
+    ;       up        |      up       |         <        |  top   
+    ;       up        |      up       |         >        | bottom  
+    ;      down       |      no       |         -        | bottom
+    ;      down       |      up       |         -        | bottom
+    ;      down       |     down      |         <        | bottom
+    ;      down       |     down      |         >        |  top 
+    ;       no        |     down      |         -        |  top 
+    ;       no        |      up       |         -        | bottom  
     ;
     
     ; first check the direction the elevator is moving in - Y = yPointerCache + 5 to point to the direction
@@ -1125,9 +1221,11 @@ ProcessElevatorVerticalColl:
       ADC #$05
       TAY
       LDA elevators, y
-      BEQ .elevatorStatic
       CMP #DIRECTION_UP
       BEQ .elevatorMovingUp
+      CMP #DIRECTION_DOWN
+      BEQ .elevatorMovingDown
+      JMP .elevatorStaticVertically
       
     ; elevator is moving down
     ;
@@ -1153,7 +1251,7 @@ ProcessElevatorVerticalColl:
       LDA b
       BEQ .collisionBottom
       
-      ; todo (not really?): issue - if player is standing on the ground, DY will be 4 and this won't work
+      ; POI (not really?): issue - if player is standing on the ground, DY will be 4 and this won't work
       ; we could check for platform collisions first
       ; however, a case where player is standing on the ground and collides with elevator moving down should not happen
       
@@ -1240,7 +1338,7 @@ ProcessElevatorVerticalColl:
     ; if player moving down, collision from the top.
     ; if player moving down, collision from the bottom.
     ; we'll never hit this if player is also static.
-    .elevatorStatic:     
+    .elevatorStaticVertically:     
       LDA b
       BNE .collisionTop
     
