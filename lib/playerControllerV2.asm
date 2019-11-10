@@ -100,13 +100,19 @@ UpdatePlayerNormal:
       JSR SetPlayerBoxesVertical
       RTS
     
+  ; Player was not crouching in the last frame.
+  ; First check if player is mid-jump.
   .playerWasNotCrouching:
-    LDA controllerDown
-    AND #CONTROLLER_DOWN
-    BEQ .playerWantsToJump
-    LDA #PLAYER_CROUCH
-    STA playerAnimation
-    JSR SetPlayerBoxesVertical
+    LDA playerJump
+    BEQ .playerWasNotJumping
+    
+    ; ...   
+    .playerWasJumping:
+      ;
+    
+    ; ...
+    .playerWasNotJumping:
+      ;
   
   .playerWantsToJump:
     ; todo
