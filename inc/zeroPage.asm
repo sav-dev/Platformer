@@ -1,5 +1,7 @@
 ;****************************************************************
 ; List of zero page variables                                   ;
+; If bytes are needed, many of these could be removed           ;
+; and instead we could use a different variable                 ;
 ;****************************************************************
 
   .rsset $0000
@@ -97,9 +99,9 @@ playerThreatBoxY2       .rs 1
 playerBulletCooldown    .rs 1  ; when player can shoot again
 
 playerState             .rs 1  ; player state (normal/falling/exploding)
-playerAnimation         .rs 1  ; player state
+playerAnimation         .rs 1  ; player animation (crouch/stand/run/jump)
 playerDirection         .rs 1  ; player direction
-playerCounter           .rs 1  ; player counter (timer), used mostly for animation
+playerCounter           .rs 1  ; player counter (timer), used mostly for animation but also for countdown after player dies etc.
 playerAnimationFrame    .rs 1  ; player animation frame
 playerJump              .rs 1  ; 0 means not jumping, otherwise contains the jump counter
 
@@ -153,11 +155,9 @@ removeEnemy             .rs 1  ; whether enemy should be exploded / removed from
 ; Elevators                                                     ;
 ;****************************************************************
 
-; POI - possible optimization - to save zero page bytes, vars below could be combined into 1
-playerOnElevator        .rs 1  ; whether player is standing on an elevator
+playerOnElevator        .rs 1  ; whether player is standing on an elevator, >0 means yes
 playerElevatorId        .rs 1  ; points to the elevator player is standing on
 
-; POI - possible optimization - to save zero page bytes, use some other var for this
 elevatorSize            .rs 1  ; size of an elevator
 
 ;****************************************************************

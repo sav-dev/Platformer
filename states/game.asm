@@ -27,28 +27,32 @@ GameFrame:
   .incrementFrameCounter:
     INC frameCount
     
-  ; POI - possible optimization - we iterate elevators way too many times
+  .updatePlayer:                    ; move player, check for collisions with platforms and elevators  
+    JSR UpdatePlayer                ; checks input, updates player dX and dY
     
-  .updateElevators:
-    JSR UpdateElevators             ; move all elevators, move player if standing on elevator, *DO NOT* render (because we may scroll)
+  ;.updateElevators:                 ; move all elevators, move player if standing on or hit by an elevator
+  ;  JSR UpdateElevators             ; moves elevator, updates player dX and dY if needed
     
-  .updatePlayer:
-    JSR UpdatePlayer                ; move player, check for collisions with platforms and threats, render  
+  .rederPlayer:                     ; at this point, player has been moved, screen has been scrolled
+    JSR RenderPlayer                ; we can render the player
   
-  .renderElevators:
-    JSR RenderElevators             ; scroll has been updated meaning we can now render the elevators
+  .renderElevators:                 ; we can now render the elevators
+    JSR RenderElevators             ; 
   
-  .spawnPlayerBullets:
-    JSR SpawnPlayerBullets          ; spawn a player bullet if needed
+  ;.checkThreatsCollisions:          ; check for player collisions with threats
+  ;  JSR CheckThreatsCollisions      ;
   
-  .updatePlayerBullets:
-    JSR UpdatePlayerBullets         ; move all player bullets, check for collisions with platforms and threats, render
+  .spawnPlayerBullets:              ; spawn a player bullet if needed 
+    JSR SpawnPlayerBullets          ;
+  
+  .updatePlayerBullets:             ; move all player bullets, check for collisions with platforms and threats, render
+    JSR UpdatePlayerBullets         ;
    
-  .updateEnemies:
-    JSR UpdateEnemies               ; move all enemies, spawn enemy bullets, check for collisions with player and player bullets, render
+  .updateEnemies:                   ; move all enemies, spawn enemy bullets, check for collisions with player and player bullets, render
+    JSR UpdateEnemies               ;
   
-  .updateEnemyBullets:
-    JSR UpdateEnemyBullets          ; move all enemy bullets, check for collisions with platforms and threats, check for collision with player, render
+  .updateEnemyBullets:              ; move all enemy bullets, check for collisions with platforms and threats, check for collision with player, render
+    JSR UpdateEnemyBullets          ;
     
   .setNmiFlags:
     .dma:
