@@ -30,7 +30,7 @@
 ; Description:                                                  ;
 ;   Updates all elevators:                                      ;
 ;     - move                                                    ;
-;     - move player if on an elevator                           ;
+;     - move player if on or hit by an elevator                 ;
 ;                                                               ;
 ; Used variables:                                               ;
 ;     X                                                         ;
@@ -38,12 +38,19 @@
 ;     enemy vars (!)                                            ;
 ;     elevator vars                                             ;
 ;     generic vars                                              ;
+;     player vars                                               ;
+;     b                                                         ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_elevator_in_memory_format                        ;
 ;****************************************************************
 
 UpdateElevators:
+  
+  ; preset b to 0. It will be used to mark the fact that we no longer need to check for collisions with player
+  ; since one was already found.
+  LDA #$00
+  STA b
   
   ; main loop - loop all elevators going down
   ; load the place pointing to after the last elevator, store it in xPointerCache
@@ -87,7 +94,7 @@ UpdateElevators:
     ; POI - possible optimization - we process the special speed multiple times per frame
     JSR ProcessSpecialSpeed    
     BNE .getMaxDistance
-    JMP .updateElevatorLoopCondition ; A = enemySpeed after ProcessSpecialSpeed
+    JMP .updateElevatorLoopCondition ; A = enemySpeed after ProcessSpecialSpeed, in this case 0
     
     ; X += 1 to point to the max movement distance, cache it in enemyMaxDistance
     .getMaxDistance:
@@ -191,19 +198,38 @@ UpdateElevators:
       STA elevators, x
       STA genericX
       
-    ; check if player is standing on the current elevator.    
+    ; check if player is standing on any elevator.    
     .checkIfPlayerOnElevator:
       LDA playerOnElevator
-      BEQ .updateElevatorLoopCondition
+      BEQ .playerNotOnAnyElevator
       LDA playerElevatorId
       CMP xPointerCache
-      BNE .updateElevatorLoopCondition
+      BNE .updateElevatorLoopCondition ; if player is on some elevator but not this one, we don't need to do anything
       
-    ; player on elevator, move by genericDY
-    ; POI - possible issue - this can force player into the wall, make sure that's never the case
+    ; player on elevator, move by however much we moved this elevator. 
+    ; but also we must check for collisions with platforms and adjust player if needed
     .playerOnElevator:
-      JSR MovePlayerVertically
-          
+      LDA genericDX
+      BEQ .playerOnVerticalElevator
+      
+      ; player on horizontal elevator, check for collisions with platforms to adjust dx if needed and move the player
+      .playerOnHorizontalElevator:
+        ; todo: check collisions with platforms
+        JSR MovePlayerHorizontallyAndSetBoxes
+        JMP .updateElevatorLoopCondition
+      
+      ; player on vertical elevator, no need to check for collisions with platforms here
+      .playerOnVerticalElevator:
+        JSR MovePlayerVertically
+        JSR SetPlayerBoxesVertical
+        JMP .updateElevatorLoopCondition
+      
+    ; player is not standing on any elevator. We must do a collision check with this elevator vs player, and move the player if needed
+    .playerNotOnAnyElevator:
+      LDA b
+      BNE .updateElevatorLoopCondition ; b > 0 means we've already found a collision and don't need to check again
+      ; todo: make a collision check
+        
     ; loop condition - if we've not just processed the last elevator, loop.   
     ; otherwise exit
     .updateElevatorLoopCondition:

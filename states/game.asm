@@ -32,8 +32,8 @@ GameFrame:
     .updatePlayer:                    ; move player, check for collisions with platforms and elevators  
       JSR UpdatePlayer                ; checks input, updates player dX and dY
       
-    ;.updateElevators:                 ; move all elevators, move player if standing on or hit by an elevator
-    ;  JSR UpdateElevators             ; moves elevator, updates player dX and dY if needed
+    .updateElevators:                 ; move all elevators, move player if standing on or hit by an elevator
+      JSR UpdateElevators             ; moves elevator, updates player dX and dY if needed
       
     .rederPlayer:                     ; at this point, player has been moved, screen has been scrolled
       JSR RenderPlayer                ; we can render the player

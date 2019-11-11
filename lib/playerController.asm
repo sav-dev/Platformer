@@ -91,6 +91,14 @@ UpdatePlayerNotVisible:
 
 UpdatePlayerNormal:
 
+  ; Preset some variables.
+  ; Note - we check vertical collisions multiple time in this routine.
+  ; But only in two the player can be going down, and only these can set the playerOnElevator variable.
+  ; First one is in .playerWasCrouching and 2nd one is in .checkVerticalCollision
+  .presetVariables:
+    LDA #$00
+    STA playerOnElevator
+
   ; Check if in the last frame player was crouching.
   .checkIfWasCrouching:
     LDA playerAnimation
@@ -118,7 +126,7 @@ UpdatePlayerNormal:
     STA playerAnimation                 ; update animation to jump
     JSR MovePlayerVertically            ; move player vertically by gravity
     JSR SetPlayerBoxesVertical          ; update boxes to make player 'stand up';
-    JSR CheckPlayerCollisionVertical    ; check for collisions again. genericDY is 0 now so it will think player is below the obstacles TODO - no need to check elevators here
+    JSR CheckPlayerCollisionVertical    ; check for collisions again. genericDY is 0 now so it will think player is below the obstacles. POI - possible optimization - no need to check elevators here
     JSR MovePlayerVertically            ; if no collision found, genericDY will be 0 and this is a no-op. POI - possible optimization - we could only do
     JSR SetPlayerBoxesVertical          ; these updates if collision found in the 2nd check, but this is so rare it's not worth the branching
     JMP .checkHorizontalMovement        ; go to the common horizontal movement code
@@ -138,7 +146,7 @@ UpdatePlayerNormal:
       LDA #PLAYER_JUMP
       STA playerAnimation               ; update animation to jump
       JSR SetPlayerBoxesVertical        ; update boxes to make player 'stand up';
-      JSR CheckPlayerCollisionVertical  ; check for collisions again. ignore any updates to DY, we just care whether a collision was found TODO - no need to check elevators here
+      JSR CheckPlayerCollisionVertical  ; check for collisions again. ignore any updates to DY, we just care whether a collision was found
       LDA collision
       BNE .playerCrouching              ; player must go back to the crouch if there is no room to stand up
       JMP .playerWantsToJump            ; go to the common jumping code
@@ -631,11 +639,10 @@ CheckVictoryConditions:
  
 CheckPlayerCollisionVertical:
   
-  ; preset collisionCache and playerOnElevator to 0
+  ; preset collisionCache to 0
   .presetCollisionCache:
     LDA #$00
-    STA collisionCache
-    STA playerOnElevator
+    STA collisionCache   
  
   ; check move direction, set b to 0 (static or up) or 1 (down).
   ; if player is not moving, skip the bounds check and go straight to .setBox
@@ -759,8 +766,8 @@ CheckPlayerCollisionVertical:
   .processPlayerAndElevatorCollision:
     LDA b ; 0 means that player was going up, 1 that player was going down
     BEQ .adjustMovement 
-    LDA yPointerCache
-    STA playerOnElevator
+    INC playerOnElevator
+    LDA yPointerCache    
     STA playerElevatorId
     
   .adjustMovement:
@@ -894,6 +901,8 @@ CheckPlayerCollisionHorizontal:
   .playerOnElevator:
     LDA playerOnElevator
     BNE .checkCollisionsWithPlatforms
+  
+  ; TODO - test the logic of checking for collisions with both elevators and platforms
   
   ; check for collisions with elevators first.
   .checkCollisionsWithElevators:
@@ -1562,7 +1571,7 @@ RenderPlayerFalling:
 
 GRAVITY = $04         ; =  4, how much the gravity pulls down per frame (not negative)
 
-JUMP_SLOWDOWN = $04   ; =  4, id A is not down, go to this point in the jump (unless already there)
+JUMP_SLOWDOWN = $04   ; =  4, if A is not down, go to this point in the jump (unless already there)
 JUMP_PRESS = $0C      ; = 12, require A to be pressed when jump counter < this
 
 JUMP_FRAMES = $0F     ; = 15, number of 'jump frames', start with this number then go down
