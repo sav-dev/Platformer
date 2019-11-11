@@ -15,6 +15,11 @@
 ;****************************************************************
 
 UpdatePlayer:
+
+ .presetVariables:
+    LDA #$00
+    STA playerOnElevator
+
   LDA playerState
   BEQ UpdatePlayerNormal        ; PLAYER_NORMAL = 0
   CMP #PLAYER_NOT_VISIBLE
@@ -91,13 +96,9 @@ UpdatePlayerNotVisible:
 
 UpdatePlayerNormal:
 
-  ; Preset some variables.
   ; Note - we check vertical collisions multiple time in this routine.
   ; But only in two the player can be going down, and only these can set the playerOnElevator variable.
   ; First one is in .playerWasCrouching and 2nd one is in .checkVerticalCollision
-  .presetVariables:
-    LDA #$00
-    STA playerOnElevator
 
   ; Check if in the last frame player was crouching.
   .checkIfWasCrouching:

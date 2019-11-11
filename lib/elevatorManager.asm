@@ -40,6 +40,8 @@
 ;     generic vars                                              ;
 ;     player vars                                               ;
 ;     b                                                         ;
+;     collision vars                                            ;
+;     Y                                                         ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_elevator_in_memory_format                        ;
@@ -142,6 +144,7 @@ UpdateElevators:
       
     .directionOK:
       LDA elevators, x
+      STA genericDirection ; genericDirection can now be reused
     
     ; once we get here, X points to the direction, and it has been loaded into A.
     ; check the direction and set DX or DY to the right value
@@ -227,8 +230,49 @@ UpdateElevators:
     ; player is not standing on any elevator. We must do a collision check with this elevator vs player, and move the player if needed
     .playerNotOnAnyElevator:
       LDA b
-      BNE .updateElevatorLoopCondition ; b > 0 means we've already found a collision and don't need to check again
-      ; TODO: make a collision check, move player if needed
+      BNE .updateElevatorLoopCondition ; b > 0 means we've already found a collision and don't need to check again      
+      
+      ; TODO - POI - possible optimization - have separate set of collision routines for player boxes
+      LDA playerPlatformBoxX1
+      STA bx1
+      LDA playerPlatformBoxX2
+      STA bx2
+      LDA playerPlatformBoxY1
+      STA by1
+      LDA playerPlatformBoxY2
+      STA by2
+        
+      LDA #$00
+      STA collision
+      LDY xPointerCache
+      JSR SingleElevatorCollision
+      LDA collision
+      BEQ .updateElevatorLoopCondition
+      
+      ; Collision found, 'a' boxes contain data for this elevator
+      .collisionFound:
+        INC b ; INC b so we do not check for more elevator collisions
+        LDA genericDirection
+        BEQ .collisionElevatorGoingLeft ; DIRECTION_LEFT = 0
+        CMP #DIRECTION_RIGHT
+        BEQ .collisionElevatorGoingRight
+        CMP #DIRECTION_UP
+        BEQ .collisionElevatorGoingUp
+                    
+        .collisionElevatorGoingDown:
+          ;todo
+          JMP .updateElevatorLoopCondition
+        
+        .collisionElevatorGoingUp:
+          ;todo
+          JMP .updateElevatorLoopCondition
+          
+        .collisionElevatorGoingLeft:
+          ;todo
+          JMP .updateElevatorLoopCondition
+          
+        .collisionElevatorGoingRight:
+          ;todo
         
     ; loop condition - if we've not just processed the last elevator, loop.   
     ; otherwise exit
