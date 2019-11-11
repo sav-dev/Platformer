@@ -357,95 +357,8 @@ UpdatePlayerNormal:
         BNE .applyHorizontalMovement
         RTS ; DX set to 0 by the collision routine, no need to move the player
       
-      ; Now apply the movement after collision checks.
-      ; Depending on the player's position and scroll, we want to either move the player or scroll the screen.
-      ; Update the position by 1 at a time.
-      ; POI - possible issue - this doesn't work if level is shorter than two screens
-      .applyHorizontalMovement:                       
-                      
-        ; Load scroll high byte, compare with max scroll high byte
-        LDA scroll + $01                
-        CMP maxScroll + $01
-        BEQ .highBytesMatch             
-                           
-        ; High bytes don't match.
-        ; Check if low byte isn't 0 - in that case we should scroll
-        LDA scroll                      
-        BNE .scrollHorizontally
-                                        
-        ; High bytes don't match, low byte is 0.
-        ; Check if high byte is 0, in that case we're on the left end.
-        ; Otherwise we should scroll.
-        LDA scroll + $01                
-        BEQ .leftMost
-        JMP .scrollHorizontally
-  
-        ; High bytes match, check if scroll == max scroll - in that case we're at the right end.
-        ; Otherwise we should scroll.
-        .highBytesMatch:                
-          LDA scroll
-          CMP maxScroll
-          BEQ .rightMost
-          JMP .scrollHorizontally
-  
-        ; We're on the left most screen.
-        ; Check if player is on the left side of the screen (position != screen center). in such case, move the player.
-        ; Otherwise, check which direction player is going - if going right, scroll, otherwise move.
-        .leftMost:                      
-          LDA playerX
-          CMP #PLAYER_SCREEN_CENTER
-          BNE .moveHorizontally
-          LDA genericDX                  
-          CMP #$80                      
-          BCC .scrollRight
-          JMP .moveHorizontally
-                               
-        ; We're on the right most screen.
-        ; Check if player is on the right side of the screen (position != screen center). in such case, move the player.
-        ; Otherwise, check which direction player is going - if going left, scroll, otherwise move.
-        .rightMost:                     
-          LDA playerX
-          CMP #PLAYER_SCREEN_CENTER
-          BNE .moveHorizontally
-          LDA genericDX                  
-          CMP #$80                      
-          BCS .scrollLeft
-          JMP .moveHorizontally
-                               
-        ; If we get here it means we want to move the player.
-        .moveHorizontally:              
-          JSR MovePlayerHorizontally
-          JMP .checkIfShouldMoveMore
-                          
-        ; If we get here it means we want to scroll the screen. 
-        ; Check which direction player is going, and scroll.
-        .scrollHorizontally:
-          LDA genericDX                  
-          CMP #$80                      
-          BCC .scrollRight
-                                         
-          .scrollLeft:                   
-            JSR DecrementScroll          
-            LDA #$01
-            STA b
-            JSR ScrollBullets
-            INC genericDX
-            JMP .checkIfShouldMoveMore  
-            
-          .scrollRight:
-            JSR IncrementScroll          
-            LDA #$00
-            STA b
-            JSR ScrollBullets
-            DEC genericDX
-
-      ; We;ve moved the player and updated DX. See if we should move the player any more. 
-      ; If not, set horizontal boxes and exit.
-      .checkIfShouldMoveMore:
-        LDA genericDX
-        BNE .applyHorizontalMovement
-        JSR SetPlayerBoxesHorizontal
-        RTS
+        .applyHorizontalMovement:
+          JMP MovePlayerHorizontallyAndSetBoxes
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -1141,28 +1054,113 @@ SetPlayerBoxesVertical:
     
 ;****************************************************************
 ; Name:                                                         ;
-;   MovePlayerHorizontally                                      ;
+;   MovePlayerHorizontallyAndSetBoxes                           ;
 ;                                                               ;
 ; Description:                                                  ;
 ;   Moves the player horizontally based on genericDX.           ;
-;   genericDX is updated (moved closer to 0 by 1).              ;
+;   Either moves the player, or scrolls the screen.             ;
+;   Also update horizontal boxes.                               ;
 ;****************************************************************
 
-MovePlayerHorizontally:
-  
-  LDA genericDX                  
-  CMP #$80                      
-  BCS .goingLeft
-  
-  .goingRight:
-    INC playerX
-    DEC genericDX
-    RTS
-  
-  .goingLeft:
-    DEC playerX
-    INC genericDX
-    RTS
+MovePlayerHorizontallyAndSetBoxes
+
+  ; Update the position by 1 at a time.
+  ; POI - possible issue - this doesn't work if level is shorter than two screens
+  .movePlayerByOne:
+   
+    ; Load scroll high byte, compare with max scroll high byte
+    LDA scroll + $01                
+    CMP maxScroll + $01
+    BEQ .highBytesMatch             
+                       
+    ; High bytes don't match.
+    ; Check if low byte isn't 0 - in that case we should scroll
+    LDA scroll                      
+    BNE .scrollHorizontally
+                                    
+    ; High bytes don't match, low byte is 0.
+    ; Check if high byte is 0, in that case we're on the left end.
+    ; Otherwise we should scroll.
+    LDA scroll + $01                
+    BEQ .leftMost
+    JMP .scrollHorizontally
+    
+    ; High bytes match, check if scroll == max scroll - in that case we're at the right end.
+    ; Otherwise we should scroll.
+    .highBytesMatch:                
+      LDA scroll
+      CMP maxScroll
+      BEQ .rightMost
+      JMP .scrollHorizontally
+    
+    ; We're on the left most screen.
+    ; Check if player is on the left side of the screen (position != screen center). in such case, move the player.
+    ; Otherwise, check which direction player is going - if going right, scroll, otherwise move.
+    .leftMost:                      
+      LDA playerX
+      CMP #PLAYER_SCREEN_CENTER
+      BNE .moveHorizontally
+      LDA genericDX                  
+      CMP #$80                      
+      BCC .scrollRight
+      JMP .moveHorizontally
+                           
+    ; We're on the right most screen.
+    ; Check if player is on the right side of the screen (position != screen center). in such case, move the player.
+    ; Otherwise, check which direction player is going - if going left, scroll, otherwise move.
+    .rightMost:                     
+      LDA playerX
+      CMP #PLAYER_SCREEN_CENTER
+      BNE .moveHorizontally
+      LDA genericDX                  
+      CMP #$80                      
+      BCS .scrollLeft
+      JMP .moveHorizontally
+                           
+    ; If we get here it means we want to move the player.
+    .moveHorizontally:    
+      LDA genericDX                  
+      CMP #$80                      
+      BCS .goingLeft
+      
+      .goingRight:
+        INC playerX
+        DEC genericDX
+        JMP .checkIfShouldMoveMore
+      
+      .goingLeft:
+        DEC playerX
+        INC genericDX
+        JMP .checkIfShouldMoveMore          
+                      
+    ; If we get here it means we want to scroll the screen. 
+    ; Check which direction player is going, and scroll.
+    .scrollHorizontally:
+      LDA genericDX                  
+      CMP #$80                      
+      BCC .scrollRight
+                                     
+      .scrollLeft:                   
+        JSR DecrementScroll          
+        LDA #$01
+        STA b
+        JSR ScrollBullets
+        INC genericDX
+        JMP .checkIfShouldMoveMore  
+        
+      .scrollRight:
+        JSR IncrementScroll          
+        LDA #$00
+        STA b
+        JSR ScrollBullets
+        DEC genericDX
+
+  ; We;ve moved the player and updated DX. See if we should move the player any more. 
+  ; If not, set horizontal boxes and exit.
+  .checkIfShouldMoveMore:
+    LDA genericDX
+    BEQ SetPlayerBoxesHorizontal ; POI - possible optimization - this is not needed if we only scrolled
+    JMP .movePlayerByOne
       
 ;****************************************************************
 ; Name:                                                         ;
