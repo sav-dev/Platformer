@@ -543,6 +543,12 @@ UpdatePlayerFalling:
 ;****************************************************************
 
 CheckThreats:
+       
+  ; only check the threats if player is not already dying or off screen
+  .checkPlayerState:
+    LDA playerState
+    BEQ .checkIfFallingOffScreen ; PLAYER_NORMAL = 0
+    RTS
         
   .checkIfFallingOffScreen:
     LDA playerY
