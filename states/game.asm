@@ -27,32 +27,37 @@ GameFrame:
   .incrementFrameCounter:
     INC frameCount
     
-  .updatePlayer:                    ; move player, check for collisions with platforms and elevators  
-    JSR UpdatePlayer                ; checks input, updates player dX and dY
+  .processFrame:
     
-  ;.updateElevators:                 ; move all elevators, move player if standing on or hit by an elevator
-  ;  JSR UpdateElevators             ; moves elevator, updates player dX and dY if needed
+    .updatePlayer:                    ; move player, check for collisions with platforms and elevators  
+      JSR UpdatePlayer                ; checks input, updates player dX and dY
+      
+    ;.updateElevators:                 ; move all elevators, move player if standing on or hit by an elevator
+    ;  JSR UpdateElevators             ; moves elevator, updates player dX and dY if needed
+      
+    .rederPlayer:                     ; at this point, player has been moved, screen has been scrolled
+      JSR RenderPlayer                ; we can render the player
     
-  .rederPlayer:                     ; at this point, player has been moved, screen has been scrolled
-    JSR RenderPlayer                ; we can render the player
-  
-  .renderElevators:                 ; we can now render the elevators
-    JSR RenderElevators             ; 
-  
-  ;.checkThreatsCollisions:          ; check for player collisions with threats
-  ;  JSR CheckThreatsCollisions      ;
-  
-  .spawnPlayerBullets:              ; spawn a player bullet if needed 
-    JSR SpawnPlayerBullets          ;
-  
-  .updatePlayerBullets:             ; move all player bullets, check for collisions with platforms and threats, render
-    JSR UpdatePlayerBullets         ;
-   
-  .updateEnemies:                   ; move all enemies, spawn enemy bullets, check for collisions with player and player bullets, render
-    JSR UpdateEnemies               ;
-  
-  .updateEnemyBullets:              ; move all enemy bullets, check for collisions with platforms and threats, check for collision with player, render
-    JSR UpdateEnemyBullets          ;
+    .renderElevators:                 ; we can now render the elevators
+      JSR RenderElevators             ; 
+    
+    .checkThreatsCollisions:          ; check for player collisions with threats, also checks if player is falling off the screen
+      JSR CheckThreats                ;
+    
+    .spawnPlayerBullets:              ; spawn a player bullet if needed 
+      JSR SpawnPlayerBullets          ;
+    
+    .updatePlayerBullets:             ; move all player bullets, check for collisions with platforms and threats, render
+      JSR UpdatePlayerBullets         ;
+     
+    .updateEnemies:                   ; move all enemies, spawn enemy bullets, check for collisions with player and player bullets, render
+      JSR UpdateEnemies               ;
+    
+    .updateEnemyBullets:              ; move all enemy bullets, check for collisions with platforms and threats, check for collision with player, render
+      JSR UpdateEnemyBullets          ;
+    
+    .checkVictoryConditions:          ; check for victory conditions
+      JSR CheckVictoryConditions      ;
     
   .setNmiFlags:
     .dma:
