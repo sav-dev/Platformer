@@ -207,7 +207,8 @@ UpdateElevators:
       BEQ .playerNotOnAnyElevator
       LDA playerElevatorId
       CMP xPointerCache
-      BNE .updateElevatorLoopCondition ; if player is on some elevator but not this one, we don't need to do anything
+      BEQ .playerOnElevator
+      JMP .updateElevatorLoopCondition ; if player is on some elevator but not this one, we don't need to do anything
       
     ; player on elevator, move by however much we moved this elevator. 
     ; but also we must check for collisions with platforms and adjust player if needed
@@ -230,50 +231,79 @@ UpdateElevators:
     ; player is not standing on any elevator. We must do a collision check with this elevator vs player, and move the player if needed
     .playerNotOnAnyElevator:
       LDA b
-      BNE .updateElevatorLoopCondition ; b > 0 means we've already found a collision and don't need to check again      
+      BEQ .checkCollision
+      JMP .updateElevatorLoopCondition ; b > 0 means we've already found a collision and don't need to check again      
+            
+      .checkCollision:
       
-      ; TODO - POI - possible optimization - have separate set of collision routines for player boxes
-      LDA playerPlatformBoxX1
-      STA bx1
-      LDA playerPlatformBoxX2
-      STA bx2
-      LDA playerPlatformBoxY1
-      STA by1
-      LDA playerPlatformBoxY2
-      STA by2
+        ; TODO - POI - possible optimization - have separate set of collision routines for player boxes
+        LDA playerPlatformBoxX1
+        STA bx1
+        LDA playerPlatformBoxX2
+        STA bx2
+        LDA playerPlatformBoxY1
+        STA by1
+        LDA playerPlatformBoxY2
+        STA by2
         
-      LDA #$00
-      STA collision
-      LDY xPointerCache
-      JSR SingleElevatorCollision
-      LDA collision
-      BEQ .updateElevatorLoopCondition
-      
-      ; Collision found, 'a' boxes contain data for this elevator
-      .collisionFound:
-        INC b ; INC b so we do not check for more elevator collisions
-        LDA genericDirection
-        BEQ .collisionElevatorGoingLeft ; DIRECTION_LEFT = 0
-        CMP #DIRECTION_RIGHT
-        BEQ .collisionElevatorGoingRight
-        CMP #DIRECTION_UP
-        BEQ .collisionElevatorGoingUp
-                    
-        .collisionElevatorGoingDown:
-          ;todo
-          JMP .updateElevatorLoopCondition
+        LDA #$00
+        STA collision
+        LDY xPointerCache
+        JSR SingleElevatorCollision
+        LDA collision
+        BEQ .updateElevatorLoopCondition
         
-        .collisionElevatorGoingUp:
-          ;todo
-          JMP .updateElevatorLoopCondition
+        ; Collision found, 'a' boxes contain data for this elevator
+        .collisionFound:
+          INC b ; INC b so we do not check for more elevator collisions
+          LDA genericDirection
+          BEQ .collisionElevatorGoingLeft ; DIRECTION_LEFT = 0
+          CMP #DIRECTION_RIGHT
+          BEQ .collisionElevatorGoingRight
+          CMP #DIRECTION_UP
+          BEQ .collisionElevatorGoingUp
+                 
+          ; dy => by1 + dy = ay2 + 1 => dy = ay2 + 1 - by1
+          .collisionElevatorGoingDown:
+            INC ay2
+            LDA ay2
+            SEC
+            SBC by1
+            STA genericDY
+            JSR MovePlayerVertically
+            JSR SetPlayerBoxesVertical
+            JMP .updateElevatorLoopCondition
           
-        .collisionElevatorGoingLeft:
-          ;todo
-          JMP .updateElevatorLoopCondition
+          ; dy => by2 + dy = ay1 - 1 => dy = ay1 - 1 - by2
+          .collisionElevatorGoingUp:
+            DEC ay1
+            LDA ay1
+            SEC
+            SBC by2
+            STA genericDY
+            JSR MovePlayerVertically
+            JSR SetPlayerBoxesVertical
+            JMP .updateElevatorLoopCondition
+            
+          ; dy => bx2 + dx = ax1 - 1 => dx = ax1 - 1 - bx2
+          .collisionElevatorGoingLeft:
+            DEC ax1
+            LDA ax1
+            SEC
+            SBC bx2
+            STA genericDX
+            JSR MovePlayerHorizontallyAndSetBoxes
+            JMP .updateElevatorLoopCondition
+            
+          ; dy => bx1 + dx = ax2 + 1 => dx = ax2 + 1 - bx1
+          .collisionElevatorGoingRight:
+            INC ax2
+            LDA ax2
+            SEC
+            SBC bx1
+            STA genericDX
+            JSR MovePlayerHorizontallyAndSetBoxes
           
-        .collisionElevatorGoingRight:
-          ;todo
-        
     ; loop condition - if we've not just processed the last elevator, loop.   
     ; otherwise exit
     .updateElevatorLoopCondition:
