@@ -214,7 +214,7 @@ UpdateElevators:
       
       ; player on horizontal elevator, check for collisions with platforms to adjust dx if needed and move the player
       .playerOnHorizontalElevator:
-        ; todo: check collisions with platforms
+        JSR CheckPlayerCollisionHorizontal ; this will only check collisions with platform because player is on the elevator
         JSR MovePlayerHorizontallyAndSetBoxes
         JMP .updateElevatorLoopCondition
       
@@ -228,7 +228,7 @@ UpdateElevators:
     .playerNotOnAnyElevator:
       LDA b
       BNE .updateElevatorLoopCondition ; b > 0 means we've already found a collision and don't need to check again
-      ; todo: make a collision check
+      ; TODO: make a collision check, move player if needed
         
     ; loop condition - if we've not just processed the last elevator, loop.   
     ; otherwise exit

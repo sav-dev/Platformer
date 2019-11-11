@@ -1013,11 +1013,27 @@ SetPlayerBoxesVertical:
   .plaformBoxY:
     LDA playerY
     STA playerPlatformBoxY2
-    SEC
-    SBC #PLAYER_PLAT_BOX_HEIGHT
-    BCC .capYAtMin
-    STA playerPlatformBoxY1
-    JMP .threatBoxY
+    
+    LDA playerAnimation
+    CMP #PLAYER_CROUCH
+    BEQ .platformCrouching
+    
+    .platformNotCrouching:
+      LDA playerPlatformBoxY2
+      SEC
+      SBC #PLAYER_PLAT_BOX_HEIGHT
+      BCC .capYAtMin   
+      STA playerPlatformBoxY1
+      JMP .threatBoxY
+    
+    .platformCrouching:
+      LDA playerPlatformBoxY2
+      SEC
+      SBC #PLAYER_PLAT_BOX_HEIGHT_C
+      BCC .capYAtMin   
+      STA playerPlatformBoxY1
+      JMP .threatBoxY
+    
     .capYAtMin:
       LDA #$00
       STA playerPlatformBoxY1
@@ -1031,9 +1047,9 @@ SetPlayerBoxesVertical:
     
     LDA playerAnimation
     CMP #PLAYER_CROUCH
-    BEQ .crouching
+    BEQ .threatCrouching
             
-    .notCrouching:
+    .threatNotCrouching:
       LDA playerThreatBoxY2
       SEC
       SBC #PLAYER_THR_BOX_HEIGHT
@@ -1041,7 +1057,7 @@ SetPlayerBoxesVertical:
       STA playerThreatBoxY1
       RTS
     
-    .crouching:
+    .threatCrouching:
       LDA playerThreatBoxY2
       SEC
       SBC #PLAYER_THR_BOX_HEIGHT_C
