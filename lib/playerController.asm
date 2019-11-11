@@ -158,7 +158,7 @@ UpdatePlayerNormal:
       AND #CONTROLLER_DOWN
       BNE .playerCrouching
       LDA #PLAYER_STAND
-      STA playerAnimation               ; update animation to jump
+      STA playerAnimation               ; update animation to standing
       JSR SetPlayerBoxesVertical        ; update boxes to make player 'stand up';
       JSR CheckPlayerCollisionVertical  ; check for collisions again. ignore any updates to DY, we just care whether a collision was found
       LDA collision
@@ -722,10 +722,6 @@ CheckPlayerCollisionVertical:
   ; POI - possible issue - make sure player will never a vertical collision with both platform and elevator in a frame.
   ; that could be the case if player could gain more vertical speed than the thickness of an elevator.
   .checkCollisionsWithPlatforms:
-    
-    .checkPlayerDY:
-      LDA genericDY
-      BEQ .checkCollisionsWithElevators
   
     .checkFirstScreen:
       LDA #$00
