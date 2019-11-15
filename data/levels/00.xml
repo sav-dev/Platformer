@@ -587,8 +587,8 @@
       <string>0-1-2-0</string>
       <string>0-1-2-0</string>
       <string>0-1-2-0</string>
-      <string>2-0-0-0</string>
-      <string>2-0-0-1</string>
+      <string>0-1-2-0</string>
+      <string>3-2-0-0</string>
       <string>2-0-1-0</string>
       <string>1-1-4-0</string>
       <string>1-1-4-1</string>
@@ -604,8 +604,8 @@
       <string>0-1-2-0</string>
       <string>0-1-2-0</string>
       <string>0-1-2-0</string>
-      <string>2-0-2-0</string>
-      <string>2-0-0-1</string>
+      <string>0-1-2-0</string>
+      <string>3-2-0-0</string>
       <string>2-0-1-0</string>
       <string>1-1-4-0</string>
       <string>1-1-4-1</string>
@@ -655,8 +655,8 @@
       <string>0-1-2-0</string>
       <string>0-1-2-0</string>
       <string>0-1-2-0</string>
-      <string>2-0-0-0</string>
-      <string>2-0-0-1</string>
+      <string>0-1-2-0</string>
+      <string>3-2-0-0</string>
       <string>2-0-1-0</string>
       <string>1-1-4-0</string>
       <string>1-1-4-1</string>
@@ -672,8 +672,8 @@
       <string>0-1-2-0</string>
       <string>0-1-2-0</string>
       <string>0-1-2-0</string>
-      <string>2-0-2-0</string>
-      <string>2-0-0-1</string>
+      <string>0-1-2-0</string>
+      <string>3-2-0-0</string>
       <string>2-0-1-0</string>
       <string>1-1-4-0</string>
       <string>1-1-4-1</string>
@@ -1131,6 +1131,16 @@
       <MinPosition>120</MinPosition>
       <MaxPosition>184</MaxPosition>
       <Direction>Down</Direction>
+    </Elevator>
+    <Elevator>
+      <X>568</X>
+      <Y>96</Y>
+      <Size>4</Size>
+      <MovementType>Horizontal</MovementType>
+      <Speed>1</Speed>
+      <MinPosition>529</MinPosition>
+      <MaxPosition>623</MaxPosition>
+      <Direction>Right</Direction>
     </Elevator>
   </Elevators>
   <PlayerStartingPosition>
