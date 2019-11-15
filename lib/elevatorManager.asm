@@ -104,12 +104,12 @@ UpdateElevators:
       LDA elevators, X    
       STA enemyMaxDistance
     
-    ; preset genericDirection to 0, then X += 1 to point to the movement distance left. 
-    ; load it. if it's 0, it means the extreme was met the previous frame - 
-    ; update it with enemyMaxDistance, and INC genericDirection to tell us we must update the direction.
-    ; note - when updating enemies, we update the direction and update distance left as soon as it reaches 0
-    ; (so it never stays at 0). We don't do this for elevators since we want to know the direction it went
-    ; later when processing the frame.
+    ; preset genericDirection to 0, then X += 1 to point to the movement distance left. load it. 
+    ; if it's 0, it means the extreme was met the previous frame -  update it with enemyMaxDistance, 
+    ; and INC genericDirection to tell us we must update the direction.
+    ;
+    ; note - when updating enemies, we update the direction and update distance left as soon as it reaches 0 (so it never stays at 0).
+    ; we don't do this for elevators for historical reasons (?)
     LDA #$00
     STA genericDirection
     INX
@@ -140,6 +140,7 @@ UpdateElevators:
       LDA elevators, x
       EOR #$01
       STA elevators, x
+      STA genericDirection ; genericDirection can now be reused
       JMP .directionLoaded
       
     .directionOK:
