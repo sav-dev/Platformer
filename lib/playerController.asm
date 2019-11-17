@@ -51,7 +51,6 @@ UpdatePlayerNotVisible:
     BEQ .resetLevel
   
   .nextLevel:
-    ; TODO - this is temporary (going immediately to the next level)
     INC currentLevel
     LDA currentLevel
     CMP #NUMBER_OF_LEVELS
@@ -476,7 +475,7 @@ CheckThreats:
     LDA playerY
     CMP #PLAYER_Y_MAX
     BNE .checkThreats
-    LDA #PLAYER_FALLING ; TODO - this shouldn't be the case for jet pack missions
+    LDA #PLAYER_FALLING ; todo 0003: this shouldn't be the case for jet pack missions
     STA playerState
     RTS
     
@@ -503,7 +502,7 @@ CheckThreats:
     
 CheckVictoryConditions:
 
-  ; TODO - victory condition should come from the level data. For now assume it's the exit one.
+  ; todo 0002: victory condition should come from the level data. For now assume it's the exit one.
   ; check if player wants to exit the stage and whether is at the exit.
   LDA controllerPressed
   AND #CONTROLLER_UP
@@ -899,9 +898,8 @@ CheckPlayerCollisionHorizontal:
     LDA playerOnElevator
     BNE .checkCollisionsWithPlatforms
   
-  ; TODO - test the logic of checking for collisions with both elevators and platforms
-  
   ; check for collisions with elevators first.
+  ; POI - possible issue - collision with elevator and wall in one frame is untested
   .checkCollisionsWithElevators:
     JSR CheckForElevatorCollision
     LDA collision

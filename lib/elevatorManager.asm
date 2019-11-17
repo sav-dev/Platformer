@@ -237,7 +237,7 @@ UpdateElevators:
             
       .checkCollision:
       
-        ; TODO - POI - possible optimization - have separate set of collision routines for player boxes
+        ; POI - possible optimization - have separate set of collision routines for player boxes to avoid setting them too much
         LDA playerPlatformBoxX1
         STA bx1
         LDA playerPlatformBoxX2
@@ -609,14 +609,12 @@ SingleElevatorCollision:
       ; elevator starts off-screen to the left. add width from the consts.
       ; if carry is not set, it means elevator is fully off-screen - exit
       ; otherwise, set ax2 to the result, and set ax1 to 0      
+      ; POI - possible issue - a collision with nothing rendered is possible if elevator's on screen part is < 8 pixels
       .ax1OffScreenToTheLeft:
         LDY elevatorSize
         CLC
         ADC ElevatorWidth, y
         BCC .noCollision
-        ; todo (???) uncomment this? otherwise bullets may hit 'nothing'
-        ; CMP #SPRITE_DIMENSION
-        ; BCC .noCollision
         STA ax2
         LDA #$00
         STA ax1
@@ -948,8 +946,8 @@ MoveElevatorsPointerBack:
 ;   b - used to track current x offset                          ;
 ;****************************************************************
     
-; todo - have different size of elevators have different palette (also update AddEditElevatorDialog)
-;        OR - add an option for elevator color in the level data/memory
+; backlog - have different size of elevators have different palette (also update AddEditElevatorDialog)
+;           OR - add an option for elevator color in the level data/memory
 RenderElevator:
   
   ; preset b (x offset) to 0

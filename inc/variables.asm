@@ -72,10 +72,13 @@ bullets           .rs 60
 PLAYER_BULLET_LIMIT     = $05 ; = 5
 ENEMIES_BULLET_LIMIT    = $0A ; = 10
 
+; depends_on_enemy_in_memory_format
+; depends_on_elevator_in_memory_format
 BYTES_TO_CLEAR_IN_500   = $44 ; total size of arrays - 256
 
 ;****************************************************************
 ; Other variables - free up to $0700                            ;
+; Variables declared below will not be cleared on lvl start     ;
 ;****************************************************************
  
 ;****************************************************************
@@ -89,6 +92,7 @@ currentLevel        .rs 1   ; current level
 ; Level exit                                                    ;
 ;****************************************************************
 
+; todo 0002: generic variables for win condition
 levelExitScreen     .rs 1
 levelExitX          .rs 1 
 levelExitY1         .rs 1

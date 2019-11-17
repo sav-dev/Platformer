@@ -106,7 +106,7 @@ LoadGame:
   
   .loadPalettes:
     LDA #$00
-    STA paletteOffset ; todo: this should be coming form the lvl data below
+    STA paletteOffset             ; todo 0001: this should be coming form the lvl data below
     JSR LoadBgPalette  
     JSR LoadSpritesPalette
     INC needDraw  
@@ -122,7 +122,7 @@ LoadGame:
  
   .clearMemory:                   ; clear all loaded enemies, elevators and bullets data
   
-    .clearArrays:                 ; clear bullets, enemies and elevators data - todo this doesn't work???
+    .clearArrays:                 ; clear data between levels
       
       LDA #$00
       LDX #$00

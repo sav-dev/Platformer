@@ -154,7 +154,7 @@ NMI:
     LDA #$00
     JMP DmaDone
   NoDma:                    ; since we always do DMA in the game logic, if we hit this it means we're lagging
-    NOP                     ; useful for debugging. todo - remove this
+    NOP                     ; useful for debugging. backlog - remove this once the game is done
   DmaDone:                  
                             
   LDA needDraw              ; do other PPU drawing
