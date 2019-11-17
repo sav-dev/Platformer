@@ -7,11 +7,11 @@
 ;                                                               ;
 ;****************************************************************
 
-pal_spr_0:
-  .incbin "PlatformerGraphics\palettes\spr_00.bin"
+pal_spr:
+  .incbin "PlatformerGraphics\palettes\spr.bin"
 
-pal_bg_0:
-  .incbin "PlatformerGraphics\palettes\bg_00.bin"
+pal_bg:
+  .incbin "PlatformerGraphics\palettes\bg.bin"
   
 ;****************************************************************
 ; Name:                                                         ;
@@ -20,21 +20,23 @@ pal_bg_0:
 ; Description:                                                  ;
 ;   Buffers the sprites to be drawn in NMI                      ;
 ;                                                               ;
-; Input parameters:                                             ;
-;   genericPointer: pointer to the palette                      ;
-;                                                               ;
 ; Variables used:                                               ;
 ;   X                                                           ;
 ;   b                                                           ;
 ;   c                                                           ;
+;   genericPointer                                              ;
 ;****************************************************************
 
 LoadSpritesPalette:
-  LDA #$3F               ; sprite palette starts at $3F10 (in PPU)
-  STA b                  ; store the high target byte in b
-  LDA #$10               
-  STA c                  ; store the low target byte in c
-  JSR LoadPalette        ; load the palette
+  LDA #$3F                 ; sprite palette starts at $3F10 (in PPU)
+  STA b                    ; store the high target byte in b
+  LDA #$10                 
+  STA c                    ; store the low target byte in c
+  LDA #LOW(pal_spr)
+  STA genericPointer
+  LDA #HIGH(pal_spr)
+  STA genericPointer + $01
+  JSR LoadPalette          ; load the palette
   RTS
   
 ;****************************************************************
@@ -45,20 +47,32 @@ LoadSpritesPalette:
 ;   Buffers the bg. palette to be drawn in NMI                  ;
 ;                                                               ;
 ; Input parameters:                                             ;
-;   genericPointer: pointer to the palette                      ;
+;   paletteOffset                                               ;
 ;                                                               ;
 ; Variables used:                                               ;
 ;   X                                                           ;
 ;   b                                                           ;
 ;   c                                                           ;
+;   genericPointer                                              ;
 ;****************************************************************
 
 LoadBgPalette:
-  LDA #$3F               ; bg palette starts at $3F00 (in PPU)
-  STA b                  ; store the high target byte in b
-  LDA #$00               
-  STA c                  ; store the low target byte in c
-  JSR LoadPalette        ; load the palette
+  LDA #$3F                 ; bg palette starts at $3F00 (in PPU)
+  STA b                    ; store the high target byte in b
+  LDA #$00                 
+  STA c                    ; store the low target byte in c
+  LDA #LOW(pal_bg)
+  STA genericPointer
+  LDA #HIGH(pal_bg)
+  STA genericPointer + $01
+  LDA genericPointer
+  CLC
+  ADC paletteOffset
+  STA genericPointer
+  LDA genericPointer + $01
+  ADC #$00
+  STA genericPointer + $01
+  JSR LoadPalette          ; load the palette
   RTS
   
 ;****************************************************************

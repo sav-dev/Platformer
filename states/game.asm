@@ -105,15 +105,9 @@ LoadGame:
   .setVramAddressingTo1Done:
   
   .loadPalettes:
-    LDA #LOW(pal_bg_0)
-    STA genericPointer
-    LDA #HIGH(pal_bg_0)
-    STA genericPointer + $01
+    LDA #$00
+    STA paletteOffset ; todo: this should be coming form the lvl data below
     JSR LoadBgPalette  
-    LDA #LOW(pal_spr_0)
-    STA genericPointer
-    LDA #HIGH(pal_spr_0)
-    STA genericPointer + $01
     JSR LoadSpritesPalette
     INC needDraw  
     JSR WaitForFrame              ; wait for values to be written

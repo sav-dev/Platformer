@@ -32,7 +32,7 @@ rightTiles        .rs 128   ; last 128 bytes of the tile dictionary
 ;****************************************************************
 
   .rsset $0300
-; ...
+; 256 bytes available here
 
 ;****************************************************************
 ; Enemies and elevators                                         ;
@@ -77,12 +77,6 @@ BYTES_TO_CLEAR_IN_500   = $44 ; total size of arrays - 256
 ;****************************************************************
 ; Other variables - free up to $0700                            ;
 ;****************************************************************
-
-; 444 bytes available; 
-; depends_on_elevator_in_memory_format
-; depends_on_enemy_in_memory_format
-; must be set to x400 + sum of everything above
- .rsset $0544 ; 
  
 ;****************************************************************
 ; Game state                                                    ;
@@ -100,3 +94,10 @@ levelExitX          .rs 1
 levelExitY1         .rs 1
 levelExitY2         .rs 1
 levelBeaten         .rs 1
+
+;****************************************************************
+; Misc.                                                         ;
+;****************************************************************
+
+; POI - possible optimization - this can be replaced with a pseudo-reg
+paletteOffset       .rs 1   ; offset of the bg palette from the lvl data
