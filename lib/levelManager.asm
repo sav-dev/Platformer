@@ -85,7 +85,7 @@ LoadLevel:
   ;  - exit screen
   ;  - exit x
   ;  - exit y1 and y2 (calculate)
-  INY
+  LDY #$00
   LDA [genericPointer], y
   STA levelExitScreen 
   INY

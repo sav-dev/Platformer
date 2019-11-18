@@ -97,29 +97,6 @@ LoadGame:
     JSR WaitForFrame              ; wait for values to be written
   .disablePPUAndSleepDone:
 
-  .setVramAddressingTo1:
-    LDA #%10010000                ; enable NMI, sprites from PT 0, bg from PT 1. Use NT 0, 1 VRAM increment (for palettes)
-    STA soft2000
-    INC needPpuReg
-    JSR WaitForFrame              ; wait for values to be written
-  .setVramAddressingTo1Done:
-  
-  .loadPalettes:
-    LDA #$00
-    STA paletteOffset             ; todo 0001: this should be coming form the lvl data below
-    JSR LoadBgPalette  
-    JSR LoadSpritesPalette
-    INC needDraw  
-    JSR WaitForFrame              ; wait for values to be written
-  .loadPalettesDone:
- 
-  .setVramAddressingTo32:
-    LDA #%10010100                ; enable NMI, sprites from PT 0, bg from PT 1. Use NT 0, 32 VRAM increment (for background)
-    STA soft2000
-    INC needPpuReg
-    JSR WaitForFrame              ; wait for values to be written
-  .setVramAddressingTo32Done:
- 
   .clearMemory:                   ; clear all loaded enemies, elevators and bullets data
   
     .clearArrays:                 ; clear data between levels
@@ -149,8 +126,9 @@ LoadGame:
     .clearLevelBeatenDone:
     
   .clearMemoryDone:
- 
+  
   .loadLevel:                     ; load level
+    JSR SetVramAddressingTo32
     LDA currentLevel
     ASL A
     TAX                           ; X = currentLevel * 2
@@ -161,7 +139,16 @@ LoadGame:
     STA levelPointer + $01        ; set the pointer
     JSR LoadLevel                 ; load level
   .loadLevelDone:
- 
+  
+  .loadPalettes:
+    JSR SetVramAddressingTo1
+    JSR LoadBgPalette  
+    JSR LoadSpritesPalette
+    INC needDraw  
+    JSR WaitForFrame              ; wait for values to be written
+    JSR SetVramAddressingTo32
+  .loadPalettesDone:
+  
   .loadPlayer:                    ; playerX and playerY should be set by LoadLevel  
     JSR LoadPlayer
   .loadPlayerDone:

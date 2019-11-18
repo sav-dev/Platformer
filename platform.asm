@@ -387,6 +387,34 @@ RenderSprite:
   ADC #SPRITE_POINTER_JUMP  
   STA spritePointer
   RTS
+    
+;****************************************************************
+; Name:                                                         ;
+;   SetVramAddressingTo1                                        ;
+;                                                               ;
+; Description:                                                  ;
+;   Sets VRAM addressing mode to inc by 1                       ;
+;****************************************************************
+
+SetVramAddressingTo1:
+    LDA #%10010000                ; enable NMI, sprites from PT 0, bg from PT 1. Use NT 0, 1 VRAM increment (for palettes)
+    STA soft2000
+    INC needPpuReg
+    JMP WaitForFrame              ; wait for values to be written
+  
+;****************************************************************
+; Name:                                                         ;
+;   SetVramAddressingTo32                                       ;
+;                                                               ;
+; Description:                                                  ;
+;   Sets VRAM addressing mode to inc by 32                      ;
+;****************************************************************
+ 
+SetVramAddressingTo32:
+    LDA #%10010100                ; enable NMI, sprites from PT 0, bg from PT 1. Use NT 0, 32 VRAM increment (for background)
+    STA soft2000
+    INC needPpuReg
+    JMP WaitForFrame              ; wait for values to be written
   
 ;****************************************************************
 ; Modules import                                                ;
