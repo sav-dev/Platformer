@@ -22,6 +22,11 @@
 ;   attsBackPointer                                             ;
 ;   platformsPointer                                            ;
 ;   threatsPointer                                              ;
+;   paletteOffset                                               ;
+;   playerX                                                     ;
+;   playerY                                                     ;
+;   level type                                                  ;
+;   win condition vars                                          ;
 ;                                                               ;
 ; Used variables:                                               ;
 ;   X                                                           ;
@@ -48,28 +53,44 @@ LoadLevel:
   ; load enemies - input is genericPointer, sets elevators and genericPointer (to 1st byte after enemy data)
   JSR LoadElevatorsInitial
   
-  ; everything has been loaded, only thing left is player starting position and exit position. format:
-  ;  - starting position x (genericPointer points here)
-  ;  - starting position y
-  ;  - exit screen
-  ;  - exit x
-  ;  - exit y1 and y2 (calculate)
+  ; next byte is the bg palette
   LDY #$00
   LDA [genericPointer], y
-  STA playerX
+  STA paletteOffset
+  LDA genericPointer
+  CLC
+  ADC #$01
+  STA genericPointer
+  LDA genericPointer + $01
+  ADC #$00
+  STA genericPointer + $01
   
+  ; next 2 bytes are players starting position
+  LDY #$00
+  LDA [genericPointer], y
+  STA playerX  
   INY
   LDA [genericPointer], y
   STA playerY
+  LDA genericPointer
+  CLC
+  ADC #$02
+  STA genericPointer
+  LDA genericPointer + $01
+  ADC #$00
+  STA genericPointer + $01
   
+  ; next 3 bytes are exit coordinates
+  ; todo 0002: make this generic
+  ;  - exit screen
+  ;  - exit x
+  ;  - exit y1 and y2 (calculate)
   INY
   LDA [genericPointer], y
-  STA levelExitScreen
-  
+  STA levelExitScreen 
   INY
   LDA [genericPointer], y
-  STA levelExitX
-  
+  STA levelExitX  
   INY
   LDA [genericPointer], y
   STA levelExitY1
@@ -77,4 +98,4 @@ LoadLevel:
   ADC #EXIT_HEIGHT
   STA levelExitY2
   
-RTS
+  RTS
