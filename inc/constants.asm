@@ -87,56 +87,65 @@ ORIENTATION_NONE  = $02
 ; Player related constans                                       ;
 ;****************************************************************
 
+PLAYER_MAX_HEIGHT        = SPRITE_DIMENSION_X4
+
+; if player has fallen off screen, and then Y >= this, it means player is completely invisible 
+; (since there are two invisible rows at the bottom of the screen)
+PLAYER_Y_FALLEN_BOTTOM   = PLAYER_MAX_HEIGHT - SPRITE_DIMENSION_X2
+
 ; inclusive so it's 16 & 32 really
-PLAYER_PLAT_BOX_WIDTH   = SPRITE_DIMENSION_X2 - $01
-PLAYER_PLAT_BOX_HEIGHT  = SPRITE_DIMENSION_X4 - $01
-PLAYER_PLAT_BOX_HEIGHT_C= SPRITE_DIMENSION_X3 - $01
+PLAYER_PLAT_BOX_WIDTH    = SPRITE_DIMENSION_X2 - $01
+PLAYER_PLAT_BOX_HEIGHT   = SPRITE_DIMENSION_X4 - $01
+PLAYER_PLAT_BOX_HEIGHT_C = SPRITE_DIMENSION_X3 - $01
+                         
+PLAYER_THR_BOX_X_OFF     = $01
+PLAYER_THR_BOX_Y_OFF     = $02
+PLAYER_THR_BOX_WIDTH     = $0D
+PLAYER_THR_BOX_HEIGHT    = $19
+PLAYER_THR_BOX_HEIGHT_C  = $11
+                         
+PLAYER_EXPL_Y_OFF        = SPRITE_DIMENSION_X3
+                         
+PLAYER_SPEED_POSITIVE    = $02   ; positive player speed
+PLAYER_SPEED_NEGATIVE    = $FE   ; positive player speed = positive speed * (-1)
+                         
+PLAYER_SCREEN_CENTER     = $78   ; if playerX == this then player is on the center of the screen
+            
+; todo 0003: add bounds for jetpack levels
 
-PLAYER_THR_BOX_X_OFF    = $01
-PLAYER_THR_BOX_Y_OFF    = $02
-PLAYER_THR_BOX_WIDTH    = $0D
-PLAYER_THR_BOX_HEIGHT   = $19
-PLAYER_THR_BOX_HEIGHT_C = $11
-
-PLAYER_EXPL_Y_OFF       = SPRITE_DIMENSION_X3
-
-PLAYER_SPEED_POSITIVE   = $02   ; positive player speed
-PLAYER_SPEED_NEGATIVE   = $FE   ; positive player speed = positive speed * (-1)
-                        
-PLAYER_SCREEN_CENTER    = $78   ; if playerX == this then player is on the center of the screen
-                        
-PLAYER_X_MIN            = $10
-PLAYER_X_MAX            = SCREEN_WIDTH - $1F
-PLAYER_Y_MIN            = $11   ; must be updated if player is to go off screen more (show/hide sprites in MovePlayerVertically?)
-PLAYER_Y_MAX            = SCREEN_HEIGHT - $01
-                        
-PLAYER_STAND            = $00
-PLAYER_JUMP             = $01
-PLAYER_RUN              = $02
-PLAYER_CROUCH           = $03
-
-PLAYER_NORMAL           = $00   ; normal state
-PLAYER_FALLING          = $01   ; player falling off screen
-PLAYER_EXPLODING        = $02   ; player is exploding
-PLAYER_NOT_VISIBLE      = $03   ; player has died and is timing out
-                        
-PLAYER_ANIM_FRAMES      = $04   ; frames are counting down so 4 -> 3 -> 2 -> 1
-PLAYER_ANIM_SPEED       = $08
-                        
-PLAYER_NOT_V_COOLDOWN   = $60   ; how much time should pass after player is dead/level has been beaten before the screen fades out
-PLAYER_NOT_V_FADED_OUT  = $22   ; how much time should pass after the screen fades out before the game is restarted/next level starts
-                    
-SPRITES_PLAYER          = SPRITES_ADDRESS
-PLAYER_SPRITES_COUNT    = $09   ; for iterating all sprites
-                        
-PLAYER_CROUCH_OFFSET    = $03   ; offset of sprite 8 when crouching
-                        
-PLAYER_BULLET_COOLDOWN  = $0F
-                        
-PLAYER_GUN_OFF_X_R      = $12
-PLAYER_GUN_OFF_X_L      = $FD - $08 ; -08 for rotation
-PLAYER_GUN_OFF_Y        = $EC - $02 ; -02 for bullet offset within the sprite
-PLAYER_GUN_OFF_Y_C      = $F4 - $02 ; same
+PLAYER_X_MIN             = $03   ; not 0 1 2 so gun doesn't move to the right of the screen
+PLAYER_X_MAX             = SCREEN_WIDTH - $0B
+                         
+PLAYER_STAND             = $00
+PLAYER_JUMP              = $01
+PLAYER_RUN               = $02
+PLAYER_CROUCH            = $03
+                         
+PLAYER_NORMAL            = $00   ; normal state
+PLAYER_EXPLODING         = $01   ; player is exploding
+PLAYER_NOT_VISIBLE       = $02   ; player is not visible
+                         
+PLAYER_ANIM_FRAMES       = $04   ; frames are counting down so 4 -> 3 -> 2 -> 1
+PLAYER_ANIM_SPEED        = $08
+                         
+PLAYER_NOT_V_COOLDOWN    = $60   ; how much time should pass after player is dead/level has been beaten before the screen fades out
+PLAYER_NOT_V_FADED_OUT   = $22   ; how much time should pass after the screen fades out before the game is restarted/next level starts
+                         
+SPRITES_PLAYER           = SPRITES_ADDRESS
+PLAYER_SPRITES_COUNT     = $09   ; for iterating all sprites
+                         
+PLAYER_CROUCH_OFFSET     = $03   ; offset of sprite 8 when crouching
+                         
+PLAYER_BULLET_COOLDOWN   = $0F
+                         
+PLAYER_GUN_OFF_X_R       = $12
+PLAYER_GUN_OFF_X_L       = $FD - $08 ; -08 for rotation
+PLAYER_GUN_OFF_Y         = $EC - $02 ; -02 for bullet offset within the sprite
+PLAYER_GUN_OFF_Y_C       = $F4 - $02 ; same
+                         
+PLAYER_Y_STATE_EXIT_UP   = $00 ; special values for the playerYState var
+PLAYER_Y_STATE_NORMAL    = $01 
+PLAYER_Y_STATE_EXIT_DOWN = $02
 
 ;****************************************************************
 ; Explosion related constans                                    ;

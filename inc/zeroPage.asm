@@ -105,6 +105,8 @@ playerCounter           .rs 1  ; player counter (timer), used mostly for animati
 playerAnimationFrame    .rs 1  ; player animation frame
 playerJump              .rs 1  ; 0 means not jumping, otherwise contains the jump counter
 
+playerYState            .rs 1  ; special var describing if player exited the screen on the top or bottom
+
 ;****************************************************************
 ; Generic vars                                                  ;
 ;****************************************************************

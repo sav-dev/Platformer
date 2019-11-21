@@ -3,6 +3,8 @@
 ; Responsible for player's movement and graphics                ;
 ;****************************************************************
     
+; todo 0001: if player is off screen to the top, don't check for any collisions
+    
 ;****************************************************************
 ; Name:                                                         ;
 ;   UpdatePlayer                                                ;
@@ -24,11 +26,7 @@ UpdatePlayer:
   BEQ UpdatePlayerNormal        ; PLAYER_NORMAL = 0
   CMP #PLAYER_NOT_VISIBLE
   BEQ UpdatePlayerNotVisible
-  CMP #PLAYER_FALLING
-  BEQ .playerFalling
   JMP UpdatePlayerExploding
-  .playerFalling:
-    JMP UpdatePlayerFalling
     
 ;****************************************************************
 ; Name:                                                         ;
@@ -413,41 +411,6 @@ UpdatePlayerExploding:
     
 ;****************************************************************
 ; Name:                                                         ;
-;   UpdatePlayerFalling                                         ;
-;                                                               ;
-; Description:                                                  ;
-;   Called when player is in the falling down state             ;
-;                                                               ;
-; Used variables:                                               ;
-;   N/I                                                         ;
-;****************************************************************
-
-UpdatePlayerFalling:
-
-  .applyGravity:
-    LDA #GRAVITY
-    STA genericDY
-    JSR MovePlayerVertically
-    
-  .checkPlayerY:
-    LDA playerY
-    CMP #$40
-    BCC .render                   ; if playerY is < 64, keep rendering the player
-    CMP #$80
-    BCS .render                   ; if playerY is >= 128, keep rendering the player
-  
-  .playerOffScreen:               ; if we get here it means playerY >= 64 && playerY < 128, meaning player is well off screen
-    LDA #PLAYER_NOT_V_COOLDOWN
-    STA playerCounter
-    LDA #PLAYER_NOT_VISIBLE
-    STA playerState
-    RTS
-  
-  .render:
-    JMP RenderPlayerFalling
-        
-;****************************************************************
-; Name:                                                         ;
 ;   CheckThreats                                                ;
 ;                                                               ;
 ; Description:                                                  ;
@@ -468,17 +431,9 @@ CheckThreats:
   ; only check the threats if player is not already dying or off screen
   .checkPlayerState:
     LDA playerState
-    BEQ .checkIfFallingOffScreen ; PLAYER_NORMAL = 0
+    BEQ .checkThreats ; PLAYER_NORMAL = 0
     RTS
         
-  .checkIfFallingOffScreen:
-    LDA playerY
-    CMP #PLAYER_Y_MAX
-    BNE .checkThreats
-    LDA #PLAYER_FALLING ; todo 0003: this shouldn't be the case for jet pack missions
-    STA playerState
-    RTS
-    
   .checkThreats:
     JSR CheckPlayerThreatCollisions
     LDA collision
@@ -645,62 +600,16 @@ CheckPlayerCollisionVertical:
     STA collisionCache   
  
   ; check move direction, set b to 0 (static or up) or 1 (down).
-  ; if player is not moving, skip the bounds check and go straight to .setBox
   .directionCheck:
     LDA #$00
     STA b                                                                     
     LDA genericDY
-    BEQ .setBox
-    CMP #$80                          
+    BEQ .directionCheckDone
+    CMP #$80
     BCS .directionCheckDone
     INC b
   .directionCheckDone:
   
-  ; check if after the movement player will be in screen bounds
-  .checkBounds:
-  
-    LDA b
-    BNE .checkBottomBound
-                         
-    ; check top screen bound.
-    ; carry clear after adding means playerY + genericDY < 0 - cap at Y_MIN 
-    ; then compare to Y_MIN, again carry clear means playerY + genericDY < Y_MIN - cap at Y_MIN
-    ; in either case also INC collisionCache
-    .checkTopBound:                   
-      LDA playerY                     
-      CLC                             
-      ADC genericDY                    
-      BCC .offTop
-      CMP #PLAYER_Y_MIN               
-      BCC .offTop
-      JMP .checkBoundsDone            
-      .offTop:                        
-        LDA #PLAYER_Y_MIN             
-        SEC
-        SBC playerY                   
-        STA genericDY                  
-        INC collisionCache
-        JMP .checkBoundsDone
-
-    ; check bottom screen bound.
-    ; carry clear after adding means playerY + genericDY < Y_MAX - continue
-    ; otherwise cap at max and just exit
-    ; in either case also INC collisionCache
-    .checkBottomBound:
-      LDA playerY                     
-      CLC                             
-      ADC genericDY                    
-      CMP #PLAYER_Y_MAX               
-      BCC .checkBoundsDone
-      .offBottom:                     
-        LDA #PLAYER_Y_MAX             
-        SEC
-        SBC playerY                   
-        STA genericDY                  
-        INC collisionCache
-    
-  .checkBoundsDone:
-
   ; set new player box.
   .setBox:
     LDA playerPlatformBoxX1
@@ -987,12 +896,72 @@ CheckPlayerCollisionHorizontal:
 MovePlayerVertically:
 
   LDA genericDY
-  CLC   
-  ADC playerY    
-  STA playerY
-  LDA #$00
-  STA genericDY
-  RTS
+  BEQ .exitRoutine
+  CMP #$80
+  BCS .playerGoingUp
+  
+  ; player is going down. A = genericDY.
+  ; add playerY, set playerY, check for overflow
+  .playerGoingDown:
+    CLC   
+    ADC playerY
+    STA playerY
+    BCS .overflowGoingDown
+    
+    ; no overflow going down, check if player is in the 'exit down' state. If yes, we should see if it's time to end the level.
+    .checkYState: 
+      LDA playerYState
+      CMP #PLAYER_Y_STATE_EXIT_DOWN
+      BNE .resetDY
+      
+      ; if playerY >= PLAYER_Y_FALLEN_BOTTOM, player is completely off screen
+      .playerOffScreenAtLeastPartially:
+        LDA playerY
+        CMP #PLAYER_Y_FALLEN_BOTTOM
+        BCC .resetDY ; carry not set means playerY < PLAYER_Y_FALLEN_BOTTOM
+  
+        ; player is completely off screen, set state to not_visible
+        .playerOffScreenCompletely:
+          LDA #PLAYER_NOT_V_COOLDOWN
+          STA playerCounter
+          LDA #PLAYER_NOT_VISIBLE
+          STA playerState
+          JMP .resetDY    
+  
+    ; carry is set, meaning overflow going down. if player previously exited the screen going up, state is back to normal. otherwise it's exit going down.
+    .overflowGoingDown:
+      LDA playerYState
+      BEQ .resetToNormal ; PLAYER_Y_STATE_EXIT_UP = 0
+                
+      .setToExitDown:
+        LDA #PLAYER_Y_STATE_EXIT_DOWN
+        STA playerYState
+        JMP .resetDY
+    
+      .resetToNormal:
+        LDA #PLAYER_Y_STATE_NORMAL
+        STA playerYState
+        JMP .resetDY  
+  
+  ; player is going up. A = genericDY.
+  ; add playerY, set playerY, check for overflow
+  .playerGoingUp:
+    CLC   
+    ADC playerY
+    STA playerY
+    BCS .resetDY
+    
+    ; carry is *not* set, meaning overflow going up. player exited the screen going up.
+    .overflowGoingUp:
+      LDA #PLAYER_Y_STATE_EXIT_UP
+      STA playerYState
+  
+  .resetDY:
+    LDA #$00
+    STA genericDY
+    
+  .exitRoutine:
+    RTS
   
 ;****************************************************************
 ; Name:                                                         ;
@@ -1004,6 +973,8 @@ MovePlayerVertically:
 ;****************************************************************
   
 SetPlayerBoxesVertical:
+
+  ; todo 0001: take playerYState into consideration
 
   .plaformBoxY:
     LDA playerY
@@ -1336,6 +1307,8 @@ LoadPlayer:
     STA playerAnimation    
     LDA #DIRECTION_RIGHT
     STA playerDirection
+    LDA #PLAYER_Y_STATE_NORMAL
+    STA playerYState
   
   .setBoxes:
     JSR SetPlayerBoxesHorizontal
@@ -1367,8 +1340,13 @@ RenderPlayer:
 
   .stateCheck:
     LDA playerState
-    BEQ .directionCheck           ; normal = 0
+    BEQ .yStateCheck              ; PLAYER_NORMAL = 0
     RTS                           ; only render in the normal state, other states render in their 'update' routine
+  
+  .yStateCheck:
+    LDA playerYState
+    BNE .directionCheck           ; PLAYER_Y_STATE_EXIT_UP = 0, and we don't want to render in that case
+    RTS    
   
   .directionCheck:
     LDA playerDirection
@@ -1467,14 +1445,16 @@ RenderPlayer:
     ;   f+g points to atts table
     ;   h+i points to x off table
   
+    ; todo 0001: take playerYState into consideration, Y overflow should be treated differently when player exited down
+  
     LDY #PLAYER_SPRITES_COUNT
     .renderTileLoop:
       DEY
       LDA [b], y
       CLC
-      ADC playerY                 ; yOffs are always negative, so if tile is off screen, e.g. if player Y = 3
-      BCC .loopCheck              ; and yOff= -8 (F8), then carry won't be set and tile should be ignored
-      STA renderYPos              ; POI - possible issue - this loopCheck is untested
+      ADC playerY                 ; yOffs are always negative. If carry is not set after the addition, don't render, e.g.
+      BCC .loopCheck              ;   if player is on top of the screen, like if Y = 10 (0A) and yOff = -31 (E1), then carry won't be set (0A + E1 = EB)
+      STA renderYPos              ;   if player is off the screen to the bottom ........................ TODO 0001 update this FINISH
       LDA [d], y
       STA renderTile
       LDA [f], y
@@ -1488,90 +1468,7 @@ RenderPlayer:
         TYA
         BNE .renderTileLoop
         RTS
-        
-;****************************************************************
-; Name:                                                         ;
-;   RenderPlayerFalling                                         ;
-;                                                               ;
-; Description:                                                  ;
-;   Renders player when falling off screen                      ;
-;                                                               ;
-; Used variables:                                               ;
-;   Y                                                           ;
-;   b ~ i used as pointers                                      ;
-;****************************************************************
-    
-RenderPlayerFalling:
-  
-  .directionCheck:
-    LDA playerDirection
-    BEQ .facingLeft               ; DIRECTION_LEFT = 0
-        
-    .facingRight:   
-      LDA #LOW(playerXOffRight)   
-      STA h   
-      LDA #HIGH(playerXOffRight)    
-      STA i   
-        
-      LDA #LOW (playerAttsRight)    
-      STA f   
-      LDA #HIGH (playerAttsRight)   
-      STA g   
-      JMP .yAndTiles
-        
-    .facingLeft:    
-      LDA #LOW(playerXOffLeft)    
-      STA h   
-      LDA #HIGH(playerXOffLeft)   
-      STA i   
-        
-      LDA #LOW (playerAttsLeft)   
-      STA f   
-      LDA #HIGH (playerAttsLeft)    
-      STA g   
-        
-  .yAndTiles:    
-    LDA #LOW(playerYOffNonCrouch)   
-    STA b   
-    LDA #HIGH(playerYOffNonCrouch)    
-    STA c   
-        
-    LDA #LOW(playerTilesJump) 
-    STA d 
-    LDA #HIGH(playerTilesJump)  
-    STA e
-      
-  .render:
-    
-    ; once we get here
-    ;   b+c points to y off table
-    ;   d+e points to tiles table
-    ;   f+g points to atts table
-    ;   h+i points to x off table
-  
-    LDY #PLAYER_SPRITES_COUNT
-    .renderTileLoop:
-      DEY
-      LDA [b], y
-      CLC
-      ADC playerY                 ; when falling down, we want to ignore tiles that would be rendered on top of the screen
-      CMP #$80                    ; compare the tile Y with $80, if it's less then ignore it
-      BCC .loopCheck
-      STA renderYPos
-      LDA [d], y
-      STA renderTile
-      LDA [f], y
-      STA renderAtts
-      LDA [h], y
-      CLC
-      ADC playerX
-      STA renderXPos
-      JSR RenderSprite
-      .loopCheck:
-        TYA
-        BNE .renderTileLoop
-        RTS
-    
+            
 ;****************************************************************
 ; Name:                                                         ;
 ;   jumpLookupTable                                             ;
