@@ -114,7 +114,7 @@ PLAYER_SCREEN_CENTER     = $78   ; if playerX == this then player is on the cent
 ; todo 0003: add bounds for jetpack levels
 
 PLAYER_X_MIN             = $03   ; not 0 1 2 so gun doesn't move to the right of the screen
-PLAYER_X_MAX             = SCREEN_WIDTH - $0B
+PLAYER_X_MAX             = SCREEN_WIDTH - PLAYER_PLAT_BOX_WIDTH
                          
 PLAYER_STAND             = $00
 PLAYER_JUMP              = $01

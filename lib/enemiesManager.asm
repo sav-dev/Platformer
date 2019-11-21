@@ -709,11 +709,20 @@ UpdateActiveEnemy:
     BNE .collisionWithPlayer
     JMP EnemyProcessShooting
   
-    ; only check for collisions if player  state == 0 (PLAYER_NORMAL)
+    ; only check for collisions with player if player is PLAYER_NORMAL and yState != PLAYER_Y_STATE_EXIT_UP
     .collisionWithPlayer:
-      LDA playerState
-      BEQ .collisionWithPlayerCheck
-      JMP .collisionWithBullets
+
+      ; only check for collisions with player if player is PLAYER_NORMAL
+      .checkPlayerState:
+        LDA playerState
+        BEQ .checkPlayerYState ; PLAYER_NORMAL = 0
+        JMP .collisionWithBullets
+        
+      ; only check for collisions with player if playerYState != PLAYER_Y_STATE_EXIT_UP
+      .checkPlayerYState:
+        LDA playerYState
+        BNE .collisionWithPlayerCheck ; PLAYER_Y_STATE_EXIT_UP = 0
+        JMP .collisionWithBullets
       
       ; load player's threat box into the 'b' vars and check for collisions.
       ; explode player if collision detected ('collision' not 0 after CheckForCollision).

@@ -3,8 +3,6 @@
 ; Responsible for player's movement and graphics                ;
 ;****************************************************************
     
-; todo 0001: if player is off screen to the top, don't check for any collisions
-    
 ;****************************************************************
 ; Name:                                                         ;
 ;   UpdatePlayer                                                ;
@@ -228,6 +226,7 @@ UpdatePlayerNormal:
   
       ; No vertical collision was found.
       ; Set animation to jump and go check horizontal movement.
+      ; todo 0001: validate off screen logic in a debugger
       .playerMidJump:
         LDA #PLAYER_JUMP
         STA playerAnimation
@@ -431,7 +430,12 @@ CheckThreats:
   ; only check the threats if player is not already dying or off screen
   .checkPlayerState:
     LDA playerState
-    BEQ .checkThreats ; PLAYER_NORMAL = 0
+    BEQ .checkPlayerYState ; PLAYER_NORMAL = 0
+    RTS
+        
+  .checkPlayerYState:
+    LDA playerYState
+    BNE .checkThreats ; PLAYER_Y_STATE_EXIT_UP = 0
     RTS
         
   .checkThreats:
@@ -592,7 +596,15 @@ CheckVictoryConditions:
 ;   genericPointer                                              ;
 ;****************************************************************
  
+CheckPlayerCollisionVerticalExit:
+  RTS
+ 
 CheckPlayerCollisionVertical:
+  
+  ; don't check for collisions if player is off screen to the top
+  .checkPlayerYState:
+    LDA playerYState
+    BEQ CheckPlayerCollisionVerticalExit ; todo 0001: is this the more optimal way to do this
   
   ; preset collisionCache to 0
   .presetCollisionCache:
@@ -611,6 +623,7 @@ CheckPlayerCollisionVertical:
   .directionCheckDone:
   
   ; set new player box.
+  ; todo 0001: update the box setting here to cap on overflow
   .setBox:
     LDA playerPlatformBoxX1
     STA bx1
@@ -722,11 +735,20 @@ CheckPlayerCollisionVertical:
 ;   genericPointer                                              ;
 ;****************************************************************
 
+CheckPlayerCollisionHorizontalExit:
+  RTS
+
 CheckPlayerCollisionHorizontal:
 
+  ; don't check for collisions if player is off screen to the top
+  .checkPlayerYState:
+    LDA playerYState
+    BEQ CheckPlayerCollisionHorizontalExit
+
   ; preset collisionCache to 0
-  LDA #$00
-  STA collisionCache
+  .presetCollisionCache:
+    LDA #$00
+    STA collisionCache
 
   ; check move direction, set b to 0 (left) or 1 (right). This never gets called when DX = 0
   .directionCheck: 
@@ -906,27 +928,7 @@ MovePlayerVertically:
     CLC   
     ADC playerY
     STA playerY
-    BCS .overflowGoingDown
-    
-    ; no overflow going down, check if player is in the 'exit down' state. If yes, we should see if it's time to end the level.
-    .checkYState: 
-      LDA playerYState
-      CMP #PLAYER_Y_STATE_EXIT_DOWN
-      BNE .resetDY
-      
-      ; if playerY >= PLAYER_Y_FALLEN_BOTTOM, player is completely off screen
-      .playerOffScreenAtLeastPartially:
-        LDA playerY
-        CMP #PLAYER_Y_FALLEN_BOTTOM
-        BCC .resetDY ; carry not set means playerY < PLAYER_Y_FALLEN_BOTTOM
-  
-        ; player is completely off screen, set state to not_visible
-        .playerOffScreenCompletely:
-          LDA #PLAYER_NOT_V_COOLDOWN
-          STA playerCounter
-          LDA #PLAYER_NOT_VISIBLE
-          STA playerState
-          JMP .resetDY    
+    BCC .resetDY     
   
     ; carry is set, meaning overflow going down. if player previously exited the screen going up, state is back to normal. otherwise it's exit going down.
     .overflowGoingDown:
@@ -972,77 +974,123 @@ MovePlayerVertically:
 ;   based on the animation (boxes for crouching are smaller)    ;
 ;****************************************************************
   
+SetPlayerBoxesVerticalExit:
+  RTS
+  
 SetPlayerBoxesVertical:
 
-  ; todo 0001: take playerYState into consideration
-
-  .plaformBoxY:
-    LDA playerY
-    STA playerPlatformBoxY2
+  ; first check playerYState
+  ; if player is offscreen to the top, don't bother with setting anything, we don't check for collisions anyway.
+  ; then we have special logic for setting boxes based on whether player is on screen or off screen to the bottom.
+  .checkPlayerYState:
+    LDA playerYState
+    BEQ SetPlayerBoxesVerticalExit ; PLAYER_Y_STATE_EXIT_UP = 0
+    CMP #PLAYER_Y_STATE_EXIT_DOWN
+    BEQ .playerOffScreenDown
     
-    LDA playerAnimation
-    CMP #PLAYER_CROUCH
-    BEQ .platformCrouching
+    .playerOnScreen:
     
-    .platformNotCrouching:
-      LDA playerPlatformBoxY2
-      SEC
-      SBC #PLAYER_PLAT_BOX_HEIGHT
-      BCC .capYAtMin   
-      STA playerPlatformBoxY1
-      JMP .threatBoxY
-    
-    .platformCrouching:
-      LDA playerPlatformBoxY2
-      SEC
-      SBC #PLAYER_PLAT_BOX_HEIGHT_C
-      BCC .capYAtMin   
-      STA playerPlatformBoxY1
-      JMP .threatBoxY
-    
-    .capYAtMin:
-      LDA #$00
-      STA playerPlatformBoxY1
-  
-  .threatBoxY:
-    LDA playerY
-    SEC
-    SBC #PLAYER_THR_BOX_Y_OFF
-    BCC .capBothAtMin
-    STA playerThreatBoxY2
-    
-    LDA playerAnimation
-    CMP #PLAYER_CROUCH
-    BEQ .threatCrouching
-            
-    .threatNotCrouching:
-      LDA playerThreatBoxY2
-      SEC
-      SBC #PLAYER_THR_BOX_HEIGHT
-      BCC .capY1AtMin
-      STA playerThreatBoxY1
-      RTS
-    
-    .threatCrouching:
-      LDA playerThreatBoxY2
-      SEC
-      SBC #PLAYER_THR_BOX_HEIGHT_C
-      BCC .capY1AtMin
-      STA playerThreatBoxY1
-      RTS
-    
-    .capBothAtMin:
-      LDA #$00
-      STA playerThreatBoxY1
-      STA playerThreatBoxY2      
-      RTS
+      .onScreenPlaformBoxY:
+        LDA playerY
+        STA playerPlatformBoxY2
+        
+        LDA playerAnimation
+        CMP #PLAYER_CROUCH
+        BEQ .onScreenPlatformCrouching
+        
+        .onScreenPlatformNotCrouching:
+          LDA playerPlatformBoxY2
+          SEC
+          SBC #PLAYER_PLAT_BOX_HEIGHT
+          BCC .onScreenCapYAtMin   
+          STA playerPlatformBoxY1
+          JMP .onScreenThreatBoxY
+        
+        .onScreenPlatformCrouching:
+          LDA playerPlatformBoxY2
+          SEC
+          SBC #PLAYER_PLAT_BOX_HEIGHT_C
+          BCC .onScreenCapYAtMin   
+          STA playerPlatformBoxY1
+          JMP .onScreenThreatBoxY
+        
+        .onScreenCapYAtMin:
+          LDA #$00
+          STA playerPlatformBoxY1
       
-    .capY1AtMin:
-      LDA #$00
-      STA playerThreatBoxY1      
-
-    RTS
+      .onScreenThreatBoxY:
+        LDA playerY
+        SEC
+        SBC #PLAYER_THR_BOX_Y_OFF
+        BCC .onScreenCapBothAtMin
+        STA playerThreatBoxY2
+        
+        LDA playerAnimation
+        CMP #PLAYER_CROUCH
+        BEQ .onScreenThreatCrouching
+                
+        .onScreenThreatNotCrouching:
+          LDA playerThreatBoxY2
+          SEC
+          SBC #PLAYER_THR_BOX_HEIGHT
+          BCC .onScreenCapY1AtMin
+          STA playerThreatBoxY1
+          RTS
+        
+        .onScreenThreatCrouching:
+          LDA playerThreatBoxY2
+          SEC
+          SBC #PLAYER_THR_BOX_HEIGHT_C
+          BCC .onScreenCapY1AtMin
+          STA playerThreatBoxY1
+          RTS
+        
+        .onScreenCapBothAtMin:
+          LDA #$00
+          STA playerThreatBoxY1
+          STA playerThreatBoxY2      
+          RTS
+          
+        .onScreenCapY1AtMin:
+          LDA #$00
+          STA playerThreatBoxY1      
+          RTS
     
+    .playerOffScreenDown:
+    
+      ; not checking for crouching as player should not be crouching if off screen down
+      .offScreenPlaformBoxY:
+        LDA #$FF
+        STA playerPlatformBoxY2
+        LDA playerY
+        SEC
+        SBC #PLAYER_PLAT_BOX_HEIGHT
+        BCS .playerCompletelyOffScreen ; carry set means no overflow, so player is completely off screen now
+        STA playerPlatformBoxY1
+        
+      .offScreenThreatBoxY:
+        LDA #$FF
+        STA playerThreatBoxY2
+        LDA playerY
+        SEC
+        SBC #PLAYER_THR_BOX_HEIGHT
+        BCS .offScreenCapY1AtMax
+        STA playerThreatBoxY1        
+        RTS
+        
+      .offScreenCapY1AtMax:
+        LDA #$FF
+        STA playerThreatBoxY1
+        RTS
+        
+      ; player is completely off screen, change state.
+      .playerCompletelyOffScreen:
+        LDA #PLAYER_NOT_V_COOLDOWN
+        STA playerCounter
+        LDA #PLAYER_NOT_VISIBLE
+        STA playerState
+        RTS
+      
 ;****************************************************************
 ; Name:                                                         ;
 ;   MovePlayerHorizontallyAndSetBoxes                           ;
@@ -1445,16 +1493,25 @@ RenderPlayer:
     ;   f+g points to atts table
     ;   h+i points to x off table
   
-    ; todo 0001: take playerYState into consideration, Y overflow should be treated differently when player exited down
-  
     LDY #PLAYER_SPRITES_COUNT
-    .renderTileLoop:
+  
+    ; check the player y state, we treat Y overflow differently based on it.
+    ; yOffs are always negative. 
+    ; if player is on screen and carry *is not* set, it means the tile is not visible and shouldn't be rendered
+    ; if player is off screen down and carry *is* set, it means the tile is not visible and shouldn't be rendered
+    ; POI - possible optimization - lots of code duplication
+    LDA playerYState
+    CMP #PLAYER_Y_STATE_EXIT_DOWN
+    BEQ .renderTileLoopPlayerOffScreenDown
+                        
+    ; todo 0001: this doesn't work
+    .renderTileLoopPlayerNormal:
       DEY
       LDA [b], y
       CLC
-      ADC playerY                 ; yOffs are always negative. If carry is not set after the addition, don't render, e.g.
-      BCC .loopCheck              ;   if player is on top of the screen, like if Y = 10 (0A) and yOff = -31 (E1), then carry won't be set (0A + E1 = EB)
-      STA renderYPos              ;   if player is off the screen to the bottom ........................ TODO 0001 update this FINISH
+      ADC playerY
+      BCC .loopCheckPlayerNormal
+      STA renderYPos
       LDA [d], y
       STA renderTile
       LDA [f], y
@@ -1464,9 +1521,30 @@ RenderPlayer:
       ADC playerX
       STA renderXPos
       JSR RenderSprite
-      .loopCheck:
+      .loopCheckPlayerNormal:
         TYA
-        BNE .renderTileLoop
+        BNE .renderTileLoopPlayerNormal
+        RTS
+        
+    .renderTileLoopPlayerOffScreenDown:
+      DEY
+      LDA [b], y
+      CLC
+      ADC playerY
+      BCS .loopCheckPlayerOffScreenDown
+      STA renderYPos
+      LDA [d], y
+      STA renderTile
+      LDA [f], y
+      STA renderAtts
+      LDA [h], y
+      CLC
+      ADC playerX
+      STA renderXPos
+      JSR RenderSprite
+      .loopCheckPlayerOffScreenDown:
+        TYA
+        BNE .renderTileLoopPlayerNormal
         RTS
             
 ;****************************************************************

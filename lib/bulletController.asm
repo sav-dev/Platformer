@@ -527,11 +527,18 @@ UpdateBullets:
         LDA l
         BEQ .noCollision
         
-        ; only check for collisions if player  state == 0 (PLAYER_NORMAL)
-        LDA playerState
-        BEQ .collisionWithPlayerCheck
-        JMP .noCollision     
-      
+        ; only check for collisions with player if player is PLAYER_NORMAL
+        .checkPlayerState:
+          LDA playerState
+          BEQ .checkPlayerYState ; PLAYER_NORMAL = 0
+          JMP .noCollision
+          
+        ; only check for collisions with player if playerYState != PLAYER_Y_STATE_EXIT_UP
+        .checkPlayerYState:
+          LDA playerYState
+          BNE .collisionWithPlayerCheck ; PLAYER_Y_STATE_EXIT_UP = 0
+          JMP .noCollision
+        
       ; check for collision with player.
       ; bullet's box is still in 'b' boxes, set the player's box in 'a' boxes.
       .collisionWithPlayerCheck:        

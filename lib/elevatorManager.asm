@@ -201,6 +201,18 @@ UpdateElevators:
       ADC genericDX
       STA elevators, x
       STA genericX
+
+    ; only check for collisions with player if player is PLAYER_NORMAL
+    .checkPlayerState:
+      LDA playerState
+      BEQ .checkPlayerYState ; PLAYER_NORMAL = 0
+      JMP .updateElevatorLoopCondition
+      
+    ; only check for collisions with player if playerYState != PLAYER_Y_STATE_EXIT_UP
+    .checkPlayerYState:
+      LDA playerYState
+      BNE .checkIfPlayerOnElevator ; PLAYER_Y_STATE_EXIT_UP = 0
+      JMP .updateElevatorLoopCondition
       
     ; check if player is standing on any elevator.    
     .checkIfPlayerOnElevator:
