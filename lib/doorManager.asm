@@ -1,8 +1,115 @@
 ;****************************************************************
 ; DoorManager                                                   ;
-; Responsible for processing doors and keycards                 ;
+; Responsible for processing the door and keycard logic         ;
 ;****************************************************************
 
+;****************************************************************
+; Name:                                                         ;
+;   ProcessDoorAndKeycard                                       ;
+;                                                               ;
+; Description:                                                  ;
+;   Process door and keycard logic                              ;
+;                                                               ;
+; Used variables:                                               ;
+;   render vars                                                 ;
+;   generic vars                                                ;
+;   X                                                           ;
+;   Y                                                           ;
+;****************************************************************
+
+ProcessDoorAndKeycard:
+
+  ; if the door doesn't exist (either is not on the level or has been opened), exit
+  .checkIfExists:
+    LDA doorExists
+    BNE .processDoor
+    RTS
+    
+  ; process the door first
+  .processDoor:
+    JSR TransposeDoor
+    LDA genericVisible
+    BEQ .processKeycard ; genericVisible set to >0 if door is on the screen
+    JSR RenderDoor      ; only thing we do with the door is rendering
+    
+  .processKeycard:
+    RTS
+
+;****************************************************************
+; Name:                                                         ;
+;   TransposeDoor                                               ;
+;                                                               ;
+; Description:                                                  ;
+;   Transposes the door.                                        ;
+;   POI - possible optimization - only do this once per frame?  ;
+;                                                               ;
+; Output variables:                                             ;
+;   genericX, genericOffScreen, genericVisible                  ;
+;                                                               ;
+; Used variables:                                               ;
+;   todo 0004                                                   ;
+;****************************************************************
+
+TransposeDoor:
+  
+  LDA #$00
+  STA genericVisible
+  STA genericOffScreen
+  
+  .checkScreen:
+    LDA scroll + $01
+    CMP doorScreen
+    BEQ .doorOnCurrentScreen
+    CLC
+    ADC #$01
+    CMP doorScreen
+    BEQ .doorOnNextScreen
+    JMP .doorNotVisible
+      
+    ; door is on the current screen. Transpose logic:
+    ;   - x' = x - low byte of scroll
+    ;   - if x' < 0 (carry cleared after the subtraction), set genericOffScreen to 1 (door is off screen to the left)
+    ;     - then check if the door is on the screen at all
+    ;     - A = generic X + door width
+    ;     - if carry not set - off screen
+    .doorOnCurrentScreen:
+      LDA doorX
+      SEC
+      SBC scroll
+      STA genericX
+      BCC .doorOffScreenToTheLeft
+      INC genericVisible
+      RTS
+      
+      .doorOffScreenToTheLeft:
+        INC genericOffScreen
+        CLC
+        ADC #DOOR_WIDTH_IN_PIXELS ; A still contains genericX
+        BCC .doorNotVisible
+        INC genericVisible
+        RTS  
+    
+    ; door is on the next screen. Transpose logic:
+    ;   - x' = x - low byte of scroll + 256
+    ;   - first calculate A = 255 - scroll + 1. If this overflows, it means scroll = 0, i.e. door is off screen
+    ;   - then calculate A = A + x. Again, overflow means door off screen
+    .doorOnNextScreen:
+      LDA #SCREEN_WIDTH
+      SEC
+      SBC scroll
+      CLC
+      ADC #$01
+      BCS .doorNotVisible
+      ADC doorX
+      BCS .doorNotVisible
+      STA genericX
+      INC genericVisible
+      RTS      
+  
+  ; door not visible
+  .doorNotVisible:
+    RTS
+    
 ;****************************************************************
 ; Name:                                                         ;
 ;   RenderDoor                                                  ;
@@ -11,10 +118,11 @@
 ;   Renders the door.                                           ;
 ;                                                               ;
 ; Input variables:                                              ;
-;   genericX, genericY, genericOffScreen - position             ;
+;   genericX, genericOffScreen - transposed position            ;
+;   doorY - position                                            ;
 ;                                                               ;
 ; Used variables:                                               ;
-;   renderAtts                                                  ;
+;   render vars                                                 ;
 ;   Y                                                           ;
 ;****************************************************************
 
@@ -33,7 +141,7 @@ RenderDoor:
     STA renderXPos    
     
   .renderLeftColumn:
-    LDA genericY
+    LDA doorY
     STA renderYPos
     JSR RenderDoorColumn
     
@@ -45,7 +153,7 @@ RenderDoor:
     STA renderXPos    
     
   .renderRightColumn:
-    LDA genericY
+    LDA doorY
     STA renderYPos
     LDA renderAtts
     ORA #%01000000

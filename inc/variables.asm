@@ -72,9 +72,19 @@ bullets           .rs 60
 PLAYER_BULLET_LIMIT     = $05 ; = 5
 ENEMIES_BULLET_LIMIT    = $0A ; = 10
 
+;****************************************************************
+; Door and keycard                                              ;
+;****************************************************************
+
+; depends_on_door_in_memory_format
+doorExists        .rs 1
+doorScreen        .rs 1
+doorX             .rs 1
+doorY             .rs 1
+
 ; depends_on_enemy_in_memory_format
 ; depends_on_elevator_in_memory_format
-BYTES_TO_CLEAR_IN_500   = $44 ; total size of arrays - 256
+BYTES_TO_CLEAR_IN_500   = $48 ; total size of arrays - 256
 
 ;****************************************************************
 ; Other variables - free up to $0700                            ;

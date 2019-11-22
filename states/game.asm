@@ -55,10 +55,13 @@ GameFrame:
     
     .updateEnemyBullets:              ; move all enemy bullets, check for collisions with platforms and threats, check for collision with player, render
       JSR UpdateEnemyBullets          ;
-    
+
+    .processDoorAndKeycard:           ; render door and keycard, check if player found the keycard
+      JSR ProcessDoorAndKeycard       ;
+ 
     .checkVictoryConditions:          ; check for victory conditions
-      JSR CheckVictoryConditions      ;
-    
+      JSR CheckVictoryConditions      ; 
+      
   .setNmiFlags:
     .dma:
       INC needDma                   ; always do DMA     

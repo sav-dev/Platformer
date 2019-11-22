@@ -363,3 +363,4 @@ EXIT_WIDTH                   = $19 ; 25 - but really 24 because we do a <
 DOOR_SPRITE            = $F8
 DOOR_ATTS              = $02
 DOOR_HEIGHT_IN_SPRITES = $06
+DOOR_WIDTH_IN_PIXELS   = $02 * SPRITE_DIMENSION

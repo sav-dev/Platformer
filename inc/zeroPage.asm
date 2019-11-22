@@ -122,7 +122,8 @@ genericOffScreen        .rs 1  ; 1 means object is off screen (so x = $FE means 
 genericDX               .rs 1  ; how much to move, used for player and enemies
 genericDY               .rs 1
 
-genericDOther           .rs 1  ; how much to move in the 'other' plane (POI - save zero page - remove this and use a pseudo-register
+genericDOther           .rs 1  ; how much to move in the 'other' plane. POI - save zero page - remove this and use a pseudo-register
+genericVisible          .rs 1  ; whether the object exists on this or the next screen. POI - save zero page - remove this and use a pseudo-register
 
 ;****************************************************************
 ; Enemy processing                                              ;

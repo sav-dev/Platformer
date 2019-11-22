@@ -99,7 +99,7 @@
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
-      <string>1-2-0-2</string>
+      <string>0-1-0-1</string>
       <string>0-0-1-5</string>
       <string>0-0-1-6</string>
       <string>0-0-1-7</string>
@@ -248,7 +248,7 @@
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
-      <string>0-2-0-2</string>
+      <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -550,18 +550,8 @@
   <Enemies />
   <Elevators>
     <Elevator>
-      <X>80</X>
-      <Y>176</Y>
-      <Size>2</Size>
-      <MovementType>Horizontal</MovementType>
-      <Speed>1</Speed>
-      <MinPosition>64</MinPosition>
-      <MaxPosition>160</MaxPosition>
-      <Direction>Left</Direction>
-    </Elevator>
-    <Elevator>
       <X>208</X>
-      <Y>112</Y>
+      <Y>80</Y>
       <Size>4</Size>
       <MovementType>Vertical</MovementType>
       <Speed>1</Speed>

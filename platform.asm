@@ -370,8 +370,9 @@ DisablePPU:
 
 RenderSprite:  
   LDX spritePointer
-  DEC renderYPos                ; sprites are rendered one line below the y position
   LDA renderYPos
+  SEC
+  SBC #$01           ; sprites are rendered one line below the y position
   STA sprites, x
   INX
   LDA renderTile
