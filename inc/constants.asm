@@ -364,3 +364,5 @@ DOOR_SPRITE            = $F8
 DOOR_ATTS              = $02
 DOOR_HEIGHT_IN_SPRITES = $06
 DOOR_WIDTH_IN_PIXELS   = $02 * SPRITE_DIMENSION
+DOOR_WIDTH_COLL        = DOOR_WIDTH_IN_PIXELS - $01    ; -1 because collision check is inclusive
+DOOR_HEIGHT_COLL       = $06 * SPRITE_DIMENSION - $01  ; -1 because collision check is inclusive

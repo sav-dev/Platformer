@@ -665,10 +665,10 @@ CheckPlayerCollisionVertical:
         LDA #$00
         STA by1
 
-  ; check for collisions with platforms first,
+  ; check for collisions with platforms and door first,
   ; check first screen first (c == 0), then second screen (c == 1) if no collisions found.
   ; if any collisions found, go to .adjustMovement. Otherwise go to .checkCollisionsWithElevators
-  ; POI - possible issue - make sure player will never a vertical collision with both platform and elevator in a frame.
+  ; POI - possible issue - make sure player will never a vertical collision with both platform/door and elevator in a frame.
   ; that could be the case if player could gain more vertical speed than the thickness of an elevator.
   .checkCollisionsWithPlatforms:
   
@@ -692,6 +692,11 @@ CheckPlayerCollisionVertical:
       STA genericPointer + $01
       JSR CheckForPlatformOneScreen
       JSR MovePlatformsPointerBack
+      LDA collision
+      BNE .adjustMovement
+
+    .checkCollisionWithDoor:
+      JSR CheckForDoorCollision
       LDA collision
       BNE .adjustMovement
       
@@ -873,8 +878,8 @@ CheckPlayerCollisionHorizontal:
       BNE .checkCollisionsWithPlatforms
       RTS
   
-  ; check for collisions with platforms.
-  ; check first screen first (c == 0), then second screen (c == 1) if no collisions found.
+  ; check for collisions with platforms and door
+  ; check first screen first (c == 0), then second screen (c == 1), then door
   ; if any collisions found, go to adjustMovement. Otherwise exit.
   .checkCollisionsWithPlatforms:
   
@@ -901,7 +906,12 @@ CheckPlayerCollisionHorizontal:
       LDA collision
       BNE .adjustMovementHorizontal
       
-      ; no collision found with platforms.
+    .checkCollisionWithDoor:
+      JSR CheckForDoorCollision
+      LDA collision
+      BNE .adjustMovementHorizontal
+      
+      ; no collision found with platforms/door
       ; but we may have had an out of bounds collision, or an elevator collision - do collision = collisionCache and exit
       LDA collisionCache
       STA collision

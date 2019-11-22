@@ -431,7 +431,7 @@ UpdateBullets:
       ; when we get here the bullet has been moved in memory, box is set, rendering vars are set
       ; check for collisions with platforms and threats.
       .checkCollisions:
-        JSR CheckForCollisionsPlatAndTh
+        JSR CheckForCollisionsPlatThDoor
         LDA collision
         BEQ .noCollisionWithPlatAndTh
                 
@@ -675,10 +675,10 @@ ScrollBullets:
     
 ;****************************************************************
 ; Name:                                                         ;
-;   CheckForCollisionsPlatAndTh                                 ;
+;   CheckForCollisionsPlatThDoor                                ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Checks for both platforms and threats collisions on both    ;
+;   Checks for platforms, threats and door collisions on both   ;
 ;   screens with the 'b' hitbox                                 ;
 ;                                                               ;
 ; Input variables:                                              ;
@@ -697,7 +697,12 @@ ScrollBullets:
 ;   genericPointer                                              ;
 ;****************************************************************
   
-CheckForCollisionsPlatAndTh:
+CheckForCollisionsPlatThDoor:
+
+  .checkDoor:
+    JSR CheckForDoorCollision
+    LDA collision
+    BNE .collisionCheckDone
 
   .checkFirstPlatformScreen:
     LDA #$00
@@ -738,7 +743,7 @@ CheckForCollisionsPlatAndTh:
     LDA threatsPointer + $01
     STA genericPointer + $01
     JSR CheckForPlatformOneScreen
-    JSR MoveThreatsPointerBack
+    JSR MoveThreatsPointerBack  
     
   .collisionCheckDone:
     RTS

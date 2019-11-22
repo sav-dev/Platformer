@@ -45,9 +45,6 @@ ProcessDoorAndKeycard:
 ;                                                               ;
 ; Output variables:                                             ;
 ;   genericX, genericOffScreen, genericVisible                  ;
-;                                                               ;
-; Used variables:                                               ;
-;   todo 0004                                                   ;
 ;****************************************************************
 
 TransposeDoor:
@@ -109,6 +106,69 @@ TransposeDoor:
   ; door not visible
   .doorNotVisible:
     RTS
+    
+;****************************************************************
+; Name:                                                         ;
+;   CheckForDoorCollision                                       ;
+;                                                               ;
+; Description:                                                  ;
+;   Checks for collisions between 'b' box and the door.         ;
+;   Sets collision >0 if found                                  ;
+;   Sets 'a' boxes to the box of the door                       ;
+;                                                               ;
+; Used variables:                                               ;
+;   collision vars                                              ;
+;****************************************************************
+
+CheckForDoorCollision:
+
+  LDA #$00
+  STA collision
+  
+  JSR TransposeDoor
+  LDA genericVisible
+  BNE .doorVisible
+  RTS ; door is not visible, no collision
+
+  .doorVisible:
+  
+    ; set Y box, don't cap, it should always be fully on screen
+    .setYBox:
+      LDA doorY
+      STA ay1
+      CLC
+      ADC #DOOR_HEIGHT_COLL
+      STA ay2 ; POI - possible optimization - have a separate var for doorAy2
+  
+      ; now check the genericOffScreen variable
+      LDA genericOffScreen
+      BNE .doorOffScreen
+    
+      ; door is on screen, set x boxes, cap X2 at max
+      .doorOnScreen:  
+        LDA genericX
+        STA ax1
+        CLC
+        ADC #DOOR_WIDTH_COLL
+        BCS .capXAtMax
+        STA ax2
+        JMP CheckForCollision
+        
+        .capXAtMax:
+          LDA #SCREEN_WIDTH
+          STA ax2
+          JMP CheckForCollision
+      
+      ; door is off screen, set ax2 = genericX + width, ax1 = 0, no need to check for overflows,
+      ; genericVisible would be 0 if the door was not on the screen at all.
+      .doorOffScreen:
+        LDA genericX
+        CLC
+        ADC #DOOR_WIDTH_COLL
+        STA ax2
+        LDA #$00
+        STA ax1
+        JMP CheckForCollision
     
 ;****************************************************************
 ; Name:                                                         ;
