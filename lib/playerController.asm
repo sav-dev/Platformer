@@ -608,35 +608,63 @@ CheckPlayerCollisionVertical:
   ; preset collisionCache to 0
   .presetCollisionCache:
     LDA #$00
-    STA collisionCache   
- 
-  ; check move direction, set b to 0 (static or up) or 1 (down).
-  .directionCheck:
-    LDA #$00
-    STA b                                                                     
-    LDA genericDY
-    BEQ .directionCheckDone
-    CMP #$80
-    BCS .directionCheckDone
-    INC b
-  .directionCheckDone:
-  
-  ; set new player box.
-  ; todo 0001: cap on overflow
-  .setBox:
+    STA collisionCache
+    STA collision
+
+  ; set X box
+  .setBoxX:
     LDA playerPlatformBoxX1
     STA bx1
     LDA playerPlatformBoxX2
     STA bx2    
-    LDA playerPlatformBoxY1
-    CLC
-    ADC genericDY
-    STA by1
-    LDA playerPlatformBoxY2
-    CLC
-    ADC genericDY
-    STA by2  
- 
+    
+  ; check move direction, set b to 0 (static or up) or 1 (down) and go to specific box setting routine
+  .directionCheck:
+    LDA #$00
+    STA b                                                                     
+    LDA genericDY
+    CMP #$80
+    BCS .setBoxYGoingUpOrStatic
+    INC b
+  
+    ; player is going down, meaning we need to cap Y at max ($FF) on overflow (carry set)
+    .setBoxYGoingDown:      
+      LDA playerPlatformBoxY1
+      CLC
+      ADC genericDY
+      BCS CheckPlayerCollisionVerticalExit ; player is completely off screen
+      STA by1
+      LDA playerPlatformBoxY2
+      CLC
+      ADC genericDY
+      BCS .goingDownCapY2
+      STA by2
+      JMP .checkCollisionsWithPlatforms
+      
+      .goingDownCapY2:
+        LDA #$FF
+        STA by2
+        JMP .checkCollisionsWithPlatforms
+    
+    ; player is going up, meaning we need to cap Y at min ($00) on no overflow (carry clear)
+    ; also called when player is static but then the additions are no-ops
+    .setBoxYGoingUpOrStatic:
+      LDA playerPlatformBoxY2
+      CLC
+      ADC genericDY
+      BCC CheckPlayerCollisionVerticalExit ; player is completely off screen
+      STA by2
+      LDA playerPlatformBoxY1
+      CLC
+      ADC genericDY
+      BCC .goingUpCapY1
+      STA by1
+      JMP .checkCollisionsWithPlatforms
+      
+      .goingUpCapY1:
+        LDA #$00
+        STA by1
+
   ; check for collisions with platforms first,
   ; check first screen first (c == 0), then second screen (c == 1) if no collisions found.
   ; if any collisions found, go to .adjustMovement. Otherwise go to .checkCollisionsWithElevators
@@ -748,6 +776,7 @@ CheckPlayerCollisionHorizontal:
   .presetCollisionCache:
     LDA #$00
     STA collisionCache
+    STA collision
 
   ; check move direction, set b to 0 (left) or 1 (right). This never gets called when DX = 0
   .directionCheck: 
@@ -807,7 +836,7 @@ CheckPlayerCollisionHorizontal:
   .checkBoundsDone:
   
   ; set new player box.
-  ; todo 0001: cap on overflow
+  ; no need to handle overflow since we are capping at X_MIN/X_MAX above
   .setBox:
     LDA playerPlatformBoxY1
     STA by1

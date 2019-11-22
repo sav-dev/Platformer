@@ -1,8 +1,3 @@
-0001: 
- - let player go out of bounds vertically
- - update collision logic to work if player is in the falling state so player can still get hit by stuff and explode
- - if player is off screen to the top, don't check for any collisions
- 
 0002:
  - win condition comes from lvl data
  - add the 'get to the end of the screen' win condition
