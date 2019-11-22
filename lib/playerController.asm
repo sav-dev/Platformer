@@ -622,7 +622,7 @@ CheckPlayerCollisionVertical:
   .directionCheckDone:
   
   ; set new player box.
-  ; todo 0001: update the box setting here to cap on overflow
+  ; todo 0001: cap on overflow
   .setBox:
     LDA playerPlatformBoxX1
     STA bx1
@@ -806,7 +806,8 @@ CheckPlayerCollisionHorizontal:
     
   .checkBoundsDone:
   
-  ; set new player box.  
+  ; set new player box.
+  ; todo 0001: cap on overflow
   .setBox:
     LDA playerPlatformBoxY1
     STA by1
