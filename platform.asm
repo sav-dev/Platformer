@@ -424,8 +424,7 @@ SetVramAddressingTo32:
   .include "lib\levelManager.asm"
   .include "lib\controllerManager.asm"  
   .include "lib\collisionManager.asm"
-  .include "lib\playerController.asm"
-  .include "lib\explosionsController.asm"
+  .include "lib\playerController.asm"  
   .include "lib\bulletController.asm"
   .include "lib\enemiesManager.asm"  
 
@@ -433,20 +432,23 @@ Bank2End:
   
   .bank 0
   .org $8000
+  
+Bank0Start:
     
   .include "lib\paletteManager.asm"   
   .include "lib\elevatorManager.asm"
+  .include "lib\explosionsController.asm"
+  .include "lib\doorManager.asm"
   
   .include "states\game.asm"
     
-Bank0Start:
 Bank0End:
     
   .bank 1
   .org $A000
 
 Bank1Start:
-
+  
 Bank1End:
   
   .bank 3

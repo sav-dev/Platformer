@@ -44,8 +44,8 @@ SPRITE_DIMENSION_X4   = SPRITE_DIMENSION * $04
 
 LAST_SPRITE_X         = $F8 ; position of the last sprite that doesn't overflow
                       
-CLEAR_SPRITE          = $FE ; when any of the sprite's values are set to this then the sprite is cleared
-CLEAR_TILE            = $FE ; clear background tile
+CLEAR_SPRITE          = $FF ; when any of the sprite's values are set to this then the sprite is cleared
+CLEAR_TILE            = $04 ; clear background tile. AUTO-GENERATED, MAY CHANGE
 CLEAR_ATTS            = $00 ; clear background atts
                                           
 Y_OFF                 = $00 ; offset of the Y position in the sprite data
@@ -355,3 +355,11 @@ ELEVATOR_HEIGHT              = $06
 
 EXIT_HEIGHT                  = $24 ; 36 - but really 35 because we do a <
 EXIT_WIDTH                   = $19 ; 25 - but really 24 because we do a <
+
+;****************************************************************
+; Door and keycard                                              ;
+;****************************************************************
+
+DOOR_SPRITE            = $F8
+DOOR_ATTS              = $02
+DOOR_HEIGHT_IN_SPRITES = $06
