@@ -229,7 +229,9 @@ MoveThreatsPointerBack:
 ;****************************************************************
     
 CheckForPlatformOneScreen:
-    
+  
+  ; todo 0004: check for collisions with doors here as well. this way we'll only have to update this one place
+ 
   LDA #$00                      
   STA collision
     
