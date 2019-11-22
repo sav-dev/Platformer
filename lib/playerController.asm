@@ -226,7 +226,6 @@ UpdatePlayerNormal:
   
       ; No vertical collision was found.
       ; Set animation to jump and go check horizontal movement.
-      ; todo 0001: validate off screen logic in a debugger
       .playerMidJump:
         LDA #PLAYER_JUMP
         STA playerAnimation
@@ -604,7 +603,7 @@ CheckPlayerCollisionVertical:
   ; don't check for collisions if player is off screen to the top
   .checkPlayerYState:
     LDA playerYState
-    BEQ CheckPlayerCollisionVerticalExit ; todo 0001: is this the more optimal way to do this
+    BEQ CheckPlayerCollisionVerticalExit
   
   ; preset collisionCache to 0
   .presetCollisionCache:
@@ -1504,7 +1503,6 @@ RenderPlayer:
     CMP #PLAYER_Y_STATE_EXIT_DOWN
     BEQ .renderTileLoopPlayerOffScreenDown
                         
-    ; todo 0001: this doesn't work
     .renderTileLoopPlayerNormal:
       DEY
       LDA [b], y
@@ -1544,7 +1542,7 @@ RenderPlayer:
       JSR RenderSprite
       .loopCheckPlayerOffScreenDown:
         TYA
-        BNE .renderTileLoopPlayerNormal
+        BNE .renderTileLoopPlayerOffScreenDown
         RTS
             
 ;****************************************************************
