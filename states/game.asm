@@ -169,6 +169,6 @@ LoadGame:
     LDA #%00011110                ; enable sprites and background
     STA soft2001                  
     INC needPpuReg
-  .enablePPUDone:
+  .enablePPUDone:  
   
   JMP WaitForFrame 

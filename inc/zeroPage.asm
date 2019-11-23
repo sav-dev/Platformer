@@ -119,8 +119,11 @@ genericFrame            .rs 1  ; generic frame count
 genericDirection        .rs 1  ; generic direction
 genericOffScreen        .rs 1  ; 1 means object is off screen (so x = $FE means render on the left side of the screen)
 
-genericDX               .rs 1  ; how much to move, used for player and enemies
+genericDX               .rs 1  ; how much to move
 genericDY               .rs 1
+
+genericWidth            .rs 1
+genericHeight           .rs 1
 
 genericDOther           .rs 1  ; how much to move in the 'other' plane. POI - save zero page - remove this and use a pseudo-register
 genericVisible          .rs 1  ; whether the object exists on this or the next screen. POI - save zero page - remove this and use a pseudo-register

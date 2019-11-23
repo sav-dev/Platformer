@@ -230,8 +230,6 @@ MoveThreatsPointerBack:
     
 CheckForPlatformOneScreen:
   
-  ; todo 0004: check for collisions with doors here as well. this way we'll only have to update this one place (??????)
- 
   LDA #$00                      
   STA collision
     
@@ -382,4 +380,172 @@ CheckForCollision:
   BCC .checkDone             ; ax1 > bx2, no collision  
   JMP CheckForCollisionNoAX1 ; check other points
   .checkDone:
+    RTS
+    
+;****************************************************************
+; Name:                                                         ;
+;   CheckForItemCollision                                       ;
+;                                                               ;
+; Description:                                                  ;
+;   Checks for collisions between 'b' box and an item.          ;
+;   Sets collision >0 if found                                  ;
+;   Sets 'a' boxes to the box of the item                       ;
+;   POI - possible issue - assumes items are always fully       ;
+;         on screen in the 'y' plane                            ;
+;                                                               ;
+; Input variables:                                              ;
+;   c - whether to transpose.                                   ;
+;     If set to 0:                                              ;
+;       genericOffScreen - the screen the object is on          ;
+;       genericX - non-transposed X                             ;
+;     If set to 1:                                              ;
+;       genericOffScreen - transposed, whether item on screen   ;
+;       genericX - transposed X                                 ;
+;   genericY - Y                                                ;
+;   genericWidth - width of the object                          ;
+;   genericHeight - height of the object                        ;
+;                                                               ;
+; Used variables:                                               ;
+;   collision vars                                              ;
+;****************************************************************
+
+CheckForItemCollision:
+
+  ; preset collision to 0
+  .preset:
+    LDA #$00
+    STA collision
+  
+  ; transpose the item if needed
+  .transposeIfNeeded:
+    LDA c
+    BNE .itemTransposed
+    JSR TransposeItem  
+    LDA genericVisible
+    BNE .itemTransposed
+    RTS  
+
+  .itemTransposed:
+  
+    ; set X box first
+    .setXBox:
+  
+      ; now check the genericOffScreen variable
+      LDA genericOffScreen
+      BNE .itemOffScreen
+    
+      ; item is on screen, set x boxes, cap X2 at max
+      .itemOnScreen:  
+        LDA genericX
+        STA ax1
+        CLC
+        ADC genericWidth
+        BCS .capXAtMax
+        STA ax2
+        JMP .setYBox
+        
+        .capXAtMax:
+          LDA #SCREEN_WIDTH
+          STA ax2
+          JMP .setYBox
+      
+      ; item is off screen, set ax2 = genericX + width, ax1 = 0, no need to check for overflows,
+      ; genericVisible would be 0 if the item was not on the screen at all.
+      .itemOffScreen:
+        LDA genericX
+        CLC
+        ADC genericWidth
+        STA ax2
+        LDA #$00
+        STA ax1
+
+    ; set Y box, don't cap, items processed by this routine should always be on screen.
+    .setYBox:
+      LDA genericY
+      STA ay1
+      CLC
+      ADC genericHeight
+      STA ay2 
+    
+    ; finally, check for collisions.
+    JMP CheckForCollision
+    
+;****************************************************************
+; Name:                                                         ;
+;   TransposeItem                                               ;
+;                                                               ;
+; Description:                                                  ;
+;   Transposes an item.                                         ;
+;   POI - possible optimization - reuse this for elsewhere      ;
+;                                                               ;
+; Input variables:                                              ;
+;   genericOffScreen - points to the screen the object is on    ;
+;   genericX - non-transposed X                                 ;
+;   genericWidth - width of the object                          ;
+;                                                               ;
+; Output variables:                                             ;
+;   genericX, genericOffScreen, genericVisible                  ;
+;****************************************************************
+
+TransposeItem:
+  
+  LDA #$00
+  STA genericVisible
+  
+  .checkScreen:
+    LDA scroll + $01
+    CMP genericOffScreen
+    BEQ .itemOnCurrentScreen
+    CLC
+    ADC #$01
+    CMP genericOffScreen
+    BEQ .itemOnNextScreen
+    JMP .itemNotVisible
+      
+    ; item is on the current screen. Transpose logic:
+    ;   - x' = x - low byte of scroll
+    ;   - if x' < 0 (carry cleared after the subtraction), set genericOffScreen to 1 (item is off screen to the left)
+    ;     - then check if the item is on the screen at all
+    ;     - A = generic X + item width
+    ;     - if carry not set - off screen
+    .itemOnCurrentScreen:
+      LDA #$00
+      STA genericOffScreen
+      LDA genericX
+      SEC
+      SBC scroll
+      STA genericX
+      BCC .itemOffScreenToTheLeft
+      INC genericVisible
+      RTS
+      
+      .itemOffScreenToTheLeft:
+        INC genericOffScreen
+        CLC
+        ADC genericWidth ; A still contains genericX
+        BCC .itemNotVisible
+        INC genericVisible
+        RTS  
+    
+    ; item is on the next screen. Transpose logic:
+    ;   - x' = x - low byte of scroll + 256
+    ;   - first calculate A = 255 - scroll + 1. If this overflows, it means scroll = 0, i.e. item is off screen
+    ;   - then calculate A = A + x. Again, overflow means item off screen
+    .itemOnNextScreen:
+      LDA #$00
+      STA genericOffScreen
+      LDA #SCREEN_WIDTH
+      SEC
+      SBC scroll
+      CLC
+      ADC #$01
+      BCS .itemNotVisible
+      ADC genericX
+      BCS .itemNotVisible
+      STA genericX
+      INC genericVisible
+      RTS      
+  
+  ; item not visible
+  .itemNotVisible:
     RTS

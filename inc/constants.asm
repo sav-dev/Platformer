@@ -363,6 +363,11 @@ EXIT_WIDTH                   = $19 ; 25 - but really 24 because we do a <
 DOOR_SPRITE            = $F8
 DOOR_ATTS              = $02
 DOOR_HEIGHT_IN_SPRITES = $06
-DOOR_WIDTH_IN_PIXELS   = $02 * SPRITE_DIMENSION
-DOOR_WIDTH_COLL        = DOOR_WIDTH_IN_PIXELS - $01    ; -1 because collision check is inclusive
-DOOR_HEIGHT_COLL       = $06 * SPRITE_DIMENSION - $01  ; -1 because collision check is inclusive
+DOOR_WIDTH             = $02 * SPRITE_DIMENSION - $01  ; -1 because collision check is inclusive
+DOOR_HEIGHT            = $06 * SPRITE_DIMENSION - $01  ; -1 because collision check is inclusive
+
+KEYCARD_SPRITE_1       = $F6
+KEYCARD_SPRITE_2       = $F7
+KEYCARD_ATTS           = $02
+KEYCARD_WIDTH          = $02 * SPRITE_DIMENSION - $01  ; -1 because collision check is inclusive
+KEYCARD_HEIGHT         = SPRITE_DIMENSION - $01        ; -1 because collision check is inclusive

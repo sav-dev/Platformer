@@ -25,6 +25,7 @@
 ;   paletteOffset                                               ;
 ;   playerX                                                     ;
 ;   playerY                                                     ;
+;   door and keycard vars                                       ;
 ;   level type                                                  ;
 ;   win condition vars                                          ;
 ;                                                               ;
@@ -52,6 +53,9 @@ LoadLevel:
   
   ; load enemies - input is genericPointer, sets elevators and genericPointer (to 1st byte after enemy data)
   JSR LoadElevatorsInitial
+  
+  ; load door and keycard data
+  ; todo 004
   
   ; next byte is the bg palette
   LDY #$00

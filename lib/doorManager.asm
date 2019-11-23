@@ -19,21 +19,51 @@
 
 ProcessDoorAndKeycard:
 
-  ; if the door doesn't exist (either is not on the level or has been opened), exit
   .checkIfExists:
     LDA doorExists
     BNE .processDoor
     RTS
     
-  ; process the door first
   .processDoor:
     JSR TransposeDoor
     LDA genericVisible
-    BEQ .processKeycard ; genericVisible set to >0 if door is on the screen
-    JSR RenderDoor      ; only thing we do with the door is rendering
+    BEQ .processKeycard
+    JSR RenderDoor
     
   .processKeycard:
+    JSR TransposeKeycard
+    LDA genericVisible
+    BNE .renderKeycard
     RTS
+    
+    .renderKeycard:
+      JSR RenderKeycard
+    
+    .checkKeycardCollision:
+      LDA keycardY
+      STA genericY
+      LDA #KEYCARD_HEIGHT
+      STA genericHeight
+      LDA #$01
+      STA c ; everything is still transposed from above, set c to > 0 to signal that
+      
+      LDA playerPlatformBoxX1
+      STA bx1
+      LDA playerPlatformBoxX2
+      STA bx2
+      LDA playerPlatformBoxY1
+      STA by1
+      LDA playerPlatformBoxY2
+      STA by2
+      JSR CheckForItemCollision      
+      LDA collision
+      BNE .keycardCollision
+      RTS
+    
+    .keycardCollision:
+      LDA #$00
+      STA doorExists ; keycard collision, simply disable the door, next frame both door and keycard will disappear
+      RTS
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -41,72 +71,40 @@ ProcessDoorAndKeycard:
 ;                                                               ;
 ; Description:                                                  ;
 ;   Transposes the door.                                        ;
-;   POI - possible optimization - only do this once per frame?  ;
 ;                                                               ;
 ; Output variables:                                             ;
 ;   genericX, genericOffScreen, genericVisible                  ;
 ;****************************************************************
 
 TransposeDoor:
-  
-  LDA #$00
-  STA genericVisible
+  LDA doorX
+  STA genericX
+  LDA doorScreen
   STA genericOffScreen
+  LDA #DOOR_WIDTH
+  STA genericWidth
+  JMP TransposeItem
   
-  .checkScreen:
-    LDA scroll + $01
-    CMP doorScreen
-    BEQ .doorOnCurrentScreen
-    CLC
-    ADC #$01
-    CMP doorScreen
-    BEQ .doorOnNextScreen
-    JMP .doorNotVisible
-      
-    ; door is on the current screen. Transpose logic:
-    ;   - x' = x - low byte of scroll
-    ;   - if x' < 0 (carry cleared after the subtraction), set genericOffScreen to 1 (door is off screen to the left)
-    ;     - then check if the door is on the screen at all
-    ;     - A = generic X + door width
-    ;     - if carry not set - off screen
-    .doorOnCurrentScreen:
-      LDA doorX
-      SEC
-      SBC scroll
-      STA genericX
-      BCC .doorOffScreenToTheLeft
-      INC genericVisible
-      RTS
-      
-      .doorOffScreenToTheLeft:
-        INC genericOffScreen
-        CLC
-        ADC #DOOR_WIDTH_IN_PIXELS ; A still contains genericX
-        BCC .doorNotVisible
-        INC genericVisible
-        RTS  
-    
-    ; door is on the next screen. Transpose logic:
-    ;   - x' = x - low byte of scroll + 256
-    ;   - first calculate A = 255 - scroll + 1. If this overflows, it means scroll = 0, i.e. door is off screen
-    ;   - then calculate A = A + x. Again, overflow means door off screen
-    .doorOnNextScreen:
-      LDA #SCREEN_WIDTH
-      SEC
-      SBC scroll
-      CLC
-      ADC #$01
-      BCS .doorNotVisible
-      ADC doorX
-      BCS .doorNotVisible
-      STA genericX
-      INC genericVisible
-      RTS      
+;****************************************************************
+; Name:                                                         ;
+;   TransposeKeycard                                            ;
+;                                                               ;
+; Description:                                                  ;
+;   Transposes the keycard.                                     ;
+;                                                               ;
+; Output variables:                                             ;
+;   genericX, genericOffScreen, genericVisible                  ;
+;****************************************************************
+
+TransposeKeycard:
+  LDA keycardX
+  STA genericX
+  LDA keycardScreen
+  STA genericOffScreen
+  LDA #KEYCARD_WIDTH
+  STA genericWidth
+  JMP TransposeItem
   
-  ; door not visible
-  .doorNotVisible:
-    RTS
-    
 ;****************************************************************
 ; Name:                                                         ;
 ;   CheckForDoorCollision                                       ;
@@ -117,58 +115,32 @@ TransposeDoor:
 ;   Sets 'a' boxes to the box of the door                       ;
 ;                                                               ;
 ; Used variables:                                               ;
+;   c                                                           ;
 ;   collision vars                                              ;
+;   generic vars                                                ;
 ;****************************************************************
 
 CheckForDoorCollision:
-
+  LDA doorExists
+  BNE .checkCollision
   LDA #$00
   STA collision
+  RTS ; door doesn't exist
   
-  JSR TransposeDoor
-  LDA genericVisible
-  BNE .doorVisible
-  RTS ; door is not visible, no collision
-
-  .doorVisible:
-  
-    ; set Y box, don't cap, it should always be fully on screen
-    .setYBox:
-      LDA doorY
-      STA ay1
-      CLC
-      ADC #DOOR_HEIGHT_COLL
-      STA ay2 ; POI - possible optimization - have a separate var for doorAy2
-  
-      ; now check the genericOffScreen variable
-      LDA genericOffScreen
-      BNE .doorOffScreen
-    
-      ; door is on screen, set x boxes, cap X2 at max
-      .doorOnScreen:  
-        LDA genericX
-        STA ax1
-        CLC
-        ADC #DOOR_WIDTH_COLL
-        BCS .capXAtMax
-        STA ax2
-        JMP CheckForCollision
-        
-        .capXAtMax:
-          LDA #SCREEN_WIDTH
-          STA ax2
-          JMP CheckForCollision
-      
-      ; door is off screen, set ax2 = genericX + width, ax1 = 0, no need to check for overflows,
-      ; genericVisible would be 0 if the door was not on the screen at all.
-      .doorOffScreen:
-        LDA genericX
-        CLC
-        ADC #DOOR_WIDTH_COLL
-        STA ax2
-        LDA #$00
-        STA ax1
-        JMP CheckForCollision
+  .checkCollision:
+    LDA doorX
+    STA genericX
+    LDA doorY
+    STA genericY
+    LDA doorScreen
+    STA genericOffScreen
+    LDA #DOOR_WIDTH
+    STA genericWidth
+    LDA #DOOR_HEIGHT
+    STA genericHeight
+    LDA #$00
+    STA c ; we want to transpose
+    JMP  CheckForItemCollision  
     
 ;****************************************************************
 ; Name:                                                         ;
@@ -242,3 +214,60 @@ RenderDoor:
       DEY
       BNE .renderLoop
       RTS
+      
+;****************************************************************
+; Name:                                                         ;
+;   RenderKeycard                                               ;
+;                                                               ;
+; Description:                                                  ;
+;   Renders the keycard.                                        ;
+;                                                               ;
+; Input variables:                                              ;
+;   genericX, genericOffScreen - transposed position            ;
+;   keycardY - position                                         ;
+;                                                               ;
+; Used variables:                                               ;
+;   render vars                                                 ;
+;****************************************************************
+
+RenderKeycard:
+
+  .presetVars:
+    LDA #KEYCARD_ATTS
+    STA renderAtts
+    LDA keycardY
+    STA renderYPos
+    LDA #KEYCARD_SPRITE_1
+    STA renderTile
+    
+  .checkIfOnScreen:
+    LDA genericOffScreen
+    BNE .offScreen
+    
+  .onScreen:
+    LDA #KEYCARD_SPRITE_1
+    STA renderTile
+    LDA genericX
+    STA renderXPos
+    JSR RenderSprite
+    LDA genericX
+    CLC
+    ADC #SPRITE_DIMENSION
+    BCS .done
+    STA renderXPos
+    LDA #KEYCARD_SPRITE_2
+    STA renderTile    
+    JMP RenderSprite
+    
+  ; off screen, but visible - only render the 2nd sprite
+  .offScreen:
+    LDA genericX
+    CLC
+    ADC #SPRITE_DIMENSION
+    STA renderXPos
+    LDA #KEYCARD_SPRITE_2
+    STA renderTile    
+    JMP RenderSprite
+  
+  .done:
+    RTS

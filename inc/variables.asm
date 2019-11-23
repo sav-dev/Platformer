@@ -81,10 +81,13 @@ doorExists        .rs 1
 doorScreen        .rs 1
 doorX             .rs 1
 doorY             .rs 1
+keycardScreen     .rs 1
+keycardX          .rs 1
+keycardY          .rs 1  
 
 ; depends_on_enemy_in_memory_format
 ; depends_on_elevator_in_memory_format
-BYTES_TO_CLEAR_IN_500   = $48 ; total size of arrays - 256
+BYTES_TO_CLEAR_IN_500   = $4B ; total size of arrays - 256
 
 ;****************************************************************
 ; Other variables - free up to $0700                            ;
