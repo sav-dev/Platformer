@@ -5,6 +5,3 @@
 0003:
  - add a 'jetpack mission' win condition
  - implement the jetpack
-
-0004
- - keycards

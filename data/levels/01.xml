@@ -281,7 +281,7 @@
       <string>2-0-0-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
+      <string>2-0-1-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -298,7 +298,7 @@
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
+      <string>2-0-2-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -315,7 +315,7 @@
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
+      <string>2-0-2-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -332,7 +332,7 @@
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
+      <string>2-0-2-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -349,7 +349,7 @@
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
+      <string>2-0-2-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -366,7 +366,7 @@
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
+      <string>2-0-2-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -383,7 +383,24 @@
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
+      <string>2-0-0-0</string>
+      <string>2-0-3-4</string>
+      <string>2-0-5-4</string>
       <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-0-1-5</string>
+      <string>0-0-1-6</string>
+      <string>0-0-1-7</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>2-0-1-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -400,24 +417,7 @@
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-0-1-5</string>
-      <string>0-0-1-6</string>
-      <string>0-0-1-7</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
+      <string>2-0-3-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -428,13 +428,13 @@
       <string>0-0-1-7</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
+      <string>2-0-4-4</string>
+      <string>2-0-4-4</string>
+      <string>2-0-4-4</string>
+      <string>2-0-4-4</string>
+      <string>2-0-4-4</string>
+      <string>2-0-5-4</string>
+      <string>2-0-0-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -560,6 +560,13 @@
       <Direction>Up</Direction>
     </Elevator>
   </Elevators>
+  <DoorAndKeycard>
+    <DoorExists>true</DoorExists>
+    <DoorX>352</DoorX>
+    <DoorY>144</DoorY>
+    <KeycardX>382</KeycardX>
+    <KeycardY>84</KeycardY>
+  </DoorAndKeycard>
   <PlayerStartingPosition>
     <X>16</X>
     <Y>191</Y>

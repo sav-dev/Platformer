@@ -271,3 +271,50 @@ RenderKeycard:
   
   .done:
     RTS
+    
+;****************************************************************
+; Name:                                                         ;
+;   LoadDoorAndKeycard                                          ;
+;                                                               ;
+; Description:                                                  ;
+;   Loads door and keycard.                                     ;
+;                                                               ;
+; Input variables:                                              ;
+;   genericPointer - 1st byte of the door/keycard data          ;
+;                                                               ;
+; Output variables:                                             ;
+;   genericPointer - set to 1st byte after door/keycard data    ;
+;                                                               ;
+; Used variables:                                               ;
+;   X                                                           ;
+;   Y                                                           ;
+;                                                               ;
+; Remarks:                                                      ;
+;   depends_on_door_in_level_data_format                        ;
+;   depends_on_door_in_memory_format                            ;
+;****************************************************************
+    
+LoadDoorAndKeycard:
+
+  ; the next 7 bytes genericPointer points to are the same as the 7 bytes in memory starting with doorExists, just copy those bytes.
+  
+  LDY #$00
+  LDX #$00
+  
+  .copyLoop:  
+    LDA [genericPointer], y  
+    STA doorExists, x
+    INY
+    INX
+    CPX #DOOR_DATA_SIZE
+    BNE .copyLoop
+    
+  LDA genericPointer
+  CLC
+  ADC #DOOR_DATA_SIZE
+  STA genericPointer
+  LDA genericPointer + $01
+  ADC #$00
+  STA genericPointer + $01
+    
+  RTS

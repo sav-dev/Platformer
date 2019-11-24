@@ -76,6 +76,8 @@ ENEMIES_BULLET_LIMIT    = $0A ; = 10
 ; Door and keycard                                              ;
 ;****************************************************************
 
+; door and keycard have the same format in memory
+; depends_on_door_in_level_data_format
 ; depends_on_door_in_memory_format
 doorExists        .rs 1
 doorScreen        .rs 1
@@ -84,6 +86,8 @@ doorY             .rs 1
 keycardScreen     .rs 1
 keycardX          .rs 1
 keycardY          .rs 1  
+
+DOOR_DATA_SIZE = $07
 
 ; depends_on_enemy_in_memory_format
 ; depends_on_elevator_in_memory_format

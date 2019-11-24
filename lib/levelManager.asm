@@ -51,11 +51,11 @@ LoadLevel:
   ; load enemies - input is genericPointer, sets enemiesPointer and genericPointer (to 1st byte after enemy data)
   JSR LoadEnemiesInitial
   
-  ; load enemies - input is genericPointer, sets elevators and genericPointer (to 1st byte after enemy data)
+  ; load enemies - input is genericPointer, sets elevators and genericPointer (to 1st byte after elevator data)
   JSR LoadElevatorsInitial
   
-  ; load door and keycard data
-  ; todo 004
+  ; load door and keycard data - input is genericPointer, sets door and keycard vars and genericPointer (to 1st byte after door/keycard data)
+  JSR LoadDoorAndKeycard
   
   ; next byte is the bg palette
   LDY #$00
