@@ -84,12 +84,13 @@ LoadLevel:
   ADC #$00
   STA genericPointer + $01
   
-  ; next 3 bytes are exit coordinates
-  ; todo 0002: make this generic
-  ;  - exit screen
-  ;  - exit x
-  ;  - exit y1 and y2 (calculate)
+  ; next 4 bytes are level data
+  ;  - level type
+  ;  - 3 bytes of level vars
   LDY #$00
+  LDA [genericPointer], y
+  STA levelType
+  INY
   LDA [genericPointer], y
   STA levelTypeData1 
   INY
