@@ -111,3 +111,4 @@ currentLevel        .rs 1   ; current level
 
 ; POI - possible optimization - this can be replaced with a pseudo-reg
 paletteOffset       .rs 1   ; offset of the bg palette from the lvl data
+levelBeaten         .rs 1   ; whether the level was beaten. only inced once and checked at the end of the level

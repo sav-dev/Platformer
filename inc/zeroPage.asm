@@ -195,8 +195,8 @@ renderAtts              .rs 1
 ; Level info                                                    ;
 ;****************************************************************
 
+; POI - possible optimization - some of these aren't checked that often. to save zero page bytes, move them out
 levelType           .rs 1
-levelBeaten         .rs 1
 levelTypeData1      .rs 1 ; normal: exit screen; jetpack: scroll speed
-levelTypeData2      .rs 1 ; normal: exit X; jetpack: N/A
+levelTypeData2      .rs 1 ; normal: exit X; jetpack: scroll counter
 levelTypeData3      .rs 1 ; normal: exit Y; jetpack: N/A

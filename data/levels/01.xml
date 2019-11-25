@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LevelType>Normal</LevelType>
   <BgPalette>1</BgPalette>
   <Tiles>
     <ArrayOfString>
@@ -571,6 +572,7 @@
     <X>16</X>
     <Y>191</Y>
   </PlayerStartingPosition>
+  <ScrollSpeed>1</ScrollSpeed>
   <ExitPosition>
     <X>452</X>
     <Y>157</Y>
