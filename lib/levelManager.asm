@@ -91,15 +91,12 @@ LoadLevel:
   ;  - exit y1 and y2 (calculate)
   LDY #$00
   LDA [genericPointer], y
-  STA levelExitScreen 
+  STA levelTypeData1 
   INY
   LDA [genericPointer], y
-  STA levelExitX  
+  STA levelTypeData2  
   INY
   LDA [genericPointer], y
-  STA levelExitY1
-  CLC
-  ADC #EXIT_HEIGHT
-  STA levelExitY2
+  STA levelTypeData3
   
   RTS

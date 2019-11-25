@@ -190,3 +190,13 @@ renderXPos              .rs 1
 renderYPos              .rs 1
 renderTile              .rs 1
 renderAtts              .rs 1
+
+;****************************************************************
+; Level info                                                    ;
+;****************************************************************
+
+levelType           .rs 1
+levelBeaten         .rs 1
+levelTypeData1      .rs 1 ; normal: exit screen; jetpack: scroll speed
+levelTypeData2      .rs 1 ; normal: exit X; jetpack: N/A
+levelTypeData3      .rs 1 ; normal: exit Y; jetpack: N/A

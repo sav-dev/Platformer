@@ -106,17 +106,6 @@ gameState           .rs 1   ; current gamestate
 currentLevel        .rs 1   ; current level
 
 ;****************************************************************
-; Level exit                                                    ;
-;****************************************************************
-
-; todo 0002: generic variables for win condition
-levelExitScreen     .rs 1
-levelExitX          .rs 1 
-levelExitY1         .rs 1
-levelExitY2         .rs 1
-levelBeaten         .rs 1
-
-;****************************************************************
 ; Misc.                                                         ;
 ;****************************************************************
 

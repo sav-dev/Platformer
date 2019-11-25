@@ -350,11 +350,15 @@ LAST_ELEVATOR_SCREEN         = LAST_ELEVATOR + ELEVATOR_SCREEN
 ELEVATOR_HEIGHT              = $06
 
 ;****************************************************************
-; Exit                                                          ;
+; Exit and level type                                           ;
 ;****************************************************************
 
-EXIT_HEIGHT                  = $24 ; 36 - but really 35 because we do a <
-EXIT_WIDTH                   = $19 ; 25 - but really 24 because we do a <
+LEVEL_TYPE_NORMAL            = $00
+LEVEL_TYPE_JETPACK           = $01
+
+; these may be off by 1 because of how this stuff is compared
+EXIT_HEIGHT                  = $23 ; 35
+EXIT_WIDTH                   = $18 ; 24
 
 ;****************************************************************
 ; Door and keycard                                              ;

@@ -470,26 +470,20 @@ CheckVictoryConditions:
   .checkExit:
   
     ; first check if player's Y is correct.
-    ; check whether:
-    ;   - playerY1 >= exitY1
-    ;     - i.e. CMP playerY1 to exitY1
-    ;     - carry clear means playerY1 < exitY1 - exit in that case
-    ;   - playerY2 <= exitY2
-    ;     - but we add 1 to exitY2 ahead of time, so check playerY2 < exitY2
-    ;     - i.e CMP playerY2 to exitY2
-    ;     - carry set means exitY2 >= playerY2 - exit in that case
     .checkY:
-      LDA playerPlatformBoxY1
-      CMP levelExitY1
-      BCC .playerNotAtExit
-      CMP levelExitY2
+      LDA levelTypeData3 ; levelExitY
+      CMP playerPlatformBoxY1
       BCS .playerNotAtExit
+      CLC
+      ADC #EXIT_HEIGHT
+      CMP playerPlatformBoxY2
+      BCC .playerNotAtExit
       
     ; now check if player's X is correct.
     ; first we must transpose exit X.
     ; check the screen.
     .transposeX:
-      LDA levelExitScreen
+      LDA levelTypeData1 ; this contains the exit screen
       CMP scroll + $01
       BEQ .currentScreen
       SEC
@@ -509,7 +503,7 @@ CheckVictoryConditions:
         CLC
         ADC #$01
         BCS .playerNotAtExit
-        ADC levelExitX
+        ADC levelTypeData2 ; levelExitX
         BCS .playerNotAtExit
         STA ax1
         JMP .playerExitX1Set
@@ -519,7 +513,7 @@ CheckVictoryConditions:
       ;   - if x' < 0 (carry cleared after the subtraction), it means exit is partially of screen.
       ;     no need to check anything then - player cannot be at the exit in that case.
       .currentScreen:
-        LDA levelExitX
+        LDA levelTypeData2 ; levelExitX
         SEC
         SBC scroll
         BCC .playerNotAtExit
@@ -535,18 +529,11 @@ CheckVictoryConditions:
         STA ax2
         
     ; now check if player's X is correct.
-    ; check whether:
-    ;   - playerX1 >= exitX1
-    ;     - i.e. CMP playerX1 to exitX1
-    ;     - carry clear means playerX1 < exitX1 - exit in that case
-    ;   - playerX2 <= exitX2
-    ;     - but we add 1 to exitX2 ahead of time, so check playerX2 < exitX2
-    ;     - i.e CMP playerX2 to exitX2
-    ;     - carry set means exitX2 >= playerX2 - exit in that case
     .checkX:
       LDA playerPlatformBoxX1
       CMP ax1
       BCC .playerNotAtExit
+      LDA playerPlatformBoxX2
       CMP ax2
       BCS .playerNotAtExit
       
@@ -1405,13 +1392,35 @@ LoadPlayer:
     JSR RenderPlayer
 
   RTS
-    
+
 ;****************************************************************
 ; Name:                                                         ;
 ;   RenderPlayer                                                ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Renders player.                                             ;
+;   Renders the player based on the level type                  ;
+;                                                               ;
+; Input variables:                                              ;
+;   playerDirection                                             ;
+;   playerAnimation                                             ;
+;   playerAnimationFrame                                        ;                                                   
+;   playerY, playerX                                            ;
+;                                                               ;
+; Used variables:                                               ;
+;   Y                                                           ;
+;   b ~ i used as pointers                                      ;
+;****************************************************************
+
+RenderPlayer:
+  ; todo 0003: update this to be based on mission type
+  JSR RenderPlayerNormal
+  
+;****************************************************************
+; Name:                                                         ;
+;   RenderPlayerNormal                                          ;
+;                                                               ;
+; Description:                                                  ;
+;   Renders the player.                                         ;
 ;                                                               ;
 ; Input variables:                                              ;
 ;   playerDirection (left/right)                                ;
@@ -1424,7 +1433,7 @@ LoadPlayer:
 ;   b ~ i used as pointers                                      ;
 ;****************************************************************
     
-RenderPlayer:
+RenderPlayerNormal:
 
   .stateCheck:
     LDA playerState
@@ -1639,7 +1648,7 @@ RenderPlayerWithJetpack:
       ADC #JETPACK_X_OFF_RIGHT
       STA renderXPos      
       JSR RenderSprite     
-      JMP RenderPlayer
+      JMP RenderPlayerNormal
     
     .facingLeft:
       LDA #FLAME_ATTS
@@ -1664,7 +1673,7 @@ RenderPlayerWithJetpack:
       ADC #JETPACK_X_OFF_LEFT
       STA renderXPos      
       JSR RenderSprite     
-      JMP RenderPlayer
+      JMP RenderPlayerNormal
 
 ;****************************************************************
 ; Name:                                                         ;
