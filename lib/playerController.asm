@@ -1414,6 +1414,7 @@ LoadPlayer:
 RenderPlayer:
   ; todo 0003: update this to be based on mission type
   JSR RenderPlayerNormal
+  RTS
   
 ;****************************************************************
 ; Name:                                                         ;
