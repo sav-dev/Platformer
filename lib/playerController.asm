@@ -460,7 +460,8 @@ CheckThreats:
     
 CheckVictoryConditions:
 
-  ; todo 0002: victory condition should come from the level data. For now assume it's the exit one.
+  ; todo 0002: check levelTypeData1
+    
   ; check if player wants to exit the stage and whether is at the exit.
   LDA controllerPressed
   AND #CONTROLLER_UP
@@ -1412,7 +1413,9 @@ LoadPlayer:
 ;****************************************************************
 
 RenderPlayer:
-  ; todo 0003: update this to be based on mission type
+  
+  ; todo 0002: check levelType
+  
   JSR RenderPlayerNormal
   RTS
   
