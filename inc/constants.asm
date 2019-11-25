@@ -129,6 +129,7 @@ PLAYER_ANIM_FRAMES       = $04   ; frames are counting down so 4 -> 3 -> 2 -> 1
 PLAYER_ANIM_SPEED        = $08
                          
 PLAYER_NOT_V_COOLDOWN    = $60   ; how much time should pass after player is dead/level has been beaten before the screen fades out
+PLAYER_JETPACK_LVL_END   = $01   ; special not_v_cooldown value for jetpack levels - the player will disappear for one frame and then next level will start
 PLAYER_NOT_V_FADED_OUT   = $22   ; how much time should pass after the screen fades out before the game is restarted/next level starts
                          
 SPRITES_PLAYER           = SPRITES_ADDRESS
@@ -353,8 +354,8 @@ ELEVATOR_HEIGHT              = $06
 ; Exit and level type                                           ;
 ;****************************************************************
 
-LEVEL_TYPE_NORMAL            = $00
-LEVEL_TYPE_JETPACK           = $01
+LEVEL_TYPE_JETPACK           = $00
+LEVEL_TYPE_NORMAL            = $01
 
 ; these may be off by 1 because of how this stuff is compared
 EXIT_HEIGHT                  = $23 ; 35

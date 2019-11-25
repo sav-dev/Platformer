@@ -1,7 +1,3 @@
-0002:
- - win condition comes from lvl data
- - add the 'get to the end of the screen' win condition
- 
 0003:
  - add a 'jetpack mission' win condition
  - implement the jetpack

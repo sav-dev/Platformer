@@ -21,10 +21,15 @@ UpdatePlayer:
     STA playerOnElevator
 
   LDA playerState
-  BEQ UpdatePlayerNormal        ; PLAYER_NORMAL = 0
+  BEQ .updatePlayerNormal ; PLAYER_NORMAL = 0
   CMP #PLAYER_NOT_VISIBLE
   BEQ UpdatePlayerNotVisible
   JMP UpdatePlayerExploding
+  
+  .updatePlayerNormal:
+    LDA levelType
+    BEQ UpdatePlayerJetpack
+    JMP UpdatePlayerNormal
     
 ;****************************************************************
 ; Name:                                                         ;
@@ -62,6 +67,40 @@ UpdatePlayerNotVisible:
     JSR LoadGame
     JMP GameLoopDone
 
+;****************************************************************
+; Name:                                                         ;
+;   UpdatePlayerJetpack                                         ;
+;                                                               ;
+; Description:                                                  ;
+;   Updates player based on current state and input.            ;    
+;   Used in jetpack missions.                                   ;
+;                                                               ;
+; Used variables:                                               ;
+;   todo 0003                                                   ;
+;****************************************************************
+
+UpdatePlayerJetpack:
+  
+  ; Update animation. This is done always.
+  .updateAnimation:
+    DEC playerCounter
+    BNE .scrollScreen
+    
+    .updateFrame:
+      LDA #FLAME_ANIMATION_SPEED
+      STA playerCounter
+      DEC playerAnimationFrame
+      BNE .scrollScreen
+      
+      .resetFrame:
+        LDA #FLAME_SPRITE_COUNT
+        STA playerAnimationFrame
+  
+  ; Scroll screen.
+  .scrollScreen:
+    ; todo 0003      
+    RTS
+     
 ;****************************************************************
 ; Name:                                                         ;
 ;   UpdatePlayerNormal                                          ;
@@ -460,7 +499,7 @@ CheckThreats:
     
 CheckVictoryConditions:
 
-  ; todo 0002: check levelTypeData1
+  ; todo 0003: do different stuff for jetpack
     
   ; check if player wants to exit the stage and whether is at the exit.
   LDA controllerPressed
@@ -1130,6 +1169,8 @@ SetPlayerBoxesVertical:
 
 MovePlayerHorizontallyAndSetBoxes
 
+  ; todo 0003: do different stuff for jetpack
+
   ; Update the position by 1 at a time.
   ; POI - possible issue - this doesn't work if level is shorter than two screens
   .movePlayerByOne:
@@ -1364,26 +1405,41 @@ CheckPlayerThreatCollisions:
 ;   LoadPlayer                                                  ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Loads player in the standing position.                      ;
+;   Loads player.                                               ;
 ;   Sets all variables.                                         ;
-;   playerX and playerY should be set on input                  ;
+;   playerX and playerY should be set on input.                 ;
+;   levelType should be set on input.                           ;
 ;****************************************************************
 
 LoadPlayer:
     
-  .presetState:
+  .commonVariables:
     LDA #PLAYER_NORMAL
     STA playerState
     LDA #$00                      
     STA playerJump
-    STA playerCounter
-    STA playerAnimationFrame      
-    LDA #PLAYER_STAND             
-    STA playerAnimation    
     LDA #DIRECTION_RIGHT
     STA playerDirection
     LDA #PLAYER_Y_STATE_NORMAL
     STA playerYState
+    LDA levelType
+    BEQ .jetpack ; LEVEL_TYPE_JETPACK = 0
+    
+    .notJetpack:
+      LDA #$00                          
+      STA playerCounter
+      STA playerAnimationFrame      
+      LDA #PLAYER_STAND             
+      STA playerAnimation    
+      JMP .setBoxes
+  
+    .jetpack:
+      LDA #FLAME_ANIMATION_SPEED                  
+      STA playerCounter
+      LDA #FLAME_SPRITE_COUNT
+      STA playerAnimationFrame      
+      LDA #PLAYER_JUMP             
+      STA playerAnimation    
   
   .setBoxes:
     JSR SetPlayerBoxesHorizontal
@@ -1414,10 +1470,14 @@ LoadPlayer:
 
 RenderPlayer:
   
-  ; todo 0002: check levelType
+  LDA levelType
+  BEQ .jetpack ; LEVEL_TYPE_JETPACK = 0
   
-  JSR RenderPlayerNormal
-  RTS
+  .notJetpack:
+    JMP RenderPlayerNormal
+  
+  .jetpack:
+    JMP RenderPlayerWithJetpack
   
 ;****************************************************************
 ; Name:                                                         ;
