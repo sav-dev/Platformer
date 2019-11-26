@@ -424,7 +424,6 @@ SetVramAddressingTo32:
   .include "lib\backgroundManager.asm"
   .include "lib\levelManager.asm"
   .include "lib\controllerManager.asm"  
-  .include "lib\collisionManager.asm"
   .include "lib\playerController.asm"  
   .include "lib\bulletController.asm"
   .include "lib\enemiesManager.asm"  
@@ -440,6 +439,7 @@ Bank0Start:
   .include "lib\elevatorManager.asm"
   .include "lib\explosionsController.asm"
   .include "lib\doorManager.asm"
+  .include "lib\collisionManager.asm"
   
   .include "states\game.asm"
     

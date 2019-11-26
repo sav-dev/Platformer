@@ -1316,3 +1316,47 @@ MoveBackAttsPointerBack:
   SBC #$00
   STA attsBackPointer + $01
   RTS
+  
+;****************************************************************
+; Name:                                                         ;
+;   ScrollLeft                                                  ;
+;                                                               ;
+; Description:                                                  ;
+;   Scroll left, move bullets.                                  ;
+;                                                               ;
+; Used variables:                                               ;
+;   X                                                           ;
+;   Y                                                           ;
+;   b                                                           ;
+;   c                                                           ;
+;   d                                                           ;
+;   e                                                           ;
+;****************************************************************
+
+ScrollLeft:
+  JSR DecrementScroll          
+  LDA #$01
+  STA b
+  JMP ScrollBullets
+
+;****************************************************************
+; Name:                                                         ;
+;   ScrollRight                                                 ;
+;                                                               ;
+; Description:                                                  ;
+;   Scroll right, move bullets.                                 ;
+;                                                               ;
+; Used variables:                                               ;
+;   X                                                           ;
+;   Y                                                           ;
+;   b                                                           ;
+;   c                                                           ;
+;   d                                                           ;
+;   e                                                           ;
+;****************************************************************
+
+ScrollRight:
+  JSR IncrementScroll          
+  LDA #$00
+  STA b
+  JMP ScrollBullets

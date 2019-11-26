@@ -74,9 +74,6 @@ UpdatePlayerNotVisible:
 ; Description:                                                  ;
 ;   Updates player based on current state and input.            ;    
 ;   Used in jetpack missions.                                   ;
-;                                                               ;
-; Used variables:                                               ;
-;   todo 0003                                                   ;
 ;****************************************************************
 
 UpdatePlayerJetpack:
@@ -84,21 +81,88 @@ UpdatePlayerJetpack:
   ; Update animation. This is done always.
   .updateAnimation:
     DEC playerCounter
-    BNE .scrollScreen
+    BNE .checkA
     
     .updateFrame:
       LDA #FLAME_ANIMATION_SPEED
       STA playerCounter
       DEC playerAnimationFrame
-      BNE .scrollScreen
+      BNE .checkA
       
       .resetFrame:
         LDA #FLAME_SPRITE_COUNT
         STA playerAnimationFrame
-  
-  ; Scroll screen.
+
+  ; Check if player wants to rotate. Also done always.
+  .checkA:
+    LDA controllerPressed
+    AND #CONTROLLER_A
+    BEQ .scrollScreen
+    LDA playerDirection
+    EOR #%00000001
+    STA playerDirection
+   
+  ; Scroll the screen:
+  ;   - set genericDX to scrollSpeed
+  ;   - check for vertical collisions
+  ;   - genericDX -= scrollSpeed
+  ;   - move the player (possibly go off screen)
+  ;   - scroll the screen by scrollSpeed
   .scrollScreen:
-    ; todo 0003      
+    ; todo 0003 - implement what's described above
+   
+  ; Set DY based on the input
+  .setDY:
+    LDA controllerDown
+    AND #CONTROLLER_UP
+    BNE .upPressed
+    LDA controllerDown
+    AND #CONTROLLER_DOWN
+    BNE .downPressed
+    JMP .setDX ; not moving vertically
+    
+    .upPressed:
+      LDA #PLAYER_SPEED_NEGATIVE
+      STA genericDY
+      JMP .checkVerticalCollisionAndMove
+    
+    .downPressed:
+      LDA #PLAYER_SPEED_POSITIVE
+      STA genericDY
+      JMP .checkVerticalCollisionAndMove
+  
+  ; DY set, check for vertical collision. This adjusts DY. Then move.
+  ; Also set playerOnElevator to 0 - collision check may have set it to something.
+  .checkVerticalCollisionAndMove:
+    JSR CheckPlayerCollisionVertical
+    JSR MovePlayerVertically
+    JSR SetPlayerBoxesVertical
+    LDA #$00
+    STA playerOnElevator
+    
+  ; Set DX based on the input
+  .setDX:
+    LDA controllerDown
+    AND #CONTROLLER_LEFT
+    BNE .leftPressed
+    LDA controllerDown
+    AND #CONTROLLER_RIGHT
+    BNE .rightPressed
+    JMP .checkHorizontalCollisionAndMove
+    
+    .leftPressed:
+      LDA #PLAYER_SPEED_NEGATIVE
+      STA genericDX
+      JMP .checkHorizontalCollisionAndMove
+    
+    .rightPressed:
+      LDA #PLAYER_SPEED_POSITIVE
+      STA genericDX
+  
+  ; DY set, check for horizontal collision. This adjusts DX. Then move.  
+  .checkHorizontalCollisionAndMove:
+    JSR CheckPlayerCollisionHorizontal
+    JSR MovePlayerHorizontallyJetpackAndSetBoxes
     RTS
      
 ;****************************************************************
@@ -401,7 +465,7 @@ UpdatePlayerNormal:
         RTS ; DX set to 0 by the collision routine, no need to move the player
       
         .applyHorizontalMovement:
-          JMP MovePlayerHorizontallyAndSetBoxes
+          JMP MovePlayerHorizontallyNormalAndSetBoxes
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -499,7 +563,7 @@ CheckThreats:
     
 CheckVictoryConditions:
 
-  ; todo 0003: do different stuff for jetpack
+  ; todo 0003 - do different stuff for jetpack
     
   ; check if player wants to exit the stage and whether is at the exit.
   LDA controllerPressed
@@ -638,6 +702,9 @@ CheckPlayerCollisionVertical:
     STA collisionCache
     STA collision
 
+  ; todo 0003 - check for Y being out of bounds of mission is jetpack
+  ;             no need to cap - player speed = 2, and there's more than enough space to make sure player doesn't go off screen
+    
   ; set X box
   .setBoxX:
     LDA playerPlatformBoxX1
@@ -822,6 +889,8 @@ CheckPlayerCollisionHorizontal:
   
   ; check if after the movement player will be in screen bounds
   .checkBounds:
+  
+  ; todo 0003 - check for X being out of bounds of mission is jetpack
   
     LDA b
     BNE .checkRightBound
@@ -1163,13 +1232,42 @@ SetPlayerBoxesVertical:
 ;                                                               ;
 ; Description:                                                  ;
 ;   Moves the player horizontally based on genericDX.           ;
+;   and level type. Also update horizontal boxes.               ;
+;****************************************************************
+
+MovePlayerHorizontallyAndSetBoxes:
+  LDA levelType ; LEVEL_TYPE_JETPACK = 0
+  BEQ MovePlayerHorizontallyJetpackAndSetBoxes
+  JMP MovePlayerHorizontallyNormalAndSetBoxes
+
+;****************************************************************
+; Name:                                                         ;
+;   MovePlayerHorizontallyJetpackAndSetBoxes                    ;
+;                                                               ;
+; Description:                                                  ;
+;   Moves the player horizontally based on genericDX.           ;
+;   If it moves player out of bounds, explode the player.       ;
+;   That could only happen if an elevator pushes player out.    ;
+;   Also update horizontal boxes.                               ;
+;****************************************************************
+
+MovePlayerHorizontallyJetpackAndSetBoxes:
+
+  ; todo 0003 - move player, explode if pushed out of bounds
+
+  RTS
+  
+;****************************************************************
+; Name:                                                         ;
+;   MovePlayerHorizontallyNormalAndSetBoxes                     ;
+;                                                               ;
+; Description:                                                  ;
+;   Moves the player horizontally based on genericDX.           ;
 ;   Either moves the player, or scrolls the screen.             ;
 ;   Also update horizontal boxes.                               ;
 ;****************************************************************
 
-MovePlayerHorizontallyAndSetBoxes
-
-  ; todo 0003: do different stuff for jetpack
+MovePlayerHorizontallyNormalAndSetBoxes:
 
   ; Update the position by 1 at a time.
   ; POI - possible issue - this doesn't work if level is shorter than two screens
@@ -1248,18 +1346,12 @@ MovePlayerHorizontallyAndSetBoxes
       BCC .scrollRight
                                      
       .scrollLeft:                   
-        JSR DecrementScroll          
-        LDA #$01
-        STA b
-        JSR ScrollBullets
+        JSR ScrollLeft
         INC genericDX
         JMP .checkIfShouldMoveMore  
         
       .scrollRight:
-        JSR IncrementScroll          
-        LDA #$00
-        STA b
-        JSR ScrollBullets
+        JSR ScrollRight
         DEC genericDX
 
   ; We;ve moved the player and updated DX. See if we should move the player any more. 

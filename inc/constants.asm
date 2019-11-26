@@ -111,10 +111,14 @@ PLAYER_SPEED_NEGATIVE    = $FE   ; positive player speed = positive speed * (-1)
                          
 PLAYER_SCREEN_CENTER     = $78   ; if playerX == this then player is on the center of the screen
             
-; todo 0003: add bounds for jetpack levels
-
-PLAYER_X_MIN             = $03   ; not 0 1 2 so gun doesn't move to the right of the screen
+PLAYER_X_MIN             = $03   ; not less so gun doesn't move to the right of the screen
 PLAYER_X_MAX             = SCREEN_WIDTH - PLAYER_PLAT_BOX_WIDTH
+
+; fine tuned. for PAL the +/- in SPRITE_DIMENSION in playerY should be removed
+PLAYER_X_MIN_JETPACK     = $06
+PLAYER_X_MAX_JETPACK     = PLAYER_X_MAX - $04
+PLAYER_Y_MIN_JETPACK     = SPRITE_DIMENSION_X4 + SPRITE_DIMENSION - $01
+PLAYER_Y_MAX_JETPACK     = SCREEN_HEIGHT - SPRITE_DIMENSION - $02
                          
 PLAYER_STAND             = $00
 PLAYER_JUMP              = $01

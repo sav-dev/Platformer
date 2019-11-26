@@ -43,7 +43,7 @@ SpawnPlayerBullet:
       LDA playerY                     
       CLC                             
       ADC #PLAYER_GUN_OFF_Y_C
-      BCC .gunOffScreen               ; same as above. POI - possible optimization - probably not needed
+      BCC .gunOffScreen               ; same as above.
       STA genericY
                                       
   .getXPositionAndAtts:               
@@ -54,6 +54,7 @@ SpawnPlayerBullet:
       LDA playerX                     
       CLC                             
       ADC #PLAYER_GUN_OFF_X_R         
+      BCS .gunOffScreen               ; gun off screen
       STA genericX
       LDA #DIRECTION_RIGHT
       STA genericDirection
@@ -63,6 +64,7 @@ SpawnPlayerBullet:
       LDA playerX                     
       CLC                             
       ADC #PLAYER_GUN_OFF_X_L         
+      BCC .gunOffScreen               ; gun off screen
       STA genericX
       LDA #DIRECTION_LEFT
       STA genericDirection
