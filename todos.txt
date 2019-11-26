@@ -1,3 +1,6 @@
 0003:
  - add a 'jetpack mission' win condition
  - implement the jetpack
+ 
+Small issues:
+  - after falling into a pit player can move horizontally and move in 'under' a platform

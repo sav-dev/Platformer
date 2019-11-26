@@ -148,7 +148,7 @@ UpdatePlayerJetpack:
     LDA controllerDown
     AND #CONTROLLER_RIGHT
     BNE .rightPressed
-    JMP .checkHorizontalCollisionAndMove
+    RTS ; not moving horizontally
     
     .leftPressed:
       LDA #PLAYER_SPEED_NEGATIVE
@@ -161,6 +161,8 @@ UpdatePlayerJetpack:
   
   ; DY set, check for horizontal collision. This adjusts DX. Then move.  
   .checkHorizontalCollisionAndMove:
+    LDA #$01
+    STA c ; check bounds
     JSR CheckPlayerCollisionHorizontal
     JSR MovePlayerHorizontallyJetpackAndSetBoxes
     RTS
@@ -459,6 +461,8 @@ UpdatePlayerNormal:
       ; If we get here, DX is set to something non-zero.
       ; Check for a horizontal collision. This updates DX.
       .checkHorizontalCollision:
+        LDA #$01
+        STA c ; check bounds
         JSR CheckPlayerCollisionHorizontal
         LDA genericDX
         BNE .applyHorizontalMovement
@@ -701,10 +705,7 @@ CheckPlayerCollisionVertical:
     LDA #$00
     STA collisionCache
     STA collision
-
-  ; todo 0003 - check for Y being out of bounds of mission is jetpack
-  ;             no need to cap - player speed = 2, and there's more than enough space to make sure player doesn't go off screen
-    
+   
   ; set X box
   .setBoxX:
     LDA playerPlatformBoxX1
@@ -712,52 +713,123 @@ CheckPlayerCollisionVertical:
     LDA playerPlatformBoxX2
     STA bx2    
     
-  ; check move direction, set b to 0 (static or up) or 1 (down) and go to specific box setting routine
+  ; check move direction, set b to 0 (static or up) or 1 (down) and go to specific box setting/bounds checking routine
   .directionCheck:
     LDA #$00
     STA b                                                                     
     LDA genericDY
     CMP #$80
-    BCS .setBoxYGoingUpOrStatic
+    BCS .goingUpOrStatic
     INC b
   
-    ; player is going down, meaning we need to cap Y at max ($FF) on overflow (carry set)
-    .setBoxYGoingDown:      
-      LDA playerPlatformBoxY1
-      CLC
-      ADC genericDY
-      BCS CheckPlayerCollisionVerticalExit ; player is completely off screen
-      STA by1
-      LDA playerPlatformBoxY2
-      CLC
-      ADC genericDY
-      BCS .goingDownCapY2
-      STA by2
-      JMP .checkCollisionsWithPlatforms
+    .goingDown:      
+      LDA levelType      
+      BEQ .downJetpack ; LEVEL_TYPE_JETPACK = 0
       
-      .goingDownCapY2:
-        LDA #$FF
+      ; player is going down, meaning we need to cap Y at max ($FF) on overflow (carry set)
+      .downNotJetpack:
+        LDA playerPlatformBoxY1
+        CLC
+        ADC genericDY
+        BCS CheckPlayerCollisionVerticalExit ; player is completely off screen
+        STA by1
+        LDA playerPlatformBoxY2
+        CLC
+        ADC genericDY
+        BCS .goingDownCapY2
         STA by2
         JMP .checkCollisionsWithPlatforms
+        
+        .goingDownCapY2:
+          LDA #$FF
+          STA by2
+          JMP .checkCollisionsWithPlatforms
     
-    ; player is going up, meaning we need to cap Y at min ($00) on no overflow (carry clear)
-    ; also called when player is static but then the additions are no-ops
-    .setBoxYGoingUpOrStatic:
-      LDA playerPlatformBoxY2
-      CLC
-      ADC genericDY
-      BCC CheckPlayerCollisionVerticalExit ; player is completely off screen
-      STA by2
-      LDA playerPlatformBoxY1
-      CLC
-      ADC genericDY
-      BCC .goingUpCapY1
-      STA by1
-      JMP .checkCollisionsWithPlatforms
-      
-      .goingUpCapY1:
-        LDA #$00
+      ; check for out of bounds, set dy
+      .downJetpack:
+
+        ; check lower screen bound.
+        ; carry set after adding means playerY + genericDY > 255 - cap at Y_MAX
+        ; then compare to Y_MAX, carry set means playerY + genericDY >= Y_MAX - cap at Y_MAX
+        ; in either case also INC collisionCache
+        .checkLowerBound:               
+          LDA playerY
+          CLC                           
+          ADC genericDY
+          BCS .offDown
+          CMP #PLAYER_Y_MAX_JETPACK
+          BCS .offDown
+          JMP .setYBoxJetpack    
+          .offDown:
+            LDA #PLAYER_Y_MAX_JETPACK
+            SEC
+            SBC playerY
+            STA genericDY
+            INC collisionCache
+            JMP .setYBoxJetpack
+    
+    .goingUpOrStatic:
+    
+      LDA levelType      
+      BEQ .upOrStaticJetpack ; LEVEL_TYPE_JETPACK = 0
+    
+      ; player is going up, meaning we need to cap Y at min ($00) on no overflow (carry clear)
+      ; also called when player is static but then the additions are no-ops
+      .upOrStaticNotJetpack:
+        LDA playerPlatformBoxY2
+        CLC
+        ADC genericDY
+        BCC CheckPlayerCollisionVerticalExit ; player is completely off screen
+        STA by2
+        LDA playerPlatformBoxY1
+        CLC
+        ADC genericDY
+        BCC .goingUpCapY1
         STA by1
+        JMP .checkCollisionsWithPlatforms
+        
+        .goingUpCapY1:
+          LDA #$00
+          STA by1
+          JMP .checkCollisionsWithPlatforms
+        
+      ; check for out of bounds, set dy, we can exit if genericDY = 0
+      .upOrStaticJetpack:
+
+        ; we can exit if genericDY = 0
+        LDA genericDY
+        BNE .checkUpperBound
+        RTS
+      
+        ; check upper screen bound.
+        ; carry clear after adding means playerY + genericDY < 0 - cap at Y_MIN 
+        ; then compare to Y_MIN, again carry clear means playerY + genericDY < Y_MIN - cap at Y_MIN
+        ; in either case also INC collisionCache
+        .checkUpperBound:
+          LDA playerY
+          CLC
+          ADC genericDY
+          BCC .offUp
+          CMP #PLAYER_Y_MIN_JETPACK
+          BCC .offUp
+          JMP .setYBoxJetpack
+          .offUp:
+            LDA #PLAYER_Y_MIN_JETPACK
+            SEC
+            SBC playerY
+            STA genericDY       
+            INC collisionCache
+        
+        ; set y box. no need to check for overflow
+        .setYBoxJetpack:
+          LDA playerPlatformBoxY1
+          CLC
+          ADC genericDY
+          STA by1
+          LDA playerPlatformBoxY2
+          CLC
+          ADC genericDY
+          STA by2          
 
   ; check for collisions with platforms and door first,
   ; check first screen first (c == 0), then second screen (c == 1) if no collisions found.
@@ -844,6 +916,9 @@ CheckPlayerCollisionVertical:
 ; Description:                                                  ;
 ;   Check for horizontal collisions, updates genericDX          ;
 ;                                                               ;
+; Input:                                                        ;
+;   c = 0 means don't check bounds, c > 0 means otherwise       ;
+;                                                               ;
 ; Output:                                                       ;
 ;   collision = 1 set on output if collision detected           ;
 ;                                                               ;
@@ -883,59 +958,75 @@ CheckPlayerCollisionHorizontal:
     STA b
     LDA genericDX
     CMP #$80
-    BCS .directionCheckDone
+    BCS .checkBounds
     INC b
-  .directionCheckDone:
   
   ; check if after the movement player will be in screen bounds
   .checkBounds:
+    LDA c
+    BEQ .setBox ; we don't want to check bounds if c == 0
   
-  ; todo 0003 - check for X being out of bounds of mission is jetpack
+    ; set c to X_MIN, set d to X_MAX
+    ; safe to use both here
+    .setMinMax:
+      LDA levelType
+      BEQ .jetpack ; LEVEL_TYPE_JETPACK = 0
+      
+      .notJetpack:
+        LDA #PLAYER_X_MIN
+        STA c
+        LDA #PLAYER_X_MAX
+        STA d
+        JMP .checkDirection
+      
+      .jetpack:
+        LDA #PLAYER_X_MIN_JETPACK
+        STA c
+        LDA #PLAYER_X_MAX_JETPACK
+        STA d
   
-    LDA b
-    BNE .checkRightBound
+    .checkDirection:
+      LDA b
+      BNE .checkRightBound
     
     ; check left screen bound.
     ; carry clear after adding means playerX + genericDX < 0 - cap at X_MIN 
-    ; then compare to Y_MIN, again carry clear means playerX + genericDX < X_MIN - cap at X_MIN
+    ; then compare to X_MIN, again carry clear means playerX + genericDX < X_MIN - cap at X_MIN
     ; in either case also INC collisionCache
     .checkLeftBound:
       LDA playerX
       CLC
       ADC genericDX
       BCC .offLeft
-      CMP #PLAYER_X_MIN
+      CMP c ; = X_MIN
       BCC .offLeft
-      JMP .checkBoundsDone
+      JMP .setBox
       .offLeft:
-        LDA #PLAYER_X_MIN
+        LDA c ; = X_MIN
         SEC
         SBC playerX
         STA genericDX       
         INC collisionCache
-        JMP .checkBoundsDone
+        JMP .setBox
          
     ; check right screen bound.
     ; carry set after adding means playerX + genericDX > 255 - cap at X_MAX
     ; then compare to X_MAX, carry clear means playerX + genericDX < X_MAX - continue
-    ; otherwise cap at X_MAX. if capping at X_MAX just exit.
-    ; in either case also INC collisionCache
+    ; otherwise cap at X_MAX. If capping at X_MAX also INC collisionCache
     .checkRightBound:               
       LDA playerX
       CLC                           
       ADC genericDX
       BCS .offRight
-      CMP #PLAYER_X_MAX
-      BCC .checkBoundsDone
+      CMP d ; = X_MAX
+      BCC .setBox
       .offRight:
-        LDA #PLAYER_X_MAX
+        LDA d ; = X_MAX
         SEC
         SBC playerX
         STA genericDX
         INC collisionCache
     
-  .checkBoundsDone:
-  
   ; set new player box.
   ; no need to handle overflow since we are capping at X_MIN/X_MAX above
   .setBox:
@@ -1114,6 +1205,11 @@ SetPlayerBoxesVerticalExit:
   
 SetPlayerBoxesVertical:
 
+  ; this is reused for both normal movement and jetpack.
+  ; there is lots of logic not needed for jetpack. 
+  ; player cannot leave the bounds with a jetpack.
+  ; POI - possible issue - make sure there's no way a vertical elevator pushes player out of bounds
+
   ; first check playerYState
   ; if player is offscreen to the top, don't bother with setting anything, we don't check for collisions anyway.
   ; then we have special logic for setting boxes based on whether player is on screen or off screen to the bottom.
@@ -1253,7 +1349,14 @@ MovePlayerHorizontallyAndSetBoxes:
 
 MovePlayerHorizontallyJetpackAndSetBoxes:
 
-  ; todo 0003 - move player, explode if pushed out of bounds
+  LDA playerX
+  CLC
+  ADC genericDX
+  STA playerX
+
+  ; todo 0003: explode player if pushed out of bounds
+  
+  JSR SetPlayerBoxesHorizontal
 
   RTS
   
