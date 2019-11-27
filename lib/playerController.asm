@@ -74,6 +74,7 @@ UpdatePlayerNotVisible:
 ; Description:                                                  ;
 ;   Updates player based on current state and input.            ;    
 ;   Used in jetpack missions.                                   ;
+;   Uses enemySpeed to calculate special speed.                 ;
 ;****************************************************************
 
 UpdatePlayerJetpack:
@@ -102,14 +103,36 @@ UpdatePlayerJetpack:
     EOR #%00000001
     STA playerDirection
    
-  ; Scroll the screen:
+  ; Check if the scroll speed is a special value
+  .checkScrollSpeed:
+    LDA levelTypeData1 ; scrollSpeed
+    ;CMP #SMALLEST_SPECIAL_SPEED
+    ;BCC .scrollScreen
+    ;JSR ProcessSpecialSpeed ; this sets enemySpeed!
+    ;BEQ .setDY ; not moving this frame
+   
+  ; Scroll the screen. When we get here, A = scrollSpeed
   ;   - set genericDX to scrollSpeed
   ;   - check for vertical collisions
   ;   - genericDX -= scrollSpeed
   ;   - move the player (possibly go off screen)
   ;   - scroll the screen by scrollSpeed
-  .scrollScreen:
-    ; todo 0003 - implement what's described above
+  .scrollScreen:    
+    STA genericDX
+    LDA #$00
+    STA c ; don't check for going out of bounds
+    JSR CheckPlayerCollisionHorizontal ; this updates genericDX
+    LDA genericDX
+    SEC
+    SBC levelTypeData1 ; scrollSpeed
+    STA genericDX
+    JSR MovePlayerHorizontallyJetpackAndSetBoxes
+    LDA levelTypeData1 ; scrollSpeed
+    STA m ; use as counter. POI - possible issue - random pseudo-register use
+    .scrollLoop:
+      JSR ScrollRight
+      DEC m
+      BNE .scrollLoop
    
   ; Set DY based on the input
   .setDY:
@@ -469,7 +492,9 @@ UpdatePlayerNormal:
         RTS ; DX set to 0 by the collision routine, no need to move the player
       
         .applyHorizontalMovement:
-          JMP MovePlayerHorizontallyNormalAndSetBoxes
+          ; todo 0001 - make sure that's the case
+          ; not calling directly into 'Normal' since this is used in the boss fight lvl type as well
+          JMP MovePlayerHorizontallyAndSetBoxes 
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -567,96 +592,124 @@ CheckThreats:
     
 CheckVictoryConditions:
 
-  ; todo 0003 - do different stuff for jetpack
+  LDA levelType
+  BEQ .jetpack ; LEVEL_TYPE_JETPACK = 0
+  CMP #LEVEL_TYPE_NORMAL
+  BEQ .normal
+  
+  ; todo 0001 - boss fight level type
     
-  ; check if player wants to exit the stage and whether is at the exit.
-  LDA controllerPressed
-  AND #CONTROLLER_UP
-  BNE .checkExit
-  RTS
+  .normal:
   
-  .checkExit:
-  
-    ; first check if player's Y is correct.
-    .checkY:
-      LDA levelTypeData3 ; levelExitY
-      CMP playerPlatformBoxY1
-      BCS .playerNotAtExit
-      CLC
-      ADC #EXIT_HEIGHT
-      CMP playerPlatformBoxY2
-      BCC .playerNotAtExit
-      
-    ; now check if player's X is correct.
-    ; first we must transpose exit X.
-    ; check the screen.
-    .transposeX:
-      LDA levelTypeData1 ; this contains the exit screen
-      CMP scroll + $01
-      BEQ .currentScreen
-      SEC
-      SBC #$01
-      CMP scroll + $01
-      BNE .playerNotAtExit ; not current screen nor the next screen
-      
-      ; exit is on the next screen. Transpose logic:
-      ;   - x' = x - low byte of scroll + 256
-      ;   - first calculate A = 255 - scroll + 1. If this overflows, it means scroll = 0, i.e. exit is off screen
-      ;   - then calculate A = A + x. Again, overflow means exit off screen
-      ;   - if exit off screen, player not at exit. Otherwise, store the result in ax1
-      .nextScreen:
-        LDA #SCREEN_WIDTH
-        SEC
-        SBC scroll
+    ; check if player wants to exit the stage and whether is at the exit.
+    LDA controllerPressed
+    AND #CONTROLLER_UP
+    BNE .checkExit
+    RTS
+    
+    .checkExit:
+    
+      ; first check if player's Y is correct.
+      .checkY:
+        LDA levelTypeData3 ; levelExitY
+        CMP playerPlatformBoxY1
+        BCS .playerNotAtExit
         CLC
-        ADC #$01
-        BCS .playerNotAtExit
-        ADC levelTypeData2 ; levelExitX
-        BCS .playerNotAtExit
-        STA ax1
-        JMP .playerExitX1Set
-      
-      ; exit is on the current screen. Transpose logic:
-      ;   - x' = x - low byte of scroll
-      ;   - if x' < 0 (carry cleared after the subtraction), it means exit is partially of screen.
-      ;     no need to check anything then - player cannot be at the exit in that case.
-      .currentScreen:
-        LDA levelTypeData2 ; levelExitX
-        SEC
-        SBC scroll
+        ADC #EXIT_HEIGHT
+        CMP playerPlatformBoxY2
         BCC .playerNotAtExit
-        STA ax1
-      
-      ; ax1 has been set, not calculate ax2 by adding exit width.
-      ; if it overflows it means player not at exit.
-      ; also ax1 is loaded when we get here so no need to load.
-      .playerExitX1Set:
-        CLC
-        ADC #EXIT_WIDTH
-        BCS .playerNotAtExit
-        STA ax2
         
-    ; now check if player's X is correct.
-    .checkX:
-      LDA playerPlatformBoxX1
-      CMP ax1
-      BCC .playerNotAtExit
-      LDA playerPlatformBoxX2
-      CMP ax2
-      BCS .playerNotAtExit
-      
-    ; if we get here, it means player is at exit.
-    ; change the state to not visible, and INC levelBeaten
-    .playerAtExit:
-      LDA #PLAYER_NOT_V_COOLDOWN
+      ; now check if player's X is correct.
+      ; first we must transpose exit X.
+      ; check the screen.
+      .transposeX:
+        LDA levelTypeData1 ; this contains the exit screen
+        CMP scroll + $01
+        BEQ .currentScreen
+        SEC
+        SBC #$01
+        CMP scroll + $01
+        BNE .playerNotAtExit ; not current screen nor the next screen
+        
+        ; exit is on the next screen. Transpose logic:
+        ;   - x' = x - low byte of scroll + 256
+        ;   - first calculate A = 255 - scroll + 1. If this overflows, it means scroll = 0, i.e. exit is off screen
+        ;   - then calculate A = A + x. Again, overflow means exit off screen
+        ;   - if exit off screen, player not at exit. Otherwise, store the result in ax1
+        .nextScreen:
+          LDA #SCREEN_WIDTH
+          SEC
+          SBC scroll
+          CLC
+          ADC #$01
+          BCS .playerNotAtExit
+          ADC levelTypeData2 ; levelExitX
+          BCS .playerNotAtExit
+          STA ax1
+          JMP .playerExitX1Set
+        
+        ; exit is on the current screen. Transpose logic:
+        ;   - x' = x - low byte of scroll
+        ;   - if x' < 0 (carry cleared after the subtraction), it means exit is partially of screen.
+        ;     no need to check anything then - player cannot be at the exit in that case.
+        .currentScreen:
+          LDA levelTypeData2 ; levelExitX
+          SEC
+          SBC scroll
+          BCC .playerNotAtExit
+          STA ax1
+        
+        ; ax1 has been set, not calculate ax2 by adding exit width.
+        ; if it overflows it means player not at exit.
+        ; also ax1 is loaded when we get here so no need to load.
+        .playerExitX1Set:
+          CLC
+          ADC #EXIT_WIDTH
+          BCS .playerNotAtExit
+          STA ax2
+          
+      ; now check if player's X is correct.
+      .checkX:
+        LDA playerPlatformBoxX1
+        CMP ax1
+        BCC .playerNotAtExit
+        LDA playerPlatformBoxX2
+        CMP ax2
+        BCS .playerNotAtExit
+        
+      ; if we get here, it means player is at exit.
+      ; change the state to not visible, and INC levelBeaten
+      .playerAtExit:
+        LDA #PLAYER_NOT_V_COOLDOWN
+        STA playerCounter
+        LDA #PLAYER_NOT_VISIBLE
+        STA playerState
+        INC levelBeaten
+        
+      .playerNotAtExit:
+        RTS
+  
+  .jetpack:
+    
+    ; check if scroll = max scroll
+    .checkIfLevelEnd:
+      LDA scroll
+      CMP maxScroll
+      BNE .jetpackDone
+      LDA scroll + $01
+      CMP maxScroll + $01
+      BNE .jetpackDone
+  
+    .levelEnd:
+      ; todo 0003 - I don't really like this. Tweak this a bit.
+      LDA #PLAYER_JETPACK_LVL_END
       STA playerCounter
       LDA #PLAYER_NOT_VISIBLE
       STA playerState
       INC levelBeaten
-      
-    .playerNotAtExit:
+    
+    .jetpackDone:
       RTS
-           
 ;****************************************************************
 ; Name:                                                         ;
 ;   CheckPlayerCollisionVertical                                ;
@@ -751,7 +804,8 @@ CheckPlayerCollisionVertical:
         ; check lower screen bound.
         ; carry set after adding means playerY + genericDY > 255 - cap at Y_MAX
         ; then compare to Y_MAX, carry set means playerY + genericDY >= Y_MAX - cap at Y_MAX
-        ; in either case also INC collisionCache
+        ; in either case also INC collisionCache.
+        ; if genericDY is 0 after the checks, we can exit.
         .checkLowerBound:               
           LDA playerY
           CLC                           
@@ -763,8 +817,9 @@ CheckPlayerCollisionVertical:
           .offDown:
             LDA #PLAYER_Y_MAX_JETPACK
             SEC
-            SBC playerY
+            SBC playerY            
             STA genericDY
+            BEQ .notMovingVertically
             INC collisionCache
             JMP .setYBoxJetpack
     
@@ -818,7 +873,13 @@ CheckPlayerCollisionVertical:
             SEC
             SBC playerY
             STA genericDY       
+            BEQ .notMovingVertically
             INC collisionCache
+            JMP .setYBoxJetpack
+            
+        ; if we get here it means genericDY = 0 after bounds check. Exit.       
+        .notMovingVertically:
+          RTS ; note - not setting collision to 1; it shouldn't matter. It's never used in jetpack scenarios. POI - possible issue
         
         ; set y box. no need to check for overflow
         .setYBoxJetpack:
@@ -1005,7 +1066,8 @@ CheckPlayerCollisionHorizontal:
         LDA c ; = X_MIN
         SEC
         SBC playerX
-        STA genericDX       
+        STA genericDX      
+        BEQ .notMovingHorizontally
         INC collisionCache
         JMP .setBox
          
@@ -1025,7 +1087,13 @@ CheckPlayerCollisionHorizontal:
         SEC
         SBC playerX
         STA genericDX
+        BEQ .notMovingHorizontally
         INC collisionCache
+        JMP .setBox
+        
+  ; if we get here it means genericDX = 0 after bounds check. Exit.       
+  .notMovingHorizontally:
+    RTS ; note - not setting collision to 1; it shouldn't matter. We never check it for this call. POI - possible issue
     
   ; set new player box.
   ; no need to handle overflow since we are capping at X_MIN/X_MAX above
@@ -1335,6 +1403,7 @@ MovePlayerHorizontallyAndSetBoxes:
   LDA levelType ; LEVEL_TYPE_JETPACK = 0
   BEQ MovePlayerHorizontallyJetpackAndSetBoxes
   JMP MovePlayerHorizontallyNormalAndSetBoxes
+  ; todo 0001 - boss fight - scroll screen to last one, don't scroll on the last one
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -1349,16 +1418,35 @@ MovePlayerHorizontallyAndSetBoxes:
 
 MovePlayerHorizontallyJetpackAndSetBoxes:
 
-  LDA playerX
-  CLC
-  ADC genericDX
-  STA playerX
+  LDA genericDX
+  CMP #$80
+  BCS .movingLeft
 
-  ; todo 0003: explode player if pushed out of bounds
+  ; same logic as in horizontal collision check bound setting
+  .movingRight:
+    LDA playerX
+    CLC                           
+    ADC genericDX
+    BCS .explode
+    CMP #PLAYER_X_MAX_JETPACK
+    BCS .explode
+    STA playerX
+    JMP SetPlayerBoxesHorizontal
   
-  JSR SetPlayerBoxesHorizontal
-
-  RTS
+  ; same logic as in horizontal collision check bound setting
+  .movingLeft:
+    LDA playerX
+    CLC
+    ADC genericDX
+    BCC .explode
+    CMP #PLAYER_X_MIN_JETPACK
+    BCC .explode
+    STA playerX
+    JMP SetPlayerBoxesHorizontal
+  
+  .explode:    
+    ; todo 0003 - exploding player still render jetpack and flames
+    JMP ExplodePlayer
   
 ;****************************************************************
 ; Name:                                                         ;
