@@ -98,7 +98,7 @@ UpdatePlayerJetpack:
   .checkA:
     LDA controllerPressed
     AND #CONTROLLER_A
-    BEQ .scrollScreen
+    BEQ .checkScrollSpeed
     LDA playerDirection
     EOR #%00000001
     STA playerDirection
@@ -106,10 +106,10 @@ UpdatePlayerJetpack:
   ; Check if the scroll speed is a special value
   .checkScrollSpeed:
     LDA levelTypeData1 ; scrollSpeed
-    ;CMP #SMALLEST_SPECIAL_SPEED
-    ;BCC .scrollScreen
-    ;JSR ProcessSpecialSpeed ; this sets enemySpeed!
-    ;BEQ .setDY ; not moving this frame
+    CMP #SMALLEST_SPECIAL_SPEED
+    BCC .scrollScreen
+    JSR ProcessSpecialSpeed ; this sets enemySpeed!
+    BEQ .setDY ; not moving this frame
    
   ; Scroll the screen. When we get here, A = scrollSpeed
   ;   - set genericDX to scrollSpeed
@@ -134,6 +134,12 @@ UpdatePlayerJetpack:
       DEC m
       BNE .scrollLoop
    
+  ; If player was exploded, we can just exit.
+  .checkPlayerState:
+    LDA playerState
+    BEQ .setDY ; PLAYER_NORMAL = 0; it can only be NORMAL or EXPLODING 
+    RTS
+    
   ; Set DY based on the input
   .setDY:
     LDA controllerDown
@@ -1428,7 +1434,7 @@ MovePlayerHorizontallyJetpackAndSetBoxes:
     CLC                           
     ADC genericDX
     BCS .explode
-    CMP #PLAYER_X_MAX_JETPACK
+    CMP #PLAYER_X_MAX_JETPACK + $01 ; we cap at PLAYER_X_MAX_JETPACK, and this check is >= so we need to +1
     BCS .explode
     STA playerX
     JMP SetPlayerBoxesHorizontal
@@ -1445,7 +1451,6 @@ MovePlayerHorizontallyJetpackAndSetBoxes:
     JMP SetPlayerBoxesHorizontal
   
   .explode:    
-    ; todo 0003 - exploding player still render jetpack and flames
     JMP ExplodePlayer
   
 ;****************************************************************
@@ -1753,8 +1758,14 @@ LoadPlayer:
 
 RenderPlayer:
   
-  LDA levelType
-  BEQ .jetpack ; LEVEL_TYPE_JETPACK = 0
+  .stateCheck:
+    LDA playerState
+    BEQ .levelTypeCheck ; PLAYER_NORMAL = 0
+    RTS                 ; only render in the normal state, other states render in their 'update' routine
+  
+  .levelTypeCheck:
+    LDA levelType
+    BEQ .jetpack        ; LEVEL_TYPE_JETPACK = 0
   
   .notJetpack:
     JMP RenderPlayerNormal
@@ -1781,11 +1792,6 @@ RenderPlayer:
 ;****************************************************************
     
 RenderPlayerNormal:
-
-  .stateCheck:
-    LDA playerState
-    BEQ .yStateCheck              ; PLAYER_NORMAL = 0
-    RTS                           ; only render in the normal state, other states render in their 'update' routine
   
   .yStateCheck:
     LDA playerYState

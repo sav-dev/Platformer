@@ -5,8 +5,5 @@
  - add a 'jetpack mission' win condition
  - implement the jetpack
 
-Big issues:
-  - exploding player in jetpack mission doesn't work correctly (if pressing left player gets moved)
- 
 Small issues:
   - after falling into a pit player can move horizontally and move in 'under' a platform
