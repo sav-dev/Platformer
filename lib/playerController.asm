@@ -1,3 +1,5 @@
+PlayerControllerStart:
+
 ;****************************************************************
 ; PlayerController                                              ;
 ; Responsible for player's movement and graphics                ;
@@ -708,7 +710,6 @@ CheckVictoryConditions:
       BNE .jetpackDone
   
     .levelEnd:
-      ; todo 0003 - I don't really like this. Tweak this a bit.
       LDA #PLAYER_JETPACK_LVL_END
       STA playerCounter
       LDA #PLAYER_NOT_VISIBLE
@@ -2134,3 +2135,9 @@ JETPACK_ATTS          = $01
 JETPACK_X_OFF_RIGHT   = $FB ; = -5; 8 pixels left from the head
 JETPACK_X_OFF_LEFT    = $0D ; = 13; 8 pixels right from the head
 JETPACK_Y_OFF         = $E1 ; same as the head
+
+;****************************************************************
+; EOF                                                           ;
+;****************************************************************
+
+PlayerControllerEnd:

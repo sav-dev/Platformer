@@ -1,3 +1,5 @@
+DoorManagerStart:
+
 ;****************************************************************
 ; DoorManager                                                   ;
 ; Responsible for processing the door and keycard logic         ;
@@ -318,3 +320,9 @@ LoadDoorAndKeycard:
   STA genericPointer + $01
     
   RTS
+  
+;****************************************************************
+; EOF                                                           ;
+;****************************************************************
+
+DoorManagerEnd:

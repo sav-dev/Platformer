@@ -1,3 +1,5 @@
+BackgroundManagerStart:
+
 ;****************************************************************
 ; BackgroundManager                                             ;
 ; Responsible for loading backgrounds                           ;
@@ -1360,3 +1362,9 @@ ScrollRight:
   LDA #$00
   STA b
   JMP ScrollBullets
+  
+;****************************************************************
+; EOF                                                           ;
+;****************************************************************
+
+BackgroundManagerEnd:

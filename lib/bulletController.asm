@@ -1,3 +1,5 @@
+BulletControllerStart:
+
 ;****************************************************************
 ; BulletController                                              ;
 ; Responsible for spawning and updating bullets                 ;
@@ -749,3 +751,9 @@ CheckForCollisionsPlatThDoor:
     
   .collisionCheckDone:
     RTS
+    
+;****************************************************************
+; EOF                                                           ;
+;****************************************************************
+
+BulletControllerEnd:

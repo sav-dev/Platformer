@@ -1,3 +1,5 @@
+CollisionManagerStart:
+
 ;****************************************************************
 ; CollisionManager                                              ;
 ; Responsible for detecting collisions                          ;
@@ -549,3 +551,9 @@ TransposeItem:
   ; item not visible
   .itemNotVisible:
     RTS
+    
+;****************************************************************
+; EOF                                                           ;
+;****************************************************************
+
+CollisionManagerEnd:

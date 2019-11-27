@@ -1,3 +1,5 @@
+ElevatorManagerStart:
+
 ;****************************************************************
 ; ElevatorManager                                               ;
 ; Responsible for updating and rendering Elevators              ;
@@ -1057,4 +1059,10 @@ ElevatorWidth:
   .byte $08 * $06
   .byte $08 * $07
   .byte $08 * $08
+  
+;****************************************************************
+; EOF                                                           ;
+;****************************************************************
+
+ElevatorManagerEnd:
   

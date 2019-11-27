@@ -1,3 +1,5 @@
+ExplosionsControllerStart:
+
 ;****************************************************************
 ; ExplosionsController                                          ;
 ; Responsible for rendering explosions                          ;
@@ -171,3 +173,9 @@ explosionTiles:
   .byte $1E, $20, $1F, $21
   .byte $1A, $1C, $1B, $1D
   .byte $19, CLEAR_SPRITE, CLEAR_SPRITE, CLEAR_SPRITE
+  
+;****************************************************************
+; EOF                                                           ;
+;****************************************************************
+
+ExplosionsControllerEnd:

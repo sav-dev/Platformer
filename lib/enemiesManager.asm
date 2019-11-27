@@ -1,3 +1,5 @@
+EnemiesManagerStart:
+
 ;****************************************************************
 ; EnemiesManager                                                ;
 ; Responsible for rendering and updating enemies                ;
@@ -2098,3 +2100,9 @@ counterClockwiseMovementTable:
   .byte DIRECTION_LEFT
   ; after DOWN (=3) comes
   .byte DIRECTION_RIGHT
+  
+;****************************************************************
+; EOF                                                           ;
+;****************************************************************
+
+EnemiesManagerEnd:

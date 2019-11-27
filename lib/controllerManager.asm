@@ -1,3 +1,5 @@
+ControllerManagerStart:
+
 ;****************************************************************
 ; ControllerManager                                             ;                           
 ; Responsible for checking the state of the controller          ;
@@ -58,3 +60,9 @@ ReadController:
   .readControllerDone:
   
   RTS
+  
+;****************************************************************
+; EOF                                                           ;
+;****************************************************************
+
+ControllerManagerEnd:

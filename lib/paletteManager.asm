@@ -1,3 +1,5 @@
+PaletteManagerStart:
+
 ;****************************************************************
 ; PaletteManager                                                ;                           
 ; Responsible for loading palettes                              ;
@@ -151,3 +153,9 @@ ClearPalettes:
     BNE .loop
     
   RTS
+  
+;****************************************************************
+; EOF                                                           ;
+;****************************************************************
+
+PaletteManagerEnd:
