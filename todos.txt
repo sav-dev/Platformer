@@ -1,9 +1,8 @@
 0001:
  - add a 'boss fight' level type
 
- 0003:
- - add a 'jetpack mission' win condition
- - implement the jetpack
+0003:
+ - have a better ending for 'jetpack' missions
 
 Small issues:
   - after falling into a pit player can move horizontally and move in 'under' a platform

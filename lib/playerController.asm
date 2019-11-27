@@ -118,16 +118,17 @@ UpdatePlayerJetpack:
   ;   - move the player (possibly go off screen)
   ;   - scroll the screen by scrollSpeed
   .scrollScreen:    
+    STA enemySpeed ; we use this later to get the scrollSpeed; may already be set in case of special speed
     STA genericDX
     LDA #$00
     STA c ; don't check for going out of bounds
     JSR CheckPlayerCollisionHorizontal ; this updates genericDX
     LDA genericDX
     SEC
-    SBC levelTypeData1 ; scrollSpeed
+    SBC enemySpeed ; this still contains scrollSpeed
     STA genericDX
     JSR MovePlayerHorizontallyJetpackAndSetBoxes
-    LDA levelTypeData1 ; scrollSpeed
+    LDA enemySpeed ; this still contains scrollSpeed
     STA m ; use as counter. POI - possible issue - random pseudo-register use
     .scrollLoop:
       JSR ScrollRight
