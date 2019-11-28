@@ -102,6 +102,7 @@ SpawnPlayerBullet:
     STA bullets, x
     LDA #PLAYER_BULLET_COOLDOWN
     STA playerBulletCooldown
+    JSR SfxShot ; todo 0006 - is this the right place
     RTS
 
 ;****************************************************************

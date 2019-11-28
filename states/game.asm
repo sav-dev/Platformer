@@ -172,6 +172,12 @@ LoadGame:
     STA soft2001                  
     INC needPpuReg
   .enablePPUDone:  
+
+  ; todo 0006 - is this the right place to call this
+  .initializeSound:
+    JSR InitializeSound
+    JSR PlaySong
+  .initializeSoundDone:
   
   JMP WaitForFrame 
   

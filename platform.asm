@@ -11,6 +11,7 @@
 ; Variables                                                     ;
 ;****************************************************************
     
+  .include "ggsound\ggsound.inc"
   .include "inc\zeroPage.asm"
   .include "inc\variables.asm"
   
@@ -184,7 +185,9 @@ NMI:
   STA needDraw
   STA needPpuReg
   STA sleeping              
-                            
+                         
+  soundengine_update        ; update the sound engine
+                         
   PLA                       ; restore regs and exit
   TAY                       
   PLA
@@ -435,14 +438,10 @@ Bank2End:
   
 Bank0Start:
     
-  .include "lib\paletteManager.asm"   
-  .include "lib\elevatorManager.asm"
-  .include "lib\explosionsController.asm"
-  .include "lib\doorManager.asm"
-  .include "lib\collisionManager.asm"
-  
-  .include "states\game.asm"
-    
+  .include "lib\soundController.asm"
+  .include "data\levels.asm"
+  .include "data\enemies.asm"    
+        
 Bank0End:
     
   .bank 1
@@ -455,10 +454,17 @@ Bank1End:
   .bank 3
   .org $E000
   
-Bank3Start:
+Bank3Start: 
+ 
+  .include "lib\paletteManager.asm"   
+  .include "lib\elevatorManager.asm"
+  .include "lib\explosionsController.asm"
+  .include "lib\doorManager.asm"
+  .include "lib\collisionManager.asm"
+  .include "lib\ggsoundInclude.asm"
   
-  .include "data\levels.asm"
-  .include "data\enemies.asm"
+  .include "states\game.asm"
+
  
 Bank3End:
   

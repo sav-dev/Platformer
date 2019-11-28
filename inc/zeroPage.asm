@@ -200,3 +200,9 @@ levelType           .rs 1
 levelTypeData1      .rs 1 ; normal: exit screen; jetpack: scroll speed
 levelTypeData2      .rs 1 ; normal: exit X; jetpack: scroll counter
 levelTypeData3      .rs 1 ; normal: exit Y; jetpack: N/A
+
+;****************************************************************
+; ggsound                                                       ;
+;****************************************************************
+
+  .include "ggsound\ggsound_zp.inc"

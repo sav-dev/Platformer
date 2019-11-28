@@ -32,7 +32,7 @@ rightTiles        .rs 128   ; last 128 bytes of the tile dictionary
 ;****************************************************************
 
   .rsset $0300
-; 256 bytes available here
+  .include "ggsound\ggsound_ram.inc"
 
 ;****************************************************************
 ; Enemies and elevators                                         ;
