@@ -33,7 +33,8 @@ rightTiles        .rs 128   ; last 128 bytes of the tile dictionary
 
   .rsset $0300
   .include "ggsound\ggsound_ram.inc"
-
+  ; sound uses between 150 and 189 bytes based on what's enabled. That means there's at least 67 bytes available here.
+  
 ;****************************************************************
 ; Enemies and elevators                                         ;
 ;****************************************************************

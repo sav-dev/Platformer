@@ -205,4 +205,6 @@ levelTypeData3      .rs 1 ; normal: exit Y; jetpack: N/A
 ; ggsound                                                       ;
 ;****************************************************************
 
-  .include "ggsound\ggsound_zp.inc"
+  .include "ggsound\ggsound_zp.inc" ; uses between 61 or 72 bytes based on what's enabled 
+  ; sound .rs 72
+  ; afterSound .rs 1
