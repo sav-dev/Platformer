@@ -4,5 +4,6 @@
 *.sav
 zeroPage.txt
 PlatformerGraphics
-sound
+ggsound
 memorySizes.txt
+todos.txt
