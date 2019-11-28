@@ -1,5 +1,0 @@
-0001:
- - add a 'boss fight' level type
-
-Small issues:
-  - after falling into a pit player can move horizontally and move in 'under' a platform
