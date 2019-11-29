@@ -126,19 +126,20 @@ UpdateActiveEnemy:
     .decState:
       DEC enemies, x
   
-  ; todo 0002: update this
   ; X still points to the state.
-  ; cache the const data pointer in Y and the screen the enemy is on in enemyScreen
-  ; first do X += 3 to skip state and id. we'll point to the const data.
-  ; then do X += 1 to point to the screen.
-  ; then to X += 1 to point to the next byte after the screen (should flip).
+  ; store the const data pointer in enemyConstsPointer and the screen the enemy is on in enemyScreen.
+  ; first do X += 3 to skip state and id. we'll point to the const data. store the two bytes in enemyConstsPointer. also preset Y to 0.
+  ; then do X += 1 to point to the screen. store in enemyScreen. then to X += 1 to point to the next byte after the screen (should flip).
   .cachePointerAndScreen:
     INX
     INX
     INX
     LDA enemies, x
-    TAY
-    INX ; todo 0002: skip high byte for now
+    STA enemyConstsPointer
+    INX
+    LDA enemies, x
+    STA enemyConstsPointer + $01
+    LDY #$00
     INX
     LDA enemies, x
     STA enemyScreen
@@ -549,7 +550,7 @@ UpdateActiveEnemy:
       BCS EnemyProcessConsts
       INC genericOffScreen
       CLC
-      ADC EnemyConsts, y
+      ADC [enemyConstsPointer], y
       BCC .enemyOffScreen
       CMP #SPRITE_DIMENSION
       BCC .enemyOffScreen
@@ -573,7 +574,7 @@ UpdateActiveEnemy:
       .hitboxXOffScreen:
         LDA genericX
         CLC
-        ADC EnemyConsts, y        
+        ADC [enemyConstsPointer], y        
         BCC .hitboxXPartiallyOffscreen
       
         ; box fully on screen, A still holds calculated x1
@@ -584,7 +585,7 @@ UpdateActiveEnemy:
           STA ax1
           INY
           CLC
-          ADC EnemyConsts, y
+          ADC [enemyConstsPointer], y
           STA ax2
           JMP .hitboxY
         
@@ -595,7 +596,7 @@ UpdateActiveEnemy:
         .hitboxXPartiallyOffscreen:
           INY
           CLC
-          ADC EnemyConsts, y
+          ADC [enemyConstsPointer], y
           BCC .noCollisions
           STA ax2
           LDA #$00
@@ -624,12 +625,12 @@ UpdateActiveEnemy:
       .hitboxXOnScreen:
         LDA genericX
         CLC
-        ADC EnemyConsts, y
+        ADC [enemyConstsPointer], y
         BCS .noCollisionsIny
         STA ax1
         INY
         CLC
-        ADC EnemyConsts, y
+        ADC [enemyConstsPointer], y
         BCS .capX2
         STA ax2
         JMP .hitboxY
@@ -646,11 +647,11 @@ UpdateActiveEnemy:
       INY
       LDA genericY
       CLC
-      ADC EnemyConsts, y
+      ADC [enemyConstsPointer], y
       STA ay1
       INY
       CLC
-      ADC EnemyConsts, y
+      ADC [enemyConstsPointer], y
       STA ay2      
     
     ; get the position of the gun.
@@ -666,7 +667,7 @@ UpdateActiveEnemy:
     ; first do Y += 1 to point to orientation, load    
     .shootingDirection:
       INY
-      LDA EnemyConsts, y
+      LDA [enemyConstsPointer], y
       STA enemyOrientation
     
     ; then do Y += 1 to point to gun x off, then check direction, and set enemyGunX and enemyGunY to a right const value.
@@ -679,19 +680,19 @@ UpdateActiveEnemy:
       .gunPositionFlip:
         INY
         INY
-        LDA EnemyConsts, y
+        LDA [enemyConstsPointer], y
         STA enemyGunX
         INY
-        LDA EnemyConsts, y
+        LDA [enemyConstsPointer], y
         STA enemyGunY
         INY
         JMP .animationConsts
       
       .gunPositionNoFlip:
-        LDA EnemyConsts, y
+        LDA [enemyConstsPointer], y
         STA enemyGunX
         INY
-        LDA EnemyConsts, y
+        LDA [enemyConstsPointer], y
         STA enemyGunY
         INY
         INY
@@ -701,20 +702,20 @@ UpdateActiveEnemy:
     ; this expects Y to point to the animation speed
     ; two bytes are: animation speed and number of frames
     .animationConsts:
-      LDA EnemyConsts, y
+      LDA [enemyConstsPointer], y
       STA enemyAnimationSpeed
       INY
-      LDA EnemyConsts, y
+      LDA [enemyConstsPointer], y
       STA enemyFrameCount
       INY
             
     ; cache the render pointer in generic pointer
     ; when we get here, Y points to the pointer already
     .renderPointer:
-      LDA EnemyConsts, y
+      LDA [enemyConstsPointer], y
       STA genericPointer
       INY
-      LDA EnemyConsts, y
+      LDA [enemyConstsPointer], y
       STA genericPointer + $01
     
   ; when we get here, X points to remaining life.
@@ -1327,10 +1328,13 @@ UpdateEnemies:
     ;   1 == ENEMY_EXPLODING
     ; else: 2+ == ENEMY_STATE_ACTIVE
     LDA enemies, x       
-    BEQ .enemyEmpty
-    CMP #ENEMY_STATE_EXPLODING
-    BEQ .enemyExploding
+    BNE .checkIfExploding
+    JMP .enemyEmpty
     
+    .checkIfExploding:
+      CMP #ENEMY_STATE_EXPLODING
+      BEQ .enemyExploding
+      
     ; active enemy - call into a subroutine, jump to the loop condition
     .enemyActive:
       JSR UpdateActiveEnemy
@@ -1358,31 +1362,33 @@ UpdateEnemies:
           ORA enemies, x
           STA destroyedEnemies, y
           
-        ; X += 1 to point at the consts pointer (low byte)
-        ; load the pointer then do += CONST_ENEMY_EXPL_OFF to point to the explosion offsets. store in Y.
+        ; X += 1 to point at the consts pointer, load it and store it in enemyConstsPointer
+        ; load CONST_ENEMY_EXPL_OFF in Y to point to the explosion offsets.
         .loadConstsPointer:
           INX
           LDA enemies, x
-          CLC
-          ADC #CONST_ENEMY_EXPL_OFF
-          TAY
+          STA enemyConstsPointer
+          INX
+          LDA enemies, x
+          STA enemyConstsPointer + $01          
+          LDY #CONST_ENEMY_EXPL_OFF
           
-        ; X += (ENEMY_X - ENEMY_POINTER_L) to point to the X position, update x using x off from consts.
+        ; X += (ENEMY_X - ENEMY_POINTER_H) to point to the X position, update x using x off from consts.
         ; X += 1 to point to the Y position, Y += 1, update y using y off from consts
         .updatePosition:
           TXA
           CLC
-          ADC #(ENEMY_X - ENEMY_POINTER_L)
+          ADC #(ENEMY_X - ENEMY_POINTER_H)
           TAX
           LDA enemies, X
           CLC
-          ADC EnemyConsts, y
+          ADC [enemyConstsPointer], y
           STA enemies, X
           INX
           INY
           LDA enemies, X
           CLC
-          ADC EnemyConsts, y
+          ADC [enemyConstsPointer], y
           STA enemies, X
           
         ; X += (ENEMY_ANIMATION_TIMER - ENEMY_Y) to point to the animation timer, set it to the const expl. speed.

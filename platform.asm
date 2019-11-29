@@ -439,8 +439,7 @@ Bank2End:
 Bank0Start:
     
   .include "lib\soundController.asm"
-  .include "data\levels.asm"
-  .include "data\enemies.asm"    
+  .include "data\levels.asm"  
         
 Bank0End:
     
@@ -456,6 +455,7 @@ Bank1End:
   
 Bank3Start: 
  
+  .include "data\enemies.asm" ; this has to be in this place
   .include "lib\paletteManager.asm"   
   .include "lib\elevatorManager.asm"
   .include "lib\explosionsController.asm"

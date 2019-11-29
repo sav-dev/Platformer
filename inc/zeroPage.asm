@@ -40,6 +40,7 @@ platformsPointer        .rs 2  ; points to the platform data for current screen
 threatsPointer          .rs 2  ; points to the threat data for current screen
 enemiesPointer          .rs 2  ; points to the enemies data for *next* screen (since we load one screen ahead)
 elevatorsPointer        .rs 2  ; points to the elevators data for *next* screen (since we load one screen ahead)
+enemyConstsPointer      .rs 2  ; used to iterate over enemy consts
 
 xPointerCache           .rs 1  ; for caching the initial value of the x register
 yPointerCache           .rs 1  ; for caching the initial value of the y register
