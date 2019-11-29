@@ -44,14 +44,14 @@ rightTiles        .rs 128   ; last 128 bytes of the tile dictionary
  .rsset $0400
  
 ; depends_on_enemy_in_memory_format
-; size of enemies must be "max enemies loaded" (currently 10) * "enemy size" (currently 20)
+; size of enemies must be "max enemies loaded" (currently 10) * "enemy size" (currently 24)
 ; size of destroyedEnemies must be "max enemies in a level" (currently 128) / 8
 
-enemies           .rs 200
+enemies           .rs 240
 destroyedEnemies  .rs 16
 
 ENEMIES_COUNT           = $0A ; = 10
-ENEMY_SIZE              = $14 ; = 20
+ENEMY_SIZE              = $18 ; = 24
 MAX_ENEMIES             = $80 ; = 128
 
 ; depends_on_elevator_in_memory_format
@@ -90,9 +90,7 @@ keycardY          .rs 1
 
 DOOR_DATA_SIZE = $07
 
-; depends_on_enemy_in_memory_format
-; depends_on_elevator_in_memory_format
-BYTES_TO_CLEAR_IN_500   = $4B ; total size of arrays - 256
+BYTES_TO_CLEAR_IN_500   = $73 ; total size of arrays - 256
 
 ;****************************************************************
 ; Other variables - free up to $0700                            ;

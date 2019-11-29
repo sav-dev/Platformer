@@ -7,13 +7,14 @@ EnemiesManagerStart:
 
 ;
 ; - enemies in level data the following format:
-;   - pointer to next screen (from here): (n x 18) + 3 (1 byte)
+;   - pointer to next screen (from here): (n x 22) + 3 (1 byte)
 ;   - number of enemies (1 byte)
-;   - n times the enemy data (18 bytes)
+;   - n times the enemy data (22 bytes)
 ;        - 1st byte of id - pointer to the right variable (1 byte)
 ;        - 2nd byte of id - a mask in the right variable (1 byte) 
 ;        - slot to put enemy in (1 byte)
-;        - pointer to const. data (1 byte)
+;        - pointer to const. data (low) (1 byte)
+;        - pointer to const. data (high) (1 byte)
 ;        - screen the enemy is on (1 byte)
 ;        - should flip (1 byte)
 ;        - movement speed (1 byte)
@@ -25,16 +26,20 @@ EnemiesManagerStart:
 ;        - initial special movement var (1 byte)
 ;        - x position (1 byte)
 ;        - y position (1 byte)            
+;        - blinking type (1 byte)
+;        - blinking const (1 byte)
+;        - blinking variable (1 byte)
 ;        - initial life (1 byte)
 ;        - shooting frequency initial (1 byte)
 ;        - shooting frequency (1 byte)
-;   - pointer to the previous screen (from here): (n x 18) + 2 (1 byte)
+;   - pointer to the previous screen (from here): (n x 22) + 2 (1 byte)
 ;
-; - enemies in memory in the following format (20 bytes):
+; - enemies in memory in the following format (24 bytes):
 ;    - state (1 byte)
 ;    - 1st byte of id - pointer to the right variable (1 byte)
 ;    - 2nd byte of id - a mask in the right variable (1 byte) 
-;    - pointer to const. data (1 byte)
+;    - pointer to const. data (low) (1 byte)
+;    - pointer to const. data (high) (1 byte)
 ;    - screen the enemy is on (1 byte)
 ;    - should flip (1 byte)
 ;    - movement speed (1 byte)
@@ -46,6 +51,9 @@ EnemiesManagerStart:
 ;    - special movement var (1 byte)
 ;    - x position (1 byte)
 ;    - y position (1 byte)
+;    - blinking type (1 byte)
+;    - blinking const (1 byte)
+;    - blinking variable (1 byte)
 ;    - remaining life (1 byte)  
 ;    - shooting timer (1 byte)
 ;    - shooting frequency (1 byte)
@@ -118,6 +126,7 @@ UpdateActiveEnemy:
     .decState:
       DEC enemies, x
   
+  ; todo 0004: update this
   ; X still points to the state.
   ; cache the const data pointer in Y and the screen the enemy is on in enemyScreen
   ; first do X += 3 to skip state and id. we'll point to the const data.
@@ -129,6 +138,7 @@ UpdateActiveEnemy:
     INX
     LDA enemies, x
     TAY
+    INX ; todo 0004: skip high byte for now
     INX
     LDA enemies, x
     STA enemyScreen
@@ -417,7 +427,7 @@ UpdateActiveEnemy:
     
       .checkDirection:
         LDA enemyDirection
-        BEQ .movingLeft ; DIRECTIOn_LEFT = 0
+        BEQ .movingLeft ; DIRECTION_LEFT = 0
         CMP #DIRECTION_NONE
         BEQ .applyMovement
         CMP #DIRECTION_RIGHT
@@ -478,13 +488,20 @@ UpdateActiveEnemy:
       INX      
       
   ; once we get here, movement has been updated, and the following are set:
-  ;   - X set to remaining life
+  ;   - X set to blinking type
   ;   - Y set to the const data pointer (1st byte: width)
   ;   - genericDirection set to current flip
   ;   - genericX and genericY set to the current position
   ;   - genericOffScreen is set to 0
   ;
-  ; we have to figure out if enemy should even be rendered. 
+  ; process the blinking variables
+  EnemyProcessBlinking:
+    INX
+    INX
+    INX ; todo 0004: for now just skip everything  
+  
+  ; X is pointint to remaining life.
+  ; we have to figure out if the enemy should even be rendered. 
   EnemyShouldRender:   
     
     ; transpose X. First check if enemy is on the current screen or the next
@@ -1341,7 +1358,7 @@ UpdateEnemies:
           ORA enemies, x
           STA destroyedEnemies, y
           
-        ; X += 1 to point at the consts pointer
+        ; X += 1 to point at the consts pointer (low byte)
         ; load the pointer then do += CONST_ENEMY_EXPL_OFF to point to the explosion offsets. store in Y.
         .loadConstsPointer:
           INX
@@ -1350,12 +1367,12 @@ UpdateEnemies:
           ADC #CONST_ENEMY_EXPL_OFF
           TAY
           
-        ; X += (ENEMY_X - ENEMY_POINTER) to point to the X position, update x using x off from consts.
+        ; X += (ENEMY_X - ENEMY_POINTER_L) to point to the X position, update x using x off from consts.
         ; X += 1 to point to the Y position, Y += 1, update y using y off from consts
         .updatePosition:
           TXA
           CLC
-          ADC #(ENEMY_X - ENEMY_POINTER)
+          ADC #(ENEMY_X - ENEMY_POINTER_L)
           TAX
           LDA enemies, X
           CLC
@@ -1645,9 +1662,9 @@ LoadEnemies:
       LDA d
       STA enemies, x
         
-    ; next (ENEMY_SHOOTING_TIMER - ENEMY_POINTER + 1) bytes are the same in both definitions.
-    ; c will be the loop pointer (no longer needed), copy the 14 bytes incrementing Y and X in each loop
-    LDA #(ENEMY_SHOOTING_TIMER - ENEMY_POINTER + $01)
+    ; next (ENEMY_SHOOTING_TIMER - ENEMY_POINTER_L + 1) bytes are the same in both definitions.
+    ; c will be the loop pointer (no longer needed), copy the bytes incrementing Y and X in each loop
+    LDA #(ENEMY_SHOOTING_TIMER - ENEMY_POINTER_L + $01)
     STA c
     .copyLoop:
       INY
