@@ -126,7 +126,7 @@ UpdateActiveEnemy:
     .decState:
       DEC enemies, x
   
-  ; todo 0004: update this
+  ; todo 0002: update this
   ; X still points to the state.
   ; cache the const data pointer in Y and the screen the enemy is on in enemyScreen
   ; first do X += 3 to skip state and id. we'll point to the const data.
@@ -138,7 +138,7 @@ UpdateActiveEnemy:
     INX
     LDA enemies, x
     TAY
-    INX ; todo 0004: skip high byte for now
+    INX ; todo 0002: skip high byte for now
     INX
     LDA enemies, x
     STA enemyScreen
@@ -1722,16 +1722,16 @@ UnloadEnemies:
     BNE .loopCondition             ; if screen != b, don't do anything
     
     .unloadEnemy:
-      DEX
-      DEX
-      DEX
-      DEX                          ; x points to the state
+      TXA
+      SEC
+      SBC #(ENEMY_SCREEN - ENEMY_STATE)
+      TAX                          ; x points to the state
       LDA #ENEMY_STATE_EMPTY
       STA enemies, x               ; unload the enemy
-      INX
-      INX
-      INX
-      INX                          ; x points back to the screen
+      TXA
+      CLC
+      ADC #(ENEMY_SCREEN - ENEMY_STATE)
+      TAX                          ; x points back to the screen
     
     .loopCondition:
       TXA                          
