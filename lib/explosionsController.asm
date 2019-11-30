@@ -5,7 +5,7 @@ ExplosionsControllerStart:
 ; Responsible for rendering explosions                          ;
 ;****************************************************************
 
-; POI - possible optimization - at a cost of 2 CHR sprites, this entire file could be removed
+; POITAG - possible optimization - at a cost of 2 CHR sprites, this entire file could be removed
 ; which will save a ton of program bytes. Use the 'render enemy' logic instead. Do this change?
 
 ;****************************************************************
@@ -149,7 +149,7 @@ RenderExplosion:
     
 ;****************************************************************
 ; ATTS for explosion are currently constant for each tile       ;
-; POI - one sprite in CHR could be saved if we flipped it       ;
+; POITAG - one sprite in CHR could be saved if we flipped it    ;
 ;****************************************************************
 
 EXPLOSION_ATTS = $00

@@ -131,7 +131,7 @@ UpdatePlayerJetpack:
     STA genericDX
     JSR MovePlayerHorizontallyJetpackAndSetBoxes
     LDA enemySpeed ; this still contains scrollSpeed
-    STA m ; use as counter. POI - possible issue - random pseudo-register use
+    STA m ; use as counter. POITAG - possible issue - random pseudo-register use
     .scrollLoop:
       JSR ScrollRight
       DEC m
@@ -259,13 +259,13 @@ UpdatePlayerNormal:
     STA playerAnimation                 ; update animation to jump
     JSR MovePlayerVertically            ; move player vertically by gravity
     JSR SetPlayerBoxesVertical          ; update boxes to make player 'stand up';
-    JSR CheckPlayerCollisionVertical    ; check for collisions again. genericDY is 0 now so it will think player is below the obstacles. POI - possible optimization - no need to check elevators here
-    JSR MovePlayerVertically            ; if no collision found, genericDY will be 0 and this is a no-op. POI - possible optimization - we could only do
-    JSR SetPlayerBoxesVertical          ; these updates if collision found in the 2nd check, but this is so rare it's not worth the branching
-    JMP .checkHorizontalMovement        ; go to the common horizontal movement code
+    JSR CheckPlayerCollisionVertical    ; check for collisions again. genericDY is 0 now so it will think player is below the obstacles. POITAG - possible optimization - no need to check elevators here
+    JSR MovePlayerVertically            ; if no collision found, genericDY will be 0 and this is a no-op. 
+    JSR SetPlayerBoxesVertical          ; POITAG - possible optimization - we could only dot these updates if collision found in the 2nd check,
+    JMP .checkHorizontalMovement        ; but this is so rare it's not worth the branching. Instead go to the common horizontal movement code
   
   ; Player was crouching in the last frame, and is still on some platform.
-  ; POI - possible issue - WE ASSUME GENERIC DY IS 0 - there should never be a case where the player falls off an elevator while crouching,
+  ; POITAG - possible issue - WE ASSUME GENERIC DY IS 0 - there should never be a case where the player falls off an elevator while crouching,
   ; and then goes down by less than the value of gravity and hits something.
   ; So the only case this may happen is if player is still on the same platform they were previously.
   ; Check if the player wants to jump - that cancels crouching.
@@ -279,7 +279,7 @@ UpdatePlayerNormal:
       LDA #PLAYER_JUMP
       STA playerAnimation               ; update animation to jump
       JSR SetPlayerBoxesVertical        ; update boxes to make player 'stand up';
-      JSR CheckPlayerCollisionVertical  ; check for collisions again. ignore any updates to DY, we just care whether a collision was found
+      JSR CheckPlayerCollision          ; check for collisions again.
       LDA collision
       BNE .playerCrouching              ; player must go back to the crouch if there is no room to stand up
       JMP .playerWantsToJump            ; go to the common jumping code
@@ -293,7 +293,7 @@ UpdatePlayerNormal:
       LDA #PLAYER_STAND
       STA playerAnimation               ; update animation to standing
       JSR SetPlayerBoxesVertical        ; update boxes to make player 'stand up';
-      JSR CheckPlayerCollisionVertical  ; check for collisions again. ignore any updates to DY, we just care whether a collision was found
+      JSR CheckPlayerCollision          ; check for collisions again.
       LDA collision
       BNE .playerCrouching              ; player must go back to the crouch if there is no room to stand up
       JMP .checkHorizontalMovement      ; go to the common horizontal movement code
@@ -890,7 +890,7 @@ CheckPlayerCollisionVertical:
             
         ; if we get here it means genericDY = 0 after bounds check. Exit.       
         .notMovingVertically:
-          RTS ; note - not setting collision to 1; it shouldn't matter. It's never used in jetpack scenarios. POI - possible issue
+          RTS ; note - not setting collision to 1; it shouldn't matter. It's never used in jetpack scenarios. POITAG - possible issue
         
         ; set y box. no need to check for overflow
         .setYBoxJetpack:
@@ -906,7 +906,7 @@ CheckPlayerCollisionVertical:
   ; check for collisions with platforms and door first,
   ; check first screen first (c == 0), then second screen (c == 1) if no collisions found.
   ; if any collisions found, go to .adjustMovement. Otherwise go to .checkCollisionsWithElevators
-  ; POI - possible issue - make sure player will never a vertical collision with both platform/door and elevator in a frame.
+  ; POITAG - possible issue - make sure player will never a vertical collision with both platform/door and elevator in a frame.
   ; that could be the case if player could gain more vertical speed than the thickness of an elevator.
   .checkCollisionsWithPlatforms:
   
@@ -1104,7 +1104,7 @@ CheckPlayerCollisionHorizontal:
         
   ; if we get here it means genericDX = 0 after bounds check. Exit.       
   .notMovingHorizontally:
-    RTS ; note - not setting collision to 1; it shouldn't matter. We never check it for this call. POI - possible issue
+    RTS ; note - not setting collision to 1; it shouldn't matter. We never check it for this call. POITAG - possible issue
     
   ; set new player box.
   ; no need to handle overflow since we are capping at X_MIN/X_MAX above
@@ -1124,13 +1124,13 @@ CheckPlayerCollisionHorizontal:
 
   ; don't check collisions with other elevators if player is already on an elevator.
   ; we will never have a vertical collision and horizontal collision with elevators in the same frame.
-  ; POI - possible issue - make sure that's the case
+  ; POITAG - possible issue - make sure that's the case
   .playerOnElevator:
     LDA playerOnElevator
     BNE .checkCollisionsWithPlatforms
   
   ; check for collisions with elevators first.
-  ; POI - possible issue - collision with elevator and wall in one frame is untested
+  ; POITAG - possible issue - collision with elevator and wall in one frame is untested
   .checkCollisionsWithElevators:
     JSR CheckForElevatorCollision
     LDA collision
@@ -1207,6 +1207,77 @@ CheckPlayerCollisionHorizontal:
       DEC genericDX
       RTS
         
+;****************************************************************
+; Name:                                                         ;
+;   CheckPlayerCollision                                        ;
+;                                                               ;
+; Description:                                                  ;
+;   Check collision between player and platforms and elevators  ;
+;                                                               ;
+; Output:                                                       ;
+;   collision = 1 set on output if collision detected           ;
+;                                                               ;
+; Used variables:                                               ;
+;   collision                                                   ;
+;   collisionVars                                               ;
+;   c                                                           ;
+;   d                                                           ;
+;   genericPointer                                              ;
+;   Y                                                           ;
+;   yPointerCache                                               ;
+;   enemyScreen                                                 ;
+;   elevatorSize                                                ;
+;****************************************************************
+        
+CheckPlayerCollision:
+
+  .presetCollision:
+    LDA #$00
+    STA collision
+
+  .setBBox:
+    LDA playerPlatformBoxX1
+    STA bx1
+    LDA playerPlatformBoxX2
+    STA bx2
+    LDA playerPlatformBoxY1
+    STA by1
+    LDA playerPlatformBoxY2
+    STA by2
+        
+  .checkCollisionsWithElevators:
+    JSR CheckForElevatorCollision
+    LDA collision
+    BNE .collisionCheckDone
+  
+  .checkCollisionsWithPlatforms:
+  
+    .checkFirstScreen:
+      LDA #$00
+      STA c
+      LDA platformsPointer
+      STA genericPointer
+      LDA platformsPointer + $01
+      STA genericPointer + $01
+      JSR CheckForPlatformOneScreen
+      LDA collision
+      BNE .collisionCheckDone
+                                      
+    .checkSecondScreen:               
+      INC c
+      JSR MovePlatformsPointerForward
+      LDA platformsPointer
+      STA genericPointer
+      LDA platformsPointer + $01
+      STA genericPointer + $01
+      JSR CheckForPlatformOneScreen
+      JSR MovePlatformsPointerBack
+      ;LDA collision
+      ;BNE .collisionCheckDone
+  
+  .collisionCheckDone:
+    RTS  
+  
 ;****************************************************************
 ; Name:                                                         ;
 ;   MovePlayerVertically                                        ;
@@ -1287,7 +1358,7 @@ SetPlayerBoxesVertical:
   ; this is reused for both normal movement and jetpack.
   ; there is lots of logic not needed for jetpack. 
   ; player cannot leave the bounds with a jetpack.
-  ; POI - possible issue - make sure there's no way a vertical elevator pushes player out of bounds
+  ; POITAG - possible issue - make sure there's no way a vertical elevator pushes player out of bounds
 
   ; first check playerYState
   ; if player is offscreen to the top, don't bother with setting anything, we don't check for collisions anyway.
@@ -1472,7 +1543,7 @@ MovePlayerHorizontallyJetpackAndSetBoxes:
 MovePlayerHorizontallyNormalAndSetBoxes:
 
   ; Update the position by 1 at a time.
-  ; POI - possible issue - this doesn't work if level is shorter than two screens
+  ; POITAG - possible issue - this doesn't work if level is shorter than two screens
   .movePlayerByOne:
    
     ; Load scroll high byte, compare with max scroll high byte
@@ -1560,7 +1631,7 @@ MovePlayerHorizontallyNormalAndSetBoxes:
   ; If not, set horizontal boxes and exit.
   .checkIfShouldMoveMore:
     LDA genericDX
-    BEQ SetPlayerBoxesHorizontal ; POI - possible optimization - this is not needed if we only scrolled
+    BEQ SetPlayerBoxesHorizontal ; POITAG - possible optimization - this is not needed if we only scrolled
     JMP .movePlayerByOne
       
 ;****************************************************************
@@ -1908,7 +1979,7 @@ RenderPlayerNormal:
     ; yOffs are always negative. 
     ; if player is on screen and carry *is not* set, it means the tile is not visible and shouldn't be rendered
     ; if player is off screen down and carry *is* set, it means the tile is not visible and shouldn't be rendered
-    ; POI - possible optimization - lots of code duplication
+    ; POITAG - possible optimization - lots of code duplication
     LDA playerYState
     CMP #PLAYER_Y_STATE_EXIT_DOWN
     BEQ .renderTileLoopPlayerOffScreenDown

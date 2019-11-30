@@ -222,7 +222,7 @@ ENEMY_BULLET_ATTS       = $02
 
 SCROLL_SPEED = $01 ; must be set to 1 as we depend on that when actually scrolling the screen.
                    ; technically could be 1, 2 or 4. Could be 8 but then inc/dec logic must be updated (the 'e' var)
-                   ; POI - possible optimization - if set to 1, inc/dec logic may be optimized to do INC/DEC instead of ADC/SBC
+                   ; POITAG - possible optimization - if set to 1, inc/dec logic may be optimized to do INC/DEC instead of ADC/SBC
                    ;      INC is easy as we can check for result being 0 to detect overflow
                    ;      but for DEC there is no simple way - calculate if it's worth updating
 

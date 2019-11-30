@@ -84,7 +84,7 @@ LoadBgPalette:
 ; Description:                                                  ; 
 ;   Buffers a palette to be drawn in NMI                        ;
 ;   Palette pointer must be set                                 ;
-;   POI - possible optimization - update this to use a          ;
+;   POITAG - possible optimization - update this to use a       ;
 ;   "copy from ROM" flag if this is to be called frequently     ;
 ;                                                               ;
 ; Input parameters:                                             ;

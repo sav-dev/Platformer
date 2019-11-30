@@ -303,7 +303,7 @@ DoDrawing:
       STA $2007               ; write it to PPU
       DEY                     ; decrement Y
       BNE .setLoop            ; if Y != 0 jump to .setLoop
-                              ; POI - possible issue - make sure this branch doesn't cross pages
+                              ; POITAG - possible issue - make sure this branch doesn't cross pages
       
     INX                       ; increment X so it points to the next segment      
     JMP .drawLoop             ; jump back to draw

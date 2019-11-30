@@ -576,7 +576,7 @@ UpdateBullets:
       .renderBullet:
       
         ; use different palette for enemy bullets
-        ; POI - possible optimization - is this really needed?
+        ; POITAG - possible optimization - is this really needed?
         LDA l
         BEQ .renderSprite
         LDA renderAtts
@@ -610,7 +610,7 @@ UpdateBullets:
 ;   ScrollBullets                                               ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Moves all bullets as part of the scroll                     ;
+;   Moves all bullets by 1 as part of the scroll                ;
 ;                                                               ;
 ; Input values:                                                 ;
 ;   b - 0 means we're incrementing scroll (move left)           ;
@@ -648,7 +648,7 @@ ScrollBullets:
     .moveRight:
       LDA bullets, x
       CLC
-      ADC #SCROLL_SPEED
+      ADC #$01
       BCS .offScreen
       STA bullets, x
       JMP .updateLoopCheck
@@ -657,7 +657,7 @@ ScrollBullets:
     .moveLeft:       
       LDA bullets, x
       SEC
-      SBC #SCROLL_SPEED
+      SBC #$01
       BCC .offScreen
       STA bullets, x
       JMP .updateLoopCheck

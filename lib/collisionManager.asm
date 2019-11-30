@@ -293,7 +293,7 @@ CheckForPlatformOneScreen:
             STA ax1
             JMP .transpositionDone
           
-        ; POI - possible optimization - I think this can be calculated better
+        ; POITAG - possible optimization - I think this can be calculated better
           
         .transpositionFor2nd:
           LDA #SCREEN_WIDTH
@@ -392,8 +392,8 @@ CheckForCollision:
 ;   Checks for collisions between 'b' box and an item.          ;
 ;   Sets collision >0 if found                                  ;
 ;   Sets 'a' boxes to the box of the item                       ;
-;   POI - possible issue - assumes items are always fully       ;
-;         on screen in the 'y' plane                            ;
+;   POITAG - possible issue - assumes items are always fully    ;
+;            on screen in the 'y' plane                         ;
 ;                                                               ;
 ; Input variables:                                              ;
 ;   c - whether to transpose.                                   ;
@@ -478,7 +478,7 @@ CheckForItemCollision:
 ;                                                               ;
 ; Description:                                                  ;
 ;   Transposes an item.                                         ;
-;   POI - possible optimization - reuse this for elsewhere      ;
+;   POITAG - possible optimization - reuse this for elsewhere   ;
 ;                                                               ;
 ; Input variables:                                              ;
 ;   genericOffScreen - points to the screen the object is on    ;

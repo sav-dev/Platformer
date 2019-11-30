@@ -62,9 +62,9 @@ EnemiesManagerStart:
 ;
 ; tags: depends_on_enemy_in_memory_format, depends_on_enemy_in_level_data_format
 ;
-; POI - memory save - some of the variables could be combined
-; POI - ROM save - some of the fields in lvl data can be removed (e.g. init. special var)
-; POI - possible issue - change pointer to const. data to two bytes if we add too many enemies
+; POITAG - memory save - some of the variables could be combined
+; POITAG - ROM save - some of the fields in lvl data can be removed (e.g. init. special var)
+; POITAG - possible issue - change pointer to const. data to two bytes if we add too many enemies
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -224,7 +224,7 @@ UpdateActiveEnemy:
       BCC .updateMovementLeft
       
       ; call the special speed routine
-      ; POI - possible optimization - this could be in line
+      ; POITAG - possible optimization - this could be in line
       JSR ProcessSpecialSpeed
       BNE .updateMovementLeft 
       JMP .calculateDiffs ; A = enemySpeed after ProcessSpecialSpeed
@@ -724,7 +724,7 @@ UpdateActiveEnemy:
   EnemyCheckCollisions:
   
     ; check if collisions should be checked.
-    ; POI - possible optimization - branch order
+    ; POITAG - possible optimization - branch order
     LDA enemyCollisions
     BNE .collisionWithPlayer
     JMP EnemyProcessShooting
@@ -1430,14 +1430,14 @@ UpdateEnemies:
           LDX xPointerCache
           LDA #ENEMY_STATE_EMPTY
           STA enemies, x        
-          JMP .updateEnemyLoopCondition ; POI - possible optimization - skip the LDA xPointerCache ?
+          JMP .updateEnemyLoopCondition ; POITAG - possible optimization - skip the LDA xPointerCache ?
       
     ; enemy empty - do nothing, let flow into the loop condition
     .enemyEmpty:      
     
       ; loop condition - if we've not just processed the last enemy, loop.   
       ; otherwise exit
-      ; POI - possible optimization - can this loop be done better?
+      ; POITAG - possible optimization - can this loop be done better?
       .updateEnemyLoopCondition:
         LDA xPointerCache      
         BEQ .updateEnemyExit
@@ -1781,7 +1781,7 @@ MoveEnemiesPointerForward:
 ; Used variables:                                               ;
 ;   Y                                                           ;
 ;   i                                                           ;
-; POI - possible optimization - is the 'i' var needed?          ;
+; POITAG - possible optimization - is the 'i' var needed?       ;
 ;****************************************************************
 
 MoveEnemiesPointerBack:
@@ -1894,7 +1894,7 @@ RenderEnemy:
     LDA #$00
     STA c                       ; set c to 0 (nothing to XOR with atts because no flip)   
     
-  .setAttsPointer:              ; POI - free sprites - have atts per frame
+  .setAttsPointer:              ; POITAG - free sprites - have atts per frame
     INY                         ; Y points to the atts
     TYA                         ; move Y to A
     CLC
@@ -1959,9 +1959,9 @@ RenderEnemy:
      JSR RenderSprite           ; render the sprite
       
       .loopCheck:
-        INY                     ; increment Y. POI - possible optimization - if we are skipping the tile because it's on/off screen,
+        INY                     ; increment Y. POITAG - possible optimization - if we are skipping the tile because it's on/off screen,
                                 ; if we knew the sprite height, we could skip all of them since they are on a grid. Do this change!
-        CPY b                   ; compare Y to tile count. POI - possible optimization - if we counted tiles down, we could do BEQ without the CPY
+        CPY b                   ; compare Y to tile count. POITAG - possible optimization - if we counted tiles down, we could do BEQ without the CPY
         BNE .renderTileLoop     ; more tiles to render
          
   RTS

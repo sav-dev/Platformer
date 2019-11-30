@@ -496,10 +496,10 @@ LoadLevelBackgroundDone:
   RTS
   
 ;
-; POI - possible optimization - lots of code below is duplicated
+; POITAG - possible optimization - lots of code below is duplicated
 ; for perf. reasons. If PGR ROM is needed, it can be refactored.
 ;
-; POI - possible optimization - perf may be a bit better if level
+; POITAG - possible optimization - perf may be a bit better if level
 ; pointer point to the column to-be-drawn instead of the current one
 ;
 
@@ -1173,7 +1173,7 @@ NewAttsOnTheLeft:
 ;                                                               ;
 ; Description:                                                  ;
 ;   Moves the level pointer forward one column.                 ;
-;   POI - RLE - have an input/output parameter which says       ;
+;   POITAG - RLE - have an input/output parameter which says    ;
 ;         how many bytes to move/pointer has been moved by      ;
 ;****************************************************************
 
@@ -1193,7 +1193,7 @@ MoveLevelPointerForward:
 ;                                                               ;
 ; Description:                                                  ;
 ;   Moves the level pointer back one column.                    ;
-;   POI - RLE - have an input/output parameter which says       ;
+;   POITAG - RLE - have an input/output parameter which says    ;
 ;         how many bytes to move/pointer has been moved by      ;
 ;****************************************************************
 
@@ -1213,7 +1213,7 @@ MoveLevelPointerBack:
 ;                                                               ;
 ; Description:                                                  ;
 ;   Moves the back level pointer forward one column.            ;
-;   POI - RLE - have an input/output parameter which says       ;
+;   POITAG - RLE - have an input/output parameter which says    ;
 ;         how many bytes to move/pointer has been moved by      ;
 ;****************************************************************
 
@@ -1233,7 +1233,7 @@ MoveLevelBackPointerForward:
 ;                                                               ;
 ; Description:                                                  ;
 ;   Moves the back level pointer forward one column.            ;
-;   POI - RLE - have an input/output parameter which says       ;
+;   POITAG - RLE - have an input/output parameter which says    ;
 ;         how many bytes to move/pointer has been moved by      ;
 ;****************************************************************
 

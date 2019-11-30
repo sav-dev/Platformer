@@ -95,7 +95,7 @@ UpdateElevators:
       BCC .getMaxDistance
     
     ; special speed, call the routine to process it
-    ; POI - possible optimization - we process the special speed multiple times per frame
+    ; POITAG - possible optimization - we process the special speed multiple times per frame
     JSR ProcessSpecialSpeed    
     BNE .getMaxDistance
     JMP .updateElevatorLoopCondition ; A = enemySpeed after ProcessSpecialSpeed, in this case 0
@@ -232,18 +232,21 @@ UpdateElevators:
       BEQ .playerOnVerticalElevator
       
       ; player on horizontal elevator, check for collisions with platforms to adjust dx if needed and move the player
+      ; POI - possible issue - make sure player won't hit other elevators when on an elevator
       .playerOnHorizontalElevator:
         LDA #$00 ; no need to check bounds since an elevator will never move a player out of bounds
-        STA c    ; POI - possible issue - make sure that's never the case
+        STA c    ; POITAG - possible issue - make sure that's never the case
         JSR CheckPlayerCollisionHorizontal ; this will only check collisions with platform because player is on the elevator
         JSR MovePlayerHorizontallyAndSetBoxes
         JMP .updateElevatorLoopCondition
       
-      ; player on vertical elevator, no need to check for collisions with platforms here
+      ; player on vertical elevator, no need to check for collisions with platforms here, just move the player.
+      ; but then check if player wasn't forced into something
+      ; POITAG - is this check needed; if we make sure this is never possible, it can be removed
       .playerOnVerticalElevator:
         JSR MovePlayerVertically
         JSR SetPlayerBoxesVertical
-        JMP .updateElevatorLoopCondition
+        JMP .checkIfPlayerForcedIntoSometing
       
     ; player is not standing on any elevator. We must do a collision check with this elevator vs player, and move the player if needed
     .playerNotOnAnyElevator:
@@ -253,7 +256,7 @@ UpdateElevators:
             
       .checkCollision:
       
-        ; POI - possible optimization - have separate set of collision routines for player boxes to avoid setting them too much
+        ; POITAG - possible optimization - have separate set of collision routines for player boxes? Hard to implement though
         LDA playerPlatformBoxX1
         STA bx1
         LDA playerPlatformBoxX2
@@ -289,7 +292,7 @@ UpdateElevators:
             STA genericDY
             JSR MovePlayerVertically
             JSR SetPlayerBoxesVertical
-            JMP .updateElevatorLoopCondition
+            JMP .checkIfPlayerForcedIntoSometing
           
           ; dy => by2 + dy = ay1 - 1 => dy = ay1 - 1 - by2
           .collisionElevatorGoingUp:
@@ -300,7 +303,7 @@ UpdateElevators:
             STA genericDY
             JSR MovePlayerVertically
             JSR SetPlayerBoxesVertical
-            JMP .updateElevatorLoopCondition
+            JMP .checkIfPlayerForcedIntoSometing
             
           ; dy => bx2 + dx = ax1 - 1 => dx = ax1 - 1 - bx2
           .collisionElevatorGoingLeft:
@@ -310,7 +313,7 @@ UpdateElevators:
             SBC bx2
             STA genericDX
             JSR MovePlayerHorizontallyAndSetBoxes
-            JMP .updateElevatorLoopCondition
+            JMP .checkIfPlayerForcedIntoSometing
             
           ; dy => bx1 + dx = ax2 + 1 => dx = ax2 + 1 - bx1
           .collisionElevatorGoingRight:
@@ -320,6 +323,15 @@ UpdateElevators:
             SBC bx1
             STA genericDX
             JSR MovePlayerHorizontallyAndSetBoxes
+
+          ; Check if player is forced into something after being moved by an elevator.
+          ; If yes, explode player.
+          ; 'b' boxes still set to player platform box
+          .checkIfPlayerForcedIntoSometing:
+            JSR CheckPlayerCollision
+            LDA collision
+            BEQ .updateElevatorLoopCondition
+            JSR ExplodePlayer
           
     ; loop condition - if we've not just processed the last elevator, loop.   
     ; otherwise exit
@@ -625,7 +637,7 @@ SingleElevatorCollision:
       ; elevator starts off-screen to the left. add width from the consts.
       ; if carry is not set, it means elevator is fully off-screen - exit
       ; otherwise, set ax2 to the result, and set ax1 to 0      
-      ; POI - possible issue - a collision with nothing rendered is possible if elevator's on screen part is < 8 pixels
+      ; POITAG - possible issue - a collision with nothing rendered is possible if elevator's on screen part is < 8 pixels
       .ax1OffScreenToTheLeft:
         LDY elevatorSize
         CLC
@@ -867,7 +879,7 @@ UnloadElevators:
   LDA #ELEVATORS_COUNT
   STA c                            ; c is the loop counter
   
-  ; POI - possible optimization - instead of DEC c BNE, do CPX BNE ? same in UnloadEnemies
+  ; POITAG - possible optimization - instead of DEC c BNE, do CPX BNE ? same in UnloadEnemies
   
   .unloadElevatorLoop:
   
@@ -923,7 +935,7 @@ MoveElevatorsPointerForward:
 ; Used variables:                                               ;
 ;   Y                                                           ;
 ;   i                                                           ;
-; POI - possible optimization - is the 'i' var needed?          ;
+; POITAG - possible optimization - is the 'i' var needed?       ;
 ;****************************************************************
 
 MoveElevatorsPointerBack:
@@ -1026,7 +1038,7 @@ RenderElevator:
         STA renderTile
   
     ; set renderYPos, we have to do it every tile because RenderSprite updates it
-    ; POI - possible optimization - change that? only set it once?
+    ; POITAG - possible optimization - change that? only set it once?
     .setYPosition:
       LDA genericY
       STA renderYPos

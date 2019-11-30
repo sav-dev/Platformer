@@ -126,14 +126,14 @@ genericDY               .rs 1
 genericWidth            .rs 1
 genericHeight           .rs 1
 
-genericDOther           .rs 1  ; how much to move in the 'other' plane. POI - save zero page - remove this and use a pseudo-register
-genericVisible          .rs 1  ; whether the object exists on this or the next screen. POI - save zero page - remove this and use a pseudo-register
+genericDOther           .rs 1  ; how much to move in the 'other' plane. POITAG - save zero page - remove this and use a pseudo-register
+genericVisible          .rs 1  ; whether the object exists on this or the next screen. POITAG - save zero page - remove this and use a pseudo-register
 
 ;****************************************************************
 ; Enemy processing                                              ;
 ;****************************************************************
 
-; POI - possible optimization - to save zero page bytes, the vars below could be replaced with the use of pseudo-registers
+; POITAG - possible optimization - to save zero page bytes, the vars below could be replaced with the use of pseudo-registers
 enemyScreen             .rs 1  ; screen the enemy is on
 
 enemyDirection          .rs 1  ; enemy direction
@@ -180,7 +180,7 @@ bx2                     .rs 1
 by1                     .rs 1      
 by2                     .rs 1      
 collision               .rs 1
-collisionCache          .rs 1  ; POI - possible optimization - to save zero page bytes, user a pseudo-register instead
+collisionCache          .rs 1  ; POITAG - possible optimization - to save zero page bytes, user a pseudo-register instead
 
 ;****************************************************************
 ; Sprite rendering                                              ;
@@ -196,7 +196,7 @@ renderAtts              .rs 1
 ; Level info                                                    ;
 ;****************************************************************
 
-; POI - possible optimization - some of these aren't checked that often. to save zero page bytes, move them out
+; POITAG - possible optimization - some of these aren't checked that often. to save zero page bytes, move them out
 levelType           .rs 1
 levelTypeData1      .rs 1 ; normal: exit screen; jetpack: scroll speed
 levelTypeData2      .rs 1 ; normal: exit X; jetpack: scroll counter
