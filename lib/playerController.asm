@@ -259,10 +259,10 @@ UpdatePlayerNormal:
     STA playerAnimation                 ; update animation to jump
     JSR MovePlayerVertically            ; move player vertically by gravity
     JSR SetPlayerBoxesVertical          ; update boxes to make player 'stand up';
-    JSR CheckPlayerCollisionVertical    ; check for collisions again. genericDY is 0 now so it will think player is below the obstacles. POITAG - possible optimization - no need to check elevators here
+    JSR CheckPlayerCollisionVertical    ; check for collisions again. genericDY is 0 now so it will think player is below the obstacles.
     JSR MovePlayerVertically            ; if no collision found, genericDY will be 0 and this is a no-op. 
-    JSR SetPlayerBoxesVertical          ; POITAG - possible optimization - we could only dot these updates if collision found in the 2nd check,
-    JMP .checkHorizontalMovement        ; but this is so rare it's not worth the branching. Instead go to the common horizontal movement code
+    JSR SetPlayerBoxesVertical
+    JMP .checkHorizontalMovement
   
   ; Player was crouching in the last frame, and is still on some platform.
   ; POITAG - possible issue - WE ASSUME GENERIC DY IS 0 - there should never be a case where the player falls off an elevator while crouching,
@@ -1121,13 +1121,6 @@ CheckPlayerCollisionHorizontal:
     CLC
     ADC genericDX
     STA bx2  
-
-  ; don't check collisions with other elevators if player is already on an elevator.
-  ; we will never have a vertical collision and horizontal collision with elevators in the same frame.
-  ; POITAG - possible issue - make sure that's the case
-  .playerOnElevator:
-    LDA playerOnElevator
-    BNE .checkCollisionsWithPlatforms
   
   ; check for collisions with elevators first.
   ; POITAG - possible issue - collision with elevator and wall in one frame is untested
@@ -1230,6 +1223,8 @@ CheckPlayerCollisionHorizontal:
 ;****************************************************************
         
 CheckPlayerCollision:
+
+  ; POITAG - possible issue - should we check for player being out of bounds here?
 
   .presetCollision:
     LDA #$00

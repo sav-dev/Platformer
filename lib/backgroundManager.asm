@@ -1336,7 +1336,7 @@ MoveBackAttsPointerBack:
 ;****************************************************************
 
 ScrollLeft:
-  JSR DecrementScroll          
+  JSR DecrementScroll
   LDA #$01
   STA b
   JMP ScrollBullets
@@ -1358,7 +1358,7 @@ ScrollLeft:
 ;****************************************************************
 
 ScrollRight:
-  JSR IncrementScroll          
+  JSR IncrementScroll
   LDA #$00
   STA b
   JMP ScrollBullets

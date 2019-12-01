@@ -41,7 +41,6 @@ ElevatorManagerStart:
 ;     elevator vars                                             ;
 ;     generic vars                                              ;
 ;     player vars                                               ;
-;     b                                                         ;
 ;     collision vars                                            ;
 ;     Y                                                         ;
 ;                                                               ;
@@ -50,11 +49,6 @@ ElevatorManagerStart:
 ;****************************************************************
 
 UpdateElevators:
-  
-  ; preset b to 0. It will be used to mark the fact that we no longer need to check for collisions with player
-  ; since one was already found.
-  LDA #$00
-  STA b
   
   ; main loop - loop all elevators going down
   ; load the place pointing to after the last elevator, store it in xPointerCache
@@ -204,7 +198,7 @@ UpdateElevators:
       STA elevators, x
       STA genericX
 
-    ; only check for collisions with player if player is PLAYER_NORMAL
+    ; only check for collisions with player if player's state is PLAYER_NORMAL
     .checkPlayerState:
       LDA playerState
       BEQ .checkPlayerYState ; PLAYER_NORMAL = 0
@@ -216,18 +210,18 @@ UpdateElevators:
       BNE .checkIfPlayerOnElevator ; PLAYER_Y_STATE_EXIT_UP = 0
       JMP .updateElevatorLoopCondition
       
-    ; check if player is standing on any elevator.    
+    ; check if player is standing on the elevator.
     .checkIfPlayerOnElevator:
       LDA playerOnElevator
-      BEQ .playerNotOnAnyElevator
+      BEQ .playerNotOnThisElevator
       LDA playerElevatorId
       CMP xPointerCache
-      BEQ .playerOnElevator
-      JMP .updateElevatorLoopCondition ; if player is on some elevator but not this one, we don't need to do anything
+      BEQ .playerOnThisElevator
+      JMP .playerNotOnThisElevator
       
     ; player on elevator, move by however much we moved this elevator. 
     ; but also we must check for collisions with platforms and adjust player if needed
-    .playerOnElevator:
+    .playerOnThisElevator:
       LDA genericDX
       BEQ .playerOnVerticalElevator
       
@@ -236,9 +230,9 @@ UpdateElevators:
       .playerOnHorizontalElevator:
         LDA #$00 ; no need to check bounds since an elevator will never move a player out of bounds
         STA c    ; POITAG - possible issue - make sure that's never the case
-        JSR CheckPlayerCollisionHorizontal ; this will only check collisions with platform because player is on the elevator
+        JSR CheckPlayerCollisionHorizontal
         JSR MovePlayerHorizontallyAndSetBoxes
-        JMP .updateElevatorLoopCondition
+        JMP .checkIfPlayerForcedIntoSometing
       
       ; player on vertical elevator, no need to check for collisions with platforms here, just move the player.
       ; but then check if player wasn't forced into something
@@ -248,90 +242,83 @@ UpdateElevators:
         JSR SetPlayerBoxesVertical
         JMP .checkIfPlayerForcedIntoSometing
       
-    ; player is not standing on any elevator. We must do a collision check with this elevator vs player, and move the player if needed
-    .playerNotOnAnyElevator:
-      LDA b
-      BEQ .checkCollision
-      JMP .updateElevatorLoopCondition ; b > 0 means we've already found a collision and don't need to check again      
-            
-      .checkCollision:
+    ; player is not standing on this elevator. We must do a collision check with this elevator vs player, and move the player if needed
+    .playerNotOnThisElevator:      
+        
+      ; POITAG - possible optimization - have separate set of collision routines for player boxes? Hard to implement though
+      LDA playerPlatformBoxX1
+      STA bx1
+      LDA playerPlatformBoxX2
+      STA bx2
+      LDA playerPlatformBoxY1
+      STA by1
+      LDA playerPlatformBoxY2
+      STA by2
       
-        ; POITAG - possible optimization - have separate set of collision routines for player boxes? Hard to implement though
-        LDA playerPlatformBoxX1
-        STA bx1
-        LDA playerPlatformBoxX2
-        STA bx2
-        LDA playerPlatformBoxY1
-        STA by1
-        LDA playerPlatformBoxY2
-        STA by2
+      LDA #$00
+      STA collision
+      LDY xPointerCache
+      JSR SingleElevatorCollision
+      LDA collision
+      BEQ .updateElevatorLoopCondition
+      
+      ; Collision found, 'a' boxes contain data for this elevator
+      .collisionFound:
+        LDA genericDirection
+        BEQ .collisionElevatorGoingLeft ; DIRECTION_LEFT = 0
+        CMP #DIRECTION_RIGHT
+        BEQ .collisionElevatorGoingRight
+        CMP #DIRECTION_UP
+        BEQ .collisionElevatorGoingUp
+               
+        ; dy => by1 + dy = ay2 + 1 => dy = ay2 + 1 - by1
+        .collisionElevatorGoingDown:
+          INC ay2
+          LDA ay2
+          SEC
+          SBC by1
+          STA genericDY
+          JSR MovePlayerVertically
+          JSR SetPlayerBoxesVertical
+          JMP .checkIfPlayerForcedIntoSometing
         
-        LDA #$00
-        STA collision
-        LDY xPointerCache
-        JSR SingleElevatorCollision
-        LDA collision
-        BEQ .updateElevatorLoopCondition
-        
-        ; Collision found, 'a' boxes contain data for this elevator
-        .collisionFound:
-          INC b ; INC b so we do not check for more elevator collisions
-          LDA genericDirection
-          BEQ .collisionElevatorGoingLeft ; DIRECTION_LEFT = 0
-          CMP #DIRECTION_RIGHT
-          BEQ .collisionElevatorGoingRight
-          CMP #DIRECTION_UP
-          BEQ .collisionElevatorGoingUp
-                 
-          ; dy => by1 + dy = ay2 + 1 => dy = ay2 + 1 - by1
-          .collisionElevatorGoingDown:
-            INC ay2
-            LDA ay2
-            SEC
-            SBC by1
-            STA genericDY
-            JSR MovePlayerVertically
-            JSR SetPlayerBoxesVertical
-            JMP .checkIfPlayerForcedIntoSometing
+        ; dy => by2 + dy = ay1 - 1 => dy = ay1 - 1 - by2
+        .collisionElevatorGoingUp:
+          DEC ay1
+          LDA ay1
+          SEC
+          SBC by2
+          STA genericDY
+          JSR MovePlayerVertically
+          JSR SetPlayerBoxesVertical
+          JMP .checkIfPlayerForcedIntoSometing
           
-          ; dy => by2 + dy = ay1 - 1 => dy = ay1 - 1 - by2
-          .collisionElevatorGoingUp:
-            DEC ay1
-            LDA ay1
-            SEC
-            SBC by2
-            STA genericDY
-            JSR MovePlayerVertically
-            JSR SetPlayerBoxesVertical
-            JMP .checkIfPlayerForcedIntoSometing
-            
-          ; dy => bx2 + dx = ax1 - 1 => dx = ax1 - 1 - bx2
-          .collisionElevatorGoingLeft:
-            DEC ax1
-            LDA ax1
-            SEC
-            SBC bx2
-            STA genericDX
-            JSR MovePlayerHorizontallyAndSetBoxes
-            JMP .checkIfPlayerForcedIntoSometing
-            
-          ; dy => bx1 + dx = ax2 + 1 => dx = ax2 + 1 - bx1
-          .collisionElevatorGoingRight:
-            INC ax2
-            LDA ax2
-            SEC
-            SBC bx1
-            STA genericDX
-            JSR MovePlayerHorizontallyAndSetBoxes
+        ; dy => bx2 + dx = ax1 - 1 => dx = ax1 - 1 - bx2
+        .collisionElevatorGoingLeft:
+          DEC ax1
+          LDA ax1
+          SEC
+          SBC bx2
+          STA genericDX
+          JSR MovePlayerHorizontallyAndSetBoxes
+          JMP .checkIfPlayerForcedIntoSometing
+          
+        ; dy => bx1 + dx = ax2 + 1 => dx = ax2 + 1 - bx1
+        .collisionElevatorGoingRight:
+          INC ax2
+          LDA ax2
+          SEC
+          SBC bx1
+          STA genericDX
+          JSR MovePlayerHorizontallyAndSetBoxes
 
-          ; Check if player is forced into something after being moved by an elevator.
-          ; If yes, explode player.
-          ; 'b' boxes still set to player platform box
-          .checkIfPlayerForcedIntoSometing:
-            JSR CheckPlayerCollision
-            LDA collision
-            BEQ .updateElevatorLoopCondition
-            JSR ExplodePlayer
+        ; Check if player is forced into something after being moved by an elevator.
+        ; If yes, explode player. 'b' boxes still set to player platform box
+        .checkIfPlayerForcedIntoSometing:
+          JSR CheckPlayerCollision
+          LDA collision
+          BEQ .updateElevatorLoopCondition
+          JSR ExplodePlayer
           
     ; loop condition - if we've not just processed the last elevator, loop.   
     ; otherwise exit
