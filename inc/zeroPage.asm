@@ -198,9 +198,11 @@ renderAtts              .rs 1
 
 ; POITAG - possible optimization - some of these aren't checked that often. to save zero page bytes, move them out
 levelType           .rs 1
-levelTypeData1      .rs 1 ; normal: exit screen; jetpack: scroll speed
-levelTypeData2      .rs 1 ; normal: exit X; jetpack: scroll counter
-levelTypeData3      .rs 1 ; normal: exit Y; jetpack: N/A
+levelTypeData1      .rs 1 ; normal: exit screen ; jetpack: scroll speed   ; boss: whether screen scrolled
+levelTypeData2      .rs 1 ; normal: exit X      ; jetpack: N/U            ; boss: victory condition
+levelTypeData3      .rs 1 ; normal: exit Y      ; jetpack: N/U            ; N/U
+
+; todo 0001 - levelTypeData3 should dictate when to scroll
 
 ;****************************************************************
 ; ggsound                                                       ;

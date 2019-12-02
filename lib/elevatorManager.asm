@@ -43,6 +43,8 @@ ElevatorManagerStart:
 ;     player vars                                               ;
 ;     collision vars                                            ;
 ;     Y                                                         ;
+;     b                                                         ;
+;     c                                                         ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_elevator_in_memory_format                        ;

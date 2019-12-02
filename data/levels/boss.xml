@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <LevelType>Normal</LevelType>
+  <LevelType>Boss</LevelType>
   <BgPalette>0</BgPalette>
   <Tiles>
     <ArrayOfString>
@@ -551,6 +551,21 @@
   <Enemies>
     <Enemy>
       <Name>Sphere</Name>
+      <X>486</X>
+      <Y>176</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>true</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Sphere</Name>
       <X>488</X>
       <Y>32</Y>
       <MovementType>None</MovementType>
@@ -561,23 +576,8 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>true</InitialFlip>
-      <ShootingFrequency>64</ShootingFrequency>
-      <ShootingInitialFrequency>64</ShootingInitialFrequency>
-    </Enemy>
-    <Enemy>
-      <Name>Sphere</Name>
-      <X>488</X>
-      <Y>80</Y>
-      <MovementType>None</MovementType>
-      <Direction>None</Direction>
-      <SpecialMovement>None</SpecialMovement>
-      <Speed>0</Speed>
-      <ShouldFlip>true</ShouldFlip>
-      <MinPosition>0</MinPosition>
-      <MaxPosition>0</MaxPosition>
-      <InitialFlip>true</InitialFlip>
-      <ShootingFrequency>64</ShootingFrequency>
-      <ShootingInitialFrequency>48</ShootingInitialFrequency>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>Sphere</Name>
@@ -591,13 +591,43 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>true</InitialFlip>
-      <ShootingFrequency>64</ShootingFrequency>
-      <ShootingInitialFrequency>32</ShootingInitialFrequency>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Spikes</Name>
+      <X>488</X>
+      <Y>16</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Spikes</Name>
+      <X>488</X>
+      <Y>208</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>Sphere</Name>
-      <X>488</X>
-      <Y>176</Y>
+      <X>490</X>
+      <Y>80</Y>
       <MovementType>None</MovementType>
       <Direction>None</Direction>
       <SpecialMovement>None</SpecialMovement>
@@ -606,13 +636,13 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>true</InitialFlip>
-      <ShootingFrequency>64</ShootingFrequency>
-      <ShootingInitialFrequency>16</ShootingInitialFrequency>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
     </Enemy>
   </Enemies>
   <Elevators>
     <Elevator>
-      <X>256</X>
+      <X>260</X>
       <Y>208</Y>
       <Size>4</Size>
       <MovementType>Vertical</MovementType>
@@ -620,16 +650,6 @@
       <MinPosition>56</MinPosition>
       <MaxPosition>208</MaxPosition>
       <Direction>Up</Direction>
-    </Elevator>
-    <Elevator>
-      <X>304</X>
-      <Y>56</Y>
-      <Size>4</Size>
-      <MovementType>Vertical</MovementType>
-      <Speed>1</Speed>
-      <MinPosition>56</MinPosition>
-      <MaxPosition>208</MaxPosition>
-      <Direction>Down</Direction>
     </Elevator>
   </Elevators>
   <PlayerStartingPosition>

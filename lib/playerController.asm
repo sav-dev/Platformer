@@ -501,9 +501,7 @@ UpdatePlayerNormal:
         RTS ; DX set to 0 by the collision routine, no need to move the player
       
         .applyHorizontalMovement:
-          ; todo 0001 - make sure that's the case
-          ; not calling directly into 'Normal' since this is used in the boss fight lvl type as well
-          JMP MovePlayerHorizontallyAndSetBoxes 
+          JMP MovePlayerHorizontallyNormalAndSetBoxes
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -603,12 +601,34 @@ CheckThreats:
 CheckVictoryConditions:
 
   LDA levelType
-  BEQ .jetpack ; LEVEL_TYPE_JETPACK = 0
+  BEQ .jetpack ; LEVEL_TYPE_JETPACK = 0  
   CMP #LEVEL_TYPE_NORMAL
   BEQ .normal
+  CMP #LEVEL_TYPE_BOSS
+  BEQ .exitRoutine ; this check is done elsewhere
   
-  ; todo 0001 - boss fight level type
+  .jetpack:
     
+    ; check if scroll = max scroll
+    .checkIfLevelEnd:
+      LDA scroll
+      CMP maxScroll
+      BNE .exitRoutine
+      LDA scroll + $01
+      CMP maxScroll + $01
+      BNE .exitRoutine
+  
+    .levelEnd:
+      LDA #PLAYER_JETPACK_LVL_END
+      STA playerCounter
+      LDA #PLAYER_NOT_VISIBLE
+      STA playerState
+      JSR StopSong ; todo 0006 - not the right place for this
+      INC levelBeaten
+    
+    .exitRoutine:
+      RTS
+  
   .normal:
   
     ; check if player wants to exit the stage and whether is at the exit.
@@ -699,28 +719,7 @@ CheckVictoryConditions:
         
       .playerNotAtExit:
         RTS
-  
-  .jetpack:
-    
-    ; check if scroll = max scroll
-    .checkIfLevelEnd:
-      LDA scroll
-      CMP maxScroll
-      BNE .jetpackDone
-      LDA scroll + $01
-      CMP maxScroll + $01
-      BNE .jetpackDone
-  
-    .levelEnd:
-      LDA #PLAYER_JETPACK_LVL_END
-      STA playerCounter
-      LDA #PLAYER_NOT_VISIBLE
-      STA playerState
-      JSR StopSong ; todo 0006 - not the right place for this
-      INC levelBeaten
-    
-    .jetpackDone:
-      RTS
+
 ;****************************************************************
 ; Name:                                                         ;
 ;   CheckPlayerCollisionVertical                                ;
@@ -1475,13 +1474,17 @@ SetPlayerBoxesVertical:
 ; Description:                                                  ;
 ;   Moves the player horizontally based on genericDX.           ;
 ;   and level type. Also update horizontal boxes.               ;
+;                                                               ;
+; Used variables:                                               ;
+;   X                                                           ;
+;   b                                                           ;
+;   c                                                           ;
 ;****************************************************************
 
 MovePlayerHorizontallyAndSetBoxes:
   LDA levelType ; LEVEL_TYPE_JETPACK = 0
   BEQ MovePlayerHorizontallyJetpackAndSetBoxes
   JMP MovePlayerHorizontallyNormalAndSetBoxes
-  ; todo 0001 - boss fight - scroll screen to last one, don't scroll on the last one
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -1533,102 +1536,198 @@ MovePlayerHorizontallyJetpackAndSetBoxes:
 ;   Moves the player horizontally based on genericDX.           ;
 ;   Either moves the player, or scrolls the screen.             ;
 ;   Also update horizontal boxes.                               ;
+;                                                               ;
+; Used variables:                                               ;
+;   X                                                           ;
+;   b                                                           ;
+;   c                                                           ;
 ;****************************************************************
 
 MovePlayerHorizontallyNormalAndSetBoxes:
 
-  ; Update the position by 1 at a time.
-  ; POITAG - possible issue - this doesn't work if level is shorter than two screens
-  .movePlayerByOne:
-   
-    ; Load scroll high byte, compare with max scroll high byte
-    LDA scroll + $01                
-    CMP maxScroll + $01
-    BEQ .highBytesMatch             
-                       
-    ; High bytes don't match.
-    ; Check if low byte isn't 0 - in that case we should scroll
-    LDA scroll                      
-    BNE .scrollHorizontally
-                                    
-    ; High bytes don't match, low byte is 0.
-    ; Check if high byte is 0, in that case we're on the left end.
-    ; Otherwise we should scroll.
-    LDA scroll + $01                
-    BEQ .leftMost
-    JMP .scrollHorizontally
-    
-    ; High bytes match, check if scroll == max scroll - in that case we're at the right end.
-    ; Otherwise we should scroll.
-    .highBytesMatch:                
-      LDA scroll
-      CMP maxScroll
-      BEQ .rightMost
-      JMP .scrollHorizontally
-    
-    ; We're on the left most screen.
-    ; Check if player is on the left side of the screen (position != screen center). in such case, move the player.
-    ; Otherwise, check which direction player is going - if going right, scroll, otherwise move.
-    .leftMost:                      
-      LDA playerX
-      CMP #PLAYER_SCREEN_CENTER
-      BNE .moveHorizontally
-      LDA genericDX                  
-      CMP #$80                      
-      BCC .scrollRight
-      JMP .moveHorizontally
-                           
-    ; We're on the right most screen.
-    ; Check if player is on the right side of the screen (position != screen center). in such case, move the player.
-    ; Otherwise, check which direction player is going - if going left, scroll, otherwise move.
-    .rightMost:                     
-      LDA playerX
-      CMP #PLAYER_SCREEN_CENTER
-      BNE .moveHorizontally
-      LDA genericDX                  
-      CMP #$80                      
-      BCS .scrollLeft
-      JMP .moveHorizontally
-                           
-    ; If we get here it means we want to move the player.
-    .moveHorizontally:    
-      LDA genericDX                  
-      CMP #$80                      
-      BCS .goingLeft
-      
-      .goingRight:
-        INC playerX
-        DEC genericDX
-        JMP .checkIfShouldMoveMore
-      
-      .goingLeft:
-        DEC playerX
-        INC genericDX
-        JMP .checkIfShouldMoveMore          
-                      
-    ; If we get here it means we want to scroll the screen. 
-    ; Check which direction player is going, and scroll.
-    .scrollHorizontally:
-      LDA genericDX                  
-      CMP #$80                      
-      BCC .scrollRight
-                                     
-      .scrollLeft:                   
-        JSR ScrollLeft
-        INC genericDX
-        JMP .checkIfShouldMoveMore  
-        
-      .scrollRight:
-        JSR ScrollRight
-        DEC genericDX
+  LDA levelType
+  CMP #LEVEL_TYPE_NORMAL
+  BEQ .normalMove
+  LDA levelTypeData1 ; if not normal it must be BOSS. check if the screen has been scrolled already
+  BEQ .normalMove    ; 0 means screen hasn't been scrolled
+  
+  ; if we get here it means the screen has been scrolled.
+  ; let the player move only within the screen
+  .moveWithinScreen:
+    LDA playerX
+    CLC
+    ADC genericDX
+    STA playerX
+    JMP SetPlayerBoxesHorizontal
 
-  ; We;ve moved the player and updated DX. See if we should move the player any more. 
-  ; If not, set horizontal boxes and exit.
-  .checkIfShouldMoveMore:
-    LDA genericDX
-    BEQ SetPlayerBoxesHorizontal ; POITAG - possible optimization - this is not needed if we only scrolled
-    JMP .movePlayerByOne
+  ; normal move that will scroll the screen etc.
+  .normalMove:
+
+    ; Update the position by 1 at a time.
+    ; POITAG - possible issue - this doesn't work if level is shorter than two screens
+    .movePlayerByOne:
+     
+      ; Load scroll high byte, compare with max scroll high byte
+      LDA scroll + $01                
+      CMP maxScroll + $01
+      BEQ .highBytesMatch             
+                         
+      ; High bytes don't match.
+      ; Check if low byte isn't 0 - in that case we should scroll
+      LDA scroll                      
+      BNE .scrollHorizontally
+                                      
+      ; High bytes don't match, low byte is 0.
+      ; Check if high byte is 0, in that case we're on the left end.
+      ; Otherwise we should scroll.
+      LDA scroll + $01                
+      BEQ .leftMost
+      JMP .scrollHorizontally
       
+      ; High bytes match, check if scroll == max scroll - in that case we're at the right end.
+      ; Otherwise we should scroll.
+      .highBytesMatch:                
+        LDA scroll
+        CMP maxScroll
+        BEQ .rightMost
+        JMP .scrollHorizontally
+      
+      ; We're on the left most screen.
+      ; Check if player is on the left side of the screen (position != screen center). in such case, move the player.
+      ; Otherwise, check which direction player is going - if going right, scroll, otherwise move.
+      .leftMost:                      
+        LDA playerX
+        CMP #PLAYER_SCREEN_CENTER
+        BNE .moveHorizontally
+        LDA genericDX                  
+        CMP #$80                      
+        BCC .scrollRight
+        JMP .moveHorizontally
+                             
+      ; We're on the right most screen.
+      ; Check if player is on the right side of the screen (position != screen center). in such case, move the player.
+      ; Otherwise, check which direction player is going - if going left, scroll, otherwise move.
+      .rightMost:                     
+        LDA playerX
+        CMP #PLAYER_SCREEN_CENTER
+        BNE .moveHorizontally
+        LDA genericDX                  
+        CMP #$80                      
+        BCS .scrollLeft
+        JMP .moveHorizontally
+                             
+      ; If we get here it means we want to move the player.
+      .moveHorizontally:    
+        LDA genericDX                  
+        CMP #$80                      
+        BCS .goingLeft
+        
+        .goingRight:
+          INC playerX
+          DEC genericDX
+          JMP .checkIfShouldMoveMore
+        
+        .goingLeft:
+          DEC playerX
+          INC genericDX
+          JMP .checkIfShouldMoveMore          
+                        
+      ; If we get here it means we want to scroll the screen. 
+      ; Check which direction player is going, and scroll.
+      .scrollHorizontally:
+        LDA genericDX                  
+        CMP #$80                      
+        BCC .scrollRight
+                                       
+        .scrollLeft:                   
+          JSR ScrollLeft
+          INC genericDX
+          JMP .checkIfShouldMoveMore  
+          
+        .scrollRight:
+          JSR ScrollRight
+          DEC genericDX
+    
+    ; We;ve moved the player and updated DX. See if we should move the player any more. 
+    ; If not, set horizontal boxes and exit.
+    .checkIfShouldMoveMore:
+      LDA genericDX
+      BEQ .moveDone
+      JMP .movePlayerByOne
+      
+    .moveDone:
+      LDA levelType
+      CMP #LEVEL_TYPE_NORMAL       ; if level type is normal, we can just set boxes and exit
+      BEQ SetPlayerBoxesHorizontal ; POITAG - possible optimization - this is not needed if we only scrolled
+      
+      ; if we get here it means we're on a boss level, and movement is done.
+      ; let's check if we should scroll the screen.
+      ; we should do that if scroll + $80 >= maxScroll
+      ;
+      ; POI - possible optimization - this is only needed if we were moving right    
+      ; POI - we can also assume boss levels will always be exactly 2 screens longer
+      ; but both are probably not worth it as this will be checked very rarely
+      .checkIfShouldScroll:        
+    
+        LDA scroll + $01
+        STA c ; POI - possible issue - random psuedo-reg use
+        LDA scroll
+        CLC
+        ADC #$70 ; POI - possible issue - I think this puts player right on the edge of the screen
+        STA b
+        LDA c
+        ADC #$00
+        CMP maxScroll + $01
+        BCC SetPlayerBoxesHorizontal ; should not scroll, set boxes and exit
+        LDA b
+        CMP maxScroll
+        BCC SetPlayerBoxesHorizontal ; should not scroll, set boxes and exit
+          
+        ; if we get here it means we want to fully scroll the screen now.
+        .shouldScroll:
+          
+          ; first, inc levelTypeData1 to mark that we're scrolling
+          INC levelTypeData1
+          
+          ; then, clear all bullets. we won't be rendering them
+          .clearAllBullets:
+            LDX #TOTAL_BULLET_VAR_SIZE
+            .clearAllBulletsLoop:
+              LDA #$00
+              STA bullets, x
+              DEX
+              BNE .clearAllBulletsLoop
+            STA bullets, x
+          
+          ; then, scroll until scroll = maxScroll:
+          ;  - clear sprites
+          ;  - scroll by 1
+          ;  - move player left by 1
+          ;  - render player and elevator
+          ;  - note:
+          ;    - not rendering bullets since we've removed all
+          ;    - not rendering doors - there shouldn't be any - POI possible issue make sure that's the case
+          ;    - not rendering enemies - they will just appear          
+          .scrollingLoop:          
+            JSR ClearSprites
+            JSR ScrollRight
+            DEC playerX
+            JSR RenderPlayer
+            JSR RenderElevators
+            INC needDma ; POI - possible issue - the local versions will be incremented too, make sure they don't overflow
+            INC needPpuReg
+            INC needDraw
+            JSR WaitForFrame
+            LDA scroll + $01
+            CMP maxScroll + $01
+            BNE .scrollingLoop
+            LDA scroll
+            CMP maxScroll
+            BNE .scrollingLoop
+                      
+          JMP SetPlayerBoxesHorizontal ; set boxes after moving the player
+      
+     
 ;****************************************************************
 ; Name:                                                         ;
 ;   SetPlayerBoxesHorizontal                                    ;

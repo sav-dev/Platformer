@@ -195,7 +195,7 @@ BULLET_E_HEIGHT         = SPRITE_DIMENSION
 BULLET_WIDTH            = $07   ; bullet hitbox, (x,y) are top left corner, inclusive so -1
 BULLET_HEIGHT           = $04   ; these are for horizontal bullet (5x8), it's 8x5 for vertical
         
-BULLET_SPEED            = $05   ; todo 0002: tweak this
+BULLET_SPEED            = $06   ; todo 0002: tweak this
 
 ; size in memory for player bullets, enemy bullets, and the two combined.
 ; player bullets come before enemy bullets in the combined var.
@@ -368,6 +368,7 @@ ELEVATOR_HEIGHT              = $06
 
 LEVEL_TYPE_JETPACK           = $00
 LEVEL_TYPE_NORMAL            = $01
+LEVEL_TYPE_BOSS              = $02
 
 ; these may be off by 1 because of how this stuff is compared
 EXIT_HEIGHT                  = $23 ; 35

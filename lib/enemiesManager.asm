@@ -1362,6 +1362,16 @@ UpdateEnemies:
           ORA enemies, x
           STA destroyedEnemies, y
           
+          .checkIfLeavelBeaten:
+            LDA levelType
+            CMP #LEVEL_TYPE_BOSS
+            BNE .loadConstsPointer
+            LDA levelTypeData2 ; list of enemies that need to be destroyed
+            AND destroyedEnemies, y
+            CMP levelTypeData2
+            BNE .loadConstsPointer
+            ; todo 0001: if we get here, it means the boss has been destroyed. add explosions and stuff
+          
         ; X += 1 to point at the consts pointer, load it and store it in enemyConstsPointer
         ; load CONST_ENEMY_EXPL_OFF in Y to point to the explosion offsets.
         .loadConstsPointer:
@@ -1444,7 +1454,7 @@ UpdateEnemies:
         JMP .updateEnemyLoop
   
   .updateEnemyExit:
-    RTS
+    RTS   
     
 ;****************************************************************
 ; Name:                                                         ;
