@@ -26,9 +26,9 @@ EnemiesManagerStart:
 ;        - initial special movement var (1 byte)
 ;        - x position (1 byte)
 ;        - y position (1 byte)            
-;        - blinking type (1 byte)
-;        - blinking const (1 byte)
-;        - blinking variable (1 byte)
+;        - blinking frequency initial (1 byte)
+;        - blinking frequency  (1 byte)
+;        - blinking init visible (1 byte)
 ;        - initial life (1 byte)
 ;        - shooting frequency initial (1 byte)
 ;        - shooting frequency (1 byte)
@@ -51,9 +51,9 @@ EnemiesManagerStart:
 ;    - special movement var (1 byte)
 ;    - x position (1 byte)
 ;    - y position (1 byte)
-;    - blinking type (1 byte)
-;    - blinking const (1 byte)
-;    - blinking variable (1 byte)
+;    - blinking timer (1 byte)
+;    - blinking frequency  (1 byte)
+;    - blinking visible (1 byte)
 ;    - remaining life (1 byte)  
 ;    - shooting timer (1 byte)
 ;    - shooting frequency (1 byte)
@@ -489,7 +489,7 @@ UpdateActiveEnemy:
       INX      
       
   ; once we get here, movement has been updated, and the following are set:
-  ;   - X set to blinking type
+  ;   - X set to blinking timer
   ;   - Y set to the const data pointer (1st byte: width)
   ;   - genericDirection set to current flip
   ;   - genericX and genericY set to the current position
@@ -497,11 +497,63 @@ UpdateActiveEnemy:
   ;
   ; process the blinking variables
   EnemyProcessBlinking:
-    INX
-    INX
-    INX ; todo 0004: for now just skip everything  
   
-  ; X is pointint to remaining life.
+    ; load the blinking timer. 0 means enemy is not blinking, >0 means enemy is blinking
+    LDA enemies, x
+    BEQ .notBlinking
+    
+    ; dec the timer. If result is 0, we must reset it and update the state
+    DEC enemies, x
+    BEQ .updateBlinking
+    
+    ; we get here if enemy is not blinking, or blinking timer has been updated and is > 0
+    ; do X += 2 to point to the blinking state
+    ; 0 means enemy is currently not visible
+    .blinkingTimerUpdated:
+      INX
+      INX
+      LDA enemies, x
+      BEQ .blinkingCurrentlyInvisible
+    
+    ; enemy is blinking but currently visible
+    ; we must do X += 1 to point to remaining life, then go to see if enemy is on screen
+    .blinkingCurrentlyVisible:
+      INX
+      JMP EnemyShouldRender
+      
+    ; enemy is blinking and currently invisible.
+    ; we must do X += 1 to point to remaining life, then we can skip the rendering and collision checks.
+    .blinkingCurrentlyInvisible:
+      INX
+      DEC enemyOnScreen
+      JMP EnemyProcessShooting ; POITAG - possible issue - if shooting timer fires when enemy is invisible, we do not shoot
+    
+    ; we get here if enemy is not blinking
+    ; do X += 3 to point to remaining life, then go to see if enemy is on screen
+    .notBlinking:    
+      INX
+      INX
+      INX
+      JMP EnemyShouldRender
+  
+    ; we get here if the blinking timer has been set to 0
+    ; X += 1 to point to the frequency, load it, then X -= 1 to point back to the timer. reset the timer.
+    ; X += 2 to point to the state, update the state, then process it
+    ; todo 0004: is this the right way to do this; should the frequency be read first and cached? calculate
+    .updateBlinking:
+      INX
+      LDA enemies, x
+      DEX
+      STA enemies, x
+      INX
+      INX
+      LDA enemies, x
+      EOR #$01 ; this will flip the state between 0 and 1
+      STA enemies, x
+      BEQ .blinkingCurrentlyInvisible
+      JMP .blinkingCurrentlyVisible
+  
+  ; X is pointing to remaining life.
   ; we have to figure out if the enemy should even be rendered. 
   EnemyShouldRender:   
     
