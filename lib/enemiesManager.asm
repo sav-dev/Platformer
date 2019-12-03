@@ -539,7 +539,8 @@ UpdateActiveEnemy:
     ; we get here if the blinking timer has been set to 0
     ; X += 1 to point to the frequency, load it, then X -= 1 to point back to the timer. reset the timer.
     ; X += 2 to point to the state, update the state, then process it
-    ; todo 0004: is this the right way to do this; should the frequency be read first and cached? calculate
+    ; we could cache put the frequency first and cache it, but that saves a few cycles when we
+    ; update blinking and adds a few cycles if we don't so it's not worth it in the long run
     .updateBlinking:
       INX
       LDA enemies, x
