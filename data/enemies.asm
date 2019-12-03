@@ -1,5 +1,3 @@
-EnemiesStart:
-
 ;****************************************************************
 ; Enemies                                                       ;
 ; Holds information about all enemies (auto-generated)          ;
@@ -190,6 +188,42 @@ WalkingRobotConsts:
 .explosionOffset:
   .byte $04, $04
 
+BarrierV6Consts:
+.width:
+  .byte $08
+.hitboxInfo:
+  .byte $00,$08,$00,$30
+.orientation:
+  .byte $02
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $00
+.numberOfFrames:
+  .byte $01
+.renderingInfo:
+  .byte LOW(BarrierV6Render), HIGH(BarrierV6Render)
+.explosionOffset:
+  .byte $FFFFFFFC, $10
+
+BarrierH6Consts:
+.width:
+  .byte $30
+.hitboxInfo:
+  .byte $00,$30,$00,$08
+.orientation:
+  .byte $02
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $00
+.numberOfFrames:
+  .byte $01
+.renderingInfo:
+  .byte LOW(BarrierH6Render), HIGH(BarrierH6Render)
+.explosionOffset:
+  .byte $10, $FFFFFFFC
+
 
 ;
 ;  all offsets for possible grids
@@ -221,6 +255,14 @@ XOff3x3:
   .byte $00, $00, $00, $08, $08, $08, $10, $10, $10
 YOff3x3:
   .byte $00, $08, $10, $00, $08, $10, $00, $08, $10
+XOff1x6:
+  .byte $00, $00, $00, $00, $00, $00
+YOff1x6:
+  .byte $00, $08, $10, $18, $20, $28
+XOff6x1:
+  .byte $00, $08, $10, $18, $20, $28
+YOff6x1:
+  .byte $00, $00, $00, $00, $00, $00
 
 ;
 ;  all information needed to draw an enemy
@@ -367,8 +409,30 @@ WalkingRobotRender:
 .WalkingRobot0:
   .byte $4E,$51,$57,$4F,$52,$58,$4E,$53,$59
 
-;****************************************************************
-; EOF                                                           ;
-;****************************************************************
+BarrierV6Render:
+.spriteCount:
+  .byte $06
+.offsets:
+  .byte LOW(XOff1x6), HIGH(XOff1x6), LOW(YOff1x6), HIGH(YOff1x6), LOW(XOff1x6), HIGH(XOff1x6), LOW(YOff1x6), HIGH(YOff1x6)
+.flipXor:
+  .byte %00000000
+.attributes:
+  .byte $02,$02,$02,$02,$02,$02
+.tiles:
+.BarrierV6:
+  .byte $5D,$5D,$5D,$5D,$5D,$5D
 
-EnemiesEnd:
+BarrierH6Render:
+.spriteCount:
+  .byte $06
+.offsets:
+  .byte LOW(XOff6x1), HIGH(XOff6x1), LOW(YOff6x1), HIGH(YOff6x1), LOW(XOff6x1), HIGH(XOff6x1), LOW(YOff6x1), HIGH(YOff6x1)
+.flipXor:
+  .byte %00000000
+.attributes:
+  .byte $02,$02,$02,$02,$02,$02
+.tiles:
+.BarrierH6:
+  .byte $5E,$5E,$5E,$5E,$5E,$5E
+
+
