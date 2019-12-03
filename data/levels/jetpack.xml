@@ -1107,6 +1107,9 @@
       <InitialFlip>true</InitialFlip>
       <ShootingFrequency>25</ShootingFrequency>
       <ShootingInitialFrequency>25</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>TurretV</Name>
@@ -1122,6 +1125,9 @@
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>64</ShootingFrequency>
       <ShootingInitialFrequency>64</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>TurretV</Name>
@@ -1137,6 +1143,9 @@
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>64</ShootingFrequency>
       <ShootingInitialFrequency>64</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>TurretV</Name>
@@ -1152,6 +1161,9 @@
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>64</ShootingFrequency>
       <ShootingInitialFrequency>64</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
   </Enemies>
   <Elevators />

@@ -742,7 +742,7 @@
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>2-0-1-1</string>
-      <string>1-0-0-9</string>
+      <string>1-0-2-9</string>
       <string>2-0-1-1</string>
       <string>1-1-4-3</string>
       <string>1-1-4-4</string>
@@ -759,7 +759,7 @@
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>2-0-1-1</string>
-      <string>1-0-0-9</string>
+      <string>1-0-2-9</string>
       <string>2-0-1-1</string>
       <string>1-1-4-3</string>
       <string>1-1-4-4</string>
@@ -776,7 +776,7 @@
       <string>0-1-1-7</string>
       <string>0-1-0-1</string>
       <string>2-0-1-1</string>
-      <string>1-0-0-10</string>
+      <string>1-0-2-10</string>
       <string>2-0-1-1</string>
       <string>1-1-4-3</string>
       <string>1-1-4-4</string>
@@ -793,7 +793,7 @@
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>2-0-1-1</string>
-      <string>1-0-0-9</string>
+      <string>1-0-2-9</string>
       <string>2-0-1-1</string>
       <string>1-1-4-3</string>
       <string>1-1-4-4</string>
@@ -810,7 +810,7 @@
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>2-0-1-1</string>
-      <string>1-0-0-10</string>
+      <string>1-0-2-10</string>
       <string>2-0-1-1</string>
       <string>1-1-4-3</string>
       <string>1-1-4-4</string>
@@ -827,7 +827,7 @@
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>2-0-1-1</string>
-      <string>1-0-0-9</string>
+      <string>1-0-2-9</string>
       <string>2-0-1-1</string>
       <string>1-1-4-3</string>
       <string>1-1-4-4</string>
@@ -844,7 +844,7 @@
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>2-0-1-1</string>
-      <string>1-0-0-9</string>
+      <string>1-0-2-9</string>
       <string>2-0-1-1</string>
       <string>1-1-4-3</string>
       <string>1-1-4-4</string>
@@ -861,7 +861,7 @@
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>2-0-1-1</string>
-      <string>1-0-0-10</string>
+      <string>1-0-2-10</string>
       <string>2-0-1-1</string>
       <string>1-1-4-3</string>
       <string>1-1-4-4</string>
@@ -878,7 +878,7 @@
       <string>0-1-0-1</string>
       <string>0-1-1-6</string>
       <string>2-0-1-1</string>
-      <string>1-0-0-9</string>
+      <string>1-0-2-9</string>
       <string>2-0-1-1</string>
       <string>1-1-4-3</string>
       <string>1-1-4-4</string>
@@ -971,6 +971,9 @@
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>TurretV</Name>
@@ -986,6 +989,9 @@
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>40</ShootingFrequency>
       <ShootingInitialFrequency>40</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>TurretV</Name>
@@ -1001,6 +1007,9 @@
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>40</ShootingFrequency>
       <ShootingInitialFrequency>20</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>TurretV</Name>
@@ -1016,6 +1025,9 @@
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>40</ShootingFrequency>
       <ShootingInitialFrequency>40</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>TurretV</Name>
@@ -1031,6 +1043,9 @@
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>40</ShootingFrequency>
       <ShootingInitialFrequency>20</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>Bug</Name>
@@ -1046,6 +1061,9 @@
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>Sphere</Name>
@@ -1061,6 +1079,9 @@
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>110</ShootingFrequency>
       <ShootingInitialFrequency>110</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>Spikes</Name>
@@ -1076,6 +1097,9 @@
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>Spikes</Name>
@@ -1091,6 +1115,9 @@
       <InitialFlip>true</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>Spikes</Name>
@@ -1106,6 +1133,9 @@
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>Spikes</Name>
@@ -1121,6 +1151,9 @@
       <InitialFlip>true</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
   </Enemies>
   <Elevators>

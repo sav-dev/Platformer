@@ -563,6 +563,9 @@
       <InitialFlip>true</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>Sphere</Name>
@@ -578,6 +581,9 @@
       <InitialFlip>true</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>Sphere</Name>
@@ -593,6 +599,9 @@
       <InitialFlip>true</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>Spikes</Name>
@@ -608,6 +617,9 @@
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>Spikes</Name>
@@ -623,6 +635,9 @@
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>Sphere</Name>
@@ -638,6 +653,9 @@
       <InitialFlip>true</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
   </Enemies>
   <Elevators>
