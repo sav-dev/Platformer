@@ -253,18 +253,13 @@ UpdatePlayerNormal:
   ; which made the player go into the wall and fall off the elevator.
   ; Move player by DY, then set the state to 'in air' and re-calculate boxes.
   ; Then call the special routine that checks if player needs to be pushed down.
-  ; If yes, do so, then check if player collides with anything else. Explode the player if yes.
   .noVerticalCollisionWhileCrouching:
     LDA #PLAYER_JUMP
     STA playerAnimation                       ; update animation to jump
     JSR MovePlayerVertically                  ; move player vertically by gravity
     JSR SetPlayerBoxesVertical                ; update boxes to make player 'stand up';
-    JSR CheckPlayerStandingUpMidAirCollision  ; call the special routine that checks if player needs to be pushed down
-    LDA playerState
-    BNE .playerExploded                       ; PLAYER_NORMAL == 0; != 0 must mean exploded, nothing else is possible
+    JSR CheckPlayerStandingUpMidAirCollision  ; call the special routine, this may move the player down
     JMP .checkHorizontalMovement    
-    .playerExploded:
-      RTS                                     ; just exit
     
   ; Player was crouching in the last frame, and is still on some platform.
   ; POITAG - possible issue - WE ASSUME GENERIC DY IS 0 - there should never be a case where the player falls off an elevator while crouching,
