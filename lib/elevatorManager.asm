@@ -227,8 +227,8 @@ UpdateElevators:
       LDA genericDX
       BEQ .playerOnVerticalElevator
       
-      ; player on horizontal elevator, check for collisions with platforms to adjust dx if needed and move the player
-      ; POI - possible issue - make sure player won't hit other elevators when on an elevator
+      ; player on horizontal elevator, check for collisions, adjust dx if needed and move the player
+      ; then check if player wasn't forced into something
       .playerOnHorizontalElevator:
         LDA #$00 ; no need to check bounds since an elevator will never move a player out of bounds
         STA c    ; POITAG - possible issue - make sure that's never the case
@@ -236,10 +236,14 @@ UpdateElevators:
         JSR MovePlayerHorizontallyAndSetBoxes
         JMP .checkIfPlayerForcedIntoSometing
       
-      ; player on vertical elevator, no need to check for collisions with platforms here, just move the player.
-      ; but then check if player wasn't forced into something
-      ; POITAG - is this check needed; if we make sure this is never possible, it can be removed
+      ; player on horizontal elevator, check for collisions, adjust dy if needed and move the player
+      ; then check if player wasn't forced into something
       .playerOnVerticalElevator:
+        JSR CheckPlayerCollisionVertical
+        LDA collision
+        BEQ .stuff
+        LDA #$00
+        .stuff:
         JSR MovePlayerVertically
         JSR SetPlayerBoxesVertical
         JMP .checkIfPlayerForcedIntoSometing

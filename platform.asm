@@ -424,9 +424,7 @@ SetVramAddressingTo32:
 ; Modules import                                                ;
 ;****************************************************************
 
-  .include "lib\backgroundManager.asm"
-  .include "lib\levelManager.asm"
-  .include "lib\controllerManager.asm"  
+  .include "lib\backgroundManager.asm"    
   .include "lib\playerController.asm"  
   .include "lib\bulletController.asm"
   .include "lib\enemiesManager.asm"  
@@ -462,6 +460,8 @@ Bank3Start:
   .include "lib\doorManager.asm"
   .include "lib\collisionManager.asm"
   .include "lib\ggsoundInclude.asm"
+  .include "lib\levelManager.asm"
+  .include "lib\controllerManager.asm"  
   
   .include "states\game.asm"
 

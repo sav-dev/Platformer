@@ -259,10 +259,11 @@ UpdatePlayerNormal:
     STA playerAnimation                 ; update animation to jump
     JSR MovePlayerVertically            ; move player vertically by gravity
     JSR SetPlayerBoxesVertical          ; update boxes to make player 'stand up';
-    JSR CheckPlayerCollisionVertical    ; check for collisions again. genericDY is 0 now so it will think player is below the obstacles.
+    JSR CheckPlayerCollisionVertical    ; check for collisions again. genericDY is 0 now so it will think player is below the obstacles. todo 0004 - don't call this with dy=0
     JSR MovePlayerVertically            ; if no collision found, genericDY will be 0 and this is a no-op. 
     JSR SetPlayerBoxesVertical
     JMP .checkHorizontalMovement
+    ; todo 0004 - can this ever force player into a position where player should be destroyed? I don't think so
   
   ; Player was crouching in the last frame, and is still on some platform.
   ; POITAG - possible issue - WE ASSUME GENERIC DY IS 0 - there should never be a case where the player falls off an elevator while crouching,
@@ -728,7 +729,7 @@ CheckVictoryConditions:
 ;   Check for vertical collisions                               ;
 ;                                                               ;
 ; Input:                                                        ;
-;   genericDY                                                   ;
+;   genericDY todo 0004 - don't allow it to be == 0             ;
 ;                                                               ;
 ; Output:                                                       ;
 ;   collision = 1 set on output if collision detected           ;
@@ -903,10 +904,8 @@ CheckPlayerCollisionVertical:
           STA by2          
 
   ; check for collisions with platforms and door first,
-  ; check first screen first (c == 0), then second screen (c == 1) if no collisions found.
-  ; if any collisions found, go to .adjustMovement. Otherwise go to .checkCollisionsWithElevators
-  ; POITAG - possible issue - make sure player will never a vertical collision with both platform/door and elevator in a frame.
-  ; that could be the case if player could gain more vertical speed than the thickness of an elevator.
+  ; check first screen first (c == 0), then second screen (c == 1) if no collisions found, then door if no collisons found there too.
+  ; if any collisions found, adjust movement. then go to .checkCollisionsWithElevators
   .checkCollisionsWithPlatforms:
   
     .checkFirstScreen:
@@ -918,8 +917,9 @@ CheckPlayerCollisionVertical:
       STA genericPointer + $01
       JSR CheckForPlatformOneScreen
       LDA collision
-      BNE .adjustMovement
-                                      
+      BEQ .checkSecondScreen
+      JMP .processPlayerAndPlatformCollision
+                            
     .checkSecondScreen:               
       INC c
       JSR MovePlatformsPointerForward
@@ -930,12 +930,59 @@ CheckPlayerCollisionVertical:
       JSR CheckForPlatformOneScreen
       JSR MovePlatformsPointerBack
       LDA collision
-      BNE .adjustMovement
-
+      BEQ .checkCollisionWithDoor
+      JMP .processPlayerAndPlatformCollision
+      
     .checkCollisionWithDoor:
       JSR CheckForDoorCollision
       LDA collision
-      BNE .adjustMovement
+      BEQ .checkCollisionsWithElevators
+      
+    .processPlayerAndPlatformCollision:
+      INC collisionCache ; needed so if there's no elevator collision, we don't lose the info about the collision
+      JSR .adjustMovementVertical
+      LDA genericDY
+      BNE .updateBox ; todo 0004 - this may cause issues
+      RTS
+      
+    ; we have updated genericDY. We must recalculate the box before checking collisions with elevators.
+    ; no need to check for bounds since we have already done that and we'll never make the absolute value of genericDY larger
+    .updateBox:
+      LDA b
+      BEQ .updateBoxGoingDown
+      
+      .updateBoxGoingUp:
+        LDA playerPlatformBoxY1
+        CLC
+        ADC genericDY
+        STA by1
+        LDA playerPlatformBoxY2
+        CLC
+        ADC genericDY
+        BCS .updateBoxGoingDownCapY2
+        STA by2
+        JMP .checkCollisionsWithElevators
+        
+        .updateBoxGoingDownCapY2:
+          LDA #$FF
+          STA by2
+          JMP .checkCollisionsWithElevators
+      
+      .updateBoxGoingDown:
+        LDA playerPlatformBoxY2
+        CLC
+        ADC genericDY
+        STA by2
+        LDA playerPlatformBoxY1
+        CLC
+        ADC genericDY
+        BCC .updateBoxGoingUpCapY1
+        STA by1
+        JMP .checkCollisionsWithElevators
+        
+        .updateBoxGoingUpCapY1:
+          LDA #$00
+          STA by1
       
   ; now check for collisions with elevators.
   ; if collision found, go handle it. otherwise exit,
@@ -951,13 +998,13 @@ CheckPlayerCollisionVertical:
   ; if we get here, player had a vertical collision with an elevator.
   ; check if was going down, set the elevator vars if yes.  
   .processPlayerAndElevatorCollision:
-    LDA b ; 0 means that player was going up, 1 that player was going down
-    BEQ .adjustMovement 
+    LDA b ; 1 means player was going down
+    BEQ .adjustMovementVertical
     INC playerOnElevator
     LDA yPointerCache    
     STA playerElevatorId
     
-  .adjustMovement:
+  .adjustMovementVertical:
 
     LDA b ; 0 means that player was going up or static, 1 that player was going down
     BNE .playerMovingDown
@@ -989,6 +1036,7 @@ CheckPlayerCollisionVertical:
 ;                                                               ;
 ; Input:                                                        ;
 ;   c = 0 means don't check bounds, c > 0 means otherwise       ;
+;   genericDX must be != 0                                      ;
 ;                                                               ;
 ; Output:                                                       ;
 ;   collision = 1 set on output if collision detected           ;
@@ -1023,6 +1071,13 @@ CheckPlayerCollisionHorizontal:
     STA collisionCache
     STA collision
 
+  ; set the 'y' box
+  .setBoxY:
+    LDA playerPlatformBoxY1
+    STA by1
+    LDA playerPlatformBoxY2
+    STA by2
+    
   ; check move direction, set b to 0 (left) or 1 (right). This never gets called when DX = 0
   .directionCheck: 
     LDA #$00
@@ -1035,7 +1090,7 @@ CheckPlayerCollisionHorizontal:
   ; check if after the movement player will be in screen bounds
   .checkBounds:
     LDA c
-    BEQ .setBox ; we don't want to check bounds if c == 0
+    BEQ .setBoxX ; we don't want to check bounds if c == 0
   
     ; set c to X_MIN, set d to X_MAX
     ; safe to use both here
@@ -1071,7 +1126,7 @@ CheckPlayerCollisionHorizontal:
       BCC .offLeft
       CMP c ; = X_MIN
       BCC .offLeft
-      JMP .setBox
+      JMP .setBoxX
       .offLeft:
         LDA c ; = X_MIN
         SEC
@@ -1079,7 +1134,7 @@ CheckPlayerCollisionHorizontal:
         STA genericDX      
         BEQ .notMovingHorizontally
         INC collisionCache
-        JMP .setBox
+        JMP .setBoxX
          
     ; check right screen bound.
     ; carry set after adding means playerX + genericDX > 255 - cap at X_MAX
@@ -1091,7 +1146,7 @@ CheckPlayerCollisionHorizontal:
       ADC genericDX
       BCS .offRight
       CMP d ; = X_MAX
-      BCC .setBox
+      BCC .setBoxX
       .offRight:
         LDA d ; = X_MAX
         SEC
@@ -1099,19 +1154,15 @@ CheckPlayerCollisionHorizontal:
         STA genericDX
         BEQ .notMovingHorizontally
         INC collisionCache
-        JMP .setBox
+        JMP .setBoxX
         
   ; if we get here it means genericDX = 0 after bounds check. Exit.       
   .notMovingHorizontally:
     RTS ; note - not setting collision to 1; it shouldn't matter. We never check it for this call. POITAG - possible issue
     
-  ; set new player box.
+  ; set the player 'x' box.
   ; no need to handle overflow since we are capping at X_MIN/X_MAX above
-  .setBox:
-    LDA playerPlatformBoxY1
-    STA by1
-    LDA playerPlatformBoxY2
-    STA by2    
+  .setBoxX:
     LDA playerPlatformBoxX1
     CLC
     ADC genericDX
@@ -1133,8 +1184,20 @@ CheckPlayerCollisionHorizontal:
       JSR .adjustMovementHorizontal
       INC collisionCache ; we must do this to make sure we do not lose the info about the collision if there are no platform ones
       LDA genericDX
-      BNE .checkCollisionsWithPlatforms
+      BNE .updateBox
       RTS
+  
+    ; if we get here, genericDX has been updated and we need to update the player 'x' box
+    ; no need to check for bounds since we have already done that and we'll never make the absolute value of genericDX larger
+    .updateBox:
+      LDA playerPlatformBoxX1
+      CLC
+      ADC genericDX
+      STA bx1
+      LDA playerPlatformBoxX2
+      CLC
+      ADC genericDX
+      STA bx2    
   
   ; check for collisions with platforms and door
   ; check first screen first (c == 0), then second screen (c == 1), then door
