@@ -251,23 +251,24 @@ UpdatePlayerNormal:
   ; Player was crouching in the last frame, but now there is no vertical collision.
   ; The only time this could happen is if the player was crouching on a horizontal elevator
   ; which made the player go into the wall and fall off the elevator.
-  ; Move player by DY, then set the state to 'in air' and calculate boxes.
-  ; Check for vertical collisions again in case player 'standing up' caused a collision.
-  ; If collision found, move player by DY again (luckily CheckPlayerCollisionVertical assumes player went up if DY = 0).
+  ; Move player by DY, then set the state to 'in air' and re-calculate boxes.
+  ; Then call the special routine that checks if player needs to be pushed down.
+  ; If yes, do so, then check if player collides with anything else. Explode the player if yes.
   .noVerticalCollisionWhileCrouching:
     LDA #PLAYER_JUMP
-    STA playerAnimation                 ; update animation to jump
-    JSR MovePlayerVertically            ; move player vertically by gravity
-    JSR SetPlayerBoxesVertical          ; update boxes to make player 'stand up';
-    JSR CheckPlayerCollisionVertical    ; check for collisions again. genericDY is 0 now so it will think player is below the obstacles. todo 0004 - don't call this with dy=0
-    JSR MovePlayerVertically            ; if no collision found, genericDY will be 0 and this is a no-op. 
-    JSR SetPlayerBoxesVertical
-    JMP .checkHorizontalMovement
-    ; todo 0004 - can this ever force player into a position where player should be destroyed? I don't think so
-  
+    STA playerAnimation                       ; update animation to jump
+    JSR MovePlayerVertically                  ; move player vertically by gravity
+    JSR SetPlayerBoxesVertical                ; update boxes to make player 'stand up';
+    JSR CheckPlayerStandingUpMidAirCollision  ; call the special routine that checks if player needs to be pushed down
+    LDA playerState
+    BNE .playerExploded                       ; PLAYER_NORMAL == 0; != 0 must mean exploded, nothing else is possible
+    JMP .checkHorizontalMovement    
+    .playerExploded:
+      RTS                                     ; just exit
+    
   ; Player was crouching in the last frame, and is still on some platform.
   ; POITAG - possible issue - WE ASSUME GENERIC DY IS 0 - there should never be a case where the player falls off an elevator while crouching,
-  ; and then goes down by less than the value of gravity and hits something.
+  ; and then goes down by less than the value of gravity and hits something. MAKE SURE THAT'S THE CASE
   ; So the only case this may happen is if player is still on the same platform they were previously.
   ; Check if the player wants to jump - that cancels crouching.
   .verticalCollisionWhileCrouching:
@@ -729,14 +730,14 @@ CheckVictoryConditions:
 ;   Check for vertical collisions                               ;
 ;                                                               ;
 ; Input:                                                        ;
-;   genericDY todo 0004 - don't allow it to be == 0             ;
+;   genericDY, must be != 0                                     ;
 ;                                                               ;
 ; Output:                                                       ;
 ;   collision = 1 set on output if collision detected           ;
 ;   'a' boxes set to whatever the collision was with (if any)   ;
 ;   b set on output to:                                         ;
 ;     1 if player was moving down                               ;
-;     0 if player was moving up or was static                   ;
+;     0 if player was moving up                                 ;
 ;   elevator vars set if player is on an elevator               ;
 ;   genericDY is updated                                        ;
 ;                                                               ;
@@ -748,7 +749,6 @@ CheckVictoryConditions:
 ;   d                                                           ;
 ;   i                                                           ;
 ;   enemyScreen                                                 ;
-;   enemySpeed                                                  ;
 ;   elevatorSize                                                ;
 ;   collision vars                                              ;
 ;   genericPointer                                              ;
@@ -777,13 +777,13 @@ CheckPlayerCollisionVertical:
     LDA playerPlatformBoxX2
     STA bx2    
     
-  ; check move direction, set b to 0 (static or up) or 1 (down) and go to specific box setting/bounds checking routine
+  ; check move direction, set b to 0 (up) or 1 (down) and go to specific box setting/bounds checking routine
   .directionCheck:
     LDA #$00
     STA b                                                                     
     LDA genericDY
     CMP #$80
-    BCS .goingUpOrStatic
+    BCS .goingUp
     INC b
   
     .goingDown:      
@@ -834,14 +834,13 @@ CheckPlayerCollisionVertical:
             INC collisionCache
             JMP .setYBoxJetpack
     
-    .goingUpOrStatic:
+    .goingUp:
     
       LDA levelType      
-      BEQ .upOrStaticJetpack ; LEVEL_TYPE_JETPACK = 0
+      BEQ .upJetpack ; LEVEL_TYPE_JETPACK = 0
     
       ; player is going up, meaning we need to cap Y at min ($00) on no overflow (carry clear)
-      ; also called when player is static but then the additions are no-ops
-      .upOrStaticNotJetpack:
+      .upNotJetpack:
         LDA playerPlatformBoxY2
         CLC
         ADC genericDY
@@ -860,7 +859,7 @@ CheckPlayerCollisionVertical:
           JMP .checkCollisionsWithPlatforms
         
       ; check for out of bounds, set dy, we can exit if genericDY = 0
-      .upOrStaticJetpack:
+      .upJetpack:
 
         ; we can exit if genericDY = 0
         LDA genericDY
@@ -942,7 +941,7 @@ CheckPlayerCollisionVertical:
       INC collisionCache ; needed so if there's no elevator collision, we don't lose the info about the collision
       JSR .adjustMovementVertical
       LDA genericDY
-      BNE .updateBox ; todo 0004 - this may cause issues
+      BNE .updateBox
       RTS
       
     ; we have updated genericDY. We must recalculate the box before checking collisions with elevators.
@@ -1006,7 +1005,7 @@ CheckPlayerCollisionVertical:
     
   .adjustMovementVertical:
 
-    LDA b ; 0 means that player was going up or static, 1 that player was going down
+    LDA b ; 0 means that player was going up, 1 that player was going down
     BNE .playerMovingDown
     
     ; dy => boxY1 + dy - 1 = ay2 => dy = ay2 - boxY1 + 1
@@ -1036,7 +1035,7 @@ CheckPlayerCollisionVertical:
 ;                                                               ;
 ; Input:                                                        ;
 ;   c = 0 means don't check bounds, c > 0 means otherwise       ;
-;   genericDX must be != 0                                      ;
+;   genericDX, must be != 0                                     ;
 ;                                                               ;
 ; Output:                                                       ;
 ;   collision = 1 set on output if collision detected           ;
@@ -1049,7 +1048,6 @@ CheckPlayerCollisionVertical:
 ;   d                                                           ;
 ;   i                                                           ;
 ;   enemyScreen                                                 ;
-;   enemySpeed                                                  ;
 ;   elevatorSize                                                ;
 ;   collision vars                                              ;
 ;   genericPointer                                              ;
@@ -1173,7 +1171,6 @@ CheckPlayerCollisionHorizontal:
     STA bx2  
   
   ; check for collisions with elevators first.
-  ; POITAG - possible issue - collision with elevator and wall in one frame is untested
   .checkCollisionsWithElevators:
     JSR CheckForElevatorCollision
     LDA collision
@@ -1261,6 +1258,58 @@ CheckPlayerCollisionHorizontal:
       STA genericDX
       DEC genericDX
       RTS
+        
+;****************************************************************
+; Name:                                                         ;
+;   CheckPlayerStandingUpMidAirCollision                        ;
+;                                                               ;
+; Description:                                                  ;
+;   Special routine which pushes player down if needed          ;
+;   POITAG - possible issue - this could possibly be replaced   ;
+;   with CheckPlayerCollisionVertical to save bytes             ;
+;   POITAG - possible issue - this is not very efficient, but   ;
+;   this will be called extremely rarely so it should be OK     ;
+;                                                               ;
+; Output:                                                       ;
+;   May update player position and boxes                        ;
+;   May explode the player                                      ;
+;                                                               ;
+; Used variables:                                               ;
+;   Y                                                           ;
+;   yPointerCache                                               ;
+;   c                                                           ;
+;   enemyScreen                                                 ;
+;   elevatorSize                                                ;
+;   collision vars                                              ;
+;   genericPointer                                              ;
+;****************************************************************
+        
+CheckPlayerStandingUpMidAirCollision:
+  JSR CheckPlayerCollision
+  LDA collision
+  BEQ .noCollision
+  
+  ; POITAG - possible issue - we only check for collisions once.
+  ; It checks elevator first, then platforms.
+  ; If an elevator is above the platform somehow, we will still hit the platform.
+  ; MAKE SURE THAT'S NEVER THE CASE
+  .collisionFound:
+
+    ; same as .playerMovingUp in vert collision checks
+    ; dy => boxY1 + dy - 1 = ay2 => dy = ay2 - boxY1 + 1
+    .setDY:    
+      LDA ay2
+      SEC
+      SBC playerPlatformBoxY1
+      STA genericDY
+      INC genericDY
+
+    .movePlayerAndSetBox:
+      JSR MovePlayerVertically
+      JMP SetPlayerBoxesVertical
+  
+  .noCollision:
+    RTS
         
 ;****************************************************************
 ; Name:                                                         ;
@@ -1415,7 +1464,7 @@ SetPlayerBoxesVertical:
   ; this is reused for both normal movement and jetpack.
   ; there is lots of logic not needed for jetpack. 
   ; player cannot leave the bounds with a jetpack.
-  ; POITAG - possible issue - make sure there's no way a vertical elevator pushes player out of bounds
+  ; POITAG - possible issue - MAKE SURE THERE'S NO WAY A VERTICAL ELEVATOR PUSHES PLAYER OUT OF BOUNDS
 
   ; first check playerYState
   ; if player is offscreen to the top, don't bother with setting anything, we don't check for collisions anyway.

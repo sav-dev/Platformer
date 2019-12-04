@@ -425,10 +425,12 @@ SetVramAddressingTo32:
 ;****************************************************************
 
   .include "lib\backgroundManager.asm"    
-  .include "lib\playerController.asm"  
-  .include "lib\bulletController.asm"
+  .include "lib\playerController.asm"    
   .include "lib\enemiesManager.asm"  
-
+  .include "lib\collisionManager.asm"
+  .include "lib\explosionsController.asm"
+  .include "lib\levelManager.asm"
+  
 Bank2End:
   
   .bank 0
@@ -456,12 +458,10 @@ Bank3Start:
   .include "data\enemies.asm" ; this has to be in this place
   .include "lib\paletteManager.asm"   
   .include "lib\elevatorManager.asm"
-  .include "lib\explosionsController.asm"
   .include "lib\doorManager.asm"
-  .include "lib\collisionManager.asm"
-  .include "lib\ggsoundInclude.asm"
-  .include "lib\levelManager.asm"
-  .include "lib\controllerManager.asm"  
+  .include "lib\ggsoundInclude.asm"  
+  .include "lib\controllerManager.asm" 
+  .include "lib\bulletController.asm"  
   
   .include "states\game.asm"
 
