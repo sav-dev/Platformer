@@ -1095,11 +1095,11 @@
   <Enemies />
   <Elevators>
     <Elevator>
-      <X>144</X>
+      <X>192</X>
       <Y>120</Y>
       <Size>4</Size>
       <MovementType>Horizontal</MovementType>
-      <Speed>255</Speed>
+      <Speed>1</Speed>
       <MinPosition>128</MinPosition>
       <MaxPosition>224</MaxPosition>
       <Direction>Right</Direction>
