@@ -7,7 +7,7 @@ BackgroundManagerStart:
 ; Game uses vertical scroll, so we update nametables 0 and 1    ;
 ; Nametable 0 starts at $2000 in PPU                            ;                             
 ; Nametable 0 attributes start at $23C0 in PPU                  ;
-; Nametable 0 starts at $4000 in PPU                            ;                             
+; Nametable 0 starts at $2400 in PPU                            ;                             
 ; Nametable 0 attributes start at $27C0 in PPU                  ;
 ;                                                               ;
 ;****************************************************************
