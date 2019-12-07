@@ -31,13 +31,13 @@ pal_bg:
 
 LoadSpritesPalette:
   LDA #$3F                 ; sprite palette starts at $3F10 (in PPU)
-  STA b                    ; store the high target byte in b
+  STA <b                   ; store the high target byte in b
   LDA #$10                 
-  STA c                    ; store the low target byte in c
+  STA <c                   ; store the low target byte in c
   LDA #LOW(pal_spr)
-  STA genericPointer
+  STA <genericPointer
   LDA #HIGH(pal_spr)
-  STA genericPointer + $01
+  STA <(genericPointer + $01)
   JSR LoadPalette          ; load the palette
   RTS
   
@@ -60,20 +60,20 @@ LoadSpritesPalette:
 
 LoadBgPalette:
   LDA #$3F                 ; bg palette starts at $3F00 (in PPU)
-  STA b                    ; store the high target byte in b
+  STA <b                   ; store the high target byte in b
   LDA #$00                 
-  STA c                    ; store the low target byte in c
+  STA <c                   ; store the low target byte in c
   LDA #LOW(pal_bg)
-  STA genericPointer
+  STA <genericPointer
   LDA #HIGH(pal_bg)
-  STA genericPointer + $01
-  LDA genericPointer
+  STA <(genericPointer + $01)
+  LDA <genericPointer
   CLC
-  ADC paletteOffset
-  STA genericPointer
-  LDA genericPointer + $01
+  ADC <paletteOffset
+  STA <genericPointer
+  LDA <(genericPointer + $01)
   ADC #$00
-  STA genericPointer + $01
+  STA <(genericPointer + $01)
   JSR LoadPalette          ; load the palette
   RTS
   
@@ -96,16 +96,16 @@ LoadBgPalette:
 
 LoadPalette:
 
-  LDX bufferOffset            ; load buffer offset to the X register
+  LDX <bufferOffset           ; load buffer offset to the X register
   LDA #$10                    ; load $10 = 16 to the A register (we're drawing a palette == 16 bytes)
   STA drawBuffer, x           ; set that to byte 0 of the buffer segment
                               
   INX                         ; increment the X register (now X == 1)
-  LDA b                       ; load the high byte of the target address
+  LDA <b                      ; load the high byte of the target address
   STA drawBuffer, x           ; set that to byte 1 of the buffer segment
                               
   INX                         ; increment the X register (now X == 2)
-  LDA c                       ; load the low byte of the target address
+  LDA <c                      ; load the low byte of the target address
   STA drawBuffer, x           ; set that to byte 2 of the buffer segment   
                               
   INX                         ; increment the X register (now X == 3)
@@ -120,7 +120,7 @@ LoadPalette:
     BNE .bufferedDrawLoop     ; loop if there's more data to be copied
                               
   INX                         ; increment the X register so it points to the next free byte in the buffer
-  STX bufferOffset            ; update the buffer offset
+  STX <bufferOffset           ; update the buffer offset
   
   RTS
   
