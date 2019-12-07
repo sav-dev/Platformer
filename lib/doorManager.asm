@@ -49,13 +49,13 @@ ProcessDoorAndKeycard:
       LDA #$01
       STA <c ; everything is still transposed from above, set c to > 0 to signal that
       
-      LDA <playerPlatformBoxX1
+      LDA playerPlatformBoxX1
       STA <bx1
-      LDA <playerPlatformBoxX2
+      LDA playerPlatformBoxX2
       STA <bx2
-      LDA <playerPlatformBoxY1
+      LDA playerPlatformBoxY1
       STA <by1
-      LDA <playerPlatformBoxY2
+      LDA playerPlatformBoxY2
       STA <by2
       JSR CheckForItemCollision      
       LDA <collision
