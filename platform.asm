@@ -170,7 +170,7 @@ NMI:
   DoPpuReg:
     LDA <soft2001           ; copy buffered $2000/$2001
     STA $2001               
-    LDA soft2000            
+    LDA <soft2000            
     STA $2000               
                             
     BIT $2002               ; set the scroll

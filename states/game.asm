@@ -134,7 +134,7 @@ LoadGame:
     STA <levelPointer             ; set the pointer
     INX
     LDA levels, x                 ; high byte of level address
-    STA levelPointer + $01        ; set the pointer
+    STA <(levelPointer + $01)     ; set the pointer
     JSR LoadLevel                 ; load level
   .loadLevelDone:
   

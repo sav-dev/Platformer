@@ -681,7 +681,7 @@ NewColumnOnTheRight:
       LDA leftTiles, x              ; sprite 1 (bottom-left)
       STA <d                        ; store it in d
       
-      LDX bufferOffset              ; load the bufferOffset back to X
+      LDX <bufferOffset             ; load the bufferOffset back to X
       
       LDA <c                        ; sprite 0
       STA drawBuffer, x             ; buffer the sprite
@@ -708,7 +708,7 @@ NewColumnOnTheRight:
       LDA rightTiles, x             ; sprite 3 (bottom-right)
       STA <d                        ; store it in d
       
-      LDX bufferOffset              ; load the bufferOffset back to X
+      LDX <bufferOffset             ; load the bufferOffset back to X
       
       LDA <c                        ; sprite 0
       STA drawBuffer, x             ; buffer the sprite
@@ -810,7 +810,7 @@ NewAttsOnTheRight:
 
       BNE .drawAtts                 ; loop if needed
       
-    STX bufferOffset                ; update the buffer offset, X points to the right place
+    STX <bufferOffset               ; update the buffer offset, X points to the right place
       
   .bufferDataDone:  
   
@@ -920,7 +920,7 @@ DecrementScroll:
       JSR NewAttsOnTheLeft             ; draw new atts on the left
     .newAttsColumnCheckDone:           
                                        
-    INC needDrawLocal                  ; if we got here it means draw during NMI will be required    
+    INC <needDrawLocal                 ; if we got here it means draw during NMI will be required    
   .newDataCheckDone:
   
 DecrementScrollDone:
@@ -976,7 +976,7 @@ NewColumnOnTheLeft:
         CLC
         ADC #$20                    ; A = $24 if nt = 1, A = $20 if nt = 0 - high byte of the address
         STA <c                      ; store the high byte in c
-        LDA scroll
+        LDA <scroll
         LSR A
         LSR A
         LSR A                       ; A = scroll / 8
@@ -1018,12 +1018,12 @@ NewColumnOnTheLeft:
       LDA leftTiles, x              ; sprite 1 (bottom-left)
       STA <d                        ; store it in d
       
-      LDX bufferOffset              ; load the bufferOffset back to X
+      LDX <bufferOffset             ; load the bufferOffset back to X
       
       LDA <c                        ; sprite 0
       STA drawBuffer, x             ; buffer the sprite
       INX                           ; X = X + 1
-      LDA <d                         ; sprite 0
+      LDA <d                        ; sprite 0
       STA drawBuffer, x             ; buffer the sprite
       INX                           ; X = X + 1
                                     
@@ -1034,7 +1034,7 @@ NewColumnOnTheLeft:
     JMP .updateBufferOffset         ; skip drawing right tiles    
 
     .drawRightTiles:                ; each iteration of this loop draws the left-most sprites of the tile    
-      STX bufferOffset              ; store the X register in the buffer offset
+      STX <bufferOffset             ; store the X register in the buffer offset
     
       LDA [levelBackPointer], y     ; load the tile id                                    
       ASL A                               
@@ -1045,7 +1045,7 @@ NewColumnOnTheLeft:
       LDA rightTiles, x             ; sprite 3 (bottom-right)
       STA <d                        ; store it in d
       
-      LDX bufferOffset              ; load the bufferOffset back to X
+      LDX <bufferOffset             ; load the bufferOffset back to X
       
       LDA <c                        ; sprite 0
       STA drawBuffer, x             ; buffer the sprite
@@ -1059,7 +1059,7 @@ NewColumnOnTheLeft:
       BNE .drawRightTiles           ; loop until the column is drawn
   
     .updateBufferOffset:    
-      STX bufferOffset              ; update bufferOffset, X points to the right place
+      STX <bufferOffset             ; update bufferOffset, X points to the right place
 
   .bufferDataDone:
   
@@ -1093,7 +1093,7 @@ NewAttsOnTheLeft:
   
   .calculateAddress:
 
-    LDA scroll
+    LDA <scroll
     BNE .scrollNot0Case
     
     .scroll0Case:                 ; scroll = 0: special case: address = C7 in other nametable
@@ -1109,13 +1109,13 @@ NewAttsOnTheLeft:
       JMP .calculateAddressDone;
     
     .scrollNot0Case:              ; scroll != 0: (scroll / 32) + $BF in current nametable
-      LDA nametable
+      LDA <nametable
       ASL A
       ASL A                       ; A = 4 if nt = 1, A = 0 if nt = 0
       CLC
       ADC #$23                    ; A = $27 if nt = 1, A = $23 if nt = 0 - high byte of the address
       STA <c                      ; store the high byte in c
-      LDA scroll
+      LDA <scroll
       LSR A
       LSR A
       LSR A
