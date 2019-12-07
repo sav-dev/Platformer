@@ -22,19 +22,19 @@ DoorManagerStart:
 ProcessDoorAndKeycard:
 
   .checkIfExists:
-    LDA <doorExists
+    LDA doorExists
     BNE .processDoor
     RTS
     
   .processDoor:
     JSR TransposeDoor
-    LDA <genericVisible
+    LDA genericVisible
     BEQ .processKeycard
     JSR RenderDoor
     
   .processKeycard:
     JSR TransposeKeycard
-    LDA <genericVisible
+    LDA genericVisible
     BNE .renderKeycard
     RTS
     
@@ -42,29 +42,29 @@ ProcessDoorAndKeycard:
       JSR RenderKeycard
     
     .checkKeycardCollision:
-      LDA <keycardY
-      STA <genericY
+      LDA keycardY
+      STA genericY
       LDA #KEYCARD_HEIGHT
-      STA <genericHeight
+      STA genericHeight
       LDA #$01
-      STA <c ; everything is still transposed from above, set c to > 0 to signal that
+      STA c ; everything is still transposed from above, set c to > 0 to signal that
       
       LDA playerPlatformBoxX1
-      STA <bx1
+      STA bx1
       LDA playerPlatformBoxX2
-      STA <bx2
+      STA bx2
       LDA playerPlatformBoxY1
-      STA <by1
+      STA by1
       LDA playerPlatformBoxY2
-      STA <by2
+      STA by2
       JSR CheckForItemCollision      
-      LDA <collision
+      LDA collision
       BNE .keycardCollision
       RTS
     
     .keycardCollision:
       LDA #$00
-      STA <doorExists ; keycard collision, simply disable the door, next frame both door and keycard will disappear
+      STA doorExists ; keycard collision, simply disable the door, next frame both door and keycard will disappear
       RTS
 
 ;****************************************************************
@@ -79,12 +79,12 @@ ProcessDoorAndKeycard:
 ;****************************************************************
 
 TransposeDoor:
-  LDA <doorX
-  STA <genericX
-  LDA <doorScreen
-  STA <genericOffScreen
+  LDA doorX
+  STA genericX
+  LDA doorScreen
+  STA genericOffScreen
   LDA #DOOR_WIDTH
-  STA <genericWidth
+  STA genericWidth
   JMP TransposeItem
   
 ;****************************************************************
@@ -99,12 +99,12 @@ TransposeDoor:
 ;****************************************************************
 
 TransposeKeycard:
-  LDA <keycardX
-  STA <genericX
-  LDA <keycardScreen
-  STA <genericOffScreen
+  LDA keycardX
+  STA genericX
+  LDA keycardScreen
+  STA genericOffScreen
   LDA #KEYCARD_WIDTH
-  STA <genericWidth
+  STA genericWidth
   JMP TransposeItem
   
 ;****************************************************************
@@ -123,25 +123,25 @@ TransposeKeycard:
 ;****************************************************************
 
 CheckForDoorCollision:
-  LDA <doorExists
+  LDA doorExists
   BNE .checkCollision
   LDA #$00
-  STA <collision
+  STA collision
   RTS ; door doesn't exist
   
   .checkCollision:
-    LDA <doorX
-    STA <genericX
-    LDA <doorY
-    STA <genericY
-    LDA <doorScreen
-    STA <genericOffScreen
+    LDA doorX
+    STA genericX
+    LDA doorY
+    STA genericY
+    LDA doorScreen
+    STA genericOffScreen
     LDA #DOOR_WIDTH
-    STA <genericWidth
+    STA genericWidth
     LDA #DOOR_HEIGHT
-    STA <genericHeight
+    STA genericHeight
     LDA #$00
-    STA <c ; we want to transpose
+    STA c ; we want to transpose
     JMP  CheckForItemCollision  
     
 ;****************************************************************
@@ -164,42 +164,42 @@ RenderDoor:
 
   .presetVars:
     LDA #DOOR_SPRITE
-    STA <renderTile    
+    STA renderTile    
     LDA #DOOR_ATTS
-    STA <renderAtts
+    STA renderAtts
     
   .setXLeftCol:
-    LDA <genericOffScreen
+    LDA genericOffScreen
     BNE .setXRightColLeftOffScreen ; off screen tot the left, don't draw this column, and have special logic for the 2nd one
-    LDA <genericX
-    STA <renderXPos    
+    LDA genericX
+    STA renderXPos    
     
   .renderLeftColumn:
-    LDA <doorY
-    STA <renderYPos
+    LDA doorY
+    STA renderYPos
     JSR RenderDoorColumn
     
   .setXRightCol:
-    LDA <genericX
+    LDA genericX
     CLC
     ADC #SPRITE_DIMENSION
     BCS .renderDoorDone            ; 2nd column is off screen to the right
-    STA <renderXPos    
+    STA renderXPos    
     
   .renderRightColumn:
-    LDA <doorY
-    STA <renderYPos
-    LDA <renderAtts
+    LDA doorY
+    STA renderYPos
+    LDA renderAtts
     ORA #%01000000
-    STA <renderAtts
+    STA renderAtts
     JMP RenderDoorColumn
     
   .setXRightColLeftOffScreen:
-    LDA <genericX
+    LDA genericX
     CLC
     ADC #SPRITE_DIMENSION
     BCC .renderDoorDone            ; 2nd column is off screen to the left
-    STA <renderXPos
+    STA renderXPos
     JMP .renderRightColumn
     
   .renderDoorDone:
@@ -209,10 +209,10 @@ RenderDoor:
     LDY #DOOR_HEIGHT_IN_SPRITES
     .renderLoop:
       JSR RenderSprite
-      LDA <renderYPos
+      LDA renderYPos
       CLC
       ADC #SPRITE_DIMENSION
-      STA <renderYPos              ; no overflow check since doors should always be fully on screen in Y plane
+      STA renderYPos               ; no overflow check since doors should always be fully on screen in Y plane
       DEY
       BNE .renderLoop
       RTS
@@ -236,39 +236,39 @@ RenderKeycard:
 
   .presetVars:
     LDA #KEYCARD_ATTS
-    STA <renderAtts
-    LDA <keycardY
-    STA <renderYPos
+    STA renderAtts
+    LDA keycardY
+    STA renderYPos
     LDA #KEYCARD_SPRITE_1
-    STA <renderTile
+    STA renderTile
     
   .checkIfOnScreen:
-    LDA <genericOffScreen
+    LDA genericOffScreen
     BNE .offScreen
     
   .onScreen:
     LDA #KEYCARD_SPRITE_1
-    STA <renderTile
-    LDA <genericX
-    STA <renderXPos
+    STA renderTile
+    LDA genericX
+    STA renderXPos
     JSR RenderSprite
-    LDA <genericX
+    LDA genericX
     CLC
     ADC #SPRITE_DIMENSION
     BCS .done
-    STA <renderXPos
+    STA renderXPos
     LDA #KEYCARD_SPRITE_2
-    STA <renderTile    
+    STA renderTile    
     JMP RenderSprite
     
   ; off screen, but visible - only render the 2nd sprite
   .offScreen:
-    LDA <genericX
+    LDA genericX
     CLC
     ADC #SPRITE_DIMENSION
-    STA <renderXPos
+    STA renderXPos
     LDA #KEYCARD_SPRITE_2
-    STA <renderTile    
+    STA renderTile    
     JMP RenderSprite
   
   .done:
@@ -311,13 +311,13 @@ LoadDoorAndKeycard:
     CPX #DOOR_DATA_SIZE
     BNE .copyLoop
     
-  LDA <genericPointer
+  LDA genericPointer
   CLC
   ADC #DOOR_DATA_SIZE
-  STA <genericPointer
-  LDA <(genericPointer + $01)
+  STA genericPointer
+  LDA genericPointer + $01
   ADC #$00
-  STA <(genericPointer + $01)
+  STA genericPointer + $01
     
   RTS
   

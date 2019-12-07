@@ -62,45 +62,45 @@ LoadLevel:
   ; next byte is the bg palette
   LDY #$00
   LDA [genericPointer], y
-  STA <paletteOffset
-  LDA <genericPointer
+  STA paletteOffset
+  LDA genericPointer
   CLC
   ADC #$01
-  STA <genericPointer
-  LDA <(genericPointer + $01)
+  STA genericPointer
+  LDA genericPointer + $01
   ADC #$00
-  STA <(genericPointer + $01)
+  STA genericPointer + $01
   
   ; next 2 bytes are players starting position
   LDY #$00
   LDA [genericPointer], y
-  STA <playerX  
+  STA playerX  
   INY
   LDA [genericPointer], y
-  STA <playerY
-  LDA <genericPointer
+  STA playerY
+  LDA genericPointer
   CLC
   ADC #$02
-  STA <genericPointer
-  LDA <(genericPointer + $01)
+  STA genericPointer
+  LDA genericPointer + $01
   ADC #$00
-  STA <(genericPointer + $01)
+  STA genericPointer + $01
   
   ; next 4 bytes are level data
   ;  - level type
   ;  - 3 bytes of level vars
   LDY #$00
   LDA [genericPointer], y
-  STA <levelType
+  STA levelType
   INY
   LDA [genericPointer], y
-  STA <levelTypeData1 
+  STA levelTypeData1 
   INY
   LDA [genericPointer], y
-  STA <levelTypeData2  
+  STA levelTypeData2  
   INY
   LDA [genericPointer], y
-  STA <levelTypeData3
+  STA levelTypeData3
   
   RTS
   
