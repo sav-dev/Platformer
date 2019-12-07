@@ -202,7 +202,34 @@ levelTypeData1      .rs 1 ; normal: exit screen ; jetpack: scroll speed   ; boss
 levelTypeData2      .rs 1 ; normal: exit X      ; jetpack: N/U            ; boss: victory condition
 levelTypeData3      .rs 1 ; normal: exit Y      ; jetpack: N/U            ; N/U
 
-; todo 0001 - levelTypeData3 should dictate when to scroll
+;****************************************************************
+; Door and keycard                                              ;
+;****************************************************************
+
+; door and keycard have the same format in memory
+; depends_on_door_in_level_data_format
+; depends_on_door_in_memory_format
+doorExists        .rs 1
+doorScreen        .rs 1
+doorX             .rs 1
+doorY             .rs 1
+keycardScreen     .rs 1
+keycardX          .rs 1
+keycardY          .rs 1  
+
+DOOR_DATA_SIZE = $07
+
+;****************************************************************
+; Other stuff                                                   ;
+; POITAG - possible optimization - these don't have to be in ZP ;
+;****************************************************************
+
+gameState           .rs 1 ; current gamestate
+currentLevel        .rs 1 ; current level
+paletteOffset       .rs 1 ; offset of the bg palette from the lvl data
+levelBeaten         .rs 1 ; whether the level was beaten. only inced once and checked at the end of the level
+
+
 
 ;****************************************************************
 ; ggsound                                                       ;

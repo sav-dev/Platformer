@@ -111,18 +111,11 @@ LoadGame:
       
       .clear400Loop:        
         STA $0400, x
+        STA $0500, x
+        STA $0600, x
         INX
         BNE .clear400Loop
                   
-      ; A still contains 0
-      ; X reset to 0 by the loop above
-                  
-      .clear500Loop:
-        STA $0500, x
-        INX
-        CPX #BYTES_TO_CLEAR_IN_500
-        BNE .clear500Loop
-        
     .clearArraysDone:
     
     .clearLevelBeaten:            ; clear the level beat flag

@@ -39,8 +39,6 @@ rightTiles        .rs 128   ; last 128 bytes of the tile dictionary
 ; Enemies and elevators                                         ;
 ;****************************************************************
 
-; if this is moved anywhere else, .clearEnemiesAndElevators in game.asm must be updated
-
  .rsset $0400
  
 ; depends_on_enemy_in_memory_format
@@ -72,42 +70,3 @@ bullets           .rs 60
 
 PLAYER_BULLET_LIMIT     = $05 ; = 5
 ENEMIES_BULLET_LIMIT    = $0A ; = 10
-
-;****************************************************************
-; Door and keycard                                              ;
-;****************************************************************
-
-; door and keycard have the same format in memory
-; depends_on_door_in_level_data_format
-; depends_on_door_in_memory_format
-doorExists        .rs 1
-doorScreen        .rs 1
-doorX             .rs 1
-doorY             .rs 1
-keycardScreen     .rs 1
-keycardX          .rs 1
-keycardY          .rs 1  
-
-DOOR_DATA_SIZE = $07
-
-BYTES_TO_CLEAR_IN_500   = $73 ; total size of arrays - 256
-
-;****************************************************************
-; Other variables - free up to $0700                            ;
-; Variables declared below will not be cleared on lvl start     ;
-;****************************************************************
- 
-;****************************************************************
-; Game state                                                    ;
-;****************************************************************
-
-gameState           .rs 1   ; current gamestate
-currentLevel        .rs 1   ; current level
-
-;****************************************************************
-; Misc.                                                         ;
-;****************************************************************
-
-; POITAG - possible optimization - this can be replaced with a pseudo-reg
-paletteOffset       .rs 1   ; offset of the bg palette from the lvl data
-levelBeaten         .rs 1   ; whether the level was beaten. only inced once and checked at the end of the level
