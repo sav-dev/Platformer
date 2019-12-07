@@ -36,38 +36,38 @@ LoadPlatformsAndThreats:
   ;  - pointer to the previous screen (from here): (n x 4) + 2 (1 byte)
 
   .screensToSkip:
-    LDA maxScroll + $01                ; load the high byte of the max scroll - that's the "number of full screens - 1".
+    LDA <maxScroll + $01                ; load the high byte of the max scroll - that's the "number of full screens - 1".
     CLC                                ; then add 2: now we have "number of full screens + 1" - even if there are no partial screens,
     ADC #$02                           ; the export data will contain platform/data for the non-existing screen.
-    STA b                              ; add 2 and set to b and c. That's the number of screens to skip.
-    STA c                              ; e.g. max scroll being 07C0 means there's 9 screens of platform/threat data.
+    STA <b                             ; add 2 and set to b and c. That's the number of screens to skip.
+    STA <c                             ; e.g. max scroll being 07C0 means there's 9 screens of platform/threat data.
   .screensToSkipDone:                  
                                        
   .setPlatformsPointer:                 
-    LDA genericPointer                 
-    STA platformsPointer               
-    LDA genericPointer + $01           
-    STA platformsPointer + $01         ; platformsPointer set to the start of the platform data
+    LDA <genericPointer                
+    STA <platformsPointer              
+    LDA <genericPointer + $01           
+    STA <platformsPointer + $01         ; platformsPointer set to the start of the platform data
     
     .setPlatformsPointerLoop:
       JSR MovePlatformsPointerForward  ; move platformsPointer forward
-      DEC b
+      DEC <b
       BNE .setPlatformsPointerLoop     ; after this loop, platformsPointer set to the start of the threat data
 
-    LDA platformsPointer
-    STA threatsPointer
-    LDA platformsPointer + $01
-    STA threatsPointer + $01           ; threatsPointer set to the start of the threat data
+    LDA <platformsPointer
+    STA <threatsPointer
+    LDA <platformsPointer + $01
+    STA <threatsPointer + $01           ; threatsPointer set to the start of the threat data
 
-    LDA genericPointer                 
-    STA platformsPointer               
-    LDA genericPointer + $01           
-    STA platformsPointer + $01         ; platformsPointer set to the start of the platform data
+    LDA <genericPointer                
+    STA <platformsPointer              
+    LDA <genericPointer + $01           
+    STA <platformsPointer + $01         ; platformsPointer set to the start of the platform data
     
-    LDA threatsPointer                 
-    STA genericPointer               
-    LDA threatsPointer + $01           
-    STA genericPointer + $01           ; genericPointer set to the start of the threat data    
+    LDA <threatsPointer                
+    STA <genericPointer              
+    LDA <threatsPointer + $01           
+    STA <genericPointer + $01           ; genericPointer set to the start of the threat data    
   .setPlatformsPointerDone:
   
   ; platformsPointer points to start of the platform data
@@ -76,23 +76,23 @@ LoadPlatformsAndThreats:
   .setThreatsPointer:      
     .setThreatsPointerLoop:
       JSR MoveThreatsPointerForward    ; move threatsPointer forward
-      DEC c
+      DEC <c
       BNE .setThreatsPointerLoop       ; after this loop, threatsPointer set to the first byte after threats data
      
-    LDA threatsPointer
-    STA b
-    LDA threatsPointer + $01
-    STA c                              ; cache that in {b,c}
+    LDA <threatsPointer
+    STA <b
+    LDA <threatsPointer + $01
+    STA <c                             ; cache that in {b,c}
 
-    LDA genericPointer                 
-    STA threatsPointer               
-    LDA genericPointer + $01           
-    STA threatsPointer + $01           ; threatsPointer set to the start of the threat data
+    LDA <genericPointer                
+    STA <threatsPointer              
+    LDA <genericPointer + $01           
+    STA <threatsPointer + $01           ; threatsPointer set to the start of the threat data
     
-    LDA b
-    STA genericPointer
-    LDA c
-    STA genericPointer + $01           ; genericPointer set to the first byte after threats data
+    LDA <b
+    STA <genericPointer
+    LDA <c
+    STA <genericPointer + $01           ; genericPointer set to the first byte after threats data
     
   .setThreatsPointerDone:  
   
@@ -113,11 +113,11 @@ MovePlatformsPointerForward:
   LDY #$00
   LDA [platformsPointer], y
   CLC
-  ADC platformsPointer
-  STA platformsPointer
-  LDA platformsPointer + $01
+  ADC <platformsPointer
+  STA <platformsPointer
+  LDA <platformsPointer + $01
   ADC #$00
-  STA platformsPointer + $01
+  STA <platformsPointer + $01
   RTS
   
 ;****************************************************************
@@ -133,23 +133,23 @@ MovePlatformsPointerForward:
 ;****************************************************************
 
 MovePlatformsPointerBack:
-  LDA platformsPointer
+  LDA <platformsPointer
   SEC
   SBC #$01
-  STA platformsPointer
-  LDA platformsPointer + $01
+  STA <platformsPointer
+  LDA <platformsPointer + $01
   SBC #$00
-  STA platformsPointer + $01
+  STA <platformsPointer + $01
   LDY #$00
   LDA [platformsPointer], y
-  STA i
-  LDA platformsPointer
+  STA <i
+  LDA <platformsPointer
   SEC
-  SBC i
-  STA platformsPointer
-  LDA platformsPointer + $01
+  SBC <i
+  STA <platformsPointer
+  LDA <platformsPointer + $01
   SBC #$00
-  STA platformsPointer + $01
+  STA <platformsPointer + $01
   RTS
   
 ;****************************************************************
@@ -167,11 +167,11 @@ MoveThreatsPointerForward:
   LDY #$00
   LDA [threatsPointer], y
   CLC
-  ADC threatsPointer
-  STA threatsPointer
-  LDA threatsPointer + $01
+  ADC <threatsPointer
+  STA <threatsPointer
+  LDA <threatsPointer + $01
   ADC #$00
-  STA threatsPointer + $01
+  STA <threatsPointer + $01
   RTS
   
 ;****************************************************************
@@ -187,23 +187,23 @@ MoveThreatsPointerForward:
 ;****************************************************************
 
 MoveThreatsPointerBack:
-  LDA threatsPointer
+  LDA <threatsPointer
   SEC
   SBC #$01
-  STA threatsPointer
-  LDA threatsPointer + $01
+  STA <threatsPointer
+  LDA <threatsPointer + $01
   SBC #$00
-  STA threatsPointer + $01
+  STA <threatsPointer + $01
   LDY #$00
   LDA [threatsPointer], y
-  STA i
-  LDA threatsPointer
+  STA <i
+  LDA <threatsPointer
   SEC
-  SBC i
-  STA threatsPointer
-  LDA threatsPointer + $01
+  SBC <i
+  STA <threatsPointer
+  LDA <threatsPointer + $01
   SBC #$00
-  STA threatsPointer + $01
+  STA <threatsPointer + $01
   RTS
   
 ;****************************************************************
@@ -233,7 +233,7 @@ MoveThreatsPointerBack:
 CheckForPlatformOneScreen:
   
   LDA #$00                      
-  STA collision
+  STA <collision
     
   LDY #$01                            ; skip first byte of the pointer (pointer to the next screen)
   LDA [genericPointer], y             ; load the number of objects
@@ -245,21 +245,21 @@ CheckForPlatformOneScreen:
     ASL A                             ; A = number of objects on the screen x 4
     CLC
     ADC #$02
-    STA d                             ; d = number of objects on the screen x 4 + 2 = what Y will be equal to after the last object
+    STA <d                            ; d = number of objects on the screen x 4 + 2 = what Y will be equal to after the last object
     INY                               ; Y points to the first coordinate of the first object
       
     .checkPlatformLoop:       
       LDA [genericPointer], y         ; X1
-      STA ax1   
+      STA <ax1  
       INY       
       LDA [genericPointer], y         ; Y1
-      STA ay1 
+      STA <ay1
       INY   
       LDA [genericPointer], y         ; X2
-      STA ax2 
+      STA <ax2
       INY   
       LDA [genericPointer], y         ; Y2
-      STA ay2 
+      STA <ay2
       INY   
       
       .transposition:
@@ -273,24 +273,24 @@ CheckForPlatformOneScreen:
         ;       calculate x1'. If x1' > 255, exit (platforms is off screen, they are sorted by x1 so all subsequent ones will also be off screen)
         ;       calculate x2'. If x2' > 255, x2' = 255
       
-        LDA c
+        LDA <c
         BNE .transpositionFor2nd
         
         .transpositionFor1st:
-          LDA ax2
+          LDA <ax2
           SEC
-          SBC scroll
+          SBC <scroll
           BCC .loopCheck              ; carry cleared means ax2 - scroll < 0. Object off screen, check next object
-          STA ax2
-          LDA ax1
+          STA <ax2
+          LDA <ax1
           SEC
-          SBC scroll
+          SBC <scroll
           BCC .zeroOutX1              ; carry cleared means ax1 - scroll < 0 - set to 0
-          STA ax1
+          STA <ax1
           JMP .transpositionDone
           .zeroOutX1:
             LDA #$00
-            STA ax1
+            STA <ax1
             JMP .transpositionDone
           
         ; POITAG - possible optimization - I think this can be calculated better
@@ -298,44 +298,44 @@ CheckForPlatformOneScreen:
         .transpositionFor2nd:
           LDA #SCREEN_WIDTH
           SEC
-          SBC scroll
+          SBC <scroll
           CLC
           ADC #$01                    ; A = 256 - scroll
           BCS .exitCheck              ; carry set means scroll = 0, no need to check 2nd screen, just exit
-          ADC ax1                     ; x1' = x1 - scroll + 256
+          ADC <ax1                    ; x1' = x1 - scroll + 256
           BCS .exitCheck              ; carry set means object is off screen, they are sorted by x1, just exit.
-          STA ax1
+          STA <ax1
           LDA #SCREEN_WIDTH
           SEC
-          SBC scroll
+          SBC <scroll
           CLC
           ADC #$01                    ; A = 256 - scroll, no need to check for overflow
-          ADC ax2        
+          ADC <ax2       
           BCS .maxOutX2               ; carry set means x2' is off scren. Max it out at 255        
-          STA ax2
+          STA <ax2
           JMP .transpositionDone
           .maxOutX2:
             LDA #SCREEN_WIDTH
-            STA ax2
+            STA <ax2
       
       .transpositionDone:
       
       .checkX:
-        LDA bx2
-        CMP ax1
+        LDA <bx2
+        CMP <ax1
         BCS .checkXDone
         RTS                           ; ax1 > bx2, no collision, and since objects are sorted by x1, no need for further checks
       .checkXDone:
       
       .checkCollision:
         JSR CheckForCollisionNoAX1    ; check for collision between the input and the object (except for the check we already did above)
-        LDA collision
+        LDA <collision
         BEQ .loopCheck                ; no collision
         RTS                           ; collision detected, exit with collision = 1
       .checkCollisionDone:  
       
       .loopCheck:
-        CPY d                         ; compare Y to d, if equal break
+        CPY <d                        ; compare Y to d, if equal break
         BEQ .exitCheck
         JMP .checkPlatformLoop        ; loop
     
@@ -353,16 +353,16 @@ CheckForPlatformOneScreen:
 ;****************************************************************
   
 CheckForCollisionNoAX1:
-  LDA ax2
-  CMP bx1
+  LDA <ax2
+  CMP <bx1
   BCC .checkDone             ; ax2 < bx1, no collision 
-  LDA by2
-  CMP ay1
+  LDA <by2
+  CMP <ay1
   BCC .checkDone             ; ay1 > by2, no collision  
-  LDA ay2
-  CMP by1
+  LDA <ay2
+  CMP <by1
   BCC .checkDone             ; ay2 < by1, no collision  
-  INC collision
+  INC <collision
   .checkDone:
     RTS
     
@@ -376,9 +376,9 @@ CheckForCollisionNoAX1:
   
 CheckForCollision:
   LDA #$00
-  STA collision
-  LDA bx2
-  CMP ax1
+  STA <collision
+  LDA <bx2
+  CMP <ax1
   BCC .checkDone             ; ax1 > bx2, no collision  
   JMP CheckForCollisionNoAX1 ; check other points
   .checkDone:
@@ -416,14 +416,14 @@ CheckForItemCollision:
   ; preset collision to 0
   .preset:
     LDA #$00
-    STA collision
+    STA <collision
   
   ; transpose the item if needed
   .transposeIfNeeded:
-    LDA c
+    LDA <c
     BNE .itemTransposed
     JSR TransposeItem  
-    LDA genericVisible
+    LDA <genericVisible
     BNE .itemTransposed
     RTS  
 
@@ -433,41 +433,41 @@ CheckForItemCollision:
     .setXBox:
   
       ; now check the genericOffScreen variable
-      LDA genericOffScreen
+      LDA <genericOffScreen
       BNE .itemOffScreen
     
       ; item is on screen, set x boxes, cap X2 at max
       .itemOnScreen:  
-        LDA genericX
-        STA ax1
+        LDA <genericX
+        STA <ax1
         CLC
-        ADC genericWidth
+        ADC <genericWidth
         BCS .capXAtMax
-        STA ax2
+        STA <ax2
         JMP .setYBox
         
         .capXAtMax:
           LDA #SCREEN_WIDTH
-          STA ax2
+          STA <ax2
           JMP .setYBox
       
       ; item is off screen, set ax2 = genericX + width, ax1 = 0, no need to check for overflows,
       ; genericVisible would be 0 if the item was not on the screen at all.
       .itemOffScreen:
-        LDA genericX
+        LDA <genericX
         CLC
-        ADC genericWidth
-        STA ax2
+        ADC <genericWidth
+        STA <ax2
         LDA #$00
-        STA ax1
+        STA <ax1
 
     ; set Y box, don't cap, items processed by this routine should always be on screen.
     .setYBox:
-      LDA genericY
-      STA ay1
+      LDA <genericY
+      STA <ay1
       CLC
-      ADC genericHeight
-      STA ay2 
+      ADC <genericHeight
+      STA <ay2
     
     ; finally, check for collisions.
     JMP CheckForCollision
@@ -492,15 +492,15 @@ CheckForItemCollision:
 TransposeItem:
   
   LDA #$00
-  STA genericVisible
+  STA <genericVisible
   
   .checkScreen:
-    LDA scroll + $01
-    CMP genericOffScreen
+    LDA <scroll + $01
+    CMP <genericOffScreen
     BEQ .itemOnCurrentScreen
     CLC
     ADC #$01
-    CMP genericOffScreen
+    CMP <genericOffScreen
     BEQ .itemOnNextScreen
     JMP .itemNotVisible
       
@@ -512,21 +512,21 @@ TransposeItem:
     ;     - if carry not set - off screen
     .itemOnCurrentScreen:
       LDA #$00
-      STA genericOffScreen
-      LDA genericX
+      STA <genericOffScreen
+      LDA <genericX
       SEC
-      SBC scroll
-      STA genericX
+      SBC <scroll
+      STA <genericX
       BCC .itemOffScreenToTheLeft
-      INC genericVisible
+      INC <genericVisible
       RTS
       
       .itemOffScreenToTheLeft:
-        INC genericOffScreen
+        INC <genericOffScreen
         CLC
-        ADC genericWidth ; A still contains genericX
+        ADC <genericWidth; A still contains genericX
         BCC .itemNotVisible
-        INC genericVisible
+        INC <genericVisible
         RTS  
     
     ; item is on the next screen. Transpose logic:
@@ -535,17 +535,17 @@ TransposeItem:
     ;   - then calculate A = A + x. Again, overflow means item off screen
     .itemOnNextScreen:
       LDA #$00
-      STA genericOffScreen
+      STA <genericOffScreen
       LDA #SCREEN_WIDTH
       SEC
-      SBC scroll
+      SBC <scroll
       CLC
       ADC #$01
       BCS .itemNotVisible
-      ADC genericX
+      ADC <genericX
       BCS .itemNotVisible
-      STA genericX
-      INC genericVisible
+      STA <genericX
+      INC <genericVisible
       RTS      
   
   ; item not visible

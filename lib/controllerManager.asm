@@ -34,7 +34,7 @@ ReadController:
     .loop:                    
       LDA $4016               
       LSR A                   
-      ROL b                   ; store the buttons in b for now
+      ROL <b                  ; store the buttons in b for now
       DEX
       BNE .loop
     
@@ -49,13 +49,13 @@ ReadController:
     ;   00111001 AND 10001001 = 00001001
      
     LDA #$FF
-    EOR controllerDown        ; NOT previous state of controllers
-    AND b                     ; AND with the current state
-    STA controllerPressed     ; store that as controllerPressed
-    LDA controllerDown        ; load previous state of controllers
-    STA controllerPrevious    ; store that in controllerPrevious
-    LDA b                     ; load the placeholder
-    STA controllerDown        ; finally, store that as current state of controllers
+    EOR <controllerDown       ; NOT previous state of controllers
+    AND <b                    ; AND with the current state
+    STA <controllerPressed    ; store that as controllerPressed
+    LDA <controllerDown       ; load previous state of controllers
+    STA <controllerPrevious   ; store that in controllerPrevious
+    LDA <b                    ; load the placeholder
+    STA <controllerDown       ; finally, store that as current state of controllers
     
   .readControllerDone:
   

@@ -61,7 +61,7 @@ UpdateElevators:
     ; move A to point to the next elevator we want to process. Cache that value in xPointerCache and store it in X
     SEC
     SBC #ELEVATOR_SIZE
-    STA xPointerCache
+    STA <xPointerCache
     TAX                  
     
     ; X now points to the size. if it's 0, elevator is inactive - exit.
@@ -71,12 +71,12 @@ UpdateElevators:
     JMP .updateElevatorLoopCondition
     
     .setSize:
-      STA elevatorSize
+      STA <elevatorSize
     
     ; X += 1 to point to the screen, load it, store it in enemyScreen
     INX
     LDA elevators, X
-    STA enemyScreen
+    STA <enemyScreen
     
     ; X += 1 to point to the speed, load it, if it's 0 - we can exit
     ; otherwise, cache it in enemySpeed then check if it's a special value
@@ -86,7 +86,7 @@ UpdateElevators:
     JMP .updateElevatorLoopCondition
     
     .speedGreaterThanZero:
-      STA enemySpeed
+      STA <enemySpeed
       CMP #SMALLEST_SPECIAL_SPEED
       BCC .getMaxDistance
     
@@ -100,27 +100,27 @@ UpdateElevators:
     .getMaxDistance:
       INX 
       LDA elevators, X    
-      STA enemyMaxDistance
+      STA <enemyMaxDistance
     
     ; preset genericDirection to 0, then X += 1 to point to the movement distance left. load it. 
     ; if it's 0, it means the extreme was met the previous frame -  update it with enemyMaxDistance, 
-    ; and INC genericDirection to tell us we must update the direction.
+    ; and INC <genericDirectionto tell us we must update the direction.
     ;
     ; note - when updating enemies, we update the direction and update distance left as soon as it reaches 0 (so it never stays at 0).
     ; we don't do this for elevators for historical reasons (?)
     LDA #$00
-    STA genericDirection
+    STA <genericDirection
     INX
     LDA elevators, x
     BNE .someDistanceLeft
     
     .zeroDistanceReachedLastFrame:
-      INC genericDirection
-      LDA enemyMaxDistance
+      INC <genericDirection
+      LDA <enemyMaxDistance
       
     .someDistanceLeft:
       SEC
-      SBC enemySpeed
+      SBC <enemySpeed
       STA elevators, x
       
     ; X += 1 to point to the direction.
@@ -131,19 +131,19 @@ UpdateElevators:
     ;   DIRECTION_DOWN  = $03 = %00000011
     ; so to update the direction, simply EOR #$01
     INX
-    LDA genericDirection
+    LDA <genericDirection
     BEQ .directionOK
     
     .directionNeedsUpdate:
       LDA elevators, x
       EOR #$01
       STA elevators, x
-      STA genericDirection ; genericDirection can now be reused
+      STA <genericDirection; genericDirection can now be reused
       JMP .directionLoaded
       
     .directionOK:
       LDA elevators, x
-      STA genericDirection ; genericDirection can now be reused
+      STA <genericDirection; genericDirection can now be reused
     
     ; once we get here, X points to the direction, and it has been loaded into A.
     ; check the direction and set DX or DY to the right value
@@ -155,33 +155,33 @@ UpdateElevators:
       BEQ .elevatorGoingUp
                   
     .elevatorGoingDown:
-      LDA enemySpeed
-      STA genericDY
+      LDA <enemySpeed
+      STA <genericDY
       LDA #$00
-      STA genericDX
+      STA <genericDX
       JMP .updatePosition
     
     .elevatorGoingUp:
       LDA #$00
-      STA genericDX
+      STA <genericDX
       SEC
-      SBC enemySpeed
-      STA genericDY
+      SBC <enemySpeed
+      STA <genericDY
       JMP .updatePosition
     
     .elevatorGoingLeft:
       LDA #$00
-      STA genericDY
+      STA <genericDY
       SEC
-      SBC enemySpeed
-      STA genericDX
+      SBC <enemySpeed
+      STA <genericDX
       JMP .updatePosition
     
     .elevatorGoingRight:
-      LDA enemySpeed  
-      STA genericDX
+      LDA <enemySpeed 
+      STA <genericDX
       LDA #$00
-      STA genericDY
+      STA <genericDY
       
     ; genericDX and genericDY are set, X still points to the direction.
     ; X += 1 to point to the Y position, update it, store it in genericY.
@@ -190,48 +190,48 @@ UpdateElevators:
       INX
       LDA elevators, x
       CLC
-      ADC genericDY
+      ADC <genericDY
       STA elevators, x
-      STA genericY
+      STA <genericY
       INX
       LDA elevators, x
       CLC
-      ADC genericDX
+      ADC <genericDX
       STA elevators, x
-      STA genericX
+      STA <genericX
 
     ; only check for collisions with player if player's state is PLAYER_NORMAL
     .checkPlayerState:
-      LDA playerState
+      LDA <playerState
       BEQ .checkPlayerYState ; PLAYER_NORMAL = 0
       JMP .updateElevatorLoopCondition
       
     ; only check for collisions with player if playerYState != PLAYER_Y_STATE_EXIT_UP
     .checkPlayerYState:
-      LDA playerYState
+      LDA <playerYState
       BNE .checkIfPlayerOnElevator ; PLAYER_Y_STATE_EXIT_UP = 0
       JMP .updateElevatorLoopCondition
       
     ; check if player is standing on the elevator.
     .checkIfPlayerOnElevator:
-      LDA playerOnElevator
+      LDA <playerOnElevator
       BEQ .playerNotOnThisElevator
-      LDA playerElevatorId
-      CMP xPointerCache
+      LDA <playerElevatorId
+      CMP <xPointerCache
       BEQ .playerOnThisElevator
       JMP .playerNotOnThisElevator
       
     ; player on elevator, move by however much we moved this elevator. 
     ; but also we must check for collisions with platforms and adjust player if needed
     .playerOnThisElevator:
-      LDA genericDX
+      LDA <genericDX
       BEQ .playerOnVerticalElevator
       
       ; player on horizontal elevator, check for collisions, adjust dx if needed and move the player
       ; then check if player wasn't forced into something
       .playerOnHorizontalElevator:
         LDA #$00 ; no need to check bounds since an elevator will never move a player out of bounds
-        STA c    ; POITAG - possible issue - make sure that's never the case
+        STA <c   ; POITAG - possible issue - make sure that's never the case
         JSR CheckPlayerCollisionHorizontal
         JSR MovePlayerHorizontallyAndSetBoxes
         JMP .checkIfPlayerForcedIntoSometing
@@ -240,7 +240,7 @@ UpdateElevators:
       ; then check if player wasn't forced into something
       .playerOnVerticalElevator:
         JSR CheckPlayerCollisionVertical
-        LDA collision
+        LDA <collision
         BEQ .stuff
         LDA #$00
         .stuff:
@@ -252,25 +252,25 @@ UpdateElevators:
     .playerNotOnThisElevator:      
         
       ; POITAG - possible optimization - have separate set of collision routines for player boxes? Hard to implement though
-      LDA playerPlatformBoxX1
-      STA bx1
-      LDA playerPlatformBoxX2
-      STA bx2
-      LDA playerPlatformBoxY1
-      STA by1
-      LDA playerPlatformBoxY2
-      STA by2
+      LDA <playerPlatformBoxX1
+      STA <bx1
+      LDA <playerPlatformBoxX2
+      STA <bx2
+      LDA <playerPlatformBoxY1
+      STA <by1
+      LDA <playerPlatformBoxY2
+      STA <by2
       
       LDA #$00
-      STA collision
-      LDY xPointerCache
+      STA <collision
+      LDY <xPointerCache
       JSR SingleElevatorCollision
-      LDA collision
+      LDA <collision
       BEQ .updateElevatorLoopCondition
       
       ; Collision found, 'a' boxes contain data for this elevator
       .collisionFound:
-        LDA genericDirection
+        LDA <genericDirection
         BEQ .collisionElevatorGoingLeft ; DIRECTION_LEFT = 0
         CMP #DIRECTION_RIGHT
         BEQ .collisionElevatorGoingRight
@@ -279,57 +279,57 @@ UpdateElevators:
                
         ; dy => by1 + dy = ay2 + 1 => dy = ay2 + 1 - by1
         .collisionElevatorGoingDown:
-          INC ay2
-          LDA ay2
+          INC <ay2
+          LDA <ay2
           SEC
-          SBC by1
-          STA genericDY
+          SBC <by1
+          STA <genericDY
           JSR MovePlayerVertically
           JSR SetPlayerBoxesVertical
           JMP .checkIfPlayerForcedIntoSometing
         
         ; dy => by2 + dy = ay1 - 1 => dy = ay1 - 1 - by2
         .collisionElevatorGoingUp:
-          DEC ay1
-          LDA ay1
+          DEC <ay1
+          LDA <ay1
           SEC
-          SBC by2
-          STA genericDY
+          SBC <by2
+          STA <genericDY
           JSR MovePlayerVertically
           JSR SetPlayerBoxesVertical
           JMP .checkIfPlayerForcedIntoSometing
           
         ; dy => bx2 + dx = ax1 - 1 => dx = ax1 - 1 - bx2
         .collisionElevatorGoingLeft:
-          DEC ax1
-          LDA ax1
+          DEC <ax1
+          LDA <ax1
           SEC
-          SBC bx2
-          STA genericDX
+          SBC <bx2
+          STA <genericDX
           JSR MovePlayerHorizontallyAndSetBoxes
           JMP .checkIfPlayerForcedIntoSometing
           
         ; dy => bx1 + dx = ax2 + 1 => dx = ax2 + 1 - bx1
         .collisionElevatorGoingRight:
-          INC ax2
-          LDA ax2
+          INC <ax2
+          LDA <ax2
           SEC
-          SBC bx1
-          STA genericDX
+          SBC <bx1
+          STA <genericDX
           JSR MovePlayerHorizontallyAndSetBoxes
 
         ; Check if player is forced into something after being moved by an elevator.
         ; If yes, explode player. 'b' boxes still set to player platform box
         .checkIfPlayerForcedIntoSometing:
           JSR CheckPlayerCollision
-          LDA collision
+          LDA <collision
           BEQ .updateElevatorLoopCondition
           JSR ExplodePlayer
           
     ; loop condition - if we've not just processed the last elevator, loop.   
     ; otherwise exit
     .updateElevatorLoopCondition:
-      LDA xPointerCache
+      LDA <xPointerCache
       BEQ .updateElevatorsDone
       JMP .updateElevatorLoop
     
@@ -366,19 +366,19 @@ RenderElevators:
     ; move A to point to the next elevator we want to process. Cache that value in xPointerCache and store it in X
     SEC
     SBC #ELEVATOR_SIZE
-    STA xPointerCache
+    STA <xPointerCache
     TAX                  
     
     ; X now points to the size. if it's 0, elevator is inactive - exit.
     ; otherwise, cache the size in elevatorSize.
     LDA elevators, x
     BEQ .renderElevatorLoopCondition
-    STA elevatorSize
+    STA <elevatorSize
     
     ; X += 1 to point to the screen, load it, store it in enemyScreen
     INX
     LDA elevators, X
-    STA enemyScreen
+    STA <enemyScreen
     
     ; X += 5 to point to the Y position, load it, store it in genericY
     ; X += 1 to point to the X position, load it, store it in genericX
@@ -387,10 +387,10 @@ RenderElevators:
     ADC #$05
     TAX
     LDA elevators, X
-    STA genericY
+    STA <genericY
     INX
     LDA elevators, X
-    STA genericX
+    STA <genericX
    
     ; once we get here, these are set:
     ;  - elevatorSize = elevator size
@@ -400,9 +400,9 @@ RenderElevators:
     ; then check if the elevator is on the current or next screen.
     .transposeX:
       LDA #$00
-      STA genericOffScreen
-      LDA enemyScreen
-      CMP scroll + $01
+      STA <genericOffScreen
+      LDA <enemyScreen
+      CMP <scroll + $01
       BEQ .currentScreen
   
       ; elevator is on the next screen. Transpose logic:
@@ -414,13 +414,13 @@ RenderElevators:
       .nextScreen:
         LDA #SCREEN_WIDTH
         SEC
-        SBC scroll
+        SBC <scroll
         CLC
         ADC #$01
         BCS .renderElevatorLoopCondition
-        ADC genericX
+        ADC <genericX
         BCS .renderElevatorLoopCondition
-        STA genericX
+        STA <genericX
         JMP .renderElevator
         
       ; elevator is on the current screen. Transpose logic:
@@ -432,13 +432,13 @@ RenderElevators:
       ;     - else if result < 8 (sprite width) - off screen
       ;     - else - on screen
       .currentScreen:
-        LDA genericX
+        LDA <genericX
         SEC
-        SBC scroll
-        STA genericX
+        SBC <scroll
+        STA <genericX
         BCS .renderElevator
-        INC genericOffScreen
-        LDY elevatorSize
+        INC <genericOffScreen
+        LDY <elevatorSize
         CLC
         ADC ElevatorWidth, y
         BCC .renderElevatorLoopCondition
@@ -453,7 +453,7 @@ RenderElevators:
     ; loop condition - if we've not just processed the last elevator, loop.   
     ; otherwise exit
     .renderElevatorLoopCondition:
-      LDA xPointerCache
+      LDA <xPointerCache
       BNE .renderElevatorLoop
       RTS
 
@@ -488,7 +488,7 @@ CheckForElevatorCollision:
 
   ; preset collision to 0
   LDA #$00
-  STA collision
+  STA <collision
   
   ; main loop - loop all elevators going down
   ; load the place pointing to after the last elevator, store it in yPointerCache
@@ -499,7 +499,7 @@ CheckForElevatorCollision:
     ; move A to point to the next elevator we want to process. Cache that value in yPointerCache and store it in Y
     SEC
     SBC #ELEVATOR_SIZE
-    STA yPointerCache
+    STA <yPointerCache
     TAY                
     
     ; Y now points to the size. if it's 0, elevator is inactive - exit.
@@ -509,7 +509,7 @@ CheckForElevatorCollision:
     
     ; Check for a collision, exit if found
     JSR SingleElevatorCollision
-    LDA collision
+    LDA <collision
     BEQ .checkCollisionLoopCondition
       
     ; Collision found.
@@ -523,7 +523,7 @@ CheckForElevatorCollision:
     ; loop condition - if we've not just processed the last elevator, loop.   
     ; otherwise exit
     .checkCollisionLoopCondition:
-      LDA yPointerCache
+      LDA <yPointerCache
       BNE .checkCollisionLoop
       RTS
 
@@ -559,12 +559,12 @@ SingleElevatorCollision:
 
   ; Y points to the size, load it, store it in elevatorSize
   LDA elevators, y
-  STA elevatorSize
+  STA <elevatorSize
 
   ; Y += 1 to point to the screen, load it, store it in enemyScreen
   INY
   LDA elevators, y
-  STA enemyScreen
+  STA <enemyScreen
   
   ; Y += 5 to point to the y position, load it, store it in ay1
   TYA
@@ -572,18 +572,18 @@ SingleElevatorCollision:
   ADC #$05
   TAY
   LDA elevators, y
-  STA ay1
+  STA <ay1
   
   ; Y += 1 to point to the x position, load it, store it in ax1
   INY
   LDA elevators, y
-  STA ax1
+  STA <ax1
   
   ; ax1 is set, time to transpose the elevator.
   ; first check if the elevator is on the current or next screen.
   .transposeXAndSetAX2:    
-    LDA enemyScreen
-    CMP scroll + $01
+    LDA <enemyScreen
+    CMP <scroll + $01
     BEQ .currentScreen
   
     ; elevator is on the next screen. Transpose logic:
@@ -595,26 +595,26 @@ SingleElevatorCollision:
     .nextScreen:
       LDA #SCREEN_WIDTH
       SEC
-      SBC scroll
+      SBC <scroll
       CLC
       ADC #$01
       BCS .noCollision
-      ADC ax1
+      ADC <ax1
       BCS .noCollision
       
       ; ax1 is on screen. set updated ax1, then lookup the width (use Y, not needed anymore), add it
       ; if carry clear, just set ax2. otherwise cap it at screen_width
       .ax1OnScreen:
-        STA ax1
-        LDY elevatorSize
+        STA <ax1
+        LDY <elevatorSize
         CLC
         ADC ElevatorWidth, y
         BCS .capX2AtMax
-        STA ax2
+        STA <ax2
         JMP .setAY2        
         .capX2AtMax:
           LDA #SCREEN_WIDTH
-          STA ax2
+          STA <ax2
           JMP .setAY2
       
     ; elevator is on the current screen. Transpose logic:
@@ -622,9 +622,9 @@ SingleElevatorCollision:
     ;     - if x' >= 0 (carry set after the subtraction), it means ax1 is on screen, go to ax1OnScreen
     ;     - otherwise, go to ax1OffScreenToTheLeft      
     .currentScreen:
-      LDA ax1
+      LDA <ax1
       SEC
-      SBC scroll
+      SBC <scroll
       BCS .ax1OnScreen
       
       ; elevator starts off-screen to the left. add width from the consts.
@@ -632,21 +632,21 @@ SingleElevatorCollision:
       ; otherwise, set ax2 to the result, and set ax1 to 0      
       ; POITAG - possible issue - a collision with nothing rendered is possible if elevator's on screen part is < 8 pixels
       .ax1OffScreenToTheLeft:
-        LDY elevatorSize
+        LDY <elevatorSize
         CLC
         ADC ElevatorWidth, y
         BCC .noCollision
-        STA ax2
+        STA <ax2
         LDA #$00
-        STA ax1
+        STA <ax1
     
   ; When we get here, it means elevator is on screen, and ax1, ax2 and ay1 are set.
   ; We must now set ay2 - just add the elevator height
   .setAY2:
-    LDA ay1
+    LDA <ay1
     CLC
     ADC #ELEVATOR_HEIGHT
-    STA ay2
+    STA <ay2
     
   ; When we get here, all boxes are set. Check for collision and exit.
   .checkCollision:    
@@ -682,35 +682,35 @@ SingleElevatorCollision:
 LoadElevatorsInitial:
   
   .screensToSkip:
-    LDA maxScroll + $01                ; see LoadPlatformsAndThreats for explanation of this logic
+    LDA <maxScroll + $01                ; see LoadPlatformsAndThreats for explanation of this logic
     CLC
     ADC #$02
-    STA b
+    STA <b
                                        
   .setElevatorsPointer:                 
-    LDA genericPointer                 
-    STA elevatorsPointer               
-    LDA genericPointer + $01           
-    STA elevatorsPointer + $01         ; elevatorsPointer set to elevators for screen 0
+    LDA <genericPointer                
+    STA <elevatorsPointer              
+    LDA <genericPointer + $01           
+    STA <elevatorsPointer + $01         ; elevatorsPointer set to elevators for screen 0
   
   .moveElevatorsPointerLoop:
     JSR MoveElevatorsPointerForward    ; move elevatorsPointer forward
-    DEC b
+    DEC <b
     BNE .moveElevatorsPointerLoop      ; after this loop, elevatorsPointer set to the first byte after elevators data
     
   .setGenericPointer:
-    LDA genericPointer
-    STA b
-    LDA genericPointer + $01
-    STA c                              ; cache genericPointer (still pointing to the start of the data) in b c
-    LDA elevatorsPointer
-    STA genericPointer
-    LDA elevatorsPointer + $01
-    STA genericPointer + $01           ; genericPointer now points to the first byte after elevators data
-    LDA b
-    STA elevatorsPointer
-    LDA c
-    STA elevatorsPointer + $01         ; elevatorsPointer now points to the first byte of the elevators data
+    LDA <genericPointer
+    STA <b
+    LDA <genericPointer + $01
+    STA <c                             ; cache genericPointer (still pointing to the start of the data) in b c
+    LDA <elevatorsPointer
+    STA <genericPointer
+    LDA <elevatorsPointer + $01
+    STA <genericPointer + $01           ; genericPointer now points to the first byte after elevators data
+    LDA <b
+    STA <elevatorsPointer
+    LDA <c
+    STA <elevatorsPointer + $01         ; elevatorsPointer now points to the first byte of the elevators data
     
   .loadElevators:
     JSR LoadElevators                  ; load elevators for screen 0
@@ -719,7 +719,7 @@ LoadElevatorsInitial:
 
   .playerOnElevator:
     LDA #$00
-    STA playerOnElevator               ; initially player is not on an elevator
+    STA <playerOnElevator              ; initially player is not on an elevator
     
   RTS                                  ; elevators loaded, pointer points to screen 1 as expected
 
@@ -743,10 +743,10 @@ LoadElevatorsForward:
   ; look in LookEnemiesForward for the logic
  
   .unloadElevators:
-    LDA scroll + $01
+    LDA <scroll + $01
     SEC
     SBC #$01
-    STA b                             ; b = screen - 1
+    STA <b                            ; b = screen - 1
     JSR UnloadElevators               ; unload elevators
  
   .loadElevatorsAndUpdatePointer:
@@ -775,10 +775,10 @@ LoadElevatorsBack:
   ; look in LookEnemiesForward for the logic
   
   .unloadElevators:
-    LDA scroll + $01
+    LDA <scroll + $01
     CLC
     ADC #$02
-    STA b                             ; b = screen + 1
+    STA <b                            ; b = screen + 1
     JSR UnloadElevators               ; unload elevators
  
   .loadElevatorsAndUpdatePointer:
@@ -818,7 +818,7 @@ LoadElevators:
     LDY #$01
     LDA [elevatorsPointer], y
     BEQ .loadElevatorsExit
-    STA b
+    STA <b
   
   ; loop for loading elevators
   .loadElevatorsLoop:
@@ -831,17 +831,17 @@ LoadElevators:
     ; remaining 8 bytes are the same.
     ; use c as the loop counter.
     LDA #$08
-    STA c
+    STA <c
     .copyLoop:
       INY
       LDA [elevatorsPointer], y      
       STA elevators, x
       INX
-      DEC c
+      DEC <c
       BNE .copyLoop
   
     ; loop if needed
-    DEC b
+    DEC <b
     BNE .loadElevatorsLoop
   
   .loadElevatorsExit:
@@ -870,14 +870,14 @@ UnloadElevators:
 
   LDX #LAST_ELEVATOR_SCREEN        ; loop all elevators going down
   LDA #ELEVATORS_COUNT
-  STA c                            ; c is the loop counter
+  STA <c                           ; c is the loop counter
   
-  ; POITAG - possible optimization - instead of DEC c BNE, do CPX BNE ? same in UnloadEnemies
+  ; POITAG - possible optimization - instead of DEC <cBNE, do CPX BNE ? same in UnloadEnemies
   
   .unloadElevatorLoop:
   
     LDA elevators, x               ; load the screen the elevator is on
-    CMP b
+    CMP <b
     BNE .loopCondition             ; if screen != b, don't do anything
     
     .unloadElevator:
@@ -891,7 +891,7 @@ UnloadElevators:
       SEC
       SBC #ELEVATOR_SIZE
       TAX                          ; decrement the pointer 
-      DEC c                        ; decrement the loop counter
+      DEC <c                       ; decrement the loop counter
       BNE .unloadElevatorLoop         
 
   RTS
@@ -911,11 +911,11 @@ MoveElevatorsPointerForward:
   LDY #$00
   LDA [elevatorsPointer], y
   CLC
-  ADC elevatorsPointer
-  STA elevatorsPointer
-  LDA elevatorsPointer + $01
+  ADC <elevatorsPointer
+  STA <elevatorsPointer
+  LDA <elevatorsPointer + $01
   ADC #$00
-  STA elevatorsPointer + $01
+  STA <elevatorsPointer + $01
   RTS
   
 ;****************************************************************
@@ -932,23 +932,23 @@ MoveElevatorsPointerForward:
 ;****************************************************************
 
 MoveElevatorsPointerBack:
-  LDA elevatorsPointer
+  LDA <elevatorsPointer
   SEC
   SBC #$01
-  STA elevatorsPointer
-  LDA elevatorsPointer + $01
+  STA <elevatorsPointer
+  LDA <elevatorsPointer + $01
   SBC #$00
-  STA elevatorsPointer + $01
+  STA <elevatorsPointer + $01
   LDY #$00
   LDA [elevatorsPointer], y
-  STA i
-  LDA elevatorsPointer
+  STA <i
+  LDA <elevatorsPointer
   SEC
-  SBC i
-  STA elevatorsPointer
-  LDA elevatorsPointer + $01
+  SBC <i
+  STA <elevatorsPointer
+  LDA <elevatorsPointer + $01
   SBC #$00
-  STA elevatorsPointer + $01
+  STA <elevatorsPointer + $01
   RTS
 
 ;****************************************************************
@@ -973,7 +973,7 @@ RenderElevator:
   
   ; preset b (x offset) to 0
   LDA #$00
-  STA b
+  STA <b
   
   ; main rendering loop
   .renderTileLoop:
@@ -982,21 +982,21 @@ RenderElevator:
     ; load the current offset, add the position, store it in renderXPos.
     ; then check if the tile is on or off screen.
     .checkXPosition:            
-      LDA b
+      LDA <b
       CLC
-      ADC genericX
-      STA renderXPos
+      ADC <genericX
+      STA <renderXPos
       BCS .tileOffScreen
                         
       ; tile on screen, only render if genericOffScreen == 0
       .tileOnScreen:
-        LDA genericOffScreen
+        LDA <genericOffScreen
         BNE .loopCheck
         JMP .setAttsAndTile
       
       ; tile off screen, only render if genericOffScreen == 1
       .tileOffScreen:           
-        LDA genericOffScreen    
+        LDA <genericOffScreen   
         BEQ .loopCheck
       
     ; if we got here we want to render the tile. renderXPos and renderYPos is already set.
@@ -1005,47 +1005,47 @@ RenderElevator:
     ; but first set the atts.
     .setAttsAndTile:
       LDA #ELEVATOR_ATTS
-      STA renderAtts
-      LDA b
+      STA <renderAtts
+      LDA <b
       BEQ .renderingLeftEnd
-      LDA elevatorSize
+      LDA <elevatorSize
       CMP #$01
       BEQ .renderingRightEnd
       
       ; rendering the center, set the right tile
       .renderingCenter:
         LDA #ELEVATOR_SPRITE
-        STA renderTile
+        STA <renderTile
         JMP .setYPosition
       
       ; rendering the left end, set horizontal flip, 
       ; then let flow into .renderingRightEnd to set the tile
       .renderingLeftEnd:
-        LDA renderAtts
+        LDA <renderAtts
         ORA #%01000000
-        STA renderAtts
+        STA <renderAtts
       
       ; rendering the right end, set the right tile
       .renderingRightEnd:
         LDA #ELEVATOR_END_SPRITE
-        STA renderTile
+        STA <renderTile
   
     ; set renderYPos, we have to do it every tile because RenderSprite updates it
     ; POITAG - possible optimization - change that? only set it once?
     .setYPosition:
-      LDA genericY
-      STA renderYPos
+      LDA <genericY
+      STA <renderYPos
     
     .renderSprite:
       JSR RenderSprite      
     
     ; loop check - b += 8, elevatorSize -= 1, elevatorSize == 0 means exit
     .loopCheck:
-      LDA b
+      LDA <b
       CLC
       ADC #$08
-      STA b
-      DEC elevatorSize
+      STA <b
+      DEC <elevatorSize
       BNE .renderTileLoop
          
   RTS

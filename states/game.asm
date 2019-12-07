@@ -23,11 +23,11 @@ GameFrame:
 
   .resetNmiFlags:
     LDA #$00
-    STA needDrawLocal
-    STA needPpuRegLocal
+    STA <needDrawLocal
+    STA <needPpuRegLocal
 
   .incrementFrameCounter:
-    INC frameCount
+    INC <frameCount
     
   .processFrame:
     
@@ -66,18 +66,18 @@ GameFrame:
       
   .setNmiFlags:
     .dma:
-      INC needDma                   ; always do DMA     
+      INC <needDma                  ; always do DMA     
   
     .checkIfDrawNeeded:
-      LDA needDrawLocal
+      LDA <needDrawLocal
       BEQ .checkIfDrawNeededDone
-      INC needDraw
+      INC <needDraw
     .checkIfDrawNeededDone:
     
     .checkIfPpuRegNeeded:
-      LDA needPpuRegLocal
+      LDA <needPpuRegLocal
       BEQ .checkIfPpuRegNeededDone
-      INC needPpuReg 
+      INC <needPpuReg
     .checkIfPpuRegNeededDone:
   
   RTS
@@ -98,7 +98,7 @@ LoadGame:
   .disablePPUAndSleep:  
     JSR DisablePPU
     JSR ClearSprites
-    INC needDma
+    INC <needDma
     JSR WaitForFrame              ; wait for values to be written
   .disablePPUAndSleepDone:
 
@@ -120,21 +120,21 @@ LoadGame:
     
     .clearLevelBeaten:            ; clear the level beat flag
       LDA #$00
-      STA levelBeaten
+      STA <levelBeaten
     .clearLevelBeatenDone:
     
   .clearMemoryDone:
   
   .loadLevel:                     ; load level
     JSR SetVramAddressingTo32
-    LDA currentLevel
+    LDA <currentLevel
     ASL A
     TAX                           ; X = currentLevel * 2
     LDA levels, x                 ; low byte of level address
-    STA levelPointer              ; set the pointer
+    STA <levelPointer             ; set the pointer
     INX
     LDA levels, x                 ; high byte of level address
-    STA levelPointer + $01        ; set the pointer
+    STA <levelPointer + $01        ; set the pointer
     JSR LoadLevel                 ; load level
   .loadLevelDone:
   
@@ -142,7 +142,7 @@ LoadGame:
     JSR SetVramAddressingTo1
     JSR LoadBgPalette  
     JSR LoadSpritesPalette
-    INC needDraw  
+    INC <needDraw 
     JSR WaitForFrame              ; wait for values to be written
     JSR SetVramAddressingTo32
   .loadPalettesDone:
@@ -153,17 +153,17 @@ LoadGame:
  
   .initVars:
     LDA #GAMESTATE_GAME
-    STA gameState
+    STA <gameState
     LDA #$00
-    STA nametable                 ; show nametable 0 first
-    STA scroll                    ; scroll starts at 0
-    STA scroll + $01
+    STA <nametable                ; show nametable 0 first
+    STA <scroll                   ; scroll starts at 0
+    STA <scroll + $01
   .initVarsDone:
  
   .enablePPU:                                    
     LDA #%00011110                ; enable sprites and background
-    STA soft2001                  
-    INC needPpuReg
+    STA <soft2001                 
+    INC <needPpuReg
   .enablePPUDone:  
 
   ; todo 0006 - is this the right place to call this

@@ -107,9 +107,9 @@ UpdateActiveEnemy:
   ; assume the enemy should be rendered.
   ; also, while we're here, assume collision check is needed and enemy is not flashing
   LDA #$01
-  STA enemyOnScreen
-  STA enemyCollisions
-  STA enemyNotFlashing
+  STA <enemyOnScreen
+  STA <enemyCollisions
+  STA <enemyNotFlashing
 
   ; at this point, X points to the state.
   ; check if enemy is flashing - compare state to 3 (ENEMY_STATE_ACTIVE + 1),
@@ -122,7 +122,7 @@ UpdateActiveEnemy:
     BCC .cachePointerAndScreen
     AND #$01
     BEQ .decState
-    DEC enemyNotFlashing
+    DEC <enemyNotFlashing
     .decState:
       DEC enemies, x
   
@@ -135,14 +135,14 @@ UpdateActiveEnemy:
     INX
     INX
     LDA enemies, x
-    STA enemyConstsPointer
+    STA <enemyConstsPointer
     INX
     LDA enemies, x
-    STA enemyConstsPointer + $01
+    STA <enemyConstsPointer + $01
     LDY #$00
     INX
     LDA enemies, x
-    STA enemyScreen
+    STA <enemyScreen
     INX
     
   ; the next 10 bytes are:
@@ -173,38 +173,38 @@ UpdateActiveEnemy:
     ; set DX and DY to 0 for starters
     ; also while we're here, set genericOffScreen to 0
     LDA #$00
-    STA genericDX
-    STA genericDY
-    STA genericOffScreen
+    STA <genericDX
+    STA <genericDY
+    STA <genericOffScreen
     
     ; load and cache the should flip flag
     LDA enemies, x
-    STA enemyShouldFlip
+    STA <enemyShouldFlip
     
     ; do X + 1 to point to the speed, load and cache it
     INX
     LDA enemies, x
-    STA enemySpeed
+    STA <enemySpeed
     
     ; do X + 1 to point to the special movement type, load and cache it
     INX
     LDA enemies, x
-    STA enemySpecialMovType
+    STA <enemySpecialMovType
         
     ; do X += 1 to point to the max distance, then load it and cache it
     INX
     LDA enemies, x
-    STA enemyMaxDistance
+    STA <enemyMaxDistance
       
     ; do X += 1 to point to the current flip, then cache it in genericDirection
     INX
     LDA enemies, x
-    STA genericDirection
+    STA <genericDirection
     
     ; do X += 1 to point to the enemy direction, then cache it in enemyDirection
     INX
     LDA enemies, x
-    STA enemyDirection
+    STA <enemyDirection
     
     ; do X += 1 to point to movement left, then load it
     ; movementLeft == 0 means the enemy is static
@@ -219,7 +219,7 @@ UpdateActiveEnemy:
     ; check speed to see if it's any of the special values
     ; X still points at movement left so we can load it
     .checkIfSpecialSpeed:
-      LDA enemySpeed
+      LDA <enemySpeed
       CMP #SMALLEST_SPECIAL_SPEED
       BCC .updateMovementLeft
       
@@ -233,7 +233,7 @@ UpdateActiveEnemy:
     .updateMovementLeft:
       LDA enemies, x
       SEC
-      SBC enemySpeed
+      SBC <enemySpeed
       STA enemies, x
       BEQ .extremeMet
       JMP .calculateDiffs
@@ -251,7 +251,7 @@ UpdateActiveEnemy:
     ;
     .extremeMet:
     
-      LDA enemySpecialMovType
+      LDA <enemySpecialMovType
       BEQ .goToResetMovementLeft ; SPECIAL_MOV_NONE = 0
       CMP #SPECIAL_MOV_STOP60
       BEQ .stop60Movement
@@ -292,41 +292,41 @@ UpdateActiveEnemy:
       ; but then set enemySpeed to 0 so we don't move this frame
       .stopMovementStop:
         DEX
-        LDA enemySpeed
+        LDA <enemySpeed
         STA enemies, x
         LDA #$00
-        STA enemySpeed
+        STA <enemySpeed
         JMP .calculateDiffs
       
       ; clockwise movement. first reset movement left. then X -= 1 to point to direction.
       ; cache Y in b,  load the next direction, update direction, restory Y. finally go to the flip logic.
       .clockwiseMovement:
-        LDA enemyMaxDistance
+        LDA <enemyMaxDistance
         STA enemies, x
         DEX
-        STY b
-        LDY enemyDirection
+        STY <b
+        LDY <enemyDirection
         LDA clockwiseMovementTable, y
         STA enemies, x
-        LDY b
+        LDY <b
         JMP .rectangleFlipLogic
       
       ; same as clockwise but with different table.
       .counterClockwiseMovement:
-        LDA enemyMaxDistance
+        LDA <enemyMaxDistance
         STA enemies, x
         DEX
-        STY b
-        LDY enemyDirection
+        STY <b
+        LDY <enemyDirection
         LDA counterClockwiseMovementTable, y
         STA enemies, x
-        LDY b
+        LDY <b
       
       ; flip logic for the rectangle movement.
       ; when we get here, X points to the direction.
       ; check if enemy should flip, if not go to the common dontFlip.
       .rectangleFlipLogic:
-        LDA enemyShouldFlip
+        LDA <enemyShouldFlip
         BEQ .dontFlip
         
         ; only flip if enemy was *not* moving in their orientation plane
@@ -338,28 +338,28 @@ UpdateActiveEnemy:
         INX
         INX
         LDA enemies, x
-        STA b
+        STA <b
         DEX
         DEX
-        LDA enemyDirection
+        LDA <enemyDirection
         AND #%00000010
-        CMP b
+        CMP <b
         BEQ .shouldFlip
         JMP .dontFlip
     
       ; when we get here, X still points to movement left. Reset it. X -= 1 to point to enemy direction.
       .resetMovementLeft:
-        LDA enemyMaxDistance
+        LDA <enemyMaxDistance
         STA enemies, x
         DEX
               
       ; X points to enemy direction. 
       ; Update direction and (maybe) flip.
       .updateDirectionAndFlip:
-        LDA enemyDirection                
+        LDA <enemyDirection               
         EOR #%00000001 ; to update direction, just flip the first bit 
         STA enemies, x ; (left = 00, right = 01, up = 10, down = 11)        
-        LDA enemyShouldFlip
+        LDA <enemyShouldFlip
         BNE .shouldFlip
         
         .dontFlip:
@@ -380,7 +380,7 @@ UpdateActiveEnemy:
     
       ; first do X += 1 to point to the special movement var. then check the special movement type.
       INX 
-      LDA enemySpecialMovType
+      LDA <enemySpecialMovType
       BEQ .normalMovement ; SPECIAL_MOV_NONE = 0
       CMP #SPECIAL_MOV_SINUS8
       BEQ .sinus8Movement
@@ -396,38 +396,38 @@ UpdateActiveEnemy:
       ; if 0 reset to the default value
       ; then restore y from b
       .sinus8Movement:        
-        STY b
+        STY <b
         LDY enemies, x
         LDA sinus8MovementTable, y
-        STA genericDOther
+        STA <genericDOther
         DEC enemies, x
         BNE .sinus8MovementRestoreY
         LDA #SINUS8_LENGTH
         STA enemies, x
         .sinus8MovementRestoreY:
-          LDY b
+          LDY <b
           JMP .checkDirection
       
       ; same as sinus 8 but uses the 16 table
       .sinus16Movement:
-        STY b
+        STY <b
         LDY enemies, x
         LDA sinus16MovementTable, y
-        STA genericDOther
+        STA <genericDOther
         DEC enemies, x
         BNE .sinus16MovementRestoreY
         LDA #SINUS16_LENGTH
         STA enemies, x
         .sinus16MovementRestoreY:
-          LDY b
+          LDY <b
           JMP .checkDirection
       
       .normalMovement:
         LDA #$00
-        STA genericDOther
+        STA <genericDOther
     
       .checkDirection:
-        LDA enemyDirection
+        LDA <enemyDirection
         BEQ .movingLeft ; DIRECTION_LEFT = 0
         CMP #DIRECTION_NONE
         BEQ .applyMovement
@@ -437,35 +437,35 @@ UpdateActiveEnemy:
         BEQ .movingUp
         
         .movingDown:
-          LDA enemySpeed
-          STA genericDY
-          LDA genericDOther
-          STA genericDX
+          LDA <enemySpeed
+          STA <genericDY
+          LDA <genericDOther
+          STA <genericDX
           JMP .applyMovement
         
         .movingUp:
           LDA #$00
           SEC
-          SBC enemySpeed
-          STA genericDY
-          LDA genericDOther
-          STA genericDX
+          SBC <enemySpeed
+          STA <genericDY
+          LDA <genericDOther
+          STA <genericDX
           JMP .applyMovement
         
         .movingRight:
-          LDA enemySpeed
-          STA genericDX
-          LDA genericDOther
-          STA genericDY
+          LDA <enemySpeed
+          STA <genericDX
+          LDA <genericDOther
+          STA <genericDY
           JMP .applyMovement
               
         .movingLeft:
           LDA #$00
           SEC
-          SBC enemySpeed
-          STA genericDX
-          LDA genericDOther
-          STA genericDY
+          SBC <enemySpeed
+          STA <genericDX
+          LDA <genericDOther
+          STA <genericDY
           
     ; once we get here, x is still pointing to special movement var, and diffs are set.
     ; do X += 1 and apply DX, caching the result in genericX
@@ -477,15 +477,15 @@ UpdateActiveEnemy:
       INX
       LDA enemies, x
       CLC
-      ADC genericDX
+      ADC <genericDX
       STA enemies, x
-      STA genericX
+      STA <genericX
       INX
       LDA enemies, x
       CLC
-      ADC genericDY
+      ADC <genericDY
       STA enemies, x
-      STA genericY
+      STA <genericY
       INX      
       
   ; once we get here, movement has been updated, and the following are set:
@@ -525,7 +525,7 @@ UpdateActiveEnemy:
     ; we must do X += 1 to point to remaining life, then we can skip the rendering and collision checks.
     .blinkingCurrentlyInvisible:
       INX
-      DEC enemyOnScreen
+      DEC <enemyOnScreen
       JMP EnemyProcessShooting ; POITAG - possible issue - if shooting timer fires when enemy is invisible, we do not shoot
     
     ; we get here if enemy is not blinking
@@ -560,8 +560,8 @@ UpdateActiveEnemy:
     
     ; transpose X. First check if enemy is on the current screen or the next
     .transposeX:
-      LDA enemyScreen
-      CMP scroll + $01
+      LDA <enemyScreen
+      CMP <scroll + $01
       BEQ .currentScreen
     
     ; enemy is on the next  screen. Transpose logic:
@@ -573,18 +573,18 @@ UpdateActiveEnemy:
     .nextScreen:
       LDA #SCREEN_WIDTH
       SEC
-      SBC scroll
+      SBC <scroll
       CLC
       ADC #$01
       BCS .enemyOffScreen
-      ADC genericX
+      ADC <genericX
       BCS .enemyOffScreen
-      STA genericX
+      STA <genericX
       JMP EnemyProcessConsts
       
       ; enemy off screen, no need to check for collisions
       .enemyOffScreen:
-        DEC enemyOnScreen
+        DEC <enemyOnScreen
         JMP EnemyProcessShooting
     
     ; enemy is on the current screen. Transpose logic:
@@ -596,12 +596,12 @@ UpdateActiveEnemy:
     ;     - else if result < 8 (sprite width) - off screen
     ;     - else - on screen
     .currentScreen:
-      LDA genericX
+      LDA <genericX
       SEC
-      SBC scroll
-      STA genericX
+      SBC <scroll
+      STA <genericX
       BCS EnemyProcessConsts
-      INC genericOffScreen
+      INC <genericOffScreen
       CLC
       ADC [enemyConstsPointer], y
       BCC .enemyOffScreen
@@ -617,7 +617,7 @@ UpdateActiveEnemy:
     ; but first do a Y += 1 to skip the width and point at hitbox x off
     .hitboxX:  
       INY
-      LDA genericOffScreen
+      LDA <genericOffScreen
       BEQ .hitboxXOnScreen
       
       ; if off screen:
@@ -625,7 +625,7 @@ UpdateActiveEnemy:
       ;   - add hitbox X offset
       ;   - if carry clear, it means the box starts at the previous screen
       .hitboxXOffScreen:
-        LDA genericX
+        LDA <genericX
         CLC
         ADC [enemyConstsPointer], y        
         BCC .hitboxXPartiallyOffscreen
@@ -635,11 +635,11 @@ UpdateActiveEnemy:
         ;   - Y += 1 to point at hitbox width
         ;   - x2 = x1 + width
         .hitboxXFullyOnScreen:
-          STA ax1
+          STA <ax1
           INY
           CLC
           ADC [enemyConstsPointer], y
-          STA ax2
+          STA <ax2
           JMP .hitboxY
         
         ; box partially off screen, A still holds calculated x1
@@ -651,9 +651,9 @@ UpdateActiveEnemy:
           CLC
           ADC [enemyConstsPointer], y
           BCC .noCollisions
-          STA ax2
+          STA <ax2
           LDA #$00
-          STA ax1
+          STA <ax1
           JMP .hitboxY
       
         ; we reach this code if we decide hitbox is off screen
@@ -665,7 +665,7 @@ UpdateActiveEnemy:
         .noCollisions:
           INY
           INY
-          DEC enemyCollisions
+          DEC <enemyCollisions
           JMP .shootingDirection
       
       ; if on screen:
@@ -676,21 +676,21 @@ UpdateActiveEnemy:
       ;   - add hitbox width
       ;   - if carry set - cap at screen width 
       .hitboxXOnScreen:
-        LDA genericX
+        LDA <genericX
         CLC
         ADC [enemyConstsPointer], y
         BCS .noCollisionsIny
-        STA ax1
+        STA <ax1
         INY
         CLC
         ADC [enemyConstsPointer], y
         BCS .capX2
-        STA ax2
+        STA <ax2
         JMP .hitboxY
         
         .capX2:
           LDA #SCREEN_WIDTH
-          STA ax2
+          STA <ax2
        
     ; use the next 2 bytes (y off, height) to calculate hitbox Y positions.
     ; store the result in ay1 and ay2. no special logic here.
@@ -698,14 +698,14 @@ UpdateActiveEnemy:
     ; first do a Y += 1 since Y is still pointing at hitbox width
     .hitboxY:
       INY
-      LDA genericY
+      LDA <genericY
       CLC
       ADC [enemyConstsPointer], y
-      STA ay1
+      STA <ay1
       INY
       CLC
       ADC [enemyConstsPointer], y
-      STA ay2      
+      STA <ay2     
     
     ; get the position of the gun.
     ; we expect Y to point to the hitbox height when we get here
@@ -721,32 +721,32 @@ UpdateActiveEnemy:
     .shootingDirection:
       INY
       LDA [enemyConstsPointer], y
-      STA enemyOrientation
+      STA <enemyOrientation
     
     ; then do Y += 1 to point to gun x off, then check direction, and set enemyGunX and enemyGunY to a right const value.
     ; make sure we do Y += 4 (5 including the initial one) to point to animation speed.
     .gunPosition:
       INY
-      LDA genericDirection
+      LDA <genericDirection
       BEQ .gunPositionNoFlip
       
       .gunPositionFlip:
         INY
         INY
         LDA [enemyConstsPointer], y
-        STA enemyGunX
+        STA <enemyGunX
         INY
         LDA [enemyConstsPointer], y
-        STA enemyGunY
+        STA <enemyGunY
         INY
         JMP .animationConsts
       
       .gunPositionNoFlip:
         LDA [enemyConstsPointer], y
-        STA enemyGunX
+        STA <enemyGunX
         INY
         LDA [enemyConstsPointer], y
-        STA enemyGunY
+        STA <enemyGunY
         INY
         INY
         INY            
@@ -756,20 +756,20 @@ UpdateActiveEnemy:
     ; two bytes are: animation speed and number of frames
     .animationConsts:
       LDA [enemyConstsPointer], y
-      STA enemyAnimationSpeed
+      STA <enemyAnimationSpeed
       INY
       LDA [enemyConstsPointer], y
-      STA enemyFrameCount
+      STA <enemyFrameCount
       INY
             
     ; cache the render pointer in generic pointer
     ; when we get here, Y points to the pointer already
     .renderPointer:
       LDA [enemyConstsPointer], y
-      STA genericPointer
+      STA <genericPointer
       INY
       LDA [enemyConstsPointer], y
-      STA genericPointer + $01
+      STA <genericPointer + $01
     
   ; when we get here, X points to remaining life.
   ; check for collisions between the enemy and the player,
@@ -778,7 +778,7 @@ UpdateActiveEnemy:
   
     ; check if collisions should be checked.
     ; POITAG - possible optimization - branch order
-    LDA enemyCollisions
+    LDA <enemyCollisions
     BNE .collisionWithPlayer
     JMP EnemyProcessShooting
   
@@ -787,29 +787,29 @@ UpdateActiveEnemy:
 
       ; only check for collisions with player if player is PLAYER_NORMAL
       .checkPlayerState:
-        LDA playerState
+        LDA <playerState
         BEQ .checkPlayerYState ; PLAYER_NORMAL = 0
         JMP .collisionWithBullets
         
       ; only check for collisions with player if playerYState != PLAYER_Y_STATE_EXIT_UP
       .checkPlayerYState:
-        LDA playerYState
+        LDA <playerYState
         BNE .collisionWithPlayerCheck ; PLAYER_Y_STATE_EXIT_UP = 0
         JMP .collisionWithBullets
       
       ; load player's threat box into the 'b' vars and check for collisions.
       ; explode player if collision detected ('collision' not 0 after CheckForCollision).
       .collisionWithPlayerCheck:
-        LDA playerThreatBoxX1
-        STA bx1
-        LDA playerThreatBoxX2
-        STA bx2
-        LDA playerThreatBoxY1
-        STA by1
-        LDA playerThreatBoxY2
-        STA by2
+        LDA <playerThreatBoxX1
+        STA <bx1
+        LDA <playerThreatBoxX2
+        STA <bx2
+        LDA <playerThreatBoxY1
+        STA <by1
+        LDA <playerThreatBoxY2
+        STA <by2
         JSR CheckForCollision
-        LDA collision
+        LDA <collision
         BEQ .collisionWithBullets
         JSR ExplodePlayer
     
@@ -823,7 +823,7 @@ UpdateActiveEnemy:
         ; subtract bullet size, and store it in y and yPointerCache
         SEC
         SBC #BULLET_MEMORY_BYTES
-        STA yPointerCache
+        STA <yPointerCache
         TAY
         
         ; check the state, we only want to check bullets that either are active or just spawned.
@@ -847,16 +847,16 @@ UpdateActiveEnemy:
         ; use genericDX for width and genericDY for height as they are not needed anymore.
         .bulletGoingVertically:
           LDA #BULLET_HEIGHT
-          STA genericDX
+          STA <genericDX
           LDA #BULLET_WIDTH
-          STA genericDY
+          STA <genericDY
           JMP .bulletSetHitbox
         
         .bulletGoingHorizontally:
           LDA #BULLET_WIDTH
-          STA genericDX
+          STA <genericDX
           LDA #BULLET_HEIGHT
-          STA genericDY
+          STA <genericDY
           
         ; set hitbox
         ; first do Y += 1 to point to the x position, set that in bx1, calculate bx2 (cap at screen width)
@@ -864,29 +864,29 @@ UpdateActiveEnemy:
         .bulletSetHitbox:
           INY
           LDA bullets, y
-          STA bx1
+          STA <bx1
           CLC
-          ADC genericDX
+          ADC <genericDX
           BCS .capBX2
-          STA bx2
+          STA <bx2
           JMP .setYBox
           
           .capBX2:
             LDA #SCREEN_WIDTH
-            STA bx2
+            STA <bx2
           
           .setYBox:
             INY
             LDA bullets, y
-            STA by1
+            STA <by1
             CLC
-            ADC genericDY
-            STA by2
+            ADC <genericDY
+            STA <by2
         
         ; now check for a collision
         .bulletCheckCollision:
           JSR CheckForCollision
-          LDA collision
+          LDA <collision
           BEQ .collisionWithBulletsLoopCheck
             
         ; collision detected
@@ -897,20 +897,20 @@ UpdateActiveEnemy:
           .updateRemainingLife:
             LDA enemies, x
             BEQ .explodeBullet
-            INC enemyHit
+            INC <enemyHit
             DEC enemies, x
             BNE .explodeBullet
-            INC removeEnemy
+            INC <removeEnemy
           
           ; now explode the bullet by loading the cached state pointer and setting it to BULLET_S_SMTH_HIT
           .explodeBullet:
-            LDY yPointerCache
+            LDY <yPointerCache
             LDA #BULLET_S_SMTH_HIT
             STA bullets, y
         
         ; loop check - load yPointerCache, if it's 0 - exit (PLAYER_BULLET_FIRST)
         .collisionWithBulletsLoopCheck:
-          LDA yPointerCache
+          LDA <yPointerCache
           BEQ EnemyProcessShooting
           JMP .collisionWithBulletsLoop
         
@@ -944,49 +944,49 @@ UpdateActiveEnemy:
     
     ; check if we're even rendering the enemy, don't shoot if not
     .shootingEnemyOnScreen:
-      LDA enemyOnScreen
+      LDA <enemyOnScreen
       BEQ EnemyProcessAnimation
     
     ; enemyGunX and enemyGunY are currently set to gun offsets.
     ; add genericX and genericY to them to get the actual position to spawn the bullet.
     ; when calculating enemyGunX, make sure the gun is on screen.    
     .calculateGunX:    
-      LDA genericOffScreen
+      LDA <genericOffScreen
       BEQ .calculateGunXEnemyOnScreen
       
       ; enemy is off screen
       ;  - if gunXOff < 0 (BMI), don't spawn the bullet
       ;  - otherwise, make sure carry is set (i.e. overflow happens and gun is on screen)
       .calculateGunXEnemyOffScreen:
-        LDA enemyGunX
+        LDA <enemyGunX
         BMI EnemyProcessAnimation
         
       .addMakeSureCarrySet:
         CLC
-        ADC genericX
+        ADC <genericX
         BCC EnemyProcessAnimation
-        STA enemyGunX
+        STA <enemyGunX
         JMP .calculateGunY
       
       ; enemy is on screen
       ;  - if gunXOff < 0 (BMI), make sure carry is set (it's not set if e.g. genericX = 5 and gunXOff = -10 = F6, F6 + 5 = FB = -5)
       ;  - otherwise, make sure carry is not set (i.e. overflow doesn't happen and gun stays on screen)
       .calculateGunXEnemyOnScreen:
-        LDA enemyGunX
+        LDA <enemyGunX
         BMI .addMakeSureCarrySet
         
         .addMakeSureCarryNotSet:
           CLC
-          ADC genericX
+          ADC <genericX
           BCS EnemyProcessAnimation
-          STA enemyGunX
+          STA <enemyGunX
             
     ; calculating gun y is straightforward - make sure an enemy is never put high enough on the screen to shoot off screen
     .calculateGunY:
-      LDA enemyGunY
+      LDA <enemyGunY
       CLC
-      ADC genericY
-      STA enemyGunY
+      ADC <genericY
+      STA <enemyGunY
       
     ; spawn enemy bullet using enemyGunX, enemyGunY, enemyOrientation, genericDirection: 
     ;   - enemyGunX, enemyGunY - point to spawn the bullet at
@@ -1019,11 +1019,11 @@ UpdateActiveEnemy:
         ; get bullet direction based on enemyOrientation and genericDirection (see comment above)
         .setBulletDirection:
           INY
-          LDA enemyOrientation
+          LDA <enemyOrientation
           BEQ .bulletDirectionVertical ; ORIENTATION_VERT = 0
           
           .bulletDirectionHorizontal:
-            LDA genericDirection
+            LDA <genericDirection
             BEQ .bulletDirectionRight
             
             .bulletDirectionLeft:
@@ -1035,7 +1035,7 @@ UpdateActiveEnemy:
               JMP .setBulletDirectionValue
           
           .bulletDirectionVertical:
-            LDA genericDirection
+            LDA <genericDirection
             BEQ .bulletDirectionDown
             
             .bulletDirectionUp:
@@ -1052,13 +1052,13 @@ UpdateActiveEnemy:
         ; set x position
         .setBulletX:
           INY
-          LDA enemyGunX
+          LDA <enemyGunX
           STA bullets, y
   
         ; set y position
         .setBulletY:
           INY
-          LDA enemyGunY
+          LDA <enemyGunY
           STA bullets, y          
         
   ; when we get here, X points to the animation timer.
@@ -1077,27 +1077,27 @@ UpdateActiveEnemy:
   EnemyProcessAnimation:
     
     .checkIfOnScreen:
-      LDA enemyOnScreen
+      LDA <enemyOnScreen
       BEQ UpdateActiveEnemyDone
     
     .checkIfShouldAnimate:
-      LDA enemySpeed
+      LDA <enemySpeed
       BEQ .loadFrame
-      LDA enemyOrientation
+      LDA <enemyOrientation
       BEQ .verticalOrientation ; ORIENTATION_VERT = 0
       CMP #ORIENTATION_NONE
       BEQ .updateTimer ; always animate enemies without an orientation
       
       ; only animate if direction is left (0) or right (1), i.e. if 2nd byte = 0
       .horizontalOrientation:
-        LDA enemyDirection
+        LDA <enemyDirection
         AND #%00000010
         BNE .loadFrame
         JMP .updateTimer
         
       ; only animate if direction is up (2) or down (3), i.e. if 2nd byte = 1
       .verticalOrientation:
-        LDA enemyDirection
+        LDA <enemyDirection
         AND #%00000010
         BEQ .loadFrame
         JMP .updateTimer   
@@ -1109,27 +1109,27 @@ UpdateActiveEnemy:
     .loadFrame:
       INX
       LDA enemies, x
-      STA genericFrame
+      STA <genericFrame
       JMP EnemyRender
     
     .updateFrame:
-      LDA enemyAnimationSpeed
+      LDA <enemyAnimationSpeed
       STA enemies, x
       INX
       DEC enemies, x
       BEQ .resetFrame
       LDA enemies, x
-      STA genericFrame
+      STA <genericFrame
       JMP EnemyRender
       
     .resetFrame:
-      LDA enemyFrameCount
+      LDA <enemyFrameCount
       STA enemies, x
-      STA genericFrame
+      STA <genericFrame
   
   ; render the enemy (only if not flashing)
   EnemyRender:
-    LDA enemyNotFlashing
+    LDA <enemyNotFlashing
     BEQ UpdateActiveEnemyDone
     JSR RenderEnemy
    
@@ -1161,28 +1161,28 @@ ProcessSpecialSpeed:
 
     ; only move if frame counter is a multiple of 4
     .speedQuarter:
-      LDA frameCount
+      LDA <frameCount
       ROR A
       BCS .specialMoveDoNotMove
       ROR A
       BCS .specialMoveDoNotMove
       LDA #$01
-      STA enemySpeed
+      STA <enemySpeed
       RTS
       
     ; only move if frame counter is even
     .speedHalf:
-      LDA frameCount
+      LDA <frameCount
       ROR A
       BCS .specialMoveDoNotMove
       LDA #$01
-      STA enemySpeed
+      STA <enemySpeed
       RTS
     
     ; if we get here it means we do not want to move
     .specialMoveDoNotMove:
       LDA #$00
-      STA enemySpeed
+      STA <enemySpeed
       RTS
     
 ;****************************************************************
@@ -1220,7 +1220,7 @@ UpdateExplodingEnemy:
     ADC #ENEMY_SCREEN
     TAX
     LDA enemies, x
-    STA enemyScreen
+    STA <enemyScreen
   
   ; X += (ENEMY_X - ENEMY_SCREEN) to point to the X position, load the X position and put it in genericX
   .loadX:
@@ -1229,12 +1229,12 @@ UpdateExplodingEnemy:
     ADC #(ENEMY_X - ENEMY_SCREEN)
     TAX
     LDA enemies, x
-    STA genericX
+    STA <genericX
   
   ; transpose X. First check if enemy is on the current screen or the next
   .transposeX:    
-    LDA enemyScreen
-    CMP scroll + $01
+    LDA <enemyScreen
+    CMP <scroll + $01
     BEQ .currentScreen
     
     ; enemy is on the next  screen. Transpose logic:
@@ -1246,18 +1246,18 @@ UpdateExplodingEnemy:
     .nextScreen:
       LDA #SCREEN_WIDTH
       SEC
-      SBC scroll
+      SBC <scroll
       CLC
       ADC #$01
       BCS .enemyOffScreen
-      ADC genericX
+      ADC <genericX
       BCS .enemyOffScreen
-      STA genericX
+      STA <genericX
       JMP .loadY
       
       ; enemy off screen, explosion can be removed
       .enemyOffScreen:
-        INC removeEnemy
+        INC <removeEnemy
         RTS
     
     ; enemy is on the current screen. Transpose logic:
@@ -1269,12 +1269,12 @@ UpdateExplodingEnemy:
     ;     - else if result < 8 (sprite width) - off screen
     ;     - else - on screen
     .currentScreen:
-      LDA genericX
+      LDA <genericX
       SEC
-      SBC scroll
-      STA genericX
+      SBC <scroll
+      STA <genericX
       BCS .loadY
-      INC genericOffScreen
+      INC <genericOffScreen
       CLC
       ADC #EXPLOSION_WIDTH
       BCC .enemyOffScreen
@@ -1285,7 +1285,7 @@ UpdateExplodingEnemy:
   .loadY:
     INX
     LDA enemies, x
-    STA genericY
+    STA <genericY
       
   ; X += (ENEMY_ANIMATION_TIMER - ENEMY_Y) to point to the animation timer, decrement it, check if 0
   .processAnimation:
@@ -1300,7 +1300,7 @@ UpdateExplodingEnemy:
     .timerIsNot0:
       INX
       LDA enemies, x
-      STA genericFrame
+      STA <genericFrame
       JMP .renderExplosion
           
     ; timer is 0, reset it to max, then X += 1 to point to the animation frame and dec it
@@ -1314,7 +1314,7 @@ UpdateExplodingEnemy:
       SBC #$01
       BEQ .explosionCompleted
       STA enemies, x
-      STA genericFrame      
+      STA <genericFrame     
           
   ; all vars are set, render the explosion then exit
   .renderExplosion:
@@ -1323,7 +1323,7 @@ UpdateExplodingEnemy:
     
   ; explosion completed
   .explosionCompleted:
-    INC removeEnemy
+    INC <removeEnemy
     RTS
 
 ;****************************************************************
@@ -1368,13 +1368,13 @@ UpdateEnemies:
     ; move A to point to the next enemy we want to process. Cache that value in xPointerCache and store it in X
     SEC
     SBC #ENEMY_SIZE
-    STA xPointerCache
+    STA <xPointerCache
     TAX                  
 
     ; set enemyHit and removeEnemy to 0
     LDA #$00
-    STA removeEnemy
-    STA enemyHit
+    STA <removeEnemy
+    STA <enemyHit
     
     ; X now points to the state. Check it:
     ;   0 == ENEMY_STATE_EMPTY
@@ -1394,13 +1394,13 @@ UpdateEnemies:
       
       ; check if enemy should be exploded
       .checkRemoveEnemyActive:
-        LDA removeEnemy
+        LDA <removeEnemy
         BEQ .checkIfEnemyHit
         
         ; explode the enemy.        
         ; first update state:
         .explodeEnemy:
-          LDX xPointerCache
+          LDX <xPointerCache
           LDA #ENEMY_STATE_EXPLODING
           STA enemies, x        
       
@@ -1416,12 +1416,12 @@ UpdateEnemies:
           STA destroyedEnemies, y
           
           .checkIfLeavelBeaten:
-            LDA levelType
+            LDA <levelType
             CMP #LEVEL_TYPE_BOSS
             BNE .loadConstsPointer
-            LDA levelTypeData2 ; list of enemies that need to be destroyed
+            LDA <levelTypeData2; list of enemies that need to be destroyed
             AND destroyedEnemies, y
-            CMP levelTypeData2
+            CMP <levelTypeData2
             BNE .loadConstsPointer
             ; todo 0001: if we get here, it means the boss has been destroyed. add explosions and stuff
           
@@ -1430,10 +1430,10 @@ UpdateEnemies:
         .loadConstsPointer:
           INX
           LDA enemies, x
-          STA enemyConstsPointer
+          STA <enemyConstsPointer
           INX
           LDA enemies, x
-          STA enemyConstsPointer + $01          
+          STA <enemyConstsPointer + $01          
           LDY #CONST_ENEMY_EXPL_OFF
           
         ; X += (ENEMY_X - ENEMY_POINTER_H) to point to the X position, update x using x off from consts.
@@ -1472,9 +1472,9 @@ UpdateEnemies:
       
         ; check if enemy was hit and state should be updated to flashing
         .checkIfEnemyHit:
-          LDA enemyHit
+          LDA <enemyHit
           BEQ .updateEnemyLoopCondition
-          LDX xPointerCache
+          LDX <xPointerCache
           LDA #ENEMY_STATE_HIT
           STA enemies, x     
           JMP .updateEnemyLoopCondition
@@ -1485,15 +1485,15 @@ UpdateEnemies:
       
       ; check if enemy should be removed from the game
       .checkRemoveEnemyExploding:
-        LDA removeEnemy
+        LDA <removeEnemy
         BEQ .updateEnemyLoopCondition
         
         ; remove enemy from the game
         .removeEnemy:
-          LDX xPointerCache
+          LDX <xPointerCache
           LDA #ENEMY_STATE_EMPTY
           STA enemies, x        
-          JMP .updateEnemyLoopCondition ; POITAG - possible optimization - skip the LDA xPointerCache ?
+          JMP .updateEnemyLoopCondition ; POITAG - possible optimization - skip the LDA <xPointerCache?
       
     ; enemy empty - do nothing, let flow into the loop condition
     .enemyEmpty:      
@@ -1502,7 +1502,7 @@ UpdateEnemies:
       ; otherwise exit
       ; POITAG - possible optimization - can this loop be done better?
       .updateEnemyLoopCondition:
-        LDA xPointerCache      
+        LDA <xPointerCache     
         BEQ .updateEnemyExit
         JMP .updateEnemyLoop
   
@@ -1533,35 +1533,35 @@ UpdateEnemies:
 LoadEnemiesInitial:
   
   .screensToSkip:
-    LDA maxScroll + $01                ; see LoadPlatformsAndThreats for explanation of this logic
+    LDA <maxScroll + $01                ; see LoadPlatformsAndThreats for explanation of this logic
     CLC
     ADC #$02
-    STA b
+    STA <b
                                        
   .setEnemiesPointer:                 
-    LDA genericPointer                 
-    STA enemiesPointer               
-    LDA genericPointer + $01           
-    STA enemiesPointer + $01           ; enemiesPointer set to enemies for screen 0
+    LDA <genericPointer                
+    STA <enemiesPointer              
+    LDA <genericPointer + $01           
+    STA <enemiesPointer + $01           ; enemiesPointer set to enemies for screen 0
   
   .moveEnemiesPointerLoop:
     JSR MoveEnemiesPointerForward      ; move enemiesPointer forward
-    DEC b
+    DEC <b
     BNE .moveEnemiesPointerLoop        ; after this loop, enemiesPointer set to the first byte after enemies data
     
   .setGenericPointer:
-    LDA genericPointer
-    STA b
-    LDA genericPointer + $01
-    STA c                              ; cache genericPointer (still pointing to the start of the data) in b c
-    LDA enemiesPointer
-    STA genericPointer
-    LDA enemiesPointer + $01
-    STA genericPointer + $01           ; genericPointer now points to the first byte after enemies data
-    LDA b
-    STA enemiesPointer
-    LDA c
-    STA enemiesPointer + $01           ; enemiesPointer now points to the first byte of the enemies data
+    LDA <genericPointer
+    STA <b
+    LDA <genericPointer + $01
+    STA <c                             ; cache genericPointer (still pointing to the start of the data) in b c
+    LDA <enemiesPointer
+    STA <genericPointer
+    LDA <enemiesPointer + $01
+    STA <genericPointer + $01           ; genericPointer now points to the first byte after enemies data
+    LDA <b
+    STA <enemiesPointer
+    LDA <c
+    STA <enemiesPointer + $01           ; enemiesPointer now points to the first byte of the enemies data
     
   .loadEnemies:
     JSR LoadEnemies                    ; load enemies for screen 0
@@ -1594,10 +1594,10 @@ LoadEnemiesForward:
   ; so we want to unload enemies for "screen - 1"
  
   .unloadEnemies:
-    LDA scroll + $01
+    LDA <scroll + $01
     SEC
     SBC #$01
-    STA b                             ; b = screen - 1
+    STA <b                            ; b = screen - 1
     JSR UnloadEnemies                 ; unload enemies
  
   .loadEnemiesAndUpdatePointer:
@@ -1632,10 +1632,10 @@ LoadEnemiesBack:
   ; so we want to unload enemies for "screen + 2"
 
   .unloadEnemies:
-    LDA scroll + $01
+    LDA <scroll + $01
     CLC
     ADC #$02
-    STA b                             ; b = screen + 1
+    STA <b                            ; b = screen + 1
     JSR UnloadEnemies                 ; unload enemies
  
   .loadEnemiesAndUpdatePointer:
@@ -1676,7 +1676,7 @@ LoadEnemies:
     LDY #$01
     LDA [enemiesPointer], y
     BEQ .loadEnemiesExit
-    STA b
+    STA <b
    
    ; loop for loading enemies
   .loadEnemiesLoop:
@@ -1689,10 +1689,10 @@ LoadEnemies:
     .cacheId:
       INY
       LDA [enemiesPointer], y
-      STA c
+      STA <c
       INY
       LDA [enemiesPointer], y
-      STA d
+      STA <d
       
     ; check if the enemy has been destroyed.
     ; we can use X here as it's not used until .getSlot.
@@ -1700,9 +1700,9 @@ LoadEnemies:
     ; result == 1 means the enemy has been destroyed - skip the enemy.
     ; we must do Y += (LVL_ENEMY_LAST - LVL_ENEMY_ID_2) though to make sure we point to the right place.
     .checkId:
-      LDX c
+      LDX <c
       LDA destroyedEnemies, x
-      AND d
+      AND <d
       BEQ .getSlot
       TYA
       CLC
@@ -1725,22 +1725,22 @@ LoadEnemies:
     ; then X += 1 to point to the second id byte, then set it to the value cached in d
     .setId:
       INX
-      LDA c
+      LDA <c
       STA enemies, x
       INX
-      LDA d
+      LDA <d
       STA enemies, x
         
     ; next (ENEMY_SHOOTING_TIMER - ENEMY_POINTER_L + 1) bytes are the same in both definitions.
     ; c will be the loop pointer (no longer needed), copy the bytes incrementing Y and X in each loop
     LDA #(ENEMY_SHOOTING_TIMER - ENEMY_POINTER_L + $01)
-    STA c
+    STA <c
     .copyLoop:
       INY
       LDA [enemiesPointer], y
       INX
       STA enemies, x
-      DEC c
+      DEC <c
       BNE .copyLoop
     
     ; next two bytes are the animation vars, set both to 1 (so they'll loop to the beginning the next frame)
@@ -1754,7 +1754,7 @@ LoadEnemies:
     
     ; loop if needed
     .loadEnemiesLoopCondition:
-      DEC b
+      DEC <b
       BNE .loadEnemiesLoop
           
   .loadEnemiesExit:
@@ -1782,12 +1782,12 @@ UnloadEnemies:
 
   LDX #LAST_ENEMY_SCREEN           ; loop all enemies going down  
   LDA #ENEMIES_COUNT
-  STA c                            ; c is the loop counter
+  STA <c                           ; c is the loop counter
   
   .unloadEnemyLoop:
   
     LDA enemies, x                 ; load the screen the enemy is on
-    CMP b
+    CMP <b
     BNE .loopCondition             ; if screen != b, don't do anything
     
     .unloadEnemy:
@@ -1807,7 +1807,7 @@ UnloadEnemies:
       SEC
       SBC #ENEMY_SIZE
       TAX                          ; decrement the pointer 
-      DEC c                        ; decrement the loop counter
+      DEC <c                       ; decrement the loop counter
       BNE .unloadEnemyLoop         
   
   RTS
@@ -1827,11 +1827,11 @@ MoveEnemiesPointerForward:
   LDY #$00
   LDA [enemiesPointer], y
   CLC
-  ADC enemiesPointer
-  STA enemiesPointer
-  LDA enemiesPointer + $01
+  ADC <enemiesPointer
+  STA <enemiesPointer
+  LDA <enemiesPointer + $01
   ADC #$00
-  STA enemiesPointer + $01
+  STA <enemiesPointer + $01
   RTS
   
 ;****************************************************************
@@ -1848,23 +1848,23 @@ MoveEnemiesPointerForward:
 ;****************************************************************
 
 MoveEnemiesPointerBack:
-  LDA enemiesPointer
+  LDA <enemiesPointer
   SEC
   SBC #$01
-  STA enemiesPointer
-  LDA enemiesPointer + $01
+  STA <enemiesPointer
+  LDA <enemiesPointer + $01
   SBC #$00
-  STA enemiesPointer + $01
+  STA <enemiesPointer + $01
   LDY #$00
   LDA [enemiesPointer], y
-  STA i
-  LDA enemiesPointer
+  STA <i
+  LDA <enemiesPointer
   SEC
-  SBC i
-  STA enemiesPointer
-  LDA enemiesPointer + $01
+  SBC <i
+  STA <enemiesPointer
+  LDA <enemiesPointer + $01
   SBC #$00
-  STA enemiesPointer + $01
+  STA <enemiesPointer + $01
   RTS
 
 ;****************************************************************
@@ -1909,11 +1909,11 @@ RenderEnemy:
   .getSpriteCount:
     LDY #$00                    ; Y points to the sprite count  
     LDA [genericPointer], y
-    STA b                       ; b = sprite count (N)
+    STA <b                      ; b = sprite count (N)
     INY                         ; Y points to xOff
   
   .checkFlip:
-    LDA genericDirection    
+    LDA <genericDirection   
     BEQ .noFlip                 ; RENDER_ENEMY_NO_FLIP == 0
   
   .flip:                        ;  flip, use the last two pointers
@@ -1922,71 +1922,71 @@ RenderEnemy:
     INY
     INY                         ; skip the first four bytes
     LDA [genericPointer], y     ; x off low flip
-    STA d
+    STA <d
     INY
     LDA [genericPointer], y     ; x off high flip
-    STA e
+    STA <e
     INY
     LDA [genericPointer], y     ; y off low flip
-    STA f
+    STA <f
     INY
     LDA [genericPointer], y     ; y off high flip
-    STA g
+    STA <g
     INY                         ; Y points at the flip atts XOR
     LDA [genericPointer], y
-    STA c                       ; store the atts XOR in c
+    STA <c                      ; store the atts XOR in c
     JMP .setAttsPointer
   
   .noFlip:                      ; no flip, use the first two pointers
     LDA [genericPointer], y     ; x off low
-    STA d
+    STA <d
     INY
     LDA [genericPointer], y     ; x off high
-    STA e
+    STA <e
     INY
     LDA [genericPointer], y     ; y off low
-    STA f
+    STA <f
     INY
     LDA [genericPointer], y     ; y off high
-    STA g
+    STA <g
     INY
     INY
     INY
     INY                         ; skip the next four bytes
     INY                         ; Y points at the flip atts XOR
     LDA #$00
-    STA c                       ; set c to 0 (nothing to XOR with atts because no flip)   
+    STA <c                      ; set c to 0 (nothing to XOR with atts because no flip)   
     
   .setAttsPointer:              ; POITAG - free sprites - have atts per frame
     INY                         ; Y points to the atts
     TYA                         ; move Y to A
     CLC
-    ADC genericPointer          ; move the generic pointer
-    STA genericPointer          ; lower byte
-    STA h                       ; set the same in h
-    LDA genericPointer + $01
+    ADC <genericPointer         ; move the generic pointer
+    STA <genericPointer         ; lower byte
+    STA <h                      ; set the same in h
+    LDA <genericPointer + $01
     ADC #$00                    ; add carry
-    STA genericPointer + $01    ; higher byte
-    STA i                       ; set the same in i
+    STA <genericPointer + $01    ; higher byte
+    STA <i                      ; set the same in i
          
   .movePointerToTiles:
     LDA #$00                    ; A = 0
-    LDY genericFrame            ; frames count down, so if animation has 4 frames, it's 4 -> 3 -> 2 -> 1    
+    LDY <genericFrame           ; frames count down, so if animation has 4 frames, it's 4 -> 3 -> 2 -> 1    
     .movePointerLoop:           ; last frame is first in the definition etc.
       CLC                       ; we have to skip the atts though, so if genericFrame = 1 (render last frame), skip N bytes
-      ADC b                     ; if genericFrame = 2 (next to last frame), skip N * 2 bytes
+      ADC <b                    ; if genericFrame = 2 (next to last frame), skip N * 2 bytes
       DEY                       ; so basically skip N * genericFrame bytes
       BNE .movePointerLoop
   
   .setTilesPointer:             ; when we get here, A = N * genericFrame
     CLC
-    ADC genericPointer          ; move the generic pointer
-    ;STA genericPointer         ; lower byte, not needed anymore
-    STA j                       ; set the same in j
-    LDA genericPointer + $01
+    ADC <genericPointer         ; move the generic pointer
+    ;STA <genericPointer        ; lower byte, not needed anymore
+    STA <j                      ; set the same in j
+    LDA <genericPointer + $01
     ADC #$00                    ; add carry
-    ;STA genericPointer + $01   ; higher byte, not needed anymore
-    STA k                       ; set the same in k
+    ;STA <genericPointer + $01   ; higher byte, not needed anymore
+    STA <k                      ; set the same in k
     
   .resetRegisters:
     LDY #$00                    ; y will be the sprite counter, start with 0
@@ -1996,35 +1996,35 @@ RenderEnemy:
     .checkXPosition:            ; this part checks if we want to render the tile based on the X position
       LDA [d], y                ; load the x offset
       CLC
-      ADC genericX              ; A = X position
-      STA renderXPos            ; set renderXPos
+      ADC <genericX             ; A = X position
+      STA <renderXPos           ; set renderXPos
       BCS .tileOffScreen        ; if carry is not set it means the tile is on screen. Otherwise it's off screen      
                                 
       .tileOnScreen:
-        LDA genericOffScreen    ; if we got here it means tile is fully on screen
+        LDA <genericOffScreen   ; if we got here it means tile is fully on screen
         BNE .loopCheck          ; only render it if genericOffScreen == 0
         JMP .renderTile
       
       .tileOffScreen:           
-        LDA genericOffScreen    ; if we got here it means tile is fully off screen
+        LDA <genericOffScreen   ; if we got here it means tile is fully off screen
         BEQ .loopCheck          ; only render if genericOffScreen == 1
       
    .renderTile:                 ; if we got here we want to render the tile
      LDA [f], y                 ; load the y offset
      CLC    
-     ADC genericY               ; A = Y position
-     STA renderYPos             ; set renderYPos
+     ADC <genericY              ; A = Y position
+     STA <renderYPos            ; set renderYPos
      LDA [h], y                 ; load the atts
-     EOR c                      ; atts XOR
-     STA renderAtts             ; set renderAtts
+     EOR <c                     ; atts XOR
+     STA <renderAtts            ; set renderAtts
      LDA [j], y                 ; load the tile
-     STA renderTile             ; set renderTile
+     STA <renderTile            ; set renderTile
      JSR RenderSprite           ; render the sprite
       
       .loopCheck:
         INY                     ; increment Y. POITAG - possible optimization - if we are skipping the tile because it's on/off screen,
                                 ; if we knew the sprite height, we could skip all of them since they are on a grid. Do this change!
-        CPY b                   ; compare Y to tile count. POITAG - possible optimization - if we counted tiles down, we could do BEQ without the CPY
+        CPY <b                  ; compare Y to tile count. POITAG - possible optimization - if we counted tiles down, we could do BEQ without the CPY
         BNE .renderTileLoop     ; more tiles to render
          
   RTS

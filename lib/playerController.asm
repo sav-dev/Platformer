@@ -20,16 +20,16 @@ UpdatePlayer:
 
  .presetVariables:
     LDA #$00
-    STA playerOnElevator
+    STA <playerOnElevator
 
-  LDA playerState
+  LDA <playerState
   BEQ .updatePlayerNormal ; PLAYER_NORMAL = 0
   CMP #PLAYER_NOT_VISIBLE
   BEQ UpdatePlayerNotVisible
   JMP UpdatePlayerExploding
   
   .updatePlayerNormal:
-    LDA levelType
+    LDA <levelType
     BEQ UpdatePlayerJetpack
     JMP UpdatePlayerNormal
     
@@ -45,21 +45,21 @@ UpdatePlayer:
 ;****************************************************************
 
 UpdatePlayerNotVisible:
-  DEC playerCounter  
+  DEC <playerCounter 
   BEQ .counterAt0
   RTS
   
   .counterAt0:
-    LDA levelBeaten
+    LDA <levelBeaten
     BEQ .resetLevel
   
   .nextLevel:
-    INC currentLevel
-    LDA currentLevel
+    INC <currentLevel
+    LDA <currentLevel
     CMP #NUMBER_OF_LEVELS
     BNE .resetLevel
     LDA #$00
-    STA currentLevel
+    STA <currentLevel
   
   .resetLevel:
     JSR WaitForFrame
@@ -83,31 +83,31 @@ UpdatePlayerJetpack:
   
   ; Update animation. This is done always.
   .updateAnimation:
-    DEC playerCounter
+    DEC <playerCounter
     BNE .checkA
     
     .updateFrame:
       LDA #FLAME_ANIMATION_SPEED
-      STA playerCounter
-      DEC playerAnimationFrame
+      STA <playerCounter
+      DEC <playerAnimationFrame
       BNE .checkA
       
       .resetFrame:
         LDA #FLAME_SPRITE_COUNT
-        STA playerAnimationFrame
+        STA <playerAnimationFrame
 
   ; Check if player wants to rotate. Also done always.
   .checkA:
-    LDA controllerPressed
+    LDA <controllerPressed
     AND #CONTROLLER_A
     BEQ .checkScrollSpeed
-    LDA playerDirection
+    LDA <playerDirection
     EOR #%00000001
-    STA playerDirection
+    STA <playerDirection
    
   ; Check if the scroll speed is a special value
   .checkScrollSpeed:
-    LDA levelTypeData1 ; scrollSpeed
+    LDA <levelTypeData1; scrollSpeed
     CMP #SMALLEST_SPECIAL_SPEED
     BCC .scrollScreen
     JSR ProcessSpecialSpeed ; this sets enemySpeed!
@@ -120,47 +120,47 @@ UpdatePlayerJetpack:
   ;   - move the player (possibly go off screen)
   ;   - scroll the screen by scrollSpeed
   .scrollScreen:    
-    STA enemySpeed ; we use this later to get the scrollSpeed; may already be set in case of special speed
-    STA genericDX
+    STA <enemySpeed; we use this later to get the scrollSpeed; may already be set in case of special speed
+    STA <genericDX
     LDA #$00
-    STA c ; don't check for going out of bounds
+    STA <c; don't check for going out of bounds
     JSR CheckPlayerCollisionHorizontal ; this updates genericDX
-    LDA genericDX
+    LDA <genericDX
     SEC
-    SBC enemySpeed ; this still contains scrollSpeed
-    STA genericDX
+    SBC <enemySpeed; this still contains scrollSpeed
+    STA <genericDX
     JSR MovePlayerHorizontallyJetpackAndSetBoxes
-    LDA enemySpeed ; this still contains scrollSpeed
-    STA m ; use as counter. POITAG - possible issue - random pseudo-register use
+    LDA <enemySpeed; this still contains scrollSpeed
+    STA <m; use as counter. POITAG - possible issue - random pseudo-register use
     .scrollLoop:
       JSR ScrollRight
-      DEC m
+      DEC <m
       BNE .scrollLoop
    
   ; If player was exploded, we can just exit.
   .checkPlayerState:
-    LDA playerState
+    LDA <playerState
     BEQ .setDY ; PLAYER_NORMAL = 0; it can only be NORMAL or EXPLODING 
     RTS
     
   ; Set DY based on the input
   .setDY:
-    LDA controllerDown
+    LDA <controllerDown
     AND #CONTROLLER_UP
     BNE .upPressed
-    LDA controllerDown
+    LDA <controllerDown
     AND #CONTROLLER_DOWN
     BNE .downPressed
     JMP .setDX ; not moving vertically
     
     .upPressed:
       LDA #PLAYER_SPEED_NEGATIVE
-      STA genericDY
+      STA <genericDY
       JMP .checkVerticalCollisionAndMove
     
     .downPressed:
       LDA #PLAYER_SPEED_POSITIVE
-      STA genericDY
+      STA <genericDY
       JMP .checkVerticalCollisionAndMove
   
   ; DY set, check for vertical collision. This adjusts DY. Then move.
@@ -170,31 +170,31 @@ UpdatePlayerJetpack:
     JSR MovePlayerVertically
     JSR SetPlayerBoxesVertical
     LDA #$00
-    STA playerOnElevator
+    STA <playerOnElevator
     
   ; Set DX based on the input
   .setDX:
-    LDA controllerDown
+    LDA <controllerDown
     AND #CONTROLLER_LEFT
     BNE .leftPressed
-    LDA controllerDown
+    LDA <controllerDown
     AND #CONTROLLER_RIGHT
     BNE .rightPressed
     RTS ; not moving horizontally
     
     .leftPressed:
       LDA #PLAYER_SPEED_NEGATIVE
-      STA genericDX
+      STA <genericDX
       JMP .checkHorizontalCollisionAndMove
     
     .rightPressed:
       LDA #PLAYER_SPEED_POSITIVE
-      STA genericDX
+      STA <genericDX
   
   ; DY set, check for horizontal collision. This adjusts DX. Then move.  
   .checkHorizontalCollisionAndMove:
     LDA #$01
-    STA c ; check bounds
+    STA <c; check bounds
     JSR CheckPlayerCollisionHorizontal
     JSR MovePlayerHorizontallyJetpackAndSetBoxes
     RTS
@@ -234,7 +234,7 @@ UpdatePlayerNormal:
 
   ; Check if in the last frame player was crouching.
   .checkIfWasCrouching:
-    LDA playerAnimation
+    LDA <playerAnimation
     CMP #PLAYER_CROUCH
     BEQ .playerWasCrouching
     JMP .playerWasNotCrouching
@@ -243,9 +243,9 @@ UpdatePlayerNormal:
   ; Apply gravity, check for vertical collisions, adjust DY
   .playerWasCrouching:
     LDA #GRAVITY
-    STA genericDY
+    STA <genericDY
     JSR CheckPlayerCollisionVertical
-    LDA collision
+    LDA <collision
     BNE .verticalCollisionWhileCrouching
     
   ; Player was crouching in the last frame, but now there is no vertical collision.
@@ -255,7 +255,7 @@ UpdatePlayerNormal:
   ; Then call the special routine that checks if player needs to be pushed down.
   .noVerticalCollisionWhileCrouching:
     LDA #PLAYER_JUMP
-    STA playerAnimation                       ; update animation to jump
+    STA <playerAnimation                      ; update animation to jump
     JSR MovePlayerVertically                  ; move player vertically by gravity
     JSR SetPlayerBoxesVertical                ; update boxes to make player 'stand up';
     JSR CheckPlayerStandingUpMidAirCollision  ; call the special routine, this may move the player down
@@ -267,45 +267,45 @@ UpdatePlayerNormal:
   ; So the only case this may happen is if player is still on the same platform they were previously.
   ; Check if the player wants to jump - that cancels crouching.
   .verticalCollisionWhileCrouching:
-    LDA controllerPressed
+    LDA <controllerPressed
     AND #CONTROLLER_A
     BEQ .noJumpFromCrouch
     
     ; Player wants to jump from crouch. 'stand up' and check for collisions. If any found, player must go back into crouch.
     .jumpFromCrouch:
       LDA #PLAYER_JUMP
-      STA playerAnimation               ; update animation to jump
+      STA <playerAnimation              ; update animation to jump
       JSR SetPlayerBoxesVertical        ; update boxes to make player 'stand up';
       JSR CheckPlayerCollision          ; check for collisions again.
-      LDA collision
+      LDA <collision
       BNE .playerCrouching              ; player must go back to the crouch if there is no room to stand up
       JMP .playerWantsToJump            ; go to the common jumping code
       
     ; No jump from crouch. Check if down is pressed. If yes, player wants to continue to crouch.
     ; Otherwise, 'stand up' and check for collisions. If any found, player must go back into crouch anyway.
     .noJumpFromCrouch:
-      LDA controllerDown
+      LDA <controllerDown
       AND #CONTROLLER_DOWN
       BNE .playerCrouching
       LDA #PLAYER_STAND
-      STA playerAnimation               ; update animation to standing
+      STA <playerAnimation              ; update animation to standing
       JSR SetPlayerBoxesVertical        ; update boxes to make player 'stand up';
       JSR CheckPlayerCollision          ; check for collisions again.
-      LDA collision
+      LDA <collision
       BNE .playerCrouching              ; player must go back to the crouch if there is no room to stand up
       JMP .checkHorizontalMovement      ; go to the common horizontal movement code
       
     ; Player continues to crouch. Set the animation, update boxes, and go to the common horizontal movement code.
     .playerCrouching:
       LDA #PLAYER_CROUCH
-      STA playerAnimation
+      STA <playerAnimation
       JSR SetPlayerBoxesVertical
       JMP .checkHorizontalMovement
     
   ; Player was not crouching in the last frame.
   ; First check if player is mid-jump.
   .playerWasNotCrouching:
-    LDA playerJump
+    LDA <playerJump
     BEQ .playerWasNotJumping
     
     ; Player is mid-jump. 
@@ -317,7 +317,7 @@ UpdatePlayerNormal:
       
         ; We require A to be pressed, see if it's down. If it is, process the jump normally
         .jumpCheckA:
-          LDA controllerDown
+          LDA <controllerDown
           AND #CONTROLLER_A 
           BNE .updateJumpCounter
           
@@ -325,29 +325,29 @@ UpdatePlayerNormal:
           ; if player jump is past (<=) the slowdown, continue normally.
           ; otherwise, move the jump to the slowdown point.
           .jumpANotDown:
-            LDA playerJump
+            LDA <playerJump
             CMP #JUMP_SLOWDOWN + $01
             BCC .updateJumpCounter
             LDA #JUMP_SLOWDOWN
-            STA playerJump
+            STA <playerJump
             JMP .lookupJumpDistance
         
         ; We get here when jump is processed normally. Decrement the jump counter.
         .updateJumpCounter:
-          DEC playerJump
+          DEC <playerJump
           
         ; Once we get here, the jump counter has been updated. Lookup the distance, set genericDY and go check for collisions.        
         .lookupJumpDistance:
-          LDX playerJump              
+          LDX <playerJump             
           LDA jumpLookupTable, x
           BEQ .playerMidJump ; little optimization, if we're in the state of jump where DY = 0 no need to check for collisions
-          STA genericDY
+          STA <genericDY
           JMP .checkVerticalCollision
     
     ; Player was not in a jump. Apply gravity.
     .playerWasNotJumping:
       LDA #GRAVITY
-      STA genericDY
+      STA <genericDY
      
     ; Once we get here, genericDY is set, either via gravity or the jump mechanics.
     ; Check for vertical collisions, move player and update boxes. Then check whether a collision was found.
@@ -355,26 +355,26 @@ UpdatePlayerNormal:
       JSR CheckPlayerCollisionVertical
       JSR MovePlayerVertically
       JSR SetPlayerBoxesVertical
-      LDA collision
+      LDA <collision
       BNE .verticalCollision
   
       ; No vertical collision was found.
       ; Set animation to jump and go check horizontal movement.
       .playerMidJump:
         LDA #PLAYER_JUMP
-        STA playerAnimation
+        STA <playerAnimation
         JMP .checkHorizontalMovement
   
       ; If we get here, a vertical collision was found.
       ; Check if the collision was going up (b = 0) or down (b > 0).
       .verticalCollision:
-        LDA b
+        LDA <b
         BNE .collisionGoingDown
         
         ; Collision going up. Cancel the jump, set animation to jump.
         .collisionGoingUp:
           LDA #$00
-          STA playerJump
+          STA <playerJump
           JMP .playerMidJump
   
         ; If we get here it means there's a collision when going down.
@@ -382,33 +382,33 @@ UpdatePlayerNormal:
         .collisionGoingDown:
           
           ; First check if down is down on the d-pad.
-          LDA controllerDown
+          LDA <controllerDown
           AND #CONTROLLER_DOWN
           BNE .playerCrouching
           
           ; Then check if A is pressed.
-          LDA controllerPressed
+          LDA <controllerPressed
           AND #CONTROLLER_A
           BNE .playerWantsToJump
           
           ; Player doesn't want to crouch or jump.
           ; If current animation is not RUN, update to STAND. Otherwise, leave as RUN.
-          LDA playerAnimation
+          LDA <playerAnimation
           CMP #PLAYER_RUN
           BEQ .checkHorizontalMovement
           LDA #PLAYER_STAND
-          STA playerAnimation
+          STA <playerAnimation
           JMP .checkHorizontalMovement                  
   
   ; If we get here, it means player wants to and is allowed to jump.
   ; Set the jump vars and clear the playerOnElevator flag.  
   .playerWantsToJump:    
     LDA #JUMP_FRAMES
-    STA playerJump
+    STA <playerJump
     LDA #PLAYER_JUMP
-    STA playerAnimation
+    STA <playerAnimation
     LDA #$00
-    STA playerOnElevator
+    STA <playerOnElevator
   
   ; Once we get here, vertical movement has been updated. 
   ; Player has been moved vertically, vertical boxes have been updated, animation is set.
@@ -417,44 +417,44 @@ UpdatePlayerNormal:
     ; Check if left is pressed, if yes update player's direction.
     ; Then if player is not crouching, set DX.
     .checkLeft:
-      LDA controllerDown
+      LDA <controllerDown
       AND #CONTROLLER_LEFT
       BEQ .checkRight
       LDA #DIRECTION_LEFT
-      STA playerDirection
-      LDA playerAnimation
+      STA <playerDirection
+      LDA <playerAnimation
       CMP #PLAYER_CROUCH
       BEQ .notMovingHorizontally
       LDA #PLAYER_SPEED_NEGATIVE
-      STA genericDX
+      STA <genericDX
       JMP .movingHorizontally
     
     ; Check if right is pressed, if yes update player's direction.
     ; Then if player is not crouching, set DX.
     .checkRight:
-      LDA controllerDown
+      LDA <controllerDown
       AND #CONTROLLER_RIGHT
       BEQ .notMovingHorizontally
       LDA #DIRECTION_RIGHT
-      STA playerDirection
-      LDA playerAnimation
+      STA <playerDirection
+      LDA <playerAnimation
       CMP #PLAYER_CROUCH
       BEQ .notMovingHorizontally
       LDA #PLAYER_SPEED_POSITIVE
-      STA genericDX
+      STA <genericDX
       JMP .movingHorizontally
 
     ; If we get here it means player is not moving vertically.
     ; If player is in the RUN state, replace it with the STAND State, then exit.
     .notMovingHorizontally:
-      LDA playerAnimation
+      LDA <playerAnimation
       CMP #PLAYER_RUN
       BEQ .changeAnimationToStand
       RTS
       
       .changeAnimationToStand:
         LDA #PLAYER_STAND
-        STA playerAnimation
+        STA <playerAnimation
         RTS
         
     ; If we get here it means player is moving horizontally.
@@ -463,37 +463,37 @@ UpdatePlayerNormal:
     ;   - if player in the JUMP animation, no updates needed
     ;   - if player is in the RUN animation, update the animation 
     .movingHorizontally:
-      LDA playerAnimation
+      LDA <playerAnimation
       BEQ .startRunning ; PLAYER_STAND = 0
       CMP #PLAYER_JUMP
       BEQ .checkHorizontalCollision      
       
       ; Player is running, update the animation,
-      DEC playerCounter
+      DEC <playerCounter
       BNE .checkHorizontalCollision
       LDA #PLAYER_ANIM_SPEED
-      STA playerCounter
-      DEC playerAnimationFrame
+      STA <playerCounter
+      DEC <playerAnimationFrame
       BNE .checkHorizontalCollision
       LDA #PLAYER_ANIM_FRAMES
-      STA playerAnimationFrame
+      STA <playerAnimationFrame
       JMP .checkHorizontalCollision
       
       .startRunning:
         LDA #PLAYER_RUN
-        STA playerAnimation
+        STA <playerAnimation
         LDA #PLAYER_ANIM_SPEED
-        STA playerCounter
+        STA <playerCounter
         LDA #PLAYER_ANIM_FRAMES
-        STA playerAnimationFrame  
+        STA <playerAnimationFrame 
             
       ; If we get here, DX is set to something non-zero.
       ; Check for a horizontal collision. This updates DX.
       .checkHorizontalCollision:
         LDA #$01
-        STA c ; check bounds
+        STA <c; check bounds
         JSR CheckPlayerCollisionHorizontal
-        LDA genericDX
+        LDA <genericDX
         BNE .applyHorizontalMovement
         RTS ; DX set to 0 by the collision routine, no need to move the player
       
@@ -514,34 +514,34 @@ UpdatePlayerNormal:
 UpdatePlayerExploding:
   
   .updateTimer:
-    DEC playerCounter
+    DEC <playerCounter
     BNE .renderExplosion
   
   .updateFrame:
     LDA #EXPLOSION_ANIM_SPEED
-    STA playerCounter
-    DEC playerAnimationFrame
+    STA <playerCounter
+    DEC <playerAnimationFrame
     BNE .renderExplosion
     
   .animationEnded:  
     LDA #PLAYER_NOT_V_COOLDOWN
-    STA playerCounter
+    STA <playerCounter
     LDA #PLAYER_NOT_VISIBLE
-    STA playerState
+    STA <playerState
     JSR StopSong ; todo 0006 - not the right place for this
     RTS
     
   .renderExplosion:
-    LDA playerX
-    STA genericX
-    LDA playerY
+    LDA <playerX
+    STA <genericX
+    LDA <playerY
     SEC
     SBC #PLAYER_EXPL_Y_OFF
-    STA genericY
-    LDA playerAnimationFrame
-    STA genericFrame
+    STA <genericY
+    LDA <playerAnimationFrame
+    STA <genericFrame
     LDA #$00
-    STA genericOffScreen
+    STA <genericOffScreen
     JMP RenderExplosion
     
 ;****************************************************************
@@ -565,18 +565,18 @@ CheckThreats:
        
   ; only check the threats if player is not already dying or off screen
   .checkPlayerState:
-    LDA playerState
+    LDA <playerState
     BEQ .checkPlayerYState ; PLAYER_NORMAL = 0
     RTS
         
   .checkPlayerYState:
-    LDA playerYState
+    LDA <playerYState
     BNE .checkThreats ; PLAYER_Y_STATE_EXIT_UP = 0
     RTS
         
   .checkThreats:
     JSR CheckPlayerThreatCollisions
-    LDA collision
+    LDA <collision
     BEQ .noCollision
     JMP ExplodePlayer
     
@@ -597,7 +597,7 @@ CheckThreats:
     
 CheckVictoryConditions:
 
-  LDA levelType
+  LDA <levelType
   BEQ .jetpack ; LEVEL_TYPE_JETPACK = 0  
   CMP #LEVEL_TYPE_NORMAL
   BEQ .normal
@@ -608,20 +608,20 @@ CheckVictoryConditions:
     
     ; check if scroll = max scroll
     .checkIfLevelEnd:
-      LDA scroll
-      CMP maxScroll
+      LDA <scroll
+      CMP <maxScroll
       BNE .exitRoutine
-      LDA scroll + $01
-      CMP maxScroll + $01
+      LDA <scroll + $01
+      CMP <maxScroll + $01
       BNE .exitRoutine
   
     .levelEnd:
       LDA #PLAYER_JETPACK_LVL_END
-      STA playerCounter
+      STA <playerCounter
       LDA #PLAYER_NOT_VISIBLE
-      STA playerState
+      STA <playerState
       JSR StopSong ; todo 0006 - not the right place for this
-      INC levelBeaten
+      INC <levelBeaten
     
     .exitRoutine:
       RTS
@@ -629,7 +629,7 @@ CheckVictoryConditions:
   .normal:
   
     ; check if player wants to exit the stage and whether is at the exit.
-    LDA controllerPressed
+    LDA <controllerPressed
     AND #CONTROLLER_UP
     BNE .checkExit
     RTS
@@ -638,24 +638,24 @@ CheckVictoryConditions:
     
       ; first check if player's Y is correct.
       .checkY:
-        LDA levelTypeData3 ; levelExitY
-        CMP playerPlatformBoxY1
+        LDA <levelTypeData3; levelExitY
+        CMP <playerPlatformBoxY1
         BCS .playerNotAtExit
         CLC
         ADC #EXIT_HEIGHT
-        CMP playerPlatformBoxY2
+        CMP <playerPlatformBoxY2
         BCC .playerNotAtExit
         
       ; now check if player's X is correct.
       ; first we must transpose exit X.
       ; check the screen.
       .transposeX:
-        LDA levelTypeData1 ; this contains the exit screen
-        CMP scroll + $01
+        LDA <levelTypeData1; this contains the exit screen
+        CMP <scroll + $01
         BEQ .currentScreen
         SEC
         SBC #$01
-        CMP scroll + $01
+        CMP <scroll + $01
         BNE .playerNotAtExit ; not current screen nor the next screen
         
         ; exit is on the next screen. Transpose logic:
@@ -666,13 +666,13 @@ CheckVictoryConditions:
         .nextScreen:
           LDA #SCREEN_WIDTH
           SEC
-          SBC scroll
+          SBC <scroll
           CLC
           ADC #$01
           BCS .playerNotAtExit
-          ADC levelTypeData2 ; levelExitX
+          ADC <levelTypeData2; levelExitX
           BCS .playerNotAtExit
-          STA ax1
+          STA <ax1
           JMP .playerExitX1Set
         
         ; exit is on the current screen. Transpose logic:
@@ -680,11 +680,11 @@ CheckVictoryConditions:
         ;   - if x' < 0 (carry cleared after the subtraction), it means exit is partially of screen.
         ;     no need to check anything then - player cannot be at the exit in that case.
         .currentScreen:
-          LDA levelTypeData2 ; levelExitX
+          LDA <levelTypeData2; levelExitX
           SEC
-          SBC scroll
+          SBC <scroll
           BCC .playerNotAtExit
-          STA ax1
+          STA <ax1
         
         ; ax1 has been set, not calculate ax2 by adding exit width.
         ; if it overflows it means player not at exit.
@@ -693,26 +693,26 @@ CheckVictoryConditions:
           CLC
           ADC #EXIT_WIDTH
           BCS .playerNotAtExit
-          STA ax2
+          STA <ax2
           
       ; now check if player's X is correct.
       .checkX:
-        LDA playerPlatformBoxX1
-        CMP ax1
+        LDA <playerPlatformBoxX1
+        CMP <ax1
         BCC .playerNotAtExit
-        LDA playerPlatformBoxX2
-        CMP ax2
+        LDA <playerPlatformBoxX2
+        CMP <ax2
         BCS .playerNotAtExit
         
       ; if we get here, it means player is at exit.
-      ; change the state to not visible, and INC levelBeaten
+      ; change the state to not visible, and INC <levelBeaten
       .playerAtExit:
         LDA #PLAYER_NOT_V_COOLDOWN
-        STA playerCounter
+        STA <playerCounter
         LDA #PLAYER_NOT_VISIBLE
-        STA playerState
+        STA <playerState
         JSR StopSong ; todo 0006 - not the right place for this
-        INC levelBeaten
+        INC <levelBeaten
         
       .playerNotAtExit:
         RTS
@@ -756,52 +756,52 @@ CheckPlayerCollisionVertical:
   
   ; don't check for collisions if player is off screen to the top
   .checkPlayerYState:
-    LDA playerYState
+    LDA <playerYState
     BEQ CheckPlayerCollisionVerticalExit
   
   ; preset collisionCache to 0
   .presetCollisionCache:
     LDA #$00
-    STA collisionCache
-    STA collision
+    STA <collisionCache
+    STA <collision
    
   ; set X box
   .setBoxX:
-    LDA playerPlatformBoxX1
-    STA bx1
-    LDA playerPlatformBoxX2
-    STA bx2    
+    LDA <playerPlatformBoxX1
+    STA <bx1
+    LDA <playerPlatformBoxX2
+    STA <bx2   
     
   ; check move direction, set b to 0 (up) or 1 (down) and go to specific box setting/bounds checking routine
   .directionCheck:
     LDA #$00
-    STA b                                                                     
-    LDA genericDY
+    STA <b                                                                    
+    LDA <genericDY
     CMP #$80
     BCS .goingUp
-    INC b
+    INC <b
   
     .goingDown:      
-      LDA levelType      
+      LDA <levelType     
       BEQ .downJetpack ; LEVEL_TYPE_JETPACK = 0
       
       ; player is going down, meaning we need to cap Y at max ($FF) on overflow (carry set)
       .downNotJetpack:
-        LDA playerPlatformBoxY1
+        LDA <playerPlatformBoxY1
         CLC
-        ADC genericDY
+        ADC <genericDY
         BCS CheckPlayerCollisionVerticalExit ; player is completely off screen
-        STA by1
-        LDA playerPlatformBoxY2
+        STA <by1
+        LDA <playerPlatformBoxY2
         CLC
-        ADC genericDY
+        ADC <genericDY
         BCS .goingDownCapY2
-        STA by2
+        STA <by2
         JMP .checkCollisionsWithPlatforms
         
         .goingDownCapY2:
           LDA #$FF
-          STA by2
+          STA <by2
           JMP .checkCollisionsWithPlatforms
     
       ; check for out of bounds, set dy
@@ -813,9 +813,9 @@ CheckPlayerCollisionVertical:
         ; in either case also INC collisionCache.
         ; if genericDY is 0 after the checks, we can exit.
         .checkLowerBound:               
-          LDA playerY
+          LDA <playerY
           CLC                           
-          ADC genericDY
+          ADC <genericDY
           BCS .offDown
           CMP #PLAYER_Y_MAX_JETPACK
           BCS .offDown
@@ -823,52 +823,52 @@ CheckPlayerCollisionVertical:
           .offDown:
             LDA #PLAYER_Y_MAX_JETPACK
             SEC
-            SBC playerY            
-            STA genericDY
+            SBC <playerY           
+            STA <genericDY
             BEQ .notMovingVertically
-            INC collisionCache
+            INC <collisionCache
             JMP .setYBoxJetpack
     
     .goingUp:
     
-      LDA levelType      
+      LDA <levelType     
       BEQ .upJetpack ; LEVEL_TYPE_JETPACK = 0
     
       ; player is going up, meaning we need to cap Y at min ($00) on no overflow (carry clear)
       .upNotJetpack:
-        LDA playerPlatformBoxY2
+        LDA <playerPlatformBoxY2
         CLC
-        ADC genericDY
+        ADC <genericDY
         BCC CheckPlayerCollisionVerticalExit ; player is completely off screen
-        STA by2
-        LDA playerPlatformBoxY1
+        STA <by2
+        LDA <playerPlatformBoxY1
         CLC
-        ADC genericDY
+        ADC <genericDY
         BCC .goingUpCapY1
-        STA by1
+        STA <by1
         JMP .checkCollisionsWithPlatforms
         
         .goingUpCapY1:
           LDA #$00
-          STA by1
+          STA <by1
           JMP .checkCollisionsWithPlatforms
         
       ; check for out of bounds, set dy, we can exit if genericDY = 0
       .upJetpack:
 
         ; we can exit if genericDY = 0
-        LDA genericDY
+        LDA <genericDY
         BNE .checkUpperBound
         RTS
       
         ; check upper screen bound.
         ; carry clear after adding means playerY + genericDY < 0 - cap at Y_MIN 
         ; then compare to Y_MIN, again carry clear means playerY + genericDY < Y_MIN - cap at Y_MIN
-        ; in either case also INC collisionCache
+        ; in either case also INC <collisionCache
         .checkUpperBound:
-          LDA playerY
+          LDA <playerY
           CLC
-          ADC genericDY
+          ADC <genericDY
           BCC .offUp
           CMP #PLAYER_Y_MIN_JETPACK
           BCC .offUp
@@ -876,10 +876,10 @@ CheckPlayerCollisionVertical:
           .offUp:
             LDA #PLAYER_Y_MIN_JETPACK
             SEC
-            SBC playerY
-            STA genericDY       
+            SBC <playerY
+            STA <genericDY      
             BEQ .notMovingVertically
-            INC collisionCache
+            INC <collisionCache
             JMP .setYBoxJetpack
             
         ; if we get here it means genericDY = 0 after bounds check. Exit.       
@@ -888,14 +888,14 @@ CheckPlayerCollisionVertical:
         
         ; set y box. no need to check for overflow
         .setYBoxJetpack:
-          LDA playerPlatformBoxY1
+          LDA <playerPlatformBoxY1
           CLC
-          ADC genericDY
-          STA by1
-          LDA playerPlatformBoxY2
+          ADC <genericDY
+          STA <by1
+          LDA <playerPlatformBoxY2
           CLC
-          ADC genericDY
-          STA by2          
+          ADC <genericDY
+          STA <by2         
 
   ; check for collisions with platforms and door first,
   ; check first screen first (c == 0), then second screen (c == 1) if no collisions found, then door if no collisons found there too.
@@ -904,121 +904,121 @@ CheckPlayerCollisionVertical:
   
     .checkFirstScreen:
       LDA #$00
-      STA c
-      LDA platformsPointer
-      STA genericPointer
-      LDA platformsPointer + $01
-      STA genericPointer + $01
+      STA <c
+      LDA <platformsPointer
+      STA <genericPointer
+      LDA <platformsPointer + $01
+      STA <genericPointer + $01
       JSR CheckForPlatformOneScreen
-      LDA collision
+      LDA <collision
       BEQ .checkSecondScreen
       JMP .processPlayerAndPlatformCollision
                             
     .checkSecondScreen:               
-      INC c
+      INC <c
       JSR MovePlatformsPointerForward
-      LDA platformsPointer
-      STA genericPointer
-      LDA platformsPointer + $01
-      STA genericPointer + $01
+      LDA <platformsPointer
+      STA <genericPointer
+      LDA <platformsPointer + $01
+      STA <genericPointer + $01
       JSR CheckForPlatformOneScreen
       JSR MovePlatformsPointerBack
-      LDA collision
+      LDA <collision
       BEQ .checkCollisionWithDoor
       JMP .processPlayerAndPlatformCollision
       
     .checkCollisionWithDoor:
       JSR CheckForDoorCollision
-      LDA collision
+      LDA <collision
       BEQ .checkCollisionsWithElevators
       
     .processPlayerAndPlatformCollision:
-      INC collisionCache ; needed so if there's no elevator collision, we don't lose the info about the collision
+      INC <collisionCache; needed so if there's no elevator collision, we don't lose the info about the collision
       JSR .adjustMovementVertical
-      LDA genericDY
+      LDA <genericDY
       BNE .updateBox
       RTS
       
     ; we have updated genericDY. We must recalculate the box before checking collisions with elevators.
     ; no need to check for bounds since we have already done that and we'll never make the absolute value of genericDY larger
     .updateBox:
-      LDA b
+      LDA <b
       BEQ .updateBoxGoingDown
       
       .updateBoxGoingUp:
-        LDA playerPlatformBoxY1
+        LDA <playerPlatformBoxY1
         CLC
-        ADC genericDY
-        STA by1
-        LDA playerPlatformBoxY2
+        ADC <genericDY
+        STA <by1
+        LDA <playerPlatformBoxY2
         CLC
-        ADC genericDY
+        ADC <genericDY
         BCS .updateBoxGoingDownCapY2
-        STA by2
+        STA <by2
         JMP .checkCollisionsWithElevators
         
         .updateBoxGoingDownCapY2:
           LDA #$FF
-          STA by2
+          STA <by2
           JMP .checkCollisionsWithElevators
       
       .updateBoxGoingDown:
-        LDA playerPlatformBoxY2
+        LDA <playerPlatformBoxY2
         CLC
-        ADC genericDY
-        STA by2
-        LDA playerPlatformBoxY1
+        ADC <genericDY
+        STA <by2
+        LDA <playerPlatformBoxY1
         CLC
-        ADC genericDY
+        ADC <genericDY
         BCC .updateBoxGoingUpCapY1
-        STA by1
+        STA <by1
         JMP .checkCollisionsWithElevators
         
         .updateBoxGoingUpCapY1:
           LDA #$00
-          STA by1
+          STA <by1
       
   ; now check for collisions with elevators.
   ; if collision found, go handle it. otherwise exit,
   ; but first do collision = collisionCache to handle the out of bounds case
   .checkCollisionsWithElevators:
     JSR CheckForElevatorCollision
-    LDA collision
+    LDA <collision
     BNE .processPlayerAndElevatorCollision
-    LDA collisionCache
-    STA collision
+    LDA <collisionCache
+    STA <collision
     RTS  
     
   ; if we get here, player had a vertical collision with an elevator.
   ; check if was going down, set the elevator vars if yes.  
   .processPlayerAndElevatorCollision:
-    LDA b ; 1 means player was going down
+    LDA <b; 1 means player was going down
     BEQ .adjustMovementVertical
-    INC playerOnElevator
-    LDA yPointerCache    
-    STA playerElevatorId
+    INC <playerOnElevator
+    LDA <yPointerCache   
+    STA <playerElevatorId
     
   .adjustMovementVertical:
 
-    LDA b ; 0 means that player was going up, 1 that player was going down
+    LDA <b; 0 means that player was going up, 1 that player was going down
     BNE .playerMovingDown
     
     ; dy => boxY1 + dy - 1 = ay2 => dy = ay2 - boxY1 + 1
     .playerMovingUp:      
-      LDA ay2
+      LDA <ay2
       SEC
-      SBC playerPlatformBoxY1
-      STA genericDY
-      INC genericDY
+      SBC <playerPlatformBoxY1
+      STA <genericDY
+      INC <genericDY
       RTS
       
     ; dy => boxY2 + dy + 1 = ay1 => dy = ay1 - boxY2 - 1
     .playerMovingDown:      
-      LDA ay1
+      LDA <ay1
       SEC
-      SBC playerPlatformBoxY2
-      STA genericDY
-      DEC genericDY
+      SBC <playerPlatformBoxY2
+      STA <genericDY
+      DEC <genericDY
       RTS
         
 ;****************************************************************
@@ -1055,98 +1055,98 @@ CheckPlayerCollisionHorizontal:
 
   ; don't check for collisions if player is off screen to the top
   .checkPlayerYState:
-    LDA playerYState
+    LDA <playerYState
     BEQ CheckPlayerCollisionHorizontalExit
 
   ; preset collisionCache to 0
   .presetCollisionCache:
     LDA #$00
-    STA collisionCache
-    STA collision
+    STA <collisionCache
+    STA <collision
 
   ; set the 'y' box
   .setBoxY:
-    LDA playerPlatformBoxY1
-    STA by1
-    LDA playerPlatformBoxY2
-    STA by2
+    LDA <playerPlatformBoxY1
+    STA <by1
+    LDA <playerPlatformBoxY2
+    STA <by2
     
   ; check move direction, set b to 0 (left) or 1 (right). This never gets called when DX = 0
   .directionCheck: 
     LDA #$00
-    STA b
-    LDA genericDX
+    STA <b
+    LDA <genericDX
     CMP #$80
     BCS .checkBounds
-    INC b
+    INC <b
   
   ; check if after the movement player will be in screen bounds
   .checkBounds:
-    LDA c
+    LDA <c
     BEQ .setBoxX ; we don't want to check bounds if c == 0
   
     ; set c to X_MIN, set d to X_MAX
     ; safe to use both here
     .setMinMax:
-      LDA levelType
+      LDA <levelType
       BEQ .jetpack ; LEVEL_TYPE_JETPACK = 0
       
       .notJetpack:
         LDA #PLAYER_X_MIN
-        STA c
+        STA <c
         LDA #PLAYER_X_MAX
-        STA d
+        STA <d
         JMP .checkDirection
       
       .jetpack:
         LDA #PLAYER_X_MIN_JETPACK
-        STA c
+        STA <c
         LDA #PLAYER_X_MAX_JETPACK
-        STA d
+        STA <d
   
     .checkDirection:
-      LDA b
+      LDA <b
       BNE .checkRightBound
     
     ; check left screen bound.
     ; carry clear after adding means playerX + genericDX < 0 - cap at X_MIN 
     ; then compare to X_MIN, again carry clear means playerX + genericDX < X_MIN - cap at X_MIN
-    ; in either case also INC collisionCache
+    ; in either case also INC <collisionCache
     .checkLeftBound:
-      LDA playerX
+      LDA <playerX
       CLC
-      ADC genericDX
+      ADC <genericDX
       BCC .offLeft
-      CMP c ; = X_MIN
+      CMP <c; = X_MIN
       BCC .offLeft
       JMP .setBoxX
       .offLeft:
-        LDA c ; = X_MIN
+        LDA <c; = X_MIN
         SEC
-        SBC playerX
-        STA genericDX      
+        SBC <playerX
+        STA <genericDX     
         BEQ .notMovingHorizontally
-        INC collisionCache
+        INC <collisionCache
         JMP .setBoxX
          
     ; check right screen bound.
     ; carry set after adding means playerX + genericDX > 255 - cap at X_MAX
     ; then compare to X_MAX, carry clear means playerX + genericDX < X_MAX - continue
-    ; otherwise cap at X_MAX. If capping at X_MAX also INC collisionCache
+    ; otherwise cap at X_MAX. If capping at X_MAX also INC <collisionCache
     .checkRightBound:               
-      LDA playerX
+      LDA <playerX
       CLC                           
-      ADC genericDX
+      ADC <genericDX
       BCS .offRight
-      CMP d ; = X_MAX
+      CMP <d; = X_MAX
       BCC .setBoxX
       .offRight:
-        LDA d ; = X_MAX
+        LDA <d; = X_MAX
         SEC
-        SBC playerX
-        STA genericDX
+        SBC <playerX
+        STA <genericDX
         BEQ .notMovingHorizontally
-        INC collisionCache
+        INC <collisionCache
         JMP .setBoxX
         
   ; if we get here it means genericDX = 0 after bounds check. Exit.       
@@ -1156,40 +1156,40 @@ CheckPlayerCollisionHorizontal:
   ; set the player 'x' box.
   ; no need to handle overflow since we are capping at X_MIN/X_MAX above
   .setBoxX:
-    LDA playerPlatformBoxX1
+    LDA <playerPlatformBoxX1
     CLC
-    ADC genericDX
-    STA bx1
-    LDA playerPlatformBoxX2
+    ADC <genericDX
+    STA <bx1
+    LDA <playerPlatformBoxX2
     CLC
-    ADC genericDX
-    STA bx2  
+    ADC <genericDX
+    STA <bx2 
   
   ; check for collisions with elevators first.
   .checkCollisionsWithElevators:
     JSR CheckForElevatorCollision
-    LDA collision
+    LDA <collision
     BEQ .checkCollisionsWithPlatforms
   
     ; Collision found. Adjust DX. If still > 0, check for collisions with platforms. Otherwise exit.
     .adjustMovementForElevator:
       JSR .adjustMovementHorizontal
-      INC collisionCache ; we must do this to make sure we do not lose the info about the collision if there are no platform ones
-      LDA genericDX
+      INC <collisionCache; we must do this to make sure we do not lose the info about the collision if there are no platform ones
+      LDA <genericDX
       BNE .updateBox
       RTS
   
     ; if we get here, genericDX has been updated and we need to update the player 'x' box
     ; no need to check for bounds since we have already done that and we'll never make the absolute value of genericDX larger
     .updateBox:
-      LDA playerPlatformBoxX1
+      LDA <playerPlatformBoxX1
       CLC
-      ADC genericDX
-      STA bx1
-      LDA playerPlatformBoxX2
+      ADC <genericDX
+      STA <bx1
+      LDA <playerPlatformBoxX2
       CLC
-      ADC genericDX
-      STA bx2    
+      ADC <genericDX
+      STA <bx2   
   
   ; check for collisions with platforms and door
   ; check first screen first (c == 0), then second screen (c == 1), then door
@@ -1198,60 +1198,60 @@ CheckPlayerCollisionHorizontal:
   
     .checkFirstScreen:
       LDA #$00
-      STA c
-      LDA platformsPointer
-      STA genericPointer
-      LDA platformsPointer + $01
-      STA genericPointer + $01
+      STA <c
+      LDA <platformsPointer
+      STA <genericPointer
+      LDA <platformsPointer + $01
+      STA <genericPointer + $01
       JSR CheckForPlatformOneScreen
-      LDA collision
+      LDA <collision
       BNE .adjustMovementHorizontal
                                       
     .checkSecondScreen:               
-      INC c
+      INC <c
       JSR MovePlatformsPointerForward
-      LDA platformsPointer
-      STA genericPointer
-      LDA platformsPointer + $01
-      STA genericPointer + $01
+      LDA <platformsPointer
+      STA <genericPointer
+      LDA <platformsPointer + $01
+      STA <genericPointer + $01
       JSR CheckForPlatformOneScreen
       JSR MovePlatformsPointerBack
-      LDA collision
+      LDA <collision
       BNE .adjustMovementHorizontal
       
     .checkCollisionWithDoor:
       JSR CheckForDoorCollision
-      LDA collision
+      LDA <collision
       BNE .adjustMovementHorizontal
       
       ; no collision found with platforms/door
       ; but we may have had an out of bounds collision, or an elevator collision - do collision = collisionCache and exit
-      LDA collisionCache
-      STA collision
+      LDA <collisionCache
+      STA <collision
       RTS
             
   ; Helper subroutine for adjusting horizontal movement  
   .adjustMovementHorizontal:
           
-    LDA b ; 0 means that player was going left, 1 that player was going right
+    LDA <b; 0 means that player was going left, 1 that player was going right
     BNE .playerMovingRight
     
     ; dx => boxX1 + dx - 1 = ax2 => dx = ax2 - boxX1 + 1
     .playerMovingLeft:
-      LDA ax2
+      LDA <ax2
       SEC
-      SBC playerPlatformBoxX1
-      STA genericDX
-      INC genericDX
+      SBC <playerPlatformBoxX1
+      STA <genericDX
+      INC <genericDX
       RTS
       
     ; dx => boxX2 + dx + 1 = ax1 => dx = ax1 - boxX2 - 1
     .playerMovingRight:
-      LDA ax1
+      LDA <ax1
       SEC
-      SBC playerPlatformBoxX2
-      STA genericDX
-      DEC genericDX
+      SBC <playerPlatformBoxX2
+      STA <genericDX
+      DEC <genericDX
       RTS
         
 ;****************************************************************
@@ -1281,7 +1281,7 @@ CheckPlayerCollisionHorizontal:
         
 CheckPlayerStandingUpMidAirCollision:
   JSR CheckPlayerCollision
-  LDA collision
+  LDA <collision
   BEQ .noCollision
   
   ; POITAG - possible issue - we only check for collisions once.
@@ -1293,11 +1293,11 @@ CheckPlayerStandingUpMidAirCollision:
     ; same as .playerMovingUp in vert collision checks
     ; dy => boxY1 + dy - 1 = ay2 => dy = ay2 - boxY1 + 1
     .setDY:    
-      LDA ay2
+      LDA <ay2
       SEC
-      SBC playerPlatformBoxY1
-      STA genericDY
-      INC genericDY
+      SBC <playerPlatformBoxY1
+      STA <genericDY
+      INC <genericDY
 
     .movePlayerAndSetBox:
       JSR MovePlayerVertically
@@ -1334,46 +1334,46 @@ CheckPlayerCollision:
 
   .presetCollision:
     LDA #$00
-    STA collision
+    STA <collision
 
   .setBBox:
-    LDA playerPlatformBoxX1
-    STA bx1
-    LDA playerPlatformBoxX2
-    STA bx2
-    LDA playerPlatformBoxY1
-    STA by1
-    LDA playerPlatformBoxY2
-    STA by2
+    LDA <playerPlatformBoxX1
+    STA <bx1
+    LDA <playerPlatformBoxX2
+    STA <bx2
+    LDA <playerPlatformBoxY1
+    STA <by1
+    LDA <playerPlatformBoxY2
+    STA <by2
         
   .checkCollisionsWithElevators:
     JSR CheckForElevatorCollision
-    LDA collision
+    LDA <collision
     BNE .collisionCheckDone
   
   .checkCollisionsWithPlatforms:
   
     .checkFirstScreen:
       LDA #$00
-      STA c
-      LDA platformsPointer
-      STA genericPointer
-      LDA platformsPointer + $01
-      STA genericPointer + $01
+      STA <c
+      LDA <platformsPointer
+      STA <genericPointer
+      LDA <platformsPointer + $01
+      STA <genericPointer + $01
       JSR CheckForPlatformOneScreen
-      LDA collision
+      LDA <collision
       BNE .collisionCheckDone
                                       
     .checkSecondScreen:               
-      INC c
+      INC <c
       JSR MovePlatformsPointerForward
-      LDA platformsPointer
-      STA genericPointer
-      LDA platformsPointer + $01
-      STA genericPointer + $01
+      LDA <platformsPointer
+      STA <genericPointer
+      LDA <platformsPointer + $01
+      STA <genericPointer + $01
       JSR CheckForPlatformOneScreen
       JSR MovePlatformsPointerBack
-      ;LDA collision
+      ;LDA <collision
       ;BNE .collisionCheckDone
   
   .collisionCheckDone:
@@ -1394,7 +1394,7 @@ CheckPlayerCollision:
 
 MovePlayerVertically:
 
-  LDA genericDY
+  LDA <genericDY
   BEQ .exitRoutine
   CMP #$80
   BCS .playerGoingUp
@@ -1403,41 +1403,41 @@ MovePlayerVertically:
   ; add playerY, set playerY, check for overflow
   .playerGoingDown:
     CLC   
-    ADC playerY
-    STA playerY
+    ADC <playerY
+    STA <playerY
     BCC .resetDY     
   
     ; carry is set, meaning overflow going down. if player previously exited the screen going up, state is back to normal. otherwise it's exit going down.
     .overflowGoingDown:
-      LDA playerYState
+      LDA <playerYState
       BEQ .resetToNormal ; PLAYER_Y_STATE_EXIT_UP = 0
                 
       .setToExitDown:
         LDA #PLAYER_Y_STATE_EXIT_DOWN
-        STA playerYState
+        STA <playerYState
         JMP .resetDY
     
       .resetToNormal:
         LDA #PLAYER_Y_STATE_NORMAL
-        STA playerYState
+        STA <playerYState
         JMP .resetDY  
   
   ; player is going up. A = genericDY.
   ; add playerY, set playerY, check for overflow
   .playerGoingUp:
     CLC   
-    ADC playerY
-    STA playerY
+    ADC <playerY
+    STA <playerY
     BCS .resetDY
     
     ; carry is *not* set, meaning overflow going up. player exited the screen going up.
     .overflowGoingUp:
       LDA #PLAYER_Y_STATE_EXIT_UP
-      STA playerYState
+      STA <playerYState
   
   .resetDY:
     LDA #$00
-    STA genericDY
+    STA <genericDY
     
   .exitRoutine:
     RTS
@@ -1465,7 +1465,7 @@ SetPlayerBoxesVertical:
   ; if player is offscreen to the top, don't bother with setting anything, we don't check for collisions anyway.
   ; then we have special logic for setting boxes based on whether player is on screen or off screen to the bottom.
   .checkPlayerYState:
-    LDA playerYState
+    LDA <playerYState
     BEQ SetPlayerBoxesVerticalExit ; PLAYER_Y_STATE_EXIT_UP = 0
     CMP #PLAYER_Y_STATE_EXIT_DOWN
     BEQ .playerOffScreenDown
@@ -1473,69 +1473,69 @@ SetPlayerBoxesVertical:
     .playerOnScreen:
     
       .onScreenPlaformBoxY:
-        LDA playerY
-        STA playerPlatformBoxY2
+        LDA <playerY
+        STA <playerPlatformBoxY2
         
-        LDA playerAnimation
+        LDA <playerAnimation
         CMP #PLAYER_CROUCH
         BEQ .onScreenPlatformCrouching
         
         .onScreenPlatformNotCrouching:
-          LDA playerPlatformBoxY2
+          LDA <playerPlatformBoxY2
           SEC
           SBC #PLAYER_PLAT_BOX_HEIGHT
           BCC .onScreenCapYAtMin   
-          STA playerPlatformBoxY1
+          STA <playerPlatformBoxY1
           JMP .onScreenThreatBoxY
         
         .onScreenPlatformCrouching:
-          LDA playerPlatformBoxY2
+          LDA <playerPlatformBoxY2
           SEC
           SBC #PLAYER_PLAT_BOX_HEIGHT_C
           BCC .onScreenCapYAtMin   
-          STA playerPlatformBoxY1
+          STA <playerPlatformBoxY1
           JMP .onScreenThreatBoxY
         
         .onScreenCapYAtMin:
           LDA #$00
-          STA playerPlatformBoxY1
+          STA <playerPlatformBoxY1
       
       .onScreenThreatBoxY:
-        LDA playerY
+        LDA <playerY
         SEC
         SBC #PLAYER_THR_BOX_Y_OFF
         BCC .onScreenCapBothAtMin
-        STA playerThreatBoxY2
+        STA <playerThreatBoxY2
         
-        LDA playerAnimation
+        LDA <playerAnimation
         CMP #PLAYER_CROUCH
         BEQ .onScreenThreatCrouching
                 
         .onScreenThreatNotCrouching:
-          LDA playerThreatBoxY2
+          LDA <playerThreatBoxY2
           SEC
           SBC #PLAYER_THR_BOX_HEIGHT
           BCC .onScreenCapY1AtMin
-          STA playerThreatBoxY1
+          STA <playerThreatBoxY1
           RTS
         
         .onScreenThreatCrouching:
-          LDA playerThreatBoxY2
+          LDA <playerThreatBoxY2
           SEC
           SBC #PLAYER_THR_BOX_HEIGHT_C
           BCC .onScreenCapY1AtMin
-          STA playerThreatBoxY1
+          STA <playerThreatBoxY1
           RTS
         
         .onScreenCapBothAtMin:
           LDA #$00
-          STA playerThreatBoxY1
-          STA playerThreatBoxY2      
+          STA <playerThreatBoxY1
+          STA <playerThreatBoxY2     
           RTS
           
         .onScreenCapY1AtMin:
           LDA #$00
-          STA playerThreatBoxY1      
+          STA <playerThreatBoxY1     
           RTS
     
     .playerOffScreenDown:
@@ -1543,34 +1543,34 @@ SetPlayerBoxesVertical:
       ; not checking for crouching as player should not be crouching if off screen down
       .offScreenPlaformBoxY:
         LDA #$FF
-        STA playerPlatformBoxY2
-        LDA playerY
+        STA <playerPlatformBoxY2
+        LDA <playerY
         SEC
         SBC #PLAYER_PLAT_BOX_HEIGHT
         BCS .playerCompletelyOffScreen ; carry set means no overflow, so player is completely off screen now
-        STA playerPlatformBoxY1
+        STA <playerPlatformBoxY1
         
       .offScreenThreatBoxY:
         LDA #$FF
-        STA playerThreatBoxY2
-        LDA playerY
+        STA <playerThreatBoxY2
+        LDA <playerY
         SEC
         SBC #PLAYER_THR_BOX_HEIGHT
         BCS .offScreenCapY1AtMax
-        STA playerThreatBoxY1        
+        STA <playerThreatBoxY1       
         RTS
         
       .offScreenCapY1AtMax:
         LDA #$FF
-        STA playerThreatBoxY1
+        STA <playerThreatBoxY1
         RTS
         
       ; player is completely off screen, change state.
       .playerCompletelyOffScreen:
         LDA #PLAYER_NOT_V_COOLDOWN
-        STA playerCounter
+        STA <playerCounter
         LDA #PLAYER_NOT_VISIBLE
-        STA playerState
+        STA <playerState
         JSR StopSong ; todo 0006 - not the right place for this
         RTS
       
@@ -1589,7 +1589,7 @@ SetPlayerBoxesVertical:
 ;****************************************************************
 
 MovePlayerHorizontallyAndSetBoxes:
-  LDA levelType ; LEVEL_TYPE_JETPACK = 0
+  LDA <levelType; LEVEL_TYPE_JETPACK = 0
   BEQ MovePlayerHorizontallyJetpackAndSetBoxes
   JMP MovePlayerHorizontallyNormalAndSetBoxes
 
@@ -1606,30 +1606,30 @@ MovePlayerHorizontallyAndSetBoxes:
 
 MovePlayerHorizontallyJetpackAndSetBoxes:
 
-  LDA genericDX
+  LDA <genericDX
   CMP #$80
   BCS .movingLeft
 
   ; same logic as in horizontal collision check bound setting
   .movingRight:
-    LDA playerX
+    LDA <playerX
     CLC                           
-    ADC genericDX
+    ADC <genericDX
     BCS .explode
     CMP #PLAYER_X_MAX_JETPACK + $01 ; we cap at PLAYER_X_MAX_JETPACK, and this check is >= so we need to +1
     BCS .explode
-    STA playerX
+    STA <playerX
     JMP SetPlayerBoxesHorizontal
   
   ; same logic as in horizontal collision check bound setting
   .movingLeft:
-    LDA playerX
+    LDA <playerX
     CLC
-    ADC genericDX
+    ADC <genericDX
     BCC .explode
     CMP #PLAYER_X_MIN_JETPACK
     BCC .explode
-    STA playerX
+    STA <playerX
     JMP SetPlayerBoxesHorizontal
   
   .explode:    
@@ -1652,19 +1652,19 @@ MovePlayerHorizontallyJetpackAndSetBoxes:
 
 MovePlayerHorizontallyNormalAndSetBoxes:
 
-  LDA levelType
+  LDA <levelType
   CMP #LEVEL_TYPE_NORMAL
   BEQ .normalMove
-  LDA levelTypeData1 ; if not normal it must be BOSS. check if the screen has been scrolled already
+  LDA <levelTypeData1; if not normal it must be BOSS. check if the screen has been scrolled already
   BEQ .normalMove    ; 0 means screen hasn't been scrolled
   
   ; if we get here it means the screen has been scrolled.
   ; let the player move only within the screen
   .moveWithinScreen:
-    LDA playerX
+    LDA <playerX
     CLC
-    ADC genericDX
-    STA playerX
+    ADC <genericDX
+    STA <playerX
     JMP SetPlayerBoxesHorizontal
 
   ; normal move that will scroll the screen etc.
@@ -1675,27 +1675,27 @@ MovePlayerHorizontallyNormalAndSetBoxes:
     .movePlayerByOne:
      
       ; Load scroll high byte, compare with max scroll high byte
-      LDA scroll + $01                
-      CMP maxScroll + $01
+      LDA <scroll + $01                
+      CMP <maxScroll + $01
       BEQ .highBytesMatch             
                          
       ; High bytes don't match.
       ; Check if low byte isn't 0 - in that case we should scroll
-      LDA scroll                      
+      LDA <scroll                     
       BNE .scrollHorizontally
                                       
       ; High bytes don't match, low byte is 0.
       ; Check if high byte is 0, in that case we're on the left end.
       ; Otherwise we should scroll.
-      LDA scroll + $01                
+      LDA <scroll + $01                
       BEQ .leftMost
       JMP .scrollHorizontally
       
       ; High bytes match, check if scroll == max scroll - in that case we're at the right end.
       ; Otherwise we should scroll.
       .highBytesMatch:                
-        LDA scroll
-        CMP maxScroll
+        LDA <scroll
+        CMP <maxScroll
         BEQ .rightMost
         JMP .scrollHorizontally
       
@@ -1703,10 +1703,10 @@ MovePlayerHorizontallyNormalAndSetBoxes:
       ; Check if player is on the left side of the screen (position != screen center). in such case, move the player.
       ; Otherwise, check which direction player is going - if going right, scroll, otherwise move.
       .leftMost:                      
-        LDA playerX
+        LDA <playerX
         CMP #PLAYER_SCREEN_CENTER
         BNE .moveHorizontally
-        LDA genericDX                  
+        LDA <genericDX                 
         CMP #$80                      
         BCC .scrollRight
         JMP .moveHorizontally
@@ -1715,55 +1715,55 @@ MovePlayerHorizontallyNormalAndSetBoxes:
       ; Check if player is on the right side of the screen (position != screen center). in such case, move the player.
       ; Otherwise, check which direction player is going - if going left, scroll, otherwise move.
       .rightMost:                     
-        LDA playerX
+        LDA <playerX
         CMP #PLAYER_SCREEN_CENTER
         BNE .moveHorizontally
-        LDA genericDX                  
+        LDA <genericDX                 
         CMP #$80                      
         BCS .scrollLeft
         JMP .moveHorizontally
                              
       ; If we get here it means we want to move the player.
       .moveHorizontally:    
-        LDA genericDX                  
+        LDA <genericDX                 
         CMP #$80                      
         BCS .goingLeft
         
         .goingRight:
-          INC playerX
-          DEC genericDX
+          INC <playerX
+          DEC <genericDX
           JMP .checkIfShouldMoveMore
         
         .goingLeft:
-          DEC playerX
-          INC genericDX
+          DEC <playerX
+          INC <genericDX
           JMP .checkIfShouldMoveMore          
                         
       ; If we get here it means we want to scroll the screen. 
       ; Check which direction player is going, and scroll.
       .scrollHorizontally:
-        LDA genericDX                  
+        LDA <genericDX                 
         CMP #$80                      
         BCC .scrollRight
                                        
         .scrollLeft:                   
           JSR ScrollLeft
-          INC genericDX
+          INC <genericDX
           JMP .checkIfShouldMoveMore  
           
         .scrollRight:
           JSR ScrollRight
-          DEC genericDX
+          DEC <genericDX
     
     ; We;ve moved the player and updated DX. See if we should move the player any more. 
     ; If not, set horizontal boxes and exit.
     .checkIfShouldMoveMore:
-      LDA genericDX
+      LDA <genericDX
       BEQ .moveDone
       JMP .movePlayerByOne
       
     .moveDone:
-      LDA levelType
+      LDA <levelType
       CMP #LEVEL_TYPE_NORMAL       ; if level type is normal, we can just set boxes and exit
       BEQ SetPlayerBoxesHorizontal ; POITAG - possible optimization - this is not needed if we only scrolled
       
@@ -1776,25 +1776,25 @@ MovePlayerHorizontallyNormalAndSetBoxes:
       ; but both are probably not worth it as this will be checked very rarely
       .checkIfShouldScroll:        
     
-        LDA scroll + $01
-        STA c ; POI - possible issue - random psuedo-reg use
-        LDA scroll
+        LDA <scroll + $01
+        STA <c; POI - possible issue - random psuedo-reg use
+        LDA <scroll
         CLC
         ADC #$70 ; POI - possible issue - I think this puts player right on the edge of the screen
-        STA b
-        LDA c
+        STA <b
+        LDA <c
         ADC #$00
-        CMP maxScroll + $01
+        CMP <maxScroll + $01
         BCC SetPlayerBoxesHorizontal ; should not scroll, set boxes and exit
-        LDA b
-        CMP maxScroll
+        LDA <b
+        CMP <maxScroll
         BCC SetPlayerBoxesHorizontal ; should not scroll, set boxes and exit
           
         ; if we get here it means we want to fully scroll the screen now.
         .shouldScroll:
           
           ; first, inc levelTypeData1 to mark that we're scrolling
-          INC levelTypeData1
+          INC <levelTypeData1
           
           ; then, clear all bullets. we won't be rendering them
           .clearAllBullets:
@@ -1818,18 +1818,18 @@ MovePlayerHorizontallyNormalAndSetBoxes:
           .scrollingLoop:          
             JSR ClearSprites
             JSR ScrollRight
-            DEC playerX
+            DEC <playerX
             JSR RenderPlayer
             JSR RenderElevators
-            INC needDma ; POI - possible issue - the local versions will be incremented too, make sure they don't overflow
-            INC needPpuReg
-            INC needDraw
+            INC <needDma; POI - possible issue - the local versions will be incremented too, make sure they don't overflow
+            INC <needPpuReg
+            INC <needDraw
             JSR WaitForFrame
-            LDA scroll + $01
-            CMP maxScroll + $01
+            LDA <scroll + $01
+            CMP <maxScroll + $01
             BNE .scrollingLoop
-            LDA scroll
-            CMP maxScroll
+            LDA <scroll
+            CMP <maxScroll
             BNE .scrollingLoop
                       
           JMP SetPlayerBoxesHorizontal ; set boxes after moving the player
@@ -1846,20 +1846,20 @@ MovePlayerHorizontallyNormalAndSetBoxes:
 SetPlayerBoxesHorizontal:
 
   .plaformBoxX:
-    LDA playerX
-    STA playerPlatformBoxX1
+    LDA <playerX
+    STA <playerPlatformBoxX1
     CLC
     ADC #PLAYER_PLAT_BOX_WIDTH     
-    STA playerPlatformBoxX2     ; don't cap X2 since player should never be off screen horizontally
+    STA <playerPlatformBoxX2    ; don't cap X2 since player should never be off screen horizontally
   
   .threatBoxX:
-    LDA playerX
+    LDA <playerX
     CLC
     ADC #PLAYER_THR_BOX_X_OFF
-    STA playerThreatBoxX1
+    STA <playerThreatBoxX1
     CLC
     ADC #PLAYER_THR_BOX_WIDTH      
-    STA playerThreatBoxX2       ; don't cap here either
+    STA <playerThreatBoxX2      ; don't cap here either
 
     RTS  
     
@@ -1876,11 +1876,11 @@ SetPlayerBoxesHorizontal:
 
 ExplodePlayer:
   LDA #PLAYER_EXPLODING
-  STA playerState
+  STA <playerState
   LDA #EXPLOSION_ANIM_FRAMES
-  STA playerAnimationFrame
+  STA <playerAnimationFrame
   LDA #EXPLOSION_ANIM_SPEED
-  STA playerCounter
+  STA <playerCounter
   JSR SfxExplode ; todo 0006 - is this the right place
   RTS   
   
@@ -1898,13 +1898,13 @@ ExplodePlayer:
 
 SpawnPlayerBullets:  
 
-  LDA playerBulletCooldown
+  LDA <playerBulletCooldown
   BEQ .checkB
-  DEC playerBulletCooldown
+  DEC <playerBulletCooldown
   RTS
     
   .checkB:
-    LDA controllerPressed
+    LDA <controllerPressed
     AND #CONTROLLER_B 
     BEQ .return
     JMP SpawnPlayerBullet
@@ -1934,33 +1934,33 @@ SpawnPlayerBullets:
 CheckPlayerThreatCollisions:
 
   .setBox:
-    LDA playerThreatBoxX1
-    STA bx1
-    LDA playerThreatBoxX2
-    STA bx2
-    LDA playerThreatBoxY1
-    STA by1
-    LDA playerThreatBoxY2
-    STA by2
+    LDA <playerThreatBoxX1
+    STA <bx1
+    LDA <playerThreatBoxX2
+    STA <bx2
+    LDA <playerThreatBoxY1
+    STA <by1
+    LDA <playerThreatBoxY2
+    STA <by2
 
   .checkFirstThreatScreen:
     LDA #$00
-    STA c
-    LDA threatsPointer
-    STA genericPointer
-    LDA threatsPointer + $01
-    STA genericPointer + $01
+    STA <c
+    LDA <threatsPointer
+    STA <genericPointer
+    LDA <threatsPointer + $01
+    STA <genericPointer + $01
     JSR CheckForPlatformOneScreen
-    LDA collision
+    LDA <collision
     BNE .collisionCheckDone
     
   .checkSecondThreatScreen:
-    INC c
+    INC <c
     JSR MoveThreatsPointerForward
-    LDA threatsPointer
-    STA genericPointer
-    LDA threatsPointer + $01
-    STA genericPointer + $01
+    LDA <threatsPointer
+    STA <genericPointer
+    LDA <threatsPointer + $01
+    STA <genericPointer + $01
     JSR CheckForPlatformOneScreen
     JSR MoveThreatsPointerBack
     
@@ -1982,31 +1982,31 @@ LoadPlayer:
     
   .commonVariables:
     LDA #PLAYER_NORMAL
-    STA playerState
+    STA <playerState
     LDA #$00                      
-    STA playerJump
+    STA <playerJump
     LDA #DIRECTION_RIGHT
-    STA playerDirection
+    STA <playerDirection
     LDA #PLAYER_Y_STATE_NORMAL
-    STA playerYState
-    LDA levelType
+    STA <playerYState
+    LDA <levelType
     BEQ .jetpack ; LEVEL_TYPE_JETPACK = 0
     
     .notJetpack:
       LDA #$00                          
-      STA playerCounter
-      STA playerAnimationFrame      
+      STA <playerCounter
+      STA <playerAnimationFrame     
       LDA #PLAYER_STAND             
-      STA playerAnimation    
+      STA <playerAnimation   
       JMP .setBoxes
   
     .jetpack:
       LDA #FLAME_ANIMATION_SPEED                  
-      STA playerCounter
+      STA <playerCounter
       LDA #FLAME_SPRITE_COUNT
-      STA playerAnimationFrame      
+      STA <playerAnimationFrame     
       LDA #PLAYER_JUMP             
-      STA playerAnimation    
+      STA <playerAnimation   
   
   .setBoxes:
     JSR SetPlayerBoxesHorizontal
@@ -2038,12 +2038,12 @@ LoadPlayer:
 RenderPlayer:
   
   .stateCheck:
-    LDA playerState
+    LDA <playerState
     BEQ .levelTypeCheck ; PLAYER_NORMAL = 0
     RTS                 ; only render in the normal state, other states render in their 'update' routine
   
   .levelTypeCheck:
-    LDA levelType
+    LDA <levelType
     BEQ .jetpack        ; LEVEL_TYPE_JETPACK = 0
   
   .notJetpack:
@@ -2073,59 +2073,59 @@ RenderPlayer:
 RenderPlayerNormal:
   
   .yStateCheck:
-    LDA playerYState
+    LDA <playerYState
     BNE .directionCheck           ; PLAYER_Y_STATE_EXIT_UP = 0, and we don't want to render in that case
     RTS    
   
   .directionCheck:
-    LDA playerDirection
+    LDA <playerDirection
     BEQ .facingLeft               ; DIRECTION_LEFT = 0
         
     .facingRight:   
       LDA #LOW(playerXOffRight)   
-      STA h   
+      STA <h  
       LDA #HIGH(playerXOffRight)    
-      STA i   
+      STA <i  
         
       LDA #LOW (playerAttsRight)    
-      STA f   
+      STA <f  
       LDA #HIGH (playerAttsRight)   
-      STA g   
+      STA <g  
       JMP .animationCheck   
         
     .facingLeft:    
       LDA #LOW(playerXOffLeft)    
-      STA h   
+      STA <h  
       LDA #HIGH(playerXOffLeft)   
-      STA i   
+      STA <i  
         
       LDA #LOW (playerAttsLeft)   
-      STA f   
+      STA <f  
       LDA #HIGH (playerAttsLeft)    
-      STA g   
+      STA <g  
         
   .animationCheck:    
-    LDA playerAnimation   
+    LDA <playerAnimation  
     CMP #PLAYER_CROUCH    
     BEQ .playerCrouch   
           
     LDA #LOW(playerYOffNonCrouch)   
-    STA b   
+    STA <b  
     LDA #HIGH(playerYOffNonCrouch)    
-    STA c   
+    STA <c  
         
-    LDA playerAnimation   
+    LDA <playerAnimation  
     BEQ .playerStand              ; PLAYER_STAND = 0
     CMP #PLAYER_JUMP  
     BEQ .playerJump 
       
     .playerRun: 
       LDA #LOW(playerTilesRun)  
-      STA d 
+      STA <d
       LDA #HIGH(playerTilesRun) 
-      STA e 
+      STA <e
         
-      LDX playerAnimationFrame    ; X = animation frame             
+      LDX <playerAnimationFrame   ; X = animation frame             
       DEX                         ; X = animation frame - 1 (so for frame 1 there is no offset etc)
       BEQ .render
       LDA #$00
@@ -2135,36 +2135,36 @@ RenderPlayerNormal:
         DEX
         BNE .movePointerLoop      ; after loop A = 9 * (frame - 1)
       CLC                         
-      ADC d                       
-      STA d                       ; move pointer
+      ADC <d                      
+      STA <d                      ; move pointer
       BCC .render                 
-      INC e                       ; handle carry
+      INC <e                      ; handle carry
       JMP .render
       
     .playerStand:
       LDA #LOW(playerTilesStand) 
-      STA d 
+      STA <d
       LDA #HIGH(playerTilesStand)  
-      STA e 
+      STA <e
       JMP .render
     
     .playerJump:
       LDA #LOW(playerTilesJump) 
-      STA d 
+      STA <d
       LDA #HIGH(playerTilesJump)  
-      STA e
+      STA <e
       JMP .render
     
     .playerCrouch:
       LDA #LOW(playerYOffCrouch)
-      STA b
+      STA <b
       LDA #HIGH(playerYOffCrouch)
-      STA c
+      STA <c
       
       LDA #LOW(playerTilesCrouch) 
-      STA d 
+      STA <d
       LDA #HIGH(playerTilesCrouch)  
-      STA e
+      STA <e
       
   .render:
     
@@ -2181,7 +2181,7 @@ RenderPlayerNormal:
     ; if player is on screen and carry *is not* set, it means the tile is not visible and shouldn't be rendered
     ; if player is off screen down and carry *is* set, it means the tile is not visible and shouldn't be rendered
     ; POITAG - possible optimization - lots of code duplication
-    LDA playerYState
+    LDA <playerYState
     CMP #PLAYER_Y_STATE_EXIT_DOWN
     BEQ .renderTileLoopPlayerOffScreenDown
                         
@@ -2189,17 +2189,17 @@ RenderPlayerNormal:
       DEY
       LDA [b], y
       CLC
-      ADC playerY
+      ADC <playerY
       BCC .loopCheckPlayerNormal
-      STA renderYPos
+      STA <renderYPos
       LDA [d], y
-      STA renderTile
+      STA <renderTile
       LDA [f], y
-      STA renderAtts
+      STA <renderAtts
       LDA [h], y
       CLC
-      ADC playerX
-      STA renderXPos
+      ADC <playerX
+      STA <renderXPos
       JSR RenderSprite
       .loopCheckPlayerNormal:
         TYA
@@ -2210,17 +2210,17 @@ RenderPlayerNormal:
       DEY
       LDA [b], y
       CLC
-      ADC playerY
+      ADC <playerY
       BCS .loopCheckPlayerOffScreenDown
-      STA renderYPos
+      STA <renderYPos
       LDA [d], y
-      STA renderTile
+      STA <renderTile
       LDA [f], y
-      STA renderAtts
+      STA <renderAtts
       LDA [h], y
       CLC
-      ADC playerX
-      STA renderXPos
+      ADC <playerX
+      STA <renderXPos
       JSR RenderSprite
       .loopCheckPlayerOffScreenDown:
         TYA
@@ -2249,61 +2249,61 @@ RenderPlayerWithJetpack:
 
   LDA #FLAME_SPRITE_1_MIN_1
   CLC
-  ADC playerAnimationFrame
-  STA renderTile
-  LDA playerY
+  ADC <playerAnimationFrame
+  STA <renderTile
+  LDA <playerY
   CLC
   ADC #FLAME_Y_OFF    ; no overflow checks anywhere, we assume player will always be in bounds
-  STA renderYPos
+  STA <renderYPos
     
-  LDA playerDirection
+  LDA <playerDirection
   BEQ .facingLeft     ; DIRECTION_LEFT = 0
         
     .facingRight:
       LDA #FLAME_ATTS
-      STA renderAtts
-      LDA playerX
+      STA <renderAtts
+      LDA <playerX
       CLC
       ADC #FLAME_X_OFF_RIGHT
-      STA renderXPos
+      STA <renderXPos
       JSR RenderSprite
       LDA #JETPACK_SPRITE
-      STA renderTile
+      STA <renderTile
       LDA #JETPACK_ATTS
-      STA renderAtts
-      LDA playerY
+      STA <renderAtts
+      LDA <playerY
       CLC
       ADC #JETPACK_Y_OFF
-      STA renderYPos      
-      LDA playerX
+      STA <renderYPos     
+      LDA <playerX
       CLC
       ADC #JETPACK_X_OFF_RIGHT
-      STA renderXPos      
+      STA <renderXPos     
       JSR RenderSprite     
       JMP RenderPlayerNormal
     
     .facingLeft:
       LDA #FLAME_ATTS
       ORA #%01000000
-      STA renderAtts
-      LDA playerX
+      STA <renderAtts
+      LDA <playerX
       CLC
       ADC #FLAME_X_OFF_LEFT
-      STA renderXPos
+      STA <renderXPos
       JSR RenderSprite
       LDA #JETPACK_SPRITE
-      STA renderTile
+      STA <renderTile
       LDA #JETPACK_ATTS
       ORA #%01000000
-      STA renderAtts
-      LDA playerY
+      STA <renderAtts
+      LDA <playerY
       CLC
       ADC #JETPACK_Y_OFF
-      STA renderYPos      
-      LDA playerX
+      STA <renderYPos     
+      LDA <playerX
       CLC
       ADC #JETPACK_X_OFF_LEFT
-      STA renderXPos      
+      STA <renderXPos     
       JSR RenderSprite     
       JMP RenderPlayerNormal
 

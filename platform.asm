@@ -68,27 +68,27 @@ vblankwait2:        ; Second wait for vblank, PPU is ready after this
 
 initGame:
   LDA #GAMESTATE_NONE
-  STA gameState
+  STA <gameState
   LDA #$00
-  STA currentLevel  
+  STA <currentLevel 
   
 initPPU:
   LDA #$00                 
-  STA needDma
-  STA needDraw
-  STA needPpuReg
+  STA <needDma
+  STA <needDraw
+  STA <needPpuReg
 
-  STA bufferOffset
+  STA <bufferOffset
   
   JSR ClearPalettes        ; clear all palettes so there's no initial color flashing
   JSR ClearSprites         ; clear all sprites
   JSR ClearBackgrounds     ; clear all backgrounds
                            
   LDA #%00000110           ; init PPU - disable sprites and background
-  STA soft2001             
+  STA <soft2001            
   STA $2001                
   LDA #%10010000           ; enable NMI, sprites from PT 0, bg from PT 1
-  STA soft2000             
+  STA <soft2000            
   STA $2000                
   BIT $2002                
   LDA #$00                 ; no horizontal scroll (yet)
@@ -96,8 +96,8 @@ initPPU:
   LDA #$00                 ; no vertical scroll
   STA $2005                
                 
-  INC needDma
-  INC needDraw
+  INC <needDma
+  INC <needDraw
   JSR WaitForFrame         ; wait for one frame for everything to get loaded
   
 ;****************************************************************
@@ -111,7 +111,7 @@ GameLoop:
   .readControllerDone:      
                                                         
   .checkGameState:          
-    LDA gameState
+    LDA <gameState
     CMP #GAMESTATE_GAME
     BEQ .gameStateGame
     JMP .gameStateNone      ; nothing was matched => game state is "none"  
@@ -124,7 +124,7 @@ GameLoop:
   
   .gameStateNone:
     LDA #$00
-    STA currentLevel        ; set current level to 0
+    STA <currentLevel       ; set current level to 0
     JSR LoadGame
     JMP GameLoopDone        
   .gameStateNoneDone:       
@@ -146,7 +146,7 @@ NMI:
   PHA                       
                
   Dma:
-  LDA needDma               
+  LDA <needDma              
   BEQ NoDma               
     LDA #SPRITES_LOW_BYTE   ; do sprite DMA
     STA $2003               ; conditional via the 'needDma' flag
@@ -158,33 +158,33 @@ NMI:
     NOP                     ; useful for debugging. backlog - remove this once the game is done
   DmaDone:                  
                             
-  LDA needDraw              ; do other PPU drawing
+  LDA <needDraw             ; do other PPU drawing
   BEQ DrawDone              ; conditional via the 'needDraw' flag
     BIT $2002               ; clear VBl flag, reset $2005/$2006 toggle
     JSR DoDrawing           ; draw the stuff from the drawing buffer
     JMP DoPpuReg            ; after drawing PPU reg is required
   DrawDone:
                             
-  LDA needPpuReg            ; PPU register updates
+  LDA <needPpuReg           ; PPU register updates
   BEQ PpuRegDone            ; conditional via the 'needPpuReg' flag
   DoPpuReg:
-    LDA soft2001            ; copy buffered $2000/$2001
+    LDA <soft2001           ; copy buffered $2000/$2001
     STA $2001               
-    LDA soft2000            
+    LDA <soft2000           
     STA $2000               
                             
     BIT $2002               ; set the scroll
-    LDA scroll              ; set horizontal scroll
+    LDA <scroll             ; set horizontal scroll
     STA $2005                
     LDA #$00                ; no vertical scroll
     STA $2005               
   PpuRegDone:
                      
   LDA #$00                  ; clear the sleeping flag so that WaitForFrame will exit, also clear all conditional flags
-  STA needDma
-  STA needDraw
-  STA needPpuReg
-  STA sleeping              
+  STA <needDma
+  STA <needDraw
+  STA <needPpuReg
+  STA <sleeping             
                          
   soundengine_update        ; update the sound engine
                          
@@ -210,9 +210,9 @@ NMI:
 ;****************************************************************
 
 WaitForFrame
-  INC sleeping
+  INC <sleeping
   .loop:
-    LDA sleeping
+    LDA <sleeping
     BNE .loop
   RTS
 
@@ -281,7 +281,7 @@ DoDrawing:
   
   .drawLoop:                    
     
-    CPX bufferOffset          ; bufferOffset points at the first available byte
+    CPX <bufferOffset         ; bufferOffset points at the first available byte
     BEQ DoDrawingDone         ; if we got there it means drawing is done
   
     LDY drawBuffer, x         ; load the length of the data to the Y register
@@ -311,7 +311,7 @@ DoDrawing:
 DoDrawingDone:
   
   LDA #$00
-  STA bufferOffset            ; reset buffer offset to 0
+  STA <bufferOffset           ; reset buffer offset to 0
 
   RTS
 
@@ -326,20 +326,20 @@ DoDrawingDone:
 FadeOut:
 
   LDA #%00111110           ; intensify reds
-  STA soft2001             
-  INC needPpuReg           
+  STA <soft2001            
+  INC <needPpuReg          
   LDX #$04
   JSR SleepForXFrames
   
   LDA #%01111110           ; intensify greens and reds
-  STA soft2001             
-  INC needPpuReg           
+  STA <soft2001            
+  INC <needPpuReg          
   LDX #$04
   JSR SleepForXFrames
 
   LDA #%00000100           ; disable PPU
-  STA soft2001
-  INC needPpuReg
+  STA <soft2001
+  INC <needPpuReg
   LDX #$04
   JSR SleepForXFrames
   
@@ -355,8 +355,8 @@ FadeOut:
   
 DisablePPU:  
   LDA #%00000110                ; disable sprites and background
-  STA soft2001                  
-  INC needPpuReg                
+  STA <soft2001                 
+  INC <needPpuReg               
   JSR WaitForFrame              
   RTS
   
@@ -372,24 +372,24 @@ DisablePPU:
 ;****************************************************************
 
 RenderSprite:  
-  LDX spritePointer
-  LDA renderYPos
+  LDX <spritePointer
+  LDA <renderYPos
   SEC
   SBC #$01           ; sprites are rendered one line below the y position
   STA sprites, x
   INX
-  LDA renderTile
+  LDA <renderTile
   STA sprites, x
   INX
-  LDA renderAtts
+  LDA <renderAtts
   STA sprites, x
   INX
-  LDA renderXPos
+  LDA <renderXPos
   STA sprites, x
-  LDA spritePointer
+  LDA <spritePointer
   CLC
   ADC #SPRITE_POINTER_JUMP  
-  STA spritePointer
+  STA <spritePointer
   RTS
     
 ;****************************************************************
@@ -402,8 +402,8 @@ RenderSprite:
 
 SetVramAddressingTo1:
     LDA #%10010000                ; enable NMI, sprites from PT 0, bg from PT 1. Use NT 0, 1 VRAM increment (for palettes)
-    STA soft2000
-    INC needPpuReg
+    STA <soft2000
+    INC <needPpuReg
     JMP WaitForFrame              ; wait for values to be written
   
 ;****************************************************************
@@ -416,8 +416,8 @@ SetVramAddressingTo1:
  
 SetVramAddressingTo32:
     LDA #%10010100                ; enable NMI, sprites from PT 0, bg from PT 1. Use NT 0, 32 VRAM increment (for background)
-    STA soft2000
-    INC needPpuReg
+    STA <soft2000
+    INC <needPpuReg
     JMP WaitForFrame              ; wait for values to be written
   
 ;****************************************************************
