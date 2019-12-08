@@ -345,7 +345,7 @@ STOP120_DEFAULT         = $78 ; = 120
 
 ELEVATOR_SPRITE              = $F9
 ELEVATOR_END_SPRITE          = $FA
-ELEVATOR_ATTS                = $02
+ELEVATOR_ATTS                = $03
 
 ; format in elevatorManager.asm
 ; depends_on_elevator_in_memory_format
@@ -384,13 +384,13 @@ EXIT_WIDTH                   = $18 ; 24
 ;****************************************************************
 
 DOOR_SPRITE            = $F8
-DOOR_ATTS              = $02
+DOOR_ATTS              = $03
 DOOR_HEIGHT_IN_SPRITES = $06
 DOOR_WIDTH             = $02 * SPRITE_DIMENSION - $01  ; -1 because collision check is inclusive
 DOOR_HEIGHT            = $06 * SPRITE_DIMENSION - $01  ; -1 because collision check is inclusive
 
 KEYCARD_SPRITE_1       = $F6
 KEYCARD_SPRITE_2       = $F7
-KEYCARD_ATTS           = $02
+KEYCARD_ATTS           = $03
 KEYCARD_WIDTH          = $02 * SPRITE_DIMENSION - $01  ; -1 because collision check is inclusive
 KEYCARD_HEIGHT         = SPRITE_DIMENSION - $01        ; -1 because collision check is inclusive

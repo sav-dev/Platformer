@@ -224,6 +224,42 @@ BarrierH6Consts:
 .explosionOffset:
   .byte $10, $FFFFFFFC
 
+BlinkerConsts:
+.width:
+  .byte $10
+.hitboxInfo:
+  .byte $02,$0C,$01,$06
+.orientation:
+  .byte $02
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $05
+.numberOfFrames:
+  .byte $04
+.renderingInfo:
+  .byte LOW(BlinkerRender), HIGH(BlinkerRender)
+.explosionOffset:
+  .byte $00, $FFFFFFFC
+
+BlobConsts:
+.width:
+  .byte $10
+.hitboxInfo:
+  .byte $01,$0E,$05,$09
+.orientation:
+  .byte $01
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $06
+.numberOfFrames:
+  .byte $04
+.renderingInfo:
+  .byte LOW(BlobRender), HIGH(BlobRender)
+.explosionOffset:
+  .byte $00, $00
+
 
 ;
 ;  all offsets for possible grids
@@ -263,6 +299,10 @@ XOff6x1:
   .byte $00, $08, $10, $18, $20, $28
 YOff6x1:
   .byte $00, $00, $00, $00, $00, $00
+XOff2x1:
+  .byte $00, $08
+YOff2x1:
+  .byte $00, $00
 
 ;
 ;  all information needed to draw an enemy
@@ -288,11 +328,11 @@ BeetleRender:
 .attributes:
   .byte $01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01
 .tiles:
-.Beetle2:
+.Frame2_Beetle2:
   .byte $26,$2A,$35,$27,$2B,$36,$28,$2C,$37,$29,$2D,$2E
-.Beetle1:
+.Frame1_Beetle1:
   .byte $26,$2A,$32,$27,$2B,$33,$28,$2C,$34,$29,$2D,$2E
-.Beetle0:
+.Frame0_Beetle0:
   .byte $26,$2A,$2F,$27,$2B,$30,$28,$2C,$31,$29,$2D,$2E
 
 BugRender:
@@ -305,9 +345,9 @@ BugRender:
 .attributes:
   .byte $00,$00,$00,$00
 .tiles:
-.Bug1:
+.Frame1_Bug1:
   .byte $38,$3C,$39,$3D
-.Bug0:
+.Frame0_Bug0:
   .byte $38,$3A,$39,$3B
 
 EyeRender:
@@ -320,7 +360,7 @@ EyeRender:
 .attributes:
   .byte $02,$82,$02,$82
 .tiles:
-.Eye:
+.Frame0_Eye:
   .byte $3E,$3E,$3F,$3F
 
 SpikesRender:
@@ -333,7 +373,7 @@ SpikesRender:
 .attributes:
   .byte $02,$02,$02,$02
 .tiles:
-.Spikes:
+.Frame0_Spikes:
   .byte $40,$42,$41,$43
 
 TurretVRender:
@@ -346,7 +386,7 @@ TurretVRender:
 .attributes:
   .byte $01,$81,$01,$01
 .tiles:
-.TurretV:
+.Frame0_TurretV:
   .byte $44,$44,$45,$46
 
 TurretHRender:
@@ -359,7 +399,7 @@ TurretHRender:
 .attributes:
   .byte $01,$01,$01,$41
 .tiles:
-.TurretH:
+.Frame0_TurretH:
   .byte $47,$49,$48,$49
 
 SphereRender:
@@ -372,7 +412,7 @@ SphereRender:
 .attributes:
   .byte $01,$01,$01,$01
 .tiles:
-.Sphere:
+.Frame0_Sphere:
   .byte $4A,$4C,$4B,$4D
 
 FlyingRobotRender:
@@ -385,9 +425,9 @@ FlyingRobotRender:
 .attributes:
   .byte $00,$00,$00,$00,$40,$00
 .tiles:
-.FlyingRobot1:
+.Frame1_FlyingRobot1:
   .byte $4E,$54,$50,$55,$4E,$56
-.FlyingRobot0:
+.Frame0_FlyingRobot0:
   .byte $4E,$51,$4F,$52,$4E,$53
 
 WalkingRobotRender:
@@ -400,13 +440,13 @@ WalkingRobotRender:
 .attributes:
   .byte $00,$00,$01,$00,$00,$01,$40,$00,$01
 .tiles:
-.WalkingRobot3:
+.Frame3_WalkingRobot3:
   .byte $4E,$54,$5A,$50,$55,$5B,$4E,$56,$5C
-.WalkingRobot2:
+.Frame2_WalkingRobot2:
   .byte $4E,$54,$57,$50,$55,$58,$4E,$56,$59
-.WalkingRobot1:
+.Frame1_WalkingRobot1:
   .byte $4E,$51,$5A,$4F,$52,$5B,$4E,$53,$5C
-.WalkingRobot0:
+.Frame0_WalkingRobot0:
   .byte $4E,$51,$57,$4F,$52,$58,$4E,$53,$59
 
 BarrierV6Render:
@@ -419,7 +459,7 @@ BarrierV6Render:
 .attributes:
   .byte $02,$02,$02,$02,$02,$02
 .tiles:
-.BarrierV6:
+.Frame0_BarrierV6:
   .byte $5D,$5D,$5D,$5D,$5D,$5D
 
 BarrierH6Render:
@@ -432,7 +472,45 @@ BarrierH6Render:
 .attributes:
   .byte $02,$02,$02,$02,$02,$02
 .tiles:
-.BarrierH6:
+.Frame0_BarrierH6:
   .byte $5E,$5E,$5E,$5E,$5E,$5E
+
+BlinkerRender:
+.spriteCount:
+  .byte $02
+.offsets:
+  .byte LOW(XOff2x1), HIGH(XOff2x1), LOW(YOff2x1), HIGH(YOff2x1), LOW(XOff2x1), HIGH(XOff2x1), LOW(YOff2x1), HIGH(YOff2x1)
+.flipXor:
+  .byte %00000000
+.attributes:
+  .byte $00,$00
+.tiles:
+.Frame3_Blinker3:
+  .byte $63,$64
+.Frame2_Blinker1:
+  .byte $5F,$60
+.Frame1_Blinker2:
+  .byte $61,$62
+.Frame0_Blinker1:
+  .byte $5F,$60
+
+BlobRender:
+.spriteCount:
+  .byte $04
+.offsets:
+  .byte LOW(XOff2x2), HIGH(XOff2x2), LOW(YOff2x2), HIGH(YOff2x2), LOW(XOff2x2H), HIGH(XOff2x2H), LOW(YOff2x2), HIGH(YOff2x2)
+.flipXor:
+  .byte %01000000
+.attributes:
+  .byte $03,$03,$03,$03
+.tiles:
+.Frame3_Blob3:
+  .byte $6D,$6F,$6E,$70
+.Frame2_Blob1:
+  .byte $65,$67,$66,$68
+.Frame1_Blob2:
+  .byte $69,$6B,$6A,$6C
+.Frame0_Blob1:
+  .byte $65,$67,$66,$68
 
 
