@@ -1,3 +1,6 @@
+
+EnemiesStart:
+
 ;****************************************************************
 ; Enemies                                                       ;
 ; Holds information about all enemies (auto-generated)          ;
@@ -514,3 +517,4 @@ BlobRender:
   .byte $65,$67,$66,$68
 
 
+EnemiesEnd:
