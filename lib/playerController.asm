@@ -2390,10 +2390,6 @@ playerTilesRun:
 ; Jetpack data, coded by hand                                   ;
 ;****************************************************************
 
-FLAME_SPRITE_1        = $F2
-FLAME_SPRITE_2        = $F3
-FLAME_SPRITE_3        = $F4
-
 FLAME_ATTS            = $00
 FLAME_X_OFF_RIGHT     = $FA ; = -6; 6 pixels left from the upper legs
 FLAME_X_OFF_LEFT      = $0E ; = 14; 6 pixels right from the upper legs
@@ -2405,8 +2401,6 @@ FLAME_Y_OFF           = $F1 ; same as the upper legs
 FLAME_SPRITE_1_MIN_1  = FLAME_SPRITE_1 - $01
 FLAME_SPRITE_COUNT    = $03
 FLAME_ANIMATION_SPEED = $06 
-
-JETPACK_SPRITE        = $F5
 
 JETPACK_ATTS          = $01
 JETPACK_X_OFF_RIGHT   = $FB ; = -5; 8 pixels left from the head

@@ -179,10 +179,6 @@ BULLET_S_NORMAL         = $02
 BULLET_S_SMTH_HIT       = $03
 BULLET_S_TO_CLEAR       = BULLET_S_SMTH_HIT + BULLET_E_DURATION
 
-BULLET_SPRITE_H         = $FD   ; tiles
-BULLET_SPRITE_V         = $FC
-BULLET_SPRITE_E         = $FB
-
 BULLET_ATTS_LEFT        = $40   ; atts
 BULLET_ATTS_RIGHT       = $00
 BULLET_ATTS_UP          = $80
@@ -343,8 +339,6 @@ STOP120_DEFAULT         = $78 ; = 120
 ; Elevators                                                     ;
 ;****************************************************************
 
-ELEVATOR_SPRITE              = $F9
-ELEVATOR_END_SPRITE          = $FA
 ELEVATOR_ATTS                = $03
 
 ; format in elevatorManager.asm
@@ -383,14 +377,11 @@ EXIT_WIDTH                   = $18 ; 24
 ; Door and keycard                                              ;
 ;****************************************************************
 
-DOOR_SPRITE            = $F8
 DOOR_ATTS              = $03
 DOOR_HEIGHT_IN_SPRITES = $06
 DOOR_WIDTH             = $02 * SPRITE_DIMENSION - $01  ; -1 because collision check is inclusive
 DOOR_HEIGHT            = $06 * SPRITE_DIMENSION - $01  ; -1 because collision check is inclusive
 
-KEYCARD_SPRITE_1       = $F6
-KEYCARD_SPRITE_2       = $F7
 KEYCARD_ATTS           = $03
 KEYCARD_WIDTH          = $02 * SPRITE_DIMENSION - $01  ; -1 because collision check is inclusive
 KEYCARD_HEIGHT         = SPRITE_DIMENSION - $01        ; -1 because collision check is inclusive
