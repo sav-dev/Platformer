@@ -1898,6 +1898,9 @@ ExplodePlayer:
 
 SpawnPlayerBullets:  
 
+  LDA playerState
+  BNE .return ; PLAYER_NORMAL = 0
+
   LDA <playerBulletCooldown
   BEQ .checkB
   DEC <playerBulletCooldown
