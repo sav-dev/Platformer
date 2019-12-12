@@ -263,6 +263,24 @@ BlobConsts:
 .explosionOffset:
   .byte $00, $00
 
+TankConsts:
+.width:
+  .byte $20
+.hitboxInfo:
+  .byte $07,$17,$02,$16
+.orientation:
+  .byte $01
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $04
+.numberOfFrames:
+  .byte $02
+.renderingInfo:
+  .byte LOW(TankRender), HIGH(TankRender)
+.explosionOffset:
+  .byte $08, $04
+
 
 ;
 ;  all offsets for possible grids
@@ -515,6 +533,21 @@ BlobRender:
   .byte $69,$6B,$6A,$6C
 .Frame0_Blob1:
   .byte $65,$67,$66,$68
+
+TankRender:
+.spriteCount:
+  .byte $0C
+.offsets:
+  .byte LOW(XOff4x3), HIGH(XOff4x3), LOW(YOff4x3), HIGH(YOff4x3), LOW(XOff4x3H), HIGH(XOff4x3H), LOW(YOff4x3), HIGH(YOff4x3)
+.flipXor:
+  .byte %01000000
+.attributes:
+  .byte $01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01
+.tiles:
+.Frame1_Tank2:
+  .byte CLEAR_SPRITE,CLEAR_SPRITE,$7B,$71,$74,$7C,$72,$75,$7D,$73,$76,$7E
+.Frame0_Tank1:
+  .byte CLEAR_SPRITE,CLEAR_SPRITE,$77,$71,$74,$78,$72,$75,$79,$73,$76,$7A
 
 
 EnemiesEnd:
