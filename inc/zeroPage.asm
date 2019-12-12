@@ -46,6 +46,12 @@ xPointerCache           .rs 1  ; for caching the initial value of the x register
 yPointerCache           .rs 1  ; for caching the initial value of the y register
 
 ;****************************************************************
+; Memory related variables                                      ;
+;****************************************************************
+
+currentBank             .rs 1  ; currently selected bank
+
+;****************************************************************
 ; Buffering related variables                                   ;
 ;****************************************************************
 

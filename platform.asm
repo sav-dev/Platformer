@@ -2,9 +2,9 @@
 ; iNES headers                                                  ;
 ;****************************************************************
 
-  .inesprg 2  ; 2x 16KB = 32KB PRG code (banks 0-3)
-  .ineschr 1  ; 1x  8KB CHR data (bank 4)
-  .inesmap 0  ; mapper 0 = NROM, no bank swapping
+  .inesprg 8  ; 8x 16KB = 128 PRG code
+  .ineschr 0  ; no CHR ROM
+  .inesmap 2  ; mapper 2 = UNROM
   .inesmir 1  ; vertical mirroring for horizontal scrolling
   
 ;****************************************************************
@@ -26,10 +26,12 @@
 ; RESET handler                                                 ;
 ;****************************************************************
 
-  .bank 2
+Bank14:
+
+  .bank 14
   .org $C000 
 
-Bank2Start:
+Bank14Start:
   
 RESET:
   SEI               ; disable IRQs
@@ -67,6 +69,11 @@ vblankwait2:        ; Second wait for vblank, PPU is ready after this
 ; Initialization logic                                          ;
 ;****************************************************************
 
+; todo 0000 - should this be here
+initialBankSelect:
+  LDY #$00
+  JSR SelectBank
+  
 initGame:
   LDA #GAMESTATE_NONE
   STA <gameState
@@ -345,6 +352,21 @@ FadeOut:
   JSR SleepForXFrames
   
   RTS
+  
+;****************************************************************
+; Name:                                                         ;
+;   EnablePPU                                                   ;
+;                                                               ;
+; Description:                                                  ;
+;   Enable sprites and backgrounds                              ;
+;****************************************************************
+  
+EnablePPU:  
+  LDA #%00011110                ; enable sprites and background
+  STA <soft2001                 
+  INC <needPpuReg               
+  JSR WaitForFrame              
+  RTS
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -432,59 +454,191 @@ SetVramAddressingTo32:
   .include "lib\explosionsController.asm"
   .include "lib\levelManager.asm"
   
-Bank2End:
+Bank14End:
   
-  .bank 0
-  .org $8000
+Bank15:
   
-Bank0Start:
-    
-  .include "lib\soundController.asm"
-  .include "data\levels.asm"  
-        
-Bank0End:
-    
-  .bank 1
-  .org $A000
-
-Bank1Start:
-  
-Bank1End:
-  
-  .bank 3
+  .bank 15
   .org $E000
   
-Bank3Start: 
+Bank15Start: 
  
   .include "data\enemies.asm" ; this has to be in this place
+  
+  .include "lib\bankManager.asm"
   .include "lib\paletteManager.asm"   
   .include "lib\elevatorManager.asm"
   .include "lib\doorManager.asm"
   .include "lib\ggsoundInclude.asm"  
   .include "lib\controllerManager.asm" 
-  .include "lib\bulletController.asm"  
+  .include "lib\bulletController.asm"
+  .include "lib\chrManager.asm"
   
   .include "states\game.asm"
-
  
-Bank3End:
+Bank15End:
+
+;****************************************************************
+; UNROM Bank $00                                                ;
+;****************************************************************
+
+Bank00:
+
+  .bank 0
+  .org $8000
+  
+Bank00Start:
+    
+  .include "lib\soundController.asm" ; todo 0006 move this to the const banks?
+  .include "data\levels.asm"
+  
+Bank00End:
+
+Bank01:
+    
+  .bank 1
+  .org $A000
+  
+Bank01Start:  
+
+  SprChr:
+  .byte $09
+  .incbin "PlatformerGraphics\Chr\spr.chr"
+  SprChrEnd:
+  
+  BgChr:
+  .byte $10
+  .incbin "PlatformerGraphics\Chr\bg.chr"
+  BgChrEnd: 
+  
+Bank01End:
+
+;****************************************************************
+; UNROM Bank $01                                                ;
+;****************************************************************
+
+Bank02:
+
+  .bank 2
+  .org $8000
+
+Bank02Start:  
+Bank02End:
+  
+Bank03:
+  
+  .bank 3
+  .org $A000
+  
+Bank03Start:  
+Bank03End:
+
+;****************************************************************
+; UNROM Bank $02                                                ;
+;****************************************************************
+
+Bank04:
+
+  .bank 4
+  .org $8000
+
+Bank04Start:  
+Bank04End:
+  
+Bank05:
+  
+  .bank 5
+  .org $A000
+
+Bank05Start:  
+Bank05End:
+
+;****************************************************************
+; UNROM Bank $03                                                ;
+;****************************************************************
+
+Bank06:
+
+  .bank 6
+  .org $8000
+
+Bank06Start:  
+Bank06End:
+  
+Bank07:
+  
+  .bank 7
+  .org $A000
+
+Bank07Start:  
+Bank07End:
+
+;****************************************************************
+; UNROM Bank $04                                                ;
+;****************************************************************
+
+Bank08:
+
+  .bank 8
+  .org $8000
+
+Bank08Start:  
+Bank08End:
+  
+Bank09:
+  
+  .bank 9
+  .org $A000
+
+Bank09Start:  
+Bank09End:
+
+;****************************************************************
+; UNROM Bank $05                                                ;
+;****************************************************************
+
+Bank10:
+
+  .bank 10
+  .org $8000
+
+Bank10Start:  
+Bank10End:
+  
+Bank11:
+  
+  .bank 11
+  .org $A000
+
+Bank11Start:  
+Bank11End:
+
+;****************************************************************
+; UNROM Bank $06                                                ;
+;****************************************************************
+
+Bank12:
+
+  .bank 12
+  .org $8000
+
+Bank12Start:  
+Bank12End:
+  
+Bank13:
+  
+  .bank 13
+  .org $A000
+
+Bank13Start:  
+Bank13End:
   
 ;****************************************************************
 ; Vectors                                                       ;
 ;****************************************************************
 
-  .bank 3
+  .bank 15
   .org $FFFA  ; vectors starts here
   .dw NMI     ; when an NMI happens (once per frame if enabled) the processor will jump to the label NMI:
   .dw RESET   ; when the processor first turns on or is reset, it will jump to the label RESET:
   .dw 0       ; external interrupt IRQ is not used
-
-;****************************************************************
-; CHR import                                                    ;
-;****************************************************************
-  
-  .bank 4
-  .org $0000
-
-  .incbin "PlatformerGraphics\chr\spr.chr"
-  .incbin "PlatformerGraphics\chr\bg.chr"

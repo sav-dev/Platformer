@@ -125,6 +125,21 @@ LoadGame:
     
   .clearMemoryDone:
   
+  ; todo 0000 - this needs to be updated; only load sprites chr once; select bank
+  .loadChr:
+    JSR SetVramAddressingTo1
+    LDA #LOW(SprChr)
+    STA <genericPointer
+    LDA #HIGH(SprChr)
+    STA <genericPointer + $01
+    JSR LoadSprChr
+    LDA #LOW(BgChr)
+    STA <genericPointer
+    LDA #HIGH(BgChr)
+    STA <genericPointer + $01
+    JSR LoadBgChr
+  .loadChrDone:
+  
   .loadLevel:                     ; load level
     JSR SetVramAddressingTo32
     LDA <currentLevel
@@ -161,9 +176,7 @@ LoadGame:
   .initVarsDone:
  
   .enablePPU:                                    
-    LDA #%00011110                ; enable sprites and background
-    STA <soft2001                 
-    INC <needPpuReg
+    JSR EnablePPU
   .enablePPUDone:  
 
   ; todo 0006 - is this the right place to call this

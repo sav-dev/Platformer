@@ -1,5 +1,7 @@
 BackgroundManager
+BankManager
 BulletController
+ChrManager
 CollisionManager
 ControllerManager
 DoorManager
