@@ -453,6 +453,7 @@ SetVramAddressingTo32:
   .include "lib\collisionManager.asm"
   .include "lib\explosionsController.asm"
   .include "lib\levelManager.asm"
+  .include "lib\elevatorManager.asm"
   
 Bank14End:
   
@@ -467,7 +468,6 @@ Bank15Start:
   
   .include "lib\bankManager.asm"
   .include "lib\paletteManager.asm"   
-  .include "lib\elevatorManager.asm"
   .include "lib\doorManager.asm"
   .include "lib\ggsoundInclude.asm"  
   .include "lib\controllerManager.asm" 
@@ -502,14 +502,16 @@ Bank01:
 Bank01Start:  
 
   SprChr:
-  .byte $09
+  .byte $09 ; page count
   .incbin "PlatformerGraphics\Chr\spr.chr"
   SprChrEnd:
   
   BgChr:
-  .byte $10
+  .byte $10 ; page count 
   .incbin "PlatformerGraphics\Chr\bg.chr"
   BgChrEnd: 
+
+  .org $B902 ; = (SprChr pageCount + BgChr pageCount) * 256 + 2; .incbin is not counted for some reason
   
 Bank01End:
 
