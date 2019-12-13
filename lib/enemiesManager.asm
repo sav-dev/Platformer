@@ -106,11 +106,13 @@ UpdateActiveEnemy:
 
   ; assume the enemy should be rendered.
   ; also, while we're here, assume collision check is needed and enemy is not flashing
+  ; finally, assume we don't want to animate the enemy if static
   LDA #$01
   STA <enemyOnScreen
   STA <enemyCollisions
   STA <enemyNotFlashing
-
+  STA <enemyDontAnimStatic
+  
   ; at this point, X points to the state.
   ; check if enemy is flashing - compare state to 3 (ENEMY_STATE_ACTIVE + 1),
   ; if carry clear enemy is not flashing.
@@ -381,14 +383,19 @@ UpdateActiveEnemy:
       ; first do X += 1 to point to the special movement var. then check the special movement type.
       INX 
       LDA <enemySpecialMovType
-      BEQ .normalMovement ; SPECIAL_MOV_NONE = 0
-      CMP #SPECIAL_MOV_SINUS8
-      BEQ .sinus8Movement
-      CMP #SPECIAL_MOV_SINUS16
-      BEQ .sinus16Movement
+      BNE .checkSpecialMovement ; SPECIAL_MOV_NONE = 0
       JMP .normalMovement
+      .checkSpecialMovement:
+        CMP #SPECIAL_MOV_JUMP_BIG
+        BEQ .jumpBigMovement
+        BCS .checkOtherMovementTypes ; carry set but not equal means value > SPECIAL_MOV_JUMP_BIG     
+        CMP #SPECIAL_MOV_SINUS8
+        BEQ .sinus8Movement
+        CMP #SPECIAL_MOV_SINUS16
+        BEQ .sinus16Movement
+        JMP .normalMovement
       
-      ; sinus movement.
+      ; special movement.
       ; first cache y in b
       ; then load the special movement var to y
       ; load the value from the table and put it in genericDOther
@@ -421,7 +428,107 @@ UpdateActiveEnemy:
         .sinus16MovementRestoreY:
           LDY <b
           JMP .checkDirection
-      
+          
+      ; same as above but uses the jump big table
+      .jumpBigMovement:
+        STY <b
+        LDY enemies, x
+        LDA jumpBigMovementTable, y
+        STA <genericDOther
+        DEC enemies, x
+        BNE .jumpBigMovementRestoreY
+        LDA #JUMP_BIG_LENGTH
+        STA enemies, x
+        .jumpBigMovementRestoreY:
+          LDY <b
+          JMP .checkDirection
+          
+      ; remaining checks
+      .checkOtherMovementTypes:
+        CMP #SPECIAL_MOV_JUMP_SMALL
+        BEQ .jumpSmallMovement
+        CMP #SPECIAL_MOV_JUMP_B_P
+        BEQ .jumpBigPauseMovement
+        CMP #SPECIAL_MOV_JUMP_S_P
+        BEQ .jumpSmallPauseMovement
+        JMP .normalMovement
+          
+      ; same as above but uses the jump small table
+      .jumpSmallMovement:
+        STY <b
+        LDY enemies, x
+        LDA jumpSmallMovementTable, y
+        STA <genericDOther
+        DEC enemies, x
+        BNE .jumpSmallMovementRestoreY
+        LDA #JUMP_SMALL_LENGTH
+        STA enemies, x
+        .jumpSmallMovementRestoreY:
+          LDY <b
+          JMP .checkDirection
+          
+      ; same as above but handling the special speed value ($80)
+      .jumpBigPauseMovement:
+        STY <b
+        LDY enemies, x
+        LDA jumpBigPauseMovementTable, y
+        CMP #$80
+        BEQ .jumpBigPauseStop
+        STA <genericDOther
+        JMP .jumpBigPauseUpdateCounter
+        
+        ; enemy is not moving. set all speeds to 0, but also mark the enemy as 'always animate'
+        ; finally, we must increment movementLeft since enemy is not moving.
+        ; X -= 1 to point to movement left, INC by enemySpeed, X += 1 to point back to where we were
+        .jumpBigPauseStop:
+          DEX
+          LDA enemies, x
+          CLC
+          ADC <enemySpeed
+          STA enemies, x
+          INX
+          LDA #$00
+          STA <enemySpeed
+          STA <genericDOther
+          STA <enemyDontAnimStatic
+        .jumpBigPauseUpdateCounter:
+          DEC enemies, x
+          BNE .jumpBigPauseMovementRestoreY
+          LDA #JUMP_BIG_PAUSE_LENGTH
+          STA enemies, x
+        .jumpBigPauseMovementRestoreY:
+          LDY <b
+          JMP .checkDirection
+
+      ; same as above different lookup
+      .jumpSmallPauseMovement:
+        STY <b
+        LDY enemies, x
+        LDA jumpSmallPauseMovementTable, y
+        CMP #$80
+        BEQ .jumpSmallPauseStop
+        STA <genericDOther
+        JMP .jumpSmallPauseUpdateCounter
+        .jumpSmallPauseStop:
+          DEX
+          LDA enemies, x
+          CLC
+          ADC <enemySpeed
+          STA enemies, x
+          INX
+          LDA #$00
+          STA <enemySpeed
+          STA <genericDOther
+          STA <enemyDontAnimStatic
+        .jumpSmallPauseUpdateCounter:
+          DEC enemies, x
+          BNE .jumpSmallPauseMovementRestoreY
+          LDA #JUMP_SMALL_PAUSE_LENGTH
+          STA enemies, x
+        .jumpSmallPauseMovementRestoreY:
+          LDY <b
+          JMP .checkDirection
+          
       .normalMovement:
         LDA #$00
         STA <genericDOther
@@ -1081,6 +1188,8 @@ UpdateActiveEnemy:
       BEQ UpdateActiveEnemyDone
     
     .checkIfShouldAnimate:
+      LDA <enemyDontAnimStatic
+      BEQ .updateTimer ; we want to always animate this enemy
       LDA <enemySpeed
       BEQ .loadFrame
       LDA <enemyOrientation
@@ -2127,7 +2236,7 @@ sinus8MovementTable:
   .byte $00
   .byte $00
   .byte $00
-  .byte $00   
+  .byte $00
   .byte $FF
   .byte $FF
   .byte $FF
@@ -2150,6 +2259,202 @@ sinus8MovementTable:
   .byte $01
   .byte $02
   .byte $02
+  
+;****************************************************************
+; Name:                                                         ;
+;   jumpBigMovementTable                                        ;
+;                                                               ;
+; Description:                                                  ;
+;   Lookup table for the jump big movement type                 ;
+;****************************************************************
+ 
+JUMP_BIG_LENGTH = $20 ; = 32
+ 
+jumpBigMovementTable:
+  .byte $00 ; this will never be used
+  .byte $02
+  .byte $02
+  .byte $02
+  .byte $02
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FE
+  .byte $FE
+  .byte $FE
+  .byte $FE
+  
+;****************************************************************
+; Name:                                                         ;
+;   jumpSmallMovementTable                                      ;
+;                                                               ;
+; Description:                                                  ;
+;   Lookup table for the jump small movement type               ;
+;****************************************************************
+ 
+JUMP_SMALL_LENGTH = $10 ; = 16
+ 
+jumpSmallMovementTable:
+  .byte $00 ; this will never be used
+  .byte $02
+  .byte $02
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FE
+  .byte $FE
+  
+;****************************************************************
+; Name:                                                         ;
+;   jumpBigPauseMovementTable                                   ;
+;                                                               ;
+; Description:                                                  ;
+;   Lookup table for the jump big pause movement type           ;
+;****************************************************************
+ 
+JUMP_BIG_PAUSE_LENGTH = $40 ; = 64
+ 
+jumpBigPauseMovementTable:
+  .byte $00 ; this will never be used
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80 ; special value meaning don't move at all this frame
+  .byte $02
+  .byte $02
+  .byte $02
+  .byte $02
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FE
+  .byte $FE
+  .byte $FE
+  .byte $FE
+  
+;****************************************************************
+; Name:                                                         ;
+;   jumpSmallPauseMovementTable                                 ;
+;                                                               ;
+; Description:                                                  ;
+;   Lookup table for the jump small pause movement type         ;
+;****************************************************************
+ 
+JUMP_SMALL_PAUSE_LENGTH = $20 ; = 32
+ 
+jumpSmallPauseMovementTable:
+  .byte $00 ; this will never be used
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80
+  .byte $80 ; special value meaning don't move at all this frame
+  .byte $02
+  .byte $02
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $01
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $00
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FF
+  .byte $FE
+  .byte $FE
   
 ;****************************************************************
 ; Name:                                                         ;
