@@ -257,7 +257,7 @@ GreenBlobConsts:
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
-  .byte $06
+  .byte $05
 .numberOfFrames:
   .byte $04
 .renderingInfo:
@@ -275,7 +275,7 @@ PinkBlobConsts:
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
-  .byte $06
+  .byte $05
 .numberOfFrames:
   .byte $04
 .renderingInfo:

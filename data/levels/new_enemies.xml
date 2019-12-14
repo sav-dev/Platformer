@@ -1094,17 +1094,17 @@
   </Tiles>
   <Enemies>
     <Enemy>
-      <Name>Blob</Name>
+      <Name>Green Blob</Name>
       <X>192</X>
       <Y>80</Y>
       <MovementType>Horizontal</MovementType>
       <Direction>Left</Direction>
-      <SpecialMovement>None</SpecialMovement>
+      <SpecialMovement>JumpBigPause</SpecialMovement>
       <Speed>1</Speed>
       <ShouldFlip>true</ShouldFlip>
-      <MinPosition>112</MinPosition>
+      <MinPosition>128</MinPosition>
       <MaxPosition>192</MaxPosition>
-      <InitialFlip>false</InitialFlip>
+      <InitialFlip>true</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
@@ -1112,16 +1112,16 @@
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
-      <Name>Blinker</Name>
-      <X>192</X>
-      <Y>48</Y>
+      <Name>Pink Blob</Name>
+      <X>208</X>
+      <Y>80</Y>
       <MovementType>Horizontal</MovementType>
       <Direction>Left</Direction>
-      <SpecialMovement>Sinus8</SpecialMovement>
+      <SpecialMovement>JumpSmallPause</SpecialMovement>
       <Speed>1</Speed>
       <ShouldFlip>true</ShouldFlip>
-      <MinPosition>96</MinPosition>
-      <MaxPosition>192</MaxPosition>
+      <MinPosition>112</MinPosition>
+      <MaxPosition>208</MaxPosition>
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
