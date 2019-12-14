@@ -1122,7 +1122,7 @@
       <ShouldFlip>true</ShouldFlip>
       <MinPosition>112</MinPosition>
       <MaxPosition>208</MaxPosition>
-      <InitialFlip>false</InitialFlip>
+      <InitialFlip>true</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>

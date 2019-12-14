@@ -251,7 +251,7 @@ GreenBlobConsts:
 .width:
   .byte $10
 .hitboxInfo:
-  .byte $01,$0E,$06,$09
+  .byte $01,$0D,$06,$09
 .orientation:
   .byte $01
 .gunInfo:
@@ -269,7 +269,7 @@ PinkBlobConsts:
 .width:
   .byte $10
 .hitboxInfo:
-  .byte $01,$0E,$06,$09
+  .byte $01,$0D,$06,$09
 .orientation:
   .byte $01
 .gunInfo:

@@ -453,7 +453,6 @@ SetVramAddressingTo32:
   .include "lib\collisionManager.asm"
   .include "lib\explosionsController.asm"
   .include "lib\levelManager.asm"
-  .include "lib\elevatorManager.asm"
   
 Bank14End:
   
@@ -473,6 +472,7 @@ Bank15Start:
   .include "lib\controllerManager.asm" 
   .include "lib\bulletController.asm"
   .include "lib\chrManager.asm"
+  .include "lib\elevatorManager.asm"
   
   .include "states\game.asm"
  
