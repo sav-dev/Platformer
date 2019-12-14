@@ -245,7 +245,7 @@ BlinkerConsts:
 .explosionOffset:
   .byte $00, $FFFFFFFC
 
-BlobConsts:
+GreenBlobConsts:
 .width:
   .byte $10
 .hitboxInfo:
@@ -259,7 +259,25 @@ BlobConsts:
 .numberOfFrames:
   .byte $04
 .renderingInfo:
-  .byte LOW(BlobRender), HIGH(BlobRender)
+  .byte LOW(GreenBlobRender), HIGH(GreenBlobRender)
+.explosionOffset:
+  .byte $00, $00
+
+PinkBlobConsts:
+.width:
+  .byte $10
+.hitboxInfo:
+  .byte $01,$0E,$06,$09
+.orientation:
+  .byte $01
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $06
+.numberOfFrames:
+  .byte $04
+.renderingInfo:
+  .byte LOW(PinkBlobRender), HIGH(PinkBlobRender)
 .explosionOffset:
   .byte $00, $00
 
@@ -515,7 +533,7 @@ BlinkerRender:
 .Frame0_Blinker1:
   .byte $5F,$60
 
-BlobRender:
+GreenBlobRender:
 .spriteCount:
   .byte $04
 .offsets:
@@ -524,6 +542,25 @@ BlobRender:
   .byte %01000000
 .attributes:
   .byte $03,$03,$03,$03
+.tiles:
+.Frame3_Blob3:
+  .byte $6D,$6F,$6E,$70
+.Frame2_Blob1:
+  .byte $65,$67,$66,$68
+.Frame1_Blob2:
+  .byte $69,$6B,$6A,$6C
+.Frame0_Blob1:
+  .byte $65,$67,$66,$68
+
+PinkBlobRender:
+.spriteCount:
+  .byte $04
+.offsets:
+  .byte LOW(XOff2x2), HIGH(XOff2x2), LOW(YOff2x2), HIGH(YOff2x2), LOW(XOff2x2H), HIGH(XOff2x2H), LOW(YOff2x2), HIGH(YOff2x2)
+.flipXor:
+  .byte %01000000
+.attributes:
+  .byte $02,$02,$02,$02
 .tiles:
 .Frame3_Blob3:
   .byte $6D,$6F,$6E,$70
@@ -545,9 +582,9 @@ TankRender:
   .byte $01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01
 .tiles:
 .Frame1_Tank2:
-  .byte CLEAR_SPRITE,CLEAR_SPRITE,$7B,$71,$74,$7C,$72,$75,$7D,$73,$76,$7E
+  .byte $71,$74,$7B,$72,$75,$7C,$73,$76,$7D,CLEAR_SPRITE,CLEAR_SPRITE,$7E
 .Frame0_Tank1:
-  .byte CLEAR_SPRITE,CLEAR_SPRITE,$77,$71,$74,$78,$72,$75,$79,$73,$76,$7A
+  .byte $71,$74,$77,$72,$75,$78,$73,$76,$79,CLEAR_SPRITE,CLEAR_SPRITE,$7A
 
 
 EnemiesEnd:
