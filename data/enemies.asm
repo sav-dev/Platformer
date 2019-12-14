@@ -4,6 +4,8 @@ EnemiesStart:
 ;****************************************************************
 ; Enemies                                                       ;
 ; Holds information about all enemies (auto-generated)          ;
+; POITAG - possible optimization - bytes savings - lots of      ;
+; duplication here, especially with cloned palette-swap enemies ;
 ;****************************************************************
 
 ;
