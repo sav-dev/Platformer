@@ -46,7 +46,7 @@ LAST_SPRITE_X         = $F8 ; position of the last sprite that doesn't overflow
 
 CLEAR_SPRITE          = $00 ; clear sprite                      
 CLEAR_SPRITE_FF       = $FF ; when any of the sprite's values are set to this then the sprite is cleared
-CLEAR_TILE            = $04 ; clear background tile. AUTO-GENERATED, MAY CHANGE
+CLEAR_TILE            = $00 ; clear background tile
 CLEAR_ATTS            = $00 ; clear background atts
                                           
 Y_OFF                 = $00 ; offset of the Y position in the sprite data
