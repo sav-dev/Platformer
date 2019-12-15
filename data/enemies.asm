@@ -370,11 +370,11 @@ BeetleRender:
   .byte $01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01
 .tiles:
 .Frame2_Beetle2:
-  .byte $26,$2A,$35,$27,$2B,$36,$28,$2C,$37,$29,$2D,$2E
+  .byte $27,$2B,$36,$28,$2C,$37,$29,$2D,$38,$2A,$2E,$2F
 .Frame1_Beetle1:
-  .byte $26,$2A,$32,$27,$2B,$33,$28,$2C,$34,$29,$2D,$2E
+  .byte $27,$2B,$33,$28,$2C,$34,$29,$2D,$35,$2A,$2E,$2F
 .Frame0_Beetle0:
-  .byte $26,$2A,$2F,$27,$2B,$30,$28,$2C,$31,$29,$2D,$2E
+  .byte $27,$2B,$30,$28,$2C,$31,$29,$2D,$32,$2A,$2E,$2F
 
 BugRender:
 .spriteCount:
@@ -387,9 +387,9 @@ BugRender:
   .byte $00,$00,$00,$00
 .tiles:
 .Frame1_Bug1:
-  .byte $38,$3C,$39,$3D
+  .byte $39,$3D,$3A,$3E
 .Frame0_Bug0:
-  .byte $38,$3A,$39,$3B
+  .byte $39,$3B,$3A,$3C
 
 EyeRender:
 .spriteCount:
@@ -402,7 +402,7 @@ EyeRender:
   .byte $02,$82,$02,$82
 .tiles:
 .Frame0_Eye:
-  .byte $3E,$3E,$3F,$3F
+  .byte $3F,$3F,$40,$40
 
 SpikesRender:
 .spriteCount:
@@ -415,7 +415,7 @@ SpikesRender:
   .byte $02,$02,$02,$02
 .tiles:
 .Frame0_Spikes:
-  .byte $40,$42,$41,$43
+  .byte $41,$43,$42,$44
 
 TurretVRender:
 .spriteCount:
@@ -428,7 +428,7 @@ TurretVRender:
   .byte $01,$81,$01,$01
 .tiles:
 .Frame0_TurretV:
-  .byte $44,$44,$45,$46
+  .byte $45,$45,$46,$47
 
 TurretHRender:
 .spriteCount:
@@ -441,7 +441,7 @@ TurretHRender:
   .byte $01,$01,$01,$41
 .tiles:
 .Frame0_TurretH:
-  .byte $47,$49,$48,$49
+  .byte $48,$4A,$49,$4A
 
 SphereRender:
 .spriteCount:
@@ -454,7 +454,7 @@ SphereRender:
   .byte $01,$01,$01,$01
 .tiles:
 .Frame0_Sphere:
-  .byte $4A,$4C,$4B,$4D
+  .byte $4B,$4D,$4C,$4E
 
 FlyingRobotRender:
 .spriteCount:
@@ -467,9 +467,9 @@ FlyingRobotRender:
   .byte $00,$00,$00,$00,$40,$00
 .tiles:
 .Frame1_FlyingRobot1:
-  .byte $4E,$54,$50,$55,$4E,$56
+  .byte $4F,$55,$51,$56,$4F,$57
 .Frame0_FlyingRobot0:
-  .byte $4E,$51,$4F,$52,$4E,$53
+  .byte $4F,$52,$50,$53,$4F,$54
 
 WalkingRobotRender:
 .spriteCount:
@@ -482,13 +482,13 @@ WalkingRobotRender:
   .byte $00,$00,$01,$00,$00,$01,$40,$00,$01
 .tiles:
 .Frame3_WalkingRobot3:
-  .byte $4E,$54,$5A,$50,$55,$5B,$4E,$56,$5C
+  .byte $4F,$55,$5B,$51,$56,$5C,$4F,$57,$5D
 .Frame2_WalkingRobot2:
-  .byte $4E,$54,$57,$50,$55,$58,$4E,$56,$59
+  .byte $4F,$55,$58,$51,$56,$59,$4F,$57,$5A
 .Frame1_WalkingRobot1:
-  .byte $4E,$51,$5A,$4F,$52,$5B,$4E,$53,$5C
+  .byte $4F,$52,$5B,$50,$53,$5C,$4F,$54,$5D
 .Frame0_WalkingRobot0:
-  .byte $4E,$51,$57,$4F,$52,$58,$4E,$53,$59
+  .byte $4F,$52,$58,$50,$53,$59,$4F,$54,$5A
 
 BarrierV6Render:
 .spriteCount:
@@ -501,7 +501,7 @@ BarrierV6Render:
   .byte $02,$02,$02,$02,$02,$02
 .tiles:
 .Frame0_BarrierV6:
-  .byte $5D,$5D,$5D,$5D,$5D,$5D
+  .byte $5E,$5E,$5E,$5E,$5E,$5E
 
 BarrierH6Render:
 .spriteCount:
@@ -514,7 +514,7 @@ BarrierH6Render:
   .byte $02,$02,$02,$02,$02,$02
 .tiles:
 .Frame0_BarrierH6:
-  .byte $5E,$5E,$5E,$5E,$5E,$5E
+  .byte $5F,$5F,$5F,$5F,$5F,$5F
 
 BlinkerRender:
 .spriteCount:
@@ -527,13 +527,13 @@ BlinkerRender:
   .byte $00,$00
 .tiles:
 .Frame3_Blinker3:
-  .byte $63,$64
+  .byte $64,$65
 .Frame2_Blinker1:
-  .byte $5F,$60
+  .byte $60,$61
 .Frame1_Blinker2:
-  .byte $61,$62
+  .byte $62,$63
 .Frame0_Blinker1:
-  .byte $5F,$60
+  .byte $60,$61
 
 GreenBlobRender:
 .spriteCount:
@@ -546,13 +546,13 @@ GreenBlobRender:
   .byte $03,$03,$03,$03
 .tiles:
 .Frame3_Blob3:
-  .byte $6D,$6F,$6E,$70
+  .byte $6E,$70,$6F,$71
 .Frame2_Blob1:
-  .byte $65,$67,$66,$68
+  .byte $66,$68,$67,$69
 .Frame1_Blob2:
-  .byte $69,$6B,$6A,$6C
+  .byte $6A,$6C,$6B,$6D
 .Frame0_Blob1:
-  .byte $65,$67,$66,$68
+  .byte $66,$68,$67,$69
 
 PinkBlobRender:
 .spriteCount:
@@ -565,13 +565,13 @@ PinkBlobRender:
   .byte $02,$02,$02,$02
 .tiles:
 .Frame3_Blob3:
-  .byte $6D,$6F,$6E,$70
+  .byte $6E,$70,$6F,$71
 .Frame2_Blob1:
-  .byte $65,$67,$66,$68
+  .byte $66,$68,$67,$69
 .Frame1_Blob2:
-  .byte $69,$6B,$6A,$6C
+  .byte $6A,$6C,$6B,$6D
 .Frame0_Blob1:
-  .byte $65,$67,$66,$68
+  .byte $66,$68,$67,$69
 
 TankRender:
 .spriteCount:
@@ -584,9 +584,9 @@ TankRender:
   .byte $01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01
 .tiles:
 .Frame1_Tank2:
-  .byte $71,$74,$7B,$72,$75,$7C,$73,$76,$7D,CLEAR_SPRITE,CLEAR_SPRITE,$7E
+  .byte $72,$75,$7C,$73,$76,$7D,$74,$77,$7E,CLEAR_SPRITE,CLEAR_SPRITE,$7F
 .Frame0_Tank1:
-  .byte $71,$74,$77,$72,$75,$78,$73,$76,$79,CLEAR_SPRITE,CLEAR_SPRITE,$7A
+  .byte $72,$75,$78,$73,$76,$79,$74,$77,$7A,CLEAR_SPRITE,CLEAR_SPRITE,$7B
 
 
 EnemiesEnd:

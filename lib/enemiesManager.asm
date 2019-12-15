@@ -2102,6 +2102,11 @@ RenderEnemy:
     
   .renderTileLoop:              ; main rendering loop
   
+    .checkTile:
+       LDA [j], y               ; load the tile
+       BEQ .loopCheck           ; CLEAR_SPRITE = 0
+       STA <renderTile          ; set renderTile
+  
     .checkXPosition:            ; this part checks if we want to render the tile based on the X position
       LDA [d], y                ; load the x offset
       CLC
@@ -2126,8 +2131,6 @@ RenderEnemy:
      LDA [h], y                 ; load the atts
      EOR <c                     ; atts XOR
      STA <renderAtts            ; set renderAtts
-     LDA [j], y                 ; load the tile
-     STA <renderTile            ; set renderTile
      JSR RenderSprite           ; render the sprite
       
       .loopCheck:

@@ -229,11 +229,11 @@ WaitForFrame
 ;   ClearSprites                                                ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Clears all 64 sprites by setting all values to $FE          ;
+;   Clears all 64 sprites by setting all values to $FF          ;
 ;****************************************************************
 
 ClearSprites:
-  LDA #CLEAR_SPRITE
+  LDA #CLEAR_SPRITE_FF
   LDX #$FF
 
   .loop:

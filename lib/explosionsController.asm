@@ -127,22 +127,25 @@ RenderExplosion:
       JMP .explosionRendered   
     
     .renderTileLoop:                
-      DEY                           
-      LDA [b], y                    
-      CLC                           
-      ADC <genericY                  
-      STA <renderYPos               
-      LDA [d], y                    
-      STA <renderTile               
-      LDA #EXPLOSION_ATTS                   
-      STA <renderAtts         
-      LDA [h], y                    
-      CLC                           
+      DEY
+      LDA [d], y
+      BEQ .checkCondition ; CLEAR_SPRITE = 0
+      STA <renderTile
+      LDA [b], y
+      CLC
+      ADC <genericY
+      STA <renderYPos
+      LDA #EXPLOSION_ATTS
+      STA <renderAtts
+      LDA [h], y
+      CLC
       ADC <genericX
       STA <renderXPos
       JSR RenderSprite
-      CPY <j
-      BNE .renderTileLoop
+      
+      .checkCondition:
+        CPY <j
+        BNE .renderTileLoop
       
   .explosionRendered:  
     RTS
@@ -169,10 +172,10 @@ explosionYOff1st:
 ;explosionYOffRest:
 ;  .byte $00, $08, $00, $08
 explosionTiles:
-  .byte $22, $24, $23, $25
-  .byte $1E, $20, $1F, $21
-  .byte $1A, $1C, $1B, $1D
-  .byte $19, CLEAR_SPRITE, CLEAR_SPRITE, CLEAR_SPRITE
+  .byte $23, $25, $24, $26
+  .byte $1F, $21, $20, $22
+  .byte $1B, $1D, $1C, $1E
+  .byte $1A, CLEAR_SPRITE, CLEAR_SPRITE, CLEAR_SPRITE
   
 ;****************************************************************
 ; EOF                                                           ;

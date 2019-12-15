@@ -2016,9 +2016,7 @@ LoadPlayer:
     JSR SetPlayerBoxesVertical
   
   .renderPlayer:
-    JSR RenderPlayer
-
-  RTS
+    JMP RenderPlayer
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -2190,13 +2188,14 @@ RenderPlayerNormal:
                         
     .renderTileLoopPlayerNormal:
       DEY
+      LDA [d], y
+      BEQ .loopCheckPlayerNormal ; CLEAR_SPRITE = 0
+      STA <renderTile      
       LDA [b], y
       CLC
       ADC <playerY
       BCC .loopCheckPlayerNormal
-      STA <renderYPos
-      LDA [d], y
-      STA <renderTile
+      STA <renderYPos      
       LDA [f], y
       STA <renderAtts
       LDA [h], y
@@ -2211,13 +2210,14 @@ RenderPlayerNormal:
         
     .renderTileLoopPlayerOffScreenDown:
       DEY
+      LDA [d], y
+      BEQ .loopCheckPlayerOffScreenDown ; CLEAR_SPRITE = 0
+      STA <renderTile
       LDA [b], y
       CLC
       ADC <playerY
       BCS .loopCheckPlayerOffScreenDown
       STA <renderYPos
-      LDA [d], y
-      STA <renderTile
       LDA [f], y
       STA <renderAtts
       LDA [h], y
@@ -2378,16 +2378,17 @@ playerAttsRight:
 playerAttsLeft:
   .byte $40, $40, $41, $41, $40, $40, $40, $40, $40
 playerTilesStand:
-  .byte $00, $01, $02, $03, $04, $05, $06, $07, CLEAR_SPRITE ; Stand
+  .byte $01, $02, $03, $04, $05, $06, $07, $08, CLEAR_SPRITE ; Stand
 playerTilesJump:
-  .byte $00, $01, $02, $03, $04, $08, $09, $0A, CLEAR_SPRITE ; Jump
+  .byte $01, $02, $03, $04, $05, $09, $0A, $0B, CLEAR_SPRITE ; Jump
 playerTilesCrouch:
-  .byte $00, $01, $02, $03, $18, $06, CLEAR_SPRITE, CLEAR_SPRITE, $12 ; Crouch
+  .byte $01, $02, $03, $04, $19, $07, CLEAR_SPRITE, CLEAR_SPRITE, $13 ; Crouch
 playerTilesRun:
-  .byte $00, $01, $02, $03, $16, $17, $11, $07, $12 ; Run 4
-  .byte $00, $01, $02, $03, $13, $14, $15, $0E, CLEAR_SPRITE ; Run 3
-  .byte $00, $01, $02, $03, $0F, $10, $11, $07, $12 ; Run 2
-  .byte $00, $01, $02, $03, $0B, $0C, $0D, $0E, CLEAR_SPRITE ; Run 1
+  .byte $01, $02, $03, $04, $17, $18, $12, $08, $13 ; Run 4
+  .byte $01, $02, $03, $04, $14, $15, $16, $0F, CLEAR_SPRITE ; Run 3
+  .byte $01, $02, $03, $04, $10, $11, $12, $08, $13 ; Run 2
+  .byte $01, $02, $03, $04, $0C, $0D, $0E, $0F, CLEAR_SPRITE ; Run 1
+
   
 ;****************************************************************
 ; Jetpack data, coded by hand                                   ;

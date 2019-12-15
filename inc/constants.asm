@@ -43,8 +43,9 @@ SPRITE_DIMENSION_X3   = SPRITE_DIMENSION * $03
 SPRITE_DIMENSION_X4   = SPRITE_DIMENSION * $04
 
 LAST_SPRITE_X         = $F8 ; position of the last sprite that doesn't overflow
-                      
-CLEAR_SPRITE          = $FF ; when any of the sprite's values are set to this then the sprite is cleared
+
+CLEAR_SPRITE          = $00 ; clear sprite                      
+CLEAR_SPRITE_FF       = $FF ; when any of the sprite's values are set to this then the sprite is cleared
 CLEAR_TILE            = $04 ; clear background tile. AUTO-GENERATED, MAY CHANGE
 CLEAR_ATTS            = $00 ; clear background atts
                                           
