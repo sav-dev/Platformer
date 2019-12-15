@@ -502,7 +502,7 @@ Bank01:
 Bank01Start:  
 
   SprChr:
-  .byte $09 ; page count
+  .byte $0A ; page count
   .incbin "PlatformerGraphics\Chr\spr.chr"
   SprChrEnd:
   
@@ -511,7 +511,7 @@ Bank01Start:
   .incbin "PlatformerGraphics\Chr\bg.chr"
   BgChrEnd: 
 
-  .org $B902 ; = (SprChr pageCount + BgChr pageCount) * 256 + 2; .incbin is not counted for some reason
+  .org $BA02 ; = (SprChr pageCount + BgChr pageCount) * 256 + 2; .incbin is not counted for some reason
   
 Bank01End:
 

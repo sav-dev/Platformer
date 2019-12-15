@@ -301,6 +301,24 @@ TankConsts:
 .explosionOffset:
   .byte $08, $04
 
+AcidConsts:
+.width:
+  .byte $10
+.hitboxInfo:
+  .byte $01,$0D,$08,$07
+.orientation:
+  .byte $02
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $07
+.numberOfFrames:
+  .byte $0C
+.renderingInfo:
+  .byte LOW(AcidRender), HIGH(AcidRender)
+.explosionOffset:
+  .byte $00, $00
+
 
 ;
 ;  all offsets for possible grids
@@ -587,6 +605,41 @@ TankRender:
   .byte $72,$75,$7C,$73,$76,$7D,$74,$77,$7E,CLEAR_SPRITE,CLEAR_SPRITE,$7F
 .Frame0_Tank1:
   .byte $72,$75,$78,$73,$76,$79,$74,$77,$7A,CLEAR_SPRITE,CLEAR_SPRITE,$7B
+
+AcidRender:
+.spriteCount:
+  .byte $04
+.offsets:
+  .byte LOW(XOff2x2), HIGH(XOff2x2), LOW(YOff2x2), HIGH(YOff2x2), LOW(XOff2x2), HIGH(XOff2x2), LOW(YOff2x2), HIGH(YOff2x2)
+.flipXor:
+  .byte %00000000
+.attributes:
+  .byte $01,$02,$01,$02
+.tiles:
+.Frame11_Acid8:
+  .byte CLEAR_SPRITE,$86,$8B,$87
+.Frame10_Acid7:
+  .byte CLEAR_SPRITE,$84,$8A,$85
+.Frame9_Acid6:
+  .byte CLEAR_SPRITE,$82,$89,$83
+.Frame8_Acid5:
+  .byte CLEAR_SPRITE,$80,CLEAR_SPRITE,$88
+.Frame7_Acid4:
+  .byte CLEAR_SPRITE,$86,CLEAR_SPRITE,$87
+.Frame6_Acid3:
+  .byte CLEAR_SPRITE,$84,CLEAR_SPRITE,$85
+.Frame5_Acid2:
+  .byte CLEAR_SPRITE,$82,CLEAR_SPRITE,$83
+.Frame4_Acid1:
+  .byte CLEAR_SPRITE,$80,CLEAR_SPRITE,$81
+.Frame3_Acid4:
+  .byte CLEAR_SPRITE,$86,CLEAR_SPRITE,$87
+.Frame2_Acid3:
+  .byte CLEAR_SPRITE,$84,CLEAR_SPRITE,$85
+.Frame1_Acid2:
+  .byte CLEAR_SPRITE,$82,CLEAR_SPRITE,$83
+.Frame0_Acid1:
+  .byte CLEAR_SPRITE,$80,CLEAR_SPRITE,$81
 
 
 EnemiesEnd:
