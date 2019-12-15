@@ -225,11 +225,23 @@ UpdateActiveEnemy:
       CMP #SMALLEST_SPECIAL_SPEED
       BCC .updateMovementLeft
       
+      ; special speed. First check if it's always animate
+      CMP #ALWAYS_ANIMATE
+      BNE .processSpecialSpeed
+      
+      ; always animate means speed is 0 but we want to animate.
+      .alwaysAnimate:
+        LDA #$00
+        STA <enemySpeed
+        STA <enemyDontAnimStatic
+        JMP .calculateDiffs
+      
       ; call the special speed routine
       ; POITAG - possible optimization - this could be in line
-      JSR ProcessSpecialSpeed
-      BNE .updateMovementLeft 
-      JMP .calculateDiffs ; A = enemySpeed after ProcessSpecialSpeed
+      .processSpecialSpeed:
+        JSR ProcessSpecialSpeed
+        BNE .updateMovementLeft 
+        JMP .calculateDiffs ; A = enemySpeed after ProcessSpecialSpeed
     
     ; reload movement left, then update
     .updateMovementLeft:

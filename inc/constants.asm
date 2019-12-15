@@ -229,7 +229,8 @@ SCROLL_SPEED = $01 ; must be set to 1 as we depend on that when actually scrolli
 
 SPEED_HALF               = $FF
 SPEED_QUARTER            = SPEED_HALF - $01
-SMALLEST_SPECIAL_SPEED   = SPEED_QUARTER
+ALWAYS_ANIMATE           = SPEED_QUARTER - $01
+SMALLEST_SPECIAL_SPEED   = ALWAYS_ANIMATE
 
 ;****************************************************************
 ; Enemies                                                       ;
