@@ -23,6 +23,7 @@ ChrManagerStart:
 LoadChr:
   
   ; load number of pages
+  LDY #$00
   LDA [genericPointer], y
   TAX
   
@@ -36,7 +37,6 @@ LoadChr:
   STA <genericPointer + $01
   
   ; load the pages
-  LDY #$00
   .copyLoop:
     LDA [genericPointer], y
     STA $2007
