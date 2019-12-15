@@ -41,9 +41,9 @@ BeetleConsts:
 .gunInfo:
   .byte $1E,$03,$F9,$03
 .animationSpeed:
-  .byte $08
+  .byte $06
 .numberOfFrames:
-  .byte $03
+  .byte $04
 .renderingInfo:
   .byte LOW(BeetleRender), HIGH(BeetleRender)
 .explosionOffset:
@@ -161,7 +161,7 @@ FlyingRobotConsts:
 .width:
   .byte $18
 .hitboxInfo:
-  .byte $01,$16,$02,$0D
+  .byte $01,$15,$02,$0D
 .orientation:
   .byte $02
 .gunInfo:
@@ -179,7 +179,7 @@ WalkingRobotConsts:
 .width:
   .byte $18
 .hitboxInfo:
-  .byte $01,$16,$02,$0D
+  .byte $01,$15,$02,$0D
 .orientation:
   .byte $02
 .gunInfo:
@@ -197,7 +197,7 @@ BarrierV6Consts:
 .width:
   .byte $08
 .hitboxInfo:
-  .byte $00,$08,$00,$30
+  .byte $00,$07,$00,$2F
 .orientation:
   .byte $02
 .gunInfo:
@@ -215,7 +215,7 @@ BarrierH6Consts:
 .width:
   .byte $30
 .hitboxInfo:
-  .byte $00,$30,$00,$08
+  .byte $00,$2F,$00,$07
 .orientation:
   .byte $02
 .gunInfo:
@@ -233,7 +233,7 @@ BlinkerConsts:
 .width:
   .byte $10
 .hitboxInfo:
-  .byte $02,$0C,$01,$06
+  .byte $02,$0B,$01,$06
 .orientation:
   .byte $02
 .gunInfo:
@@ -287,7 +287,7 @@ TankConsts:
 .width:
   .byte $20
 .hitboxInfo:
-  .byte $07,$17,$02,$16
+  .byte $05,$16,$01,$16
 .orientation:
   .byte $01
 .gunInfo:
@@ -387,6 +387,8 @@ BeetleRender:
 .attributes:
   .byte $01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01
 .tiles:
+.Frame3_Beetle1:
+  .byte $27,$2B,$33,$28,$2C,$34,$29,$2D,$35,$2A,$2E,$2F
 .Frame2_Beetle2:
   .byte $27,$2B,$36,$28,$2C,$37,$29,$2D,$38,$2A,$2E,$2F
 .Frame1_Beetle1:
