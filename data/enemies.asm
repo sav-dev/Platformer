@@ -291,7 +291,7 @@ TankConsts:
 .orientation:
   .byte $01
 .gunInfo:
-  .byte $00,$00,$00,$00
+  .byte $17,$01,$00,$01
 .animationSpeed:
   .byte $04
 .numberOfFrames:
@@ -327,7 +327,7 @@ TurretD1Consts:
 .orientation:
   .byte $01
 .gunInfo:
-  .byte $00,$00,$00,$00
+  .byte $0E,$FE,$F9,$FE
 .animationSpeed:
   .byte $00
 .numberOfFrames:
@@ -345,7 +345,7 @@ TurretD2Consts:
 .orientation:
   .byte $01
 .gunInfo:
-  .byte $00,$00,$00,$00
+  .byte $0E,$0D,$F9,$0D
 .animationSpeed:
   .byte $00
 .numberOfFrames:
@@ -363,7 +363,7 @@ GunnerRobotConsts:
 .orientation:
   .byte $01
 .gunInfo:
-  .byte $00,$00,$00,$00
+  .byte $17,$09,$F8,$09
 .animationSpeed:
   .byte $00
 .numberOfFrames:
