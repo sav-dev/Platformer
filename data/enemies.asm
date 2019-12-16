@@ -319,6 +319,60 @@ AcidConsts:
 .explosionOffset:
   .byte $00, $00
 
+TurretD1Consts:
+.width:
+  .byte $10
+.hitboxInfo:
+  .byte $01,$0D,$01,$0D
+.orientation:
+  .byte $01
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $00
+.numberOfFrames:
+  .byte $01
+.renderingInfo:
+  .byte LOW(TurretD1Render), HIGH(TurretD1Render)
+.explosionOffset:
+  .byte $00, $00
+
+TurretD2Consts:
+.width:
+  .byte $10
+.hitboxInfo:
+  .byte $01,$0D,$01,$0D
+.orientation:
+  .byte $01
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $00
+.numberOfFrames:
+  .byte $01
+.renderingInfo:
+  .byte LOW(TurretD2Render), HIGH(TurretD2Render)
+.explosionOffset:
+  .byte $00, $00
+
+GunnerRobotConsts:
+.width:
+  .byte $18
+.hitboxInfo:
+  .byte $05,$0D,$01,$1E
+.orientation:
+  .byte $01
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $00
+.numberOfFrames:
+  .byte $01
+.renderingInfo:
+  .byte LOW(GunnerRobotRender), HIGH(GunnerRobotRender)
+.explosionOffset:
+  .byte $04, $08
+
 
 ;
 ;  all offsets for possible grids
@@ -362,6 +416,12 @@ XOff2x1:
   .byte $00, $08
 YOff2x1:
   .byte $00, $00
+XOff3x4:
+  .byte $00, $00, $00, $00, $08, $08, $08, $08, $10, $10, $10, $10
+YOff3x4:
+  .byte $00, $08, $10, $18, $00, $08, $10, $18, $00, $08, $10, $18
+XOff3x4H:
+  .byte $10, $10, $10, $10, $08, $08, $08, $08, $00, $00, $00, $00
 
 ;
 ;  all information needed to draw an enemy
@@ -642,6 +702,45 @@ AcidRender:
   .byte CLEAR_SPRITE,$82,CLEAR_SPRITE,$83
 .Frame0_Acid1:
   .byte CLEAR_SPRITE,$80,CLEAR_SPRITE,$81
+
+TurretD1Render:
+.spriteCount:
+  .byte $04
+.offsets:
+  .byte LOW(XOff2x2), HIGH(XOff2x2), LOW(YOff2x2), HIGH(YOff2x2), LOW(XOff2x2H), HIGH(XOff2x2H), LOW(YOff2x2), HIGH(YOff2x2)
+.flipXor:
+  .byte %01000000
+.attributes:
+  .byte $01,$01,$01,$01
+.tiles:
+.Frame0_TurretD1:
+  .byte $8C,$8E,$8D,$8F
+
+TurretD2Render:
+.spriteCount:
+  .byte $04
+.offsets:
+  .byte LOW(XOff2x2), HIGH(XOff2x2), LOW(YOff2x2), HIGH(YOff2x2), LOW(XOff2x2H), HIGH(XOff2x2H), LOW(YOff2x2), HIGH(YOff2x2)
+.flipXor:
+  .byte %01000000
+.attributes:
+  .byte $81,$81,$81,$81
+.tiles:
+.Frame0_TurretD2:
+  .byte $8E,$8C,$8F,$8D
+
+GunnerRobotRender:
+.spriteCount:
+  .byte $0C
+.offsets:
+  .byte LOW(XOff3x4), HIGH(XOff3x4), LOW(YOff3x4), HIGH(YOff3x4), LOW(XOff3x4H), HIGH(XOff3x4H), LOW(YOff3x4), HIGH(YOff3x4)
+.flipXor:
+  .byte %01000000
+.attributes:
+  .byte $01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01
+.tiles:
+.Frame0_GunnerRobot:
+  .byte $90,$92,$95,$97,$91,$93,$96,$98,CLEAR_SPRITE,$94,CLEAR_SPRITE,CLEAR_SPRITE
 
 
 EnemiesEnd:
