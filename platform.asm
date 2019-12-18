@@ -464,6 +464,7 @@ Bank15:
 Bank15Start: 
  
   .include "data\enemies.asm" ; this has to be in this place
+  .include "data\bullets.asm"
   
   .include "lib\bankManager.asm"
   .include "lib\paletteManager.asm"   

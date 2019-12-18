@@ -335,7 +335,7 @@ UpdateBullets:
         ; get get here for either goingLeft or goingRight.
         ; set tile, X += 1 to point to the y position, set by1, renderYPos, calculate by2, calculate bx2 (capping at screen width)
         .goingHorizontally:
-          LDA #BULLET_SPRITE_H
+          LDA #$99
           STA <renderTile
           INX
           LDA bullets, x
@@ -416,7 +416,7 @@ UpdateBullets:
         ; get get here for either goingUp or goingDown.
         ; set tile, calculate by2, calculate bx2 (capping at screen width)
         .goingVertically:
-          LDA #BULLET_SPRITE_V  
+          LDA #$9A
           STA <renderTile
           LDA <by1
           CLC
