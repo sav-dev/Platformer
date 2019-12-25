@@ -64,9 +64,17 @@ ELEVATOR_SIZE           = $08 ; = 8
 ; Bullets                                                       ;
 ;****************************************************************
 
-; size of bullets must be 4 * PLAYER_BULLET_LIMIT + 4 (currently 5) * ENEMY_BULLET_LIMIT (currently 10)
+; size of bullets must be BULLET_MEMORY_BYTES * (PLAYER_BULLET_LIMIT + ENEMY_BULLET_LIMIT)
  
-bullets           .rs 60
+bullets           .rs 165
 
 PLAYER_BULLET_LIMIT     = $05 ; = 5
 ENEMIES_BULLET_LIMIT    = $0A ; = 10
+BULLET_MEMORY_BYTES     = $0B ; = 11
+
+; size in memory for player bullets, enemy bullets, and the two combined.
+; player bullets come before enemy bullets in the combined var.
+PLAYER_BULLET_VAR_SIZE   = PLAYER_BULLET_LIMIT * BULLET_MEMORY_BYTES
+ENEMIES_BULLET_VAR_SIZE  = ENEMIES_BULLET_LIMIT * BULLET_MEMORY_BYTES
+TOTAL_BULLET_VAR_SIZE    = PLAYER_BULLET_VAR_SIZE + ENEMIES_BULLET_VAR_SIZE
+

@@ -15,6 +15,7 @@ EnemiesStart:
 ;    hitbox y off    : 1 byte
 ;    hitbox height   : 1 byte (inclusive)
 ;    orientation     : 1 byte (see ORIENTATION_* consts)
+;    bullet id       : 1 byte
 ;    gun x off       : 1 byte (signed, 0 for non shooting)
 ;    gun y off       : 1 byte (signed, 0 for non shooting)
 ;    gun x off flip  : 1 byte (signed, 0 for non shooting)
@@ -23,6 +24,7 @@ EnemiesStart:
 ;    # of frames     : 1 bytes
 ;    rendering info  : 2 bytes
 ;    expl. offsets   : 2 bytes (x/y)
+;    expl. id        : 1 byte
 ;
 ;  ordered by animation id
 ;
@@ -37,6 +39,8 @@ BeetleConsts:
   .byte $02,$1B,$04,$10
 .orientation:
   .byte $01
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $1E,$03,$F9,$03
 .animationSpeed:
@@ -47,6 +51,8 @@ BeetleConsts:
   .byte LOW(BeetleRender), HIGH(BeetleRender)
 .explosionOffset:
   .byte $08, $04
+.explosionId:
+  .byte $00
 
 BugConsts:
 .width:
@@ -55,6 +61,8 @@ BugConsts:
   .byte $02,$0B,$04,$0A
 .orientation:
   .byte $01
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -65,6 +73,8 @@ BugConsts:
   .byte LOW(BugRender), HIGH(BugRender)
 .explosionOffset:
   .byte $00, $00
+.explosionId:
+  .byte $00
 
 EyeConsts:
 .width:
@@ -73,6 +83,8 @@ EyeConsts:
   .byte $03,$09,$02,$0B
 .orientation:
   .byte $01
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -83,6 +95,8 @@ EyeConsts:
   .byte LOW(EyeRender), HIGH(EyeRender)
 .explosionOffset:
   .byte $00, $00
+.explosionId:
+  .byte $00
 
 SpikesConsts:
 .width:
@@ -91,6 +105,8 @@ SpikesConsts:
   .byte $02,$0A,$02,$0A
 .orientation:
   .byte $02
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -101,6 +117,8 @@ SpikesConsts:
   .byte LOW(SpikesRender), HIGH(SpikesRender)
 .explosionOffset:
   .byte $00, $00
+.explosionId:
+  .byte $00
 
 TurretVConsts:
 .width:
@@ -108,6 +126,8 @@ TurretVConsts:
 .hitboxInfo:
   .byte $01,$0D,$01,$0D
 .orientation:
+  .byte $00
+.bulletId:
   .byte $00
 .gunInfo:
   .byte $0A,$0F,$0A,$F8
@@ -119,6 +139,8 @@ TurretVConsts:
   .byte LOW(TurretVRender), HIGH(TurretVRender)
 .explosionOffset:
   .byte $00, $00
+.explosionId:
+  .byte $00
 
 TurretHConsts:
 .width:
@@ -127,6 +149,8 @@ TurretHConsts:
   .byte $01,$0D,$01,$0D
 .orientation:
   .byte $01
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $0F,$01,$F8,$01
 .animationSpeed:
@@ -137,6 +161,8 @@ TurretHConsts:
   .byte LOW(TurretHRender), HIGH(TurretHRender)
 .explosionOffset:
   .byte $00, $00
+.explosionId:
+  .byte $00
 
 SphereConsts:
 .width:
@@ -145,6 +171,8 @@ SphereConsts:
   .byte $01,$0D,$01,$0D
 .orientation:
   .byte $01
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $0D,$06,$FA,$06
 .animationSpeed:
@@ -155,6 +183,8 @@ SphereConsts:
   .byte LOW(SphereRender), HIGH(SphereRender)
 .explosionOffset:
   .byte $00, $00
+.explosionId:
+  .byte $00
 
 FlyingRobotConsts:
 .width:
@@ -163,6 +193,8 @@ FlyingRobotConsts:
   .byte $01,$15,$02,$0D
 .orientation:
   .byte $02
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -173,6 +205,8 @@ FlyingRobotConsts:
   .byte LOW(FlyingRobotRender), HIGH(FlyingRobotRender)
 .explosionOffset:
   .byte $04, $00
+.explosionId:
+  .byte $00
 
 WalkingRobotConsts:
 .width:
@@ -181,6 +215,8 @@ WalkingRobotConsts:
   .byte $01,$15,$02,$0D
 .orientation:
   .byte $02
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -191,6 +227,8 @@ WalkingRobotConsts:
   .byte LOW(WalkingRobotRender), HIGH(WalkingRobotRender)
 .explosionOffset:
   .byte $04, $04
+.explosionId:
+  .byte $00
 
 BarrierV6Consts:
 .width:
@@ -199,6 +237,8 @@ BarrierV6Consts:
   .byte $00,$07,$00,$2F
 .orientation:
   .byte $02
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -209,6 +249,8 @@ BarrierV6Consts:
   .byte LOW(BarrierV6Render), HIGH(BarrierV6Render)
 .explosionOffset:
   .byte $FFFFFFFC, $10
+.explosionId:
+  .byte $00
 
 BarrierH6Consts:
 .width:
@@ -217,6 +259,8 @@ BarrierH6Consts:
   .byte $00,$2F,$00,$07
 .orientation:
   .byte $02
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -227,6 +271,8 @@ BarrierH6Consts:
   .byte LOW(BarrierH6Render), HIGH(BarrierH6Render)
 .explosionOffset:
   .byte $10, $FFFFFFFC
+.explosionId:
+  .byte $00
 
 BlinkerConsts:
 .width:
@@ -235,6 +281,8 @@ BlinkerConsts:
   .byte $02,$0B,$01,$06
 .orientation:
   .byte $02
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -245,6 +293,8 @@ BlinkerConsts:
   .byte LOW(BlinkerRender), HIGH(BlinkerRender)
 .explosionOffset:
   .byte $00, $FFFFFFFC
+.explosionId:
+  .byte $00
 
 GreenBlobConsts:
 .width:
@@ -253,6 +303,8 @@ GreenBlobConsts:
   .byte $01,$0D,$06,$09
 .orientation:
   .byte $01
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -263,6 +315,8 @@ GreenBlobConsts:
   .byte LOW(GreenBlobRender), HIGH(GreenBlobRender)
 .explosionOffset:
   .byte $00, $00
+.explosionId:
+  .byte $00
 
 PinkBlobConsts:
 .width:
@@ -271,6 +325,8 @@ PinkBlobConsts:
   .byte $01,$0D,$06,$09
 .orientation:
   .byte $01
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -281,6 +337,8 @@ PinkBlobConsts:
   .byte LOW(PinkBlobRender), HIGH(PinkBlobRender)
 .explosionOffset:
   .byte $00, $00
+.explosionId:
+  .byte $00
 
 TankConsts:
 .width:
@@ -289,6 +347,8 @@ TankConsts:
   .byte $05,$16,$01,$16
 .orientation:
   .byte $01
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $17,$01,$00,$01
 .animationSpeed:
@@ -299,6 +359,8 @@ TankConsts:
   .byte LOW(TankRender), HIGH(TankRender)
 .explosionOffset:
   .byte $08, $04
+.explosionId:
+  .byte $00
 
 AcidConsts:
 .width:
@@ -307,6 +369,8 @@ AcidConsts:
   .byte $01,$0D,$08,$07
 .orientation:
   .byte $02
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
@@ -317,6 +381,8 @@ AcidConsts:
   .byte LOW(AcidRender), HIGH(AcidRender)
 .explosionOffset:
   .byte $00, $00
+.explosionId:
+  .byte $00
 
 TurretD1Consts:
 .width:
@@ -325,6 +391,8 @@ TurretD1Consts:
   .byte $01,$0D,$01,$0D
 .orientation:
   .byte $01
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $0E,$FE,$F9,$FE
 .animationSpeed:
@@ -335,6 +403,8 @@ TurretD1Consts:
   .byte LOW(TurretD1Render), HIGH(TurretD1Render)
 .explosionOffset:
   .byte $00, $00
+.explosionId:
+  .byte $00
 
 TurretD2Consts:
 .width:
@@ -343,6 +413,8 @@ TurretD2Consts:
   .byte $01,$0D,$01,$0D
 .orientation:
   .byte $01
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $0E,$0D,$F9,$0D
 .animationSpeed:
@@ -353,6 +425,8 @@ TurretD2Consts:
   .byte LOW(TurretD2Render), HIGH(TurretD2Render)
 .explosionOffset:
   .byte $00, $00
+.explosionId:
+  .byte $00
 
 GunnerRobotConsts:
 .width:
@@ -361,6 +435,8 @@ GunnerRobotConsts:
   .byte $05,$0D,$01,$1E
 .orientation:
   .byte $01
+.bulletId:
+  .byte $00
 .gunInfo:
   .byte $17,$09,$F8,$09
 .animationSpeed:
@@ -371,6 +447,8 @@ GunnerRobotConsts:
   .byte LOW(GunnerRobotRender), HIGH(GunnerRobotRender)
 .explosionOffset:
   .byte $04, $08
+.explosionId:
+  .byte $00
 
 
 ;

@@ -166,52 +166,46 @@ EXPLOSION_WIDTH         = SPRITE_DIMENSION * $02
 ; Bullets related constans                                      ;
 ;****************************************************************
 
-BULLET_MEMORY_BYTES     = $04   ; bullet memory layout
-BULLET_MEMORY_STATE     = $00
-BULLET_MEMORY_DIRECTION = $01
-BULLET_MEMORY_X_OFF     = $02
-BULLET_MEMORY_Y_OFF     = $03
+; bullet memory layout
+BULLET_MEMORY_STATE      = $00
+BULLET_MEMORY_X_SPEED    = BULLET_MEMORY_STATE + $01
+BULLET_MEMORY_Y_SPEED    = BULLET_MEMORY_X_SPEED + $01
+BULLET_MEMORY_BOX_DX     = BULLET_MEMORY_Y_SPEED + $01
+BULLET_MEMORY_BOX_DY     = BULLET_MEMORY_BOX_DX + $01
+BULLET_MEMORY_ATTS       = BULLET_MEMORY_BOX_DY + $01
+BULLET_MEMORY_SPRITE     = BULLET_MEMORY_ATTS + $01
+BULLET_MEMORY_BOX_WIDTH  = BULLET_MEMORY_SPRITE + $01
+BULLET_MEMORY_BOX_HEIGHT = BULLET_MEMORY_BOX_WIDTH + $01
+BULLET_MEMORY_X_OFF      = BULLET_MEMORY_BOX_HEIGHT + $01
+BULLET_MEMORY_Y_OFF      = BULLET_MEMORY_X_OFF + $01
 
-BULLET_E_DURATION       = $05   ; duration of bullet explosion
+; duration of bullet explosion
+BULLET_E_DURATION        = $05
 
-BULLET_S_NOT_EXIST      = $00   ; bullet states
-BULLET_S_JUST_SPAWNED   = $01
-BULLET_S_NORMAL         = $02
-BULLET_S_SMTH_HIT       = $03
-BULLET_S_TO_CLEAR       = BULLET_S_SMTH_HIT + BULLET_E_DURATION
-
-BULLET_ATTS_LEFT        = $40   ; atts
-BULLET_ATTS_RIGHT       = $00
-BULLET_ATTS_UP          = $80
-BULLET_ATTS_DOWN        = $00
-BULLET_ATTS_E           = $00
-
-BULLET_E_WIDTH          = SPRITE_DIMENSION
-BULLET_E_HEIGHT         = SPRITE_DIMENSION
-
-BULLET_WIDTH            = $07   ; bullet hitbox, (x,y) are top left corner, inclusive so -1
-BULLET_HEIGHT           = $04   ; these are for horizontal bullet (5x8), it's 8x5 for vertical
-        
-BULLET_SPEED            = $06   ; todo 0002: tweak this
-
-; size in memory for player bullets, enemy bullets, and the two combined.
-; player bullets come before enemy bullets in the combined var.
-PLAYER_BULLET_VAR_SIZE  = PLAYER_BULLET_LIMIT * BULLET_MEMORY_BYTES
-ENEMIES_BULLET_VAR_SIZE = ENEMIES_BULLET_LIMIT * BULLET_MEMORY_BYTES
-TOTAL_BULLET_VAR_SIZE   = PLAYER_BULLET_VAR_SIZE + ENEMIES_BULLET_VAR_SIZE
-
+; bullet states
+BULLET_S_NOT_EXIST       = $00
+BULLET_S_JUST_SPAWNED    = $01
+BULLET_S_NORMAL          = $02
+BULLET_S_SMTH_HIT        = $03
+BULLET_S_TO_CLEAR        = BULLET_S_SMTH_HIT + BULLET_E_DURATION
+                         
+; atts for bullet explosion
+BULLET_ATTS_E            = $00
+              
+; size of the bullet explosion              
+BULLET_E_WIDTH           = SPRITE_DIMENSION
+BULLET_E_HEIGHT          = SPRITE_DIMENSION
+                         
 ; pointer to the last and first player bullet in the combined var (and also the player var)
-PLAYER_BULLET_LAST      = PLAYER_BULLET_VAR_SIZE - BULLET_MEMORY_BYTES
-PLAYER_BULLET_FIRST     = $00
+PLAYER_BULLET_LAST       = PLAYER_BULLET_VAR_SIZE - BULLET_MEMORY_BYTES
+PLAYER_BULLET_FIRST      = $00
 
 ; pointer to the last and first enemy bullet in the combined var
-ENEMY_BULLET_LAST       = TOTAL_BULLET_VAR_SIZE - BULLET_MEMORY_BYTES
-ENEMY_BULLET_FIRST      = TOTAL_BULLET_VAR_SIZE - ENEMIES_BULLET_VAR_SIZE
+ENEMY_BULLET_LAST        = TOTAL_BULLET_VAR_SIZE - BULLET_MEMORY_BYTES
+ENEMY_BULLET_FIRST       = TOTAL_BULLET_VAR_SIZE - ENEMIES_BULLET_VAR_SIZE
 
 ; last bullet in the combined var is the last bullet in the enemy var
-TOTAL_BULLET_LAST       = ENEMY_BULLET_LAST
-
-ENEMY_BULLET_ATTS       = $02
+TOTAL_BULLET_LAST        = ENEMY_BULLET_LAST
 
 ;****************************************************************
 ; Scroll                                                        ;
@@ -305,7 +299,8 @@ CONST_ENEMY_GUN_Y_OFF_F   = $01 + CONST_ENEMY_GUN_X_OFF_F
 CONST_ENEMY_ANIM_SPEED    = $01 + CONST_ENEMY_GUN_Y_OFF_F  
 CONST_ENEMY_FRAMES_COUNT  = $01 + CONST_ENEMY_ANIM_SPEED   
 CONST_ENEMY_RENDER_INFO   = $01 + CONST_ENEMY_FRAMES_COUNT 
-CONST_ENEMY_EXPL_OFF      = $02 + CONST_ENEMY_RENDER_INFO  
+CONST_ENEMY_EXPL_OFF      = $02 + CONST_ENEMY_RENDER_INFO
+CONST_ENEMY_EXPL_ID       = $01 + CONST_ENEMY_EXPL_OFF
 CONST_ENEMY_LAST          = CONST_ENEMY_EXPL_OFF
 
 AFTER_LAST_ENEMY          = ENEMY_SIZE * ENEMIES_COUNT 

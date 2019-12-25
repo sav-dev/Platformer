@@ -152,6 +152,7 @@ enemyFrameCount         .rs 1  ; enemy frame count
 
 enemyOrientation        .rs 1  ; enemy orientation
 
+enemyBulletId           .rs 1  ; enemy bullet id
 enemyGunX               .rs 1  ; enemy gun x position
 enemyGunY               .rs 1  ; enemy gun y position
 

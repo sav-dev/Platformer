@@ -100,6 +100,8 @@ EnemiesManagerStart:
 ; Remarks:                                                      ;
 ;   depends_on_enemy_in_memory_format                           ;
 ;   depends_on_enemy_consts_format                              ;
+;   depends_on_bullets_consts_format                            ;
+;   depends_on_bullets_in_memory_format                         ;
 ;****************************************************************
  
 UpdateActiveEnemy:
@@ -785,7 +787,7 @@ UpdateActiveEnemy:
           INY
           INY
           DEC <enemyCollisions
-          JMP .shootingDirection
+          JMP .orientation
       
       ; if on screen:
       ;   - load generic X
@@ -829,18 +831,25 @@ UpdateActiveEnemy:
     ; get the position of the gun.
     ; we expect Y to point to the hitbox height when we get here
     ;
-    ; the next 5 const bytes are:
-    ;  - shooting direction
+    ; the next 6 const bytes are:
+    ;  - orientation
+    ;  - bullet id
     ;  - gun x off
     ;  - gun y off
     ;  - gun x off (flip)
     ;  - gun y off (flip)
     ;    
     ; first do Y += 1 to point to orientation, load    
-    .shootingDirection:
+    .orientation:
       INY
       LDA [enemyConstsPointer], y
       STA <enemyOrientation
+    
+    ; Y += 1 to point to bullet id, load
+    .bulletId:
+      INY
+      LDA [enemyConstsPointer], y
+      STA <enemyBulletId
     
     ; then do Y += 1 to point to gun x off, then check direction, and set enemyGunX and enemyGunY to a right const value.
     ; make sure we do Y += 4 (5 including the initial one) to point to animation speed.
@@ -935,103 +944,105 @@ UpdateActiveEnemy:
     ; check collisions between the enemy and player's bullets.
     ; use Y to iterate the bullets - we don't need it anymore.
     ; the loop expects A to point to the bullet 4 bytes ahead of the one we want to check.
+    ; depends_on_bullets_in_memory_format
     .collisionWithBullets:      
       LDA #PLAYER_BULLET_LAST + BULLET_MEMORY_BYTES
       .collisionWithBulletsLoop:
       
-        ; subtract bullet size, and store it in y and yPointerCache
-        SEC
-        SBC #BULLET_MEMORY_BYTES
-        STA <yPointerCache
-        TAY
-        
-        ; check the state, we only want to check bullets that either are active or just spawned.
-        ; first check if state == 0 (BULLET_S_NOT_EXIST), then check if it's < BULLET_S_SMTH_HIT (3).
-        ; that means it's either 1 (BULLET_S_JUST_SPAWNED) or 2 (BULLET_S_NORMAL).
-        LDA bullets, y
-        BEQ .collisionWithBulletsLoopCheck
-        CMP #BULLET_S_SMTH_HIT
-        BCS .collisionWithBulletsLoopCheck
-        
-        ; bullet is active. Load it's hitbox into 'b' vars.
-        ; first Y += 1 to point to direction, then branch off that (DIRECTION_LEFT = 0).
-        ; we only care about vertical/horizontal
-        INY
-        LDA bullets, y
-        BEQ .bulletGoingHorizontally
-        CMP #DIRECTION_RIGHT  
-        BEQ .bulletGoingHorizontally
-        
-        ; based on the direction, set hitbox width and height.
-        ; use genericDX for width and genericDY for height as they are not needed anymore.
-        .bulletGoingVertically:
-          LDA #BULLET_HEIGHT
-          STA <genericDX
-          LDA #BULLET_WIDTH
-          STA <genericDY
-          JMP .bulletSetHitbox
-        
-        .bulletGoingHorizontally:
-          LDA #BULLET_WIDTH
-          STA <genericDX
-          LDA #BULLET_HEIGHT
-          STA <genericDY
-          
-        ; set hitbox
-        ; first do Y += 1 to point to the x position, set that in bx1, calculate bx2 (cap at screen width)
-        ; then do Y += 1 to point to the y position, set that in by1, calculate by2
-        .bulletSetHitbox:
-          INY
-          LDA bullets, y
-          STA <bx1
-          CLC
-          ADC <genericDX
-          BCS .capBX2
-          STA <bx2
-          JMP .setYBox
-          
-          .capBX2:
-            LDA #SCREEN_WIDTH
-            STA <bx2
-          
-          .setYBox:
-            INY
-            LDA bullets, y
-            STA <by1
-            CLC
-            ADC <genericDY
-            STA <by2
-        
-        ; now check for a collision
-        .bulletCheckCollision:
-          JSR CheckForCollision
-          LDA <collision
-          BEQ .collisionWithBulletsLoopCheck
-            
-        ; collision detected
-        .bulletCollision:
-          
-          ; first check if remaining life > 0. decrement it if yes, and inc enemyHit
-          ; set removeEnemy to 1 if remaining life decremented to 0
-          .updateRemainingLife:
-            LDA enemies, x
-            BEQ .explodeBullet
-            INC <enemyHit
-            DEC enemies, x
-            BNE .explodeBullet
-            INC <removeEnemy
-          
-          ; now explode the bullet by loading the cached state pointer and setting it to BULLET_S_SMTH_HIT
-          .explodeBullet:
-            LDY <yPointerCache
-            LDA #BULLET_S_SMTH_HIT
-            STA bullets, y
-        
-        ; loop check - load yPointerCache, if it's 0 - exit (PLAYER_BULLET_FIRST)
-        .collisionWithBulletsLoopCheck:
-          LDA <yPointerCache
-          BEQ EnemyProcessShooting
-          JMP .collisionWithBulletsLoop
+        ; todo 0002
+        ;; subtract bullet size, and store it in y and yPointerCache
+        ;SEC
+        ;SBC #BULLET_MEMORY_BYTES
+        ;STA <yPointerCache
+        ;TAY
+        ;
+        ;; check the state, we only want to check bullets that either are active or just spawned.
+        ;; first check if state == 0 (BULLET_S_NOT_EXIST), then check if it's < BULLET_S_SMTH_HIT (3).
+        ;; that means it's either 1 (BULLET_S_JUST_SPAWNED) or 2 (BULLET_S_NORMAL).
+        ;LDA bullets, y
+        ;BEQ .collisionWithBulletsLoopCheck
+        ;CMP #BULLET_S_SMTH_HIT
+        ;BCS .collisionWithBulletsLoopCheck
+        ;
+        ;; bullet is active. Load it's hitbox into 'b' vars.
+        ;; first Y += 1 to point to direction, then branch off that (DIRECTION_LEFT = 0).
+        ;; we only care about vertical/horizontal
+        ;INY
+        ;LDA bullets, y
+        ;BEQ .bulletGoingHorizontally
+        ;CMP #DIRECTION_RIGHT  
+        ;BEQ .bulletGoingHorizontally
+        ;
+        ;; based on the direction, set hitbox width and height.
+        ;; use genericDX for width and genericDY for height as they are not needed anymore.
+        ;.bulletGoingVertically:
+        ;  LDA #BULLET_HEIGHT
+        ;  STA <genericDX
+        ;  LDA #BULLET_WIDTH
+        ;  STA <genericDY
+        ;  JMP .bulletSetHitbox
+        ;
+        ;.bulletGoingHorizontally:
+        ;  LDA #BULLET_WIDTH
+        ;  STA <genericDX
+        ;  LDA #BULLET_HEIGHT
+        ;  STA <genericDY
+        ;  
+        ;; set hitbox
+        ;; first do Y += 1 to point to the x position, set that in bx1, calculate bx2 (cap at screen width)
+        ;; then do Y += 1 to point to the y position, set that in by1, calculate by2
+        ;.bulletSetHitbox:
+        ;  INY
+        ;  LDA bullets, y
+        ;  STA <bx1
+        ;  CLC
+        ;  ADC <genericDX
+        ;  BCS .capBX2
+        ;  STA <bx2
+        ;  JMP .setYBox
+        ;  
+        ;  .capBX2:
+        ;    LDA #SCREEN_WIDTH
+        ;    STA <bx2
+        ;  
+        ;  .setYBox:
+        ;    INY
+        ;    LDA bullets, y
+        ;    STA <by1
+        ;    CLC
+        ;    ADC <genericDY
+        ;    STA <by2
+        ;
+        ;; now check for a collision
+        ;.bulletCheckCollision:
+        ;  JSR CheckForCollision
+        ;  LDA <collision
+        ;  BEQ .collisionWithBulletsLoopCheck
+        ;    
+        ;; collision detected
+        ;.bulletCollision:
+        ;  
+        ;  ; first check if remaining life > 0. decrement it if yes, and inc enemyHit
+        ;  ; set removeEnemy to 1 if remaining life decremented to 0
+        ;  .updateRemainingLife:
+        ;    LDA enemies, x
+        ;    BEQ .explodeBullet
+        ;    INC <enemyHit
+        ;    DEC enemies, x
+        ;    BNE .explodeBullet
+        ;    INC <removeEnemy
+        ;  
+        ;  ; now explode the bullet by loading the cached state pointer and setting it to BULLET_S_SMTH_HIT
+        ;  .explodeBullet:
+        ;    LDY <yPointerCache
+        ;    LDA #BULLET_S_SMTH_HIT
+        ;    STA bullets, y
+        ;
+        ;; loop check - load yPointerCache, if it's 0 - exit (PLAYER_BULLET_FIRST)
+        ;.collisionWithBulletsLoopCheck:
+        ;  LDA <yPointerCache
+        ;  BEQ EnemyProcessShooting
+        ;  JMP .collisionWithBulletsLoop
         
   ; When we get here, we expect X to point to remaining life.
   ; X += 1 to point to the current shooting timer
@@ -1107,78 +1118,78 @@ UpdateActiveEnemy:
       ADC <genericY
       STA <enemyGunY
       
-    ; spawn enemy bullet using enemyGunX, enemyGunY, enemyOrientation, genericDirection: 
+    ; spawn enemy bullet using enemyGunX, enemyGunY, genericDirection: 
     ;   - enemyGunX, enemyGunY - point to spawn the bullet at
-    ;   - enemyOrientation - a ORIENTATION_* const value
-    ;   - genericDirection - current flip (0 means shoot right or down, 1 means shoot left or up)
-    SpawnEnemyBullet:
+    ;   - genericDirection - current flip
+    ; depends_on_bullets_consts_format
+    SpawnEnemyBullet: ; todo 0002
       
-      ; first find a free slot, look for BULLET_S_NOT_EXIST == 0
-      LDY #ENEMY_BULLET_LAST
-      .findFreeSlotLoop:    
-        LDA bullets, y
-        BEQ .freeSlotFound
-        CPY #ENEMY_BULLET_FIRST
-        BEQ EnemyProcessAnimation
-        DEY
-        DEY
-        DEY
-        DEY
-        JMP .findFreeSlotLoop
-  
-      ; free slot found, Y points to it
-      ; memory layout: state, direction, x, y
-      .freeSlotFound:
-        
-        ; state = just spawned
-        .setBulletState:
-          LDA #BULLET_S_JUST_SPAWNED
-          STA bullets, y
-          
-        ; get bullet direction based on enemyOrientation and genericDirection (see comment above)
-        .setBulletDirection:
-          INY
-          LDA <enemyOrientation
-          BEQ .bulletDirectionVertical ; ORIENTATION_VERT = 0
-          
-          .bulletDirectionHorizontal:
-            LDA <genericDirection
-            BEQ .bulletDirectionRight
-            
-            .bulletDirectionLeft:
-              LDA #DIRECTION_LEFT
-              JMP .setBulletDirectionValue
-          
-            .bulletDirectionRight:
-              LDA #DIRECTION_RIGHT
-              JMP .setBulletDirectionValue
-          
-          .bulletDirectionVertical:
-            LDA <genericDirection
-            BEQ .bulletDirectionDown
-            
-            .bulletDirectionUp:
-              LDA #DIRECTION_UP
-              JMP .setBulletDirectionValue
-            
-            .bulletDirectionDown:
-              LDA #DIRECTION_DOWN
-          
-          ; A = direction when we get here
-          .setBulletDirectionValue:
-            STA bullets, y
-        
-        ; set x position
-        .setBulletX:
-          INY
-          LDA <enemyGunX
-          STA bullets, y
-  
-        ; set y position
-        .setBulletY:
-          INY
-          LDA <enemyGunY
-          STA bullets, y          
+      ;; first find a free slot, look for BULLET_S_NOT_EXIST == 0
+      ;LDY #ENEMY_BULLET_LAST
+      ;.findFreeSlotLoop:    
+      ;  LDA bullets, y
+      ;  BEQ .freeSlotFound
+      ;  CPY #ENEMY_BULLET_FIRST
+      ;  BEQ EnemyProcessAnimation
+      ;  DEY
+      ;  DEY
+      ;  DEY
+      ;  DEY
+      ;  JMP .findFreeSlotLoop
+      ;
+      ;; free slot found, Y points to it
+      ;; memory layout: state, direction, x, y
+      ;.freeSlotFound:
+      ;  
+      ;  ; state = just spawned
+      ;  .setBulletState:
+      ;    LDA #BULLET_S_JUST_SPAWNED
+      ;    STA bullets, y
+      ;    
+      ;  ; get bullet direction based on enemyOrientation and genericDirection (see comment above)
+      ;  .setBulletDirection:
+      ;    INY
+      ;    LDA <enemyOrientation
+      ;    BEQ .bulletDirectionVertical ; ORIENTATION_VERT = 0
+      ;    
+      ;    .bulletDirectionHorizontal:
+      ;      LDA <genericDirection
+      ;      BEQ .bulletDirectionRight
+      ;      
+      ;      .bulletDirectionLeft:
+      ;        LDA #DIRECTION_LEFT
+      ;        JMP .setBulletDirectionValue
+      ;    
+      ;      .bulletDirectionRight:
+      ;        LDA #DIRECTION_RIGHT
+      ;        JMP .setBulletDirectionValue
+      ;    
+      ;    .bulletDirectionVertical:
+      ;      LDA <genericDirection
+      ;      BEQ .bulletDirectionDown
+      ;      
+      ;      .bulletDirectionUp:
+      ;        LDA #DIRECTION_UP
+      ;        JMP .setBulletDirectionValue
+      ;      
+      ;      .bulletDirectionDown:
+      ;        LDA #DIRECTION_DOWN
+      ;    
+      ;    ; A = direction when we get here
+      ;    .setBulletDirectionValue:
+      ;      STA bullets, y
+      ;  
+      ;  ; set x position
+      ;  .setBulletX:
+      ;    INY
+      ;    LDA <enemyGunX
+      ;    STA bullets, y
+      ;
+      ;  ; set y position
+      ;  .setBulletY:
+      ;    INY
+      ;    LDA <enemyGunY
+      ;    STA bullets, y          
         
   ; when we get here, X points to the animation timer.
   ; next byte is the current animation frame.
