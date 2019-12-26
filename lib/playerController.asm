@@ -1650,6 +1650,7 @@ MovePlayerHorizontallyJetpackAndSetBoxes:
 ;   c                                                           ;
 ;****************************************************************
 
+; todo 0002: scroll bullets only once
 MovePlayerHorizontallyNormalAndSetBoxes:
 
   LDA <levelType

@@ -1335,11 +1335,10 @@ MoveBackAttsPointerBack:
 ;   e                                                           ;
 ;****************************************************************
 
+; todo 0002 get rid of this, call inline
 ScrollLeft:
   JSR DecrementScroll
-  LDA #$01
-  STA <b
-  JMP ScrollBullets
+  JMP ScrollBulletsRight
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -1357,11 +1356,10 @@ ScrollLeft:
 ;   e                                                           ;
 ;****************************************************************
 
+; todo 0002 get rid of this, call inline
 ScrollRight:
   JSR IncrementScroll
-  LDA #$00
-  STA <b
-  JMP ScrollBullets
+  JMP ScrollBulletsLeft
   
 ;****************************************************************
 ; EOF                                                           ;

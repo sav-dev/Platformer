@@ -275,7 +275,7 @@ UpdateBullets:
   ; update loop expects A to point to one bullet ahead of the one we want to update.
   ; first load j = last bullet to update.
   LDA <j
-  .updateLoop:
+  UpdateLoop:
   
     ; subtract bullet size, and store it in x and xPointerCache
     SEC
@@ -290,13 +290,13 @@ UpdateBullets:
     ; BULLET_S_NOT_EXIST == 0, go to bulletExists on anything else.
     ; otherwise jump to the loop check
     BNE .bulletExists
-    JMP .updateLoopCheck
+    JMP UpdateLoopCheck
     
     ; if we get here it means the bullet exists. compare to BULLET_S_SMTH_HIT.
-    ; carry clear if state < BULLET_S_SMTH_HIT - meaning either normal or just spawned
+    ; carry clear if state < BULLET_S_SMTH_HIT - meaning either BULLET_S_JUST_SPAWNED or BULLET_S_NORMAL
     .bulletExists:
       CMP #BULLET_S_SMTH_HIT
-      BCC .updateActiveBullet
+      BCC UpdateActiveBullet
     
     ; if we get here it means the bullet is exploding.
     ; increment the state by 1, and compare to the max.
@@ -306,7 +306,7 @@ UpdateBullets:
       ADC #$01
       CMP #BULLET_S_TO_CLEAR
       BNE .updateExplosion      
-      JMP .clearBullet
+      JMP ClearBullet
       
     ; bullet still exploding. first store the updated state, then calculate atts
     .updateExplosion:
@@ -339,27 +339,45 @@ UpdateBullets:
       STA <renderTile  
       
       ; render bullet
-      JMP .renderBullet
+      JMP RenderBullet
       
     ; if we got here, the bullet is active.
-    ; load the variables in order up to x position and process:
-    ;   x speed -> set to genericDX
-    ;   y speed -> set to genericDY
-    ;   box dx -> set to bx1
-    ;   box dy -> set to by1
-    ;   atts -> set to renderAtts
-    ;   sprite id -> set to renderTile
-    ;   box width -> set to genericWidth
-    ;   box height -> set to genericHeight
-    .updateActiveBullet:
+    UpdateActiveBullet:
+
+      ; cache state in genericFrame
+      STA <genericFrame
+      CMP #BULLET_S_JUST_SPAWNED
+      BNE .loadSpeed
+      
+      ; if bullet has just been spawned we don't want to move it.      
+      ; set speed vars to 0
+      .setSpeedTo0:
+        LDA #$00
+        STA <genericDX
+        STA <genericDY
+        INX ; 1 = x speed
+        INX ; 2 = y speed
+        JMP .preloadRemainingVars
     
-      .preload:
+       ; load the bullet speed vars:
+       ;   x speed -> set to genericDX
+       ;   y speed -> set to genericDY
+      .loadSpeed:
         INX ; 1 = x speed
         LDA bullets, x
         STA <genericDX
         INX ; 2 = y speed
         LDA bullets, x
         STA <genericDY
+    
+      ; load the remaining variables in order up to x position and process:
+      ;   box dx -> set to bx1
+      ;   box dy -> set to by1
+      ;   atts -> set to renderAtts
+      ;   sprite id -> set to renderTile
+      ;   box width -> set to genericWidth
+      ;   box height -> set to genericHeight
+      .preloadRemainingVars:
         INX ; 3 = box dx
         LDA bullets, x
         STA <bx1
@@ -388,13 +406,13 @@ UpdateBullets:
           CLC
           ADC bullets, x
           BCS .setXPosition
-          JMP .clearBullet ; carry not set means bullet went off the screen to the left
+          JMP ClearBullet ; carry not set means bullet went off the screen to the left
           
         .positiveDX:
           CLC
           ADC bullets, x
           BCC .setXPosition
-          JMP .clearBullet ; carry set means bullet went off the screen to the right
+          JMP ClearBullet ; carry set means bullet went off the screen to the right
           
         ; A is set to the updated X position
         ;   update the bullets memory;
@@ -407,7 +425,7 @@ UpdateBullets:
           CLC
           ADC <bx1
           BCC .setBX1
-          JMP .clearBullet
+          JMP ClearBullet
           
           .setBX1:
             STA <bx1
@@ -430,14 +448,14 @@ UpdateBullets:
           CLC
           ADC bullets, x
           BCS .setYPosition
-          JMP .clearBullet ; carry not set means bullet went off the screen up
+          JMP ClearBullet ; carry not set means bullet went off the screen up
           
         .positiveDY:
           CLC
           ADC bullets, x
           CMP #SCREEN_HEIGHT
-          BCC .setXPosition
-          JMP .clearBullet ; carry set means bullet went off the screen down
+          BCC .setYPosition
+          JMP ClearBullet ; carry set means bullet went off the screen down
           
         ; A is set to the updated Y position
         ;   update the bullets memory;
@@ -451,7 +469,7 @@ UpdateBullets:
           ADC <by1
           CMP #SCREEN_HEIGHT
           BCC .setBY1
-          JMP .clearBullet
+          JMP ClearBullet
           
           .setBY1:
             STA <by1
@@ -467,178 +485,111 @@ UpdateBullets:
               STA <by2
       
       ; when we get here, X points to the y position and the 'b' boxes are set to the bullet
-      .checkCollisions:
+      .checkCollisions: ; F5F3
   
-  ;      JSR CheckForCollisionsPlatThDoor
-  ;      LDA <collision
-  ;      BEQ .noCollisionWithPlatAndTh
-  ;              
-  ;    ; if we get here, a collision has been detected. X still points to the Y position.
-  ;    ; if it was just spawn, just clear it. otherwise we must update it's position
-  ;    .collisionWithPlatOrTh:
-  ;      LDA <genericFrame
-  ;      CMP #BULLET_S_JUST_SPAWNED
-  ;      BNE .collisionCheckDirection
-  ;      JMP .clearBullet
-  ;    
-  ;    ; check the direction the bullet was going
-  ;    ; to update the position we'll use the fact that 'a' boxes contain the position of whatever we hit
-  ;    .collisionCheckDirection:
-  ;      LDA <genericDirection
-  ;      BEQ .collisionLeft              ; DIRECTION_LEFT = 0
-  ;      CMP #DIRECTION_RIGHT  
-  ;      BEQ .collisionRight
-  ;      CMP #DIRECTION_DOWN 
-  ;      BEQ .collisionDown
-  ;      
-  ;      ; collision going up, meaning bullet y should be set to ay2 + 1
-  ;      .collisionUp:                   
-  ;        INC <ay2
-  ;        LDA <ay2
-  ;        STA bullets, x
-  ;        STA <renderYPos
-  ;        JMP .collisionUpdateState
-  ;      
-  ;      ; collision going down, meaning bullet y should be set to ay1 - tile size
-  ;      .collisionDown:
-  ;        LDA <ay1
-  ;        SEC
-  ;        SBC #BULLET_E_HEIGHT
-  ;        STA bullets, x
-  ;        STA <renderYPos
-  ;        JMP .collisionUpdateState
-  ;            
-  ;      ; collision going left, meaning bullet y should be set to ax2 + 1
-  ;      ; but first X -= 1 to point to the x position
-  ;      .collisionLeft:                
-  ;        DEX
-  ;        INC <ax2
-  ;        LDA <ax2
-  ;        STA bullets, x
-  ;        STA <renderXPos
-  ;        JMP .collisionUpdateState
-  ;      
-  ;      ; collision going right, meaning bullet y should be set to ax1 - tile size
-  ;      ; but first X -= 1 to point to the x position
-  ;      .collisionRight:                
-  ;        DEX
-  ;        LDA <ax1
-  ;        SEC
-  ;        SBC #BULLET_E_WIDTH
-  ;        STA bullets, x
-  ;        STA <renderXPos
-  ;        
-  ;    ; when we get here, position has been updated in memory and in render vars.
-  ;    ; we must update the state to BULLET_S_SMTH_HIT, and update the tiles we want to render.
-  ;    ; but first load X from xPointerCache to point to the state.
-  ;    ; then go to render the bullet.
-  ;    .collisionUpdateState:
-  ;      LDX <xPointerCache
-  ;      LDA #BULLET_S_SMTH_HIT
-  ;      STA bullets, x
-  ;      LDA #BULLET_SPRITE_E
-  ;      STA <renderTile
-  ;      LDA #BULLET_ATTS_E
-  ;      STA <renderAtts
-  ;      JMP .renderBullet
-  ;      
-  ;    ; we get here if no collision with platforms or threats was detected.
-  ;    ; check for collisions with elevators.      
-  ;    .noCollisionWithPlatAndTh:        
-  ;      JSR CheckForElevatorCollision
-  ;      LDA <collision
-  ;      BEQ .noCollisionWithElevators
-  ;      
-  ;    ; collision with elevator detected.
-  ;    ; if bullet has just been spawned, clear it.
-  ;    ; otherwise explode the bullet.
-  ;    ; backlog - move the bullet to the place it actually hit the platform
-  ;    .collisionWithElevator:
-  ;      LDA <genericFrame
-  ;      CMP #BULLET_S_JUST_SPAWNED
-  ;      BNE .collisionUpdateState
-  ;      JMP .clearBullet
-  ;      
-  ;    ; we get here if no collision with platforms, threats or elevators was detected.  
-  ;    ; check for collisions with player for enemy bullets.
-  ;    .noCollisionWithElevators:
-  ;      LDA <l
-  ;      BEQ .noCollision
-  ;      
-  ;      ; only check for collisions with player if player is PLAYER_NORMAL
-  ;      .checkPlayerState:
-  ;        LDA <playerState
-  ;        BEQ .checkPlayerYState ; PLAYER_NORMAL = 0
-  ;        JMP .noCollision
-  ;        
-  ;      ; only check for collisions with player if playerYState != PLAYER_Y_STATE_EXIT_UP
-  ;      .checkPlayerYState:
-  ;        LDA <playerYState
-  ;        BNE .collisionWithPlayerCheck ; PLAYER_Y_STATE_EXIT_UP = 0
-  ;        JMP .noCollision
-  ;      
-  ;    ; check for collision with player.
-  ;    ; bullet's box is still in 'b' boxes, set the player's box in 'a' boxes.
-  ;    .collisionWithPlayerCheck:        
-  ;      LDA <playerThreatBoxX1
-  ;      STA <ax1
-  ;      LDA <playerThreatBoxX2
-  ;      STA <ax2
-  ;      LDA <playerThreatBoxY1
-  ;      STA <ay1
-  ;      LDA <playerThreatBoxY2
-  ;      STA <ay2
-  ;      JSR CheckForCollision
-  ;      LDA <collision
-  ;      BEQ .noCollision
-  ;      
-  ;      ; collision with player detected - explode player, then go to .collisionUpdateState
-  ;      JSR ExplodePlayer
-  ;      JMP .collisionUpdateState        
-  ;    
-  ;    ; no collisions detected.
-  ;    ; load X from xPointerCache to point to the state, then set it to BULLET_S_NORMAL
-  ;    ; (in case it's currently set to BULLET_S_JUST_SPAWNED).
-  ;    ; then go to render the bullet.
-  ;    .noCollision:
-  ;      LDX <xPointerCache
-  ;      LDA #BULLET_S_NORMAL
-  ;      STA bullets, x
+        JSR CheckForCollisionsPlatThDoor
+        LDA <collision
+        BNE .collisionFound
+        JSR CheckForElevatorCollision
+        LDA <collision
+        BNE .collisionFound
+  
+      ; no collision with scenery. If needed, check for collision with player.  
+      .noCollisionWithScenery:
+        LDA <l
+        BEQ .noCollision
+        
+        ; only check for collisions with player if player is PLAYER_NORMAL
+        .checkPlayerState:
+          LDA <playerState
+          BEQ .checkPlayerYState ; PLAYER_NORMAL = 0
+          JMP .noCollision
+          
+        ; only check for collisions with player if playerYState != PLAYER_Y_STATE_EXIT_UP
+        .checkPlayerYState:
+          LDA <playerYState
+          BNE .collisionWithPlayerCheck ; PLAYER_Y_STATE_EXIT_UP = 0
+          JMP .noCollision
+        
+        ; check for collision with player.
+        ; bullet's box is still in 'b' boxes, set the player's box in 'a' boxes.
+        .collisionWithPlayerCheck:        
+          LDA <playerThreatBoxX1
+          STA <ax1
+          LDA <playerThreatBoxX2
+          STA <ax2
+          LDA <playerThreatBoxY1
+          STA <ay1
+          LDA <playerThreatBoxY2
+          STA <ay2
+          JSR CheckForCollision
+          LDA <collision
+          BEQ .noCollision
+          
+          ; collision with player detected - explode player, then flow to .collisionFound
+          JSR ExplodePlayer
+        
+      ; collision was found.
+      ; 'b' boxes set to the bullet boxes
+      ; 'a' boxes set to whatever was hit
+      ; genericDX/genericDY set to bullet speed
+      ; if the bullet was just spawned, just clear it. otherwise explode it
+      .collisionFound:
+        LDA <genericFrame
+        CMP #BULLET_S_JUST_SPAWNED
+        BEQ ClearBullet    
+        
+        ; todo 0002: move the bullet
+        
+        LDX <xPointerCache
+        LDA #BULLET_S_SMTH_HIT
+        STA bullets, x
+        LDA #BULLET_SPRITE_E
+        STA <renderTile
+        LDA #BULLET_ATTS_E
+        STA <renderAtts
+        JMP RenderBullet
+        
+      ; no collisions detected.
+      ; load X from xPointerCache to point to the state, then set it to BULLET_S_NORMAL
+      ; (in case it's currently set to BULLET_S_JUST_SPAWNED).
+      ; then go to render the bullet.
+      .noCollision:
+        LDX <xPointerCache
+        LDA #BULLET_S_NORMAL
+        STA bullets, x
         
       ; render the bullet
       ; we expect all 4 render vars to be set when we get here
-      .renderBullet:      
+      RenderBullet:      
         JSR RenderSprite
-        JMP .updateLoopCheck
+        JMP UpdateLoopCheck
         
       ; we get here if we want to clear the bullet.
       ; load X from xPointerCache to point to the state, then set it to BULLET_S_NOT_EXIST
-      .clearBullet:
+      ClearBullet:
         LDX <xPointerCache
         LDA #BULLET_S_NOT_EXIST 
         STA bullets, x 
           
       ; loop check. load the pointer of the bullet we just processed,
       ; and compare it to the lower bound param to see if we should exit the loop.
-      .updateLoopCheck:
+      UpdateLoopCheck:
         LDA <xPointerCache
         CMP <k
         BEQ .updateDone
-        JMP .updateLoop
+        JMP UpdateLoop
   
   .updateDone:
     RTS
       
 ;****************************************************************
 ; Name:                                                         ;
-;   ScrollBullets                                               ;
+;   ScrollBulletsLeft                                           ;
 ;                                                               ;
 ; Description:                                                  ;
 ;   Moves all bullets by 1 as part of the scroll                ;
-;                                                               ;
-; Input values:                                                 ;
-;   b - 0 means we're incrementing scroll (move left)           ;
-;       1 means we're decrementing scroll (move right)          ;
+;   Called when incrementing scroll, we must move bullets left  ;
 ;                                                               ;
 ; Used variables:                                               ;
 ;   X                                                           ;
@@ -647,64 +598,83 @@ UpdateBullets:
 ;   depends_on_bullets_in_memory_format                         ;
 ;****************************************************************  
 
-ScrollBullets:
+ScrollBulletsLeft:
+  RTS      
+    
+;****************************************************************
+; Name:                                                         ;
+;   ScrollBulletsRight                                          ;
+;                                                               ;
+; Description:                                                  ;
+;   Moves all bullets by 1 as part of the scroll                ;
+;   Called when decrementing scroll, we must move bullets right ;
+;                                                               ;
+; Used variables:                                               ;
+;   X                                                           ;
+;                                                               ;
+; Tags:                                                         ;
+;   depends_on_bullets_in_memory_format                         ;
+;****************************************************************  
 
-  ; update loop expects A to point to the bullet 4 bytes ahead of the one we want to update.
-  LDA #TOTAL_BULLET_LAST + BULLET_MEMORY_BYTES
-  .updateLoop:
+ScrollBulletsRight:
+  RTS
+
+;  ; update loop expects A to point to the bullet 4 bytes ahead of the one we want to update.
+;  LDA #TOTAL_BULLET_LAST + BULLET_MEMORY_BYTES
+;  .updateLoop:
+;  
+;    ; subtract bullet size, and store it in x and xPointerCache
+;    SEC
+;    SBC #BULLET_MEMORY_BYTES
+;    STA <xPointerCache
+;    TAX
+;  
+;    ; load the bullet state, do nothing if the bullet doesn't exist (0 == BULLET_S_NOT_EXIST)
+;    LDA bullets, x
+;    BEQ .updateLoopCheck
+;    
+;    ; we must move the bullet. X += 2 to point to the x position
+;    INX
+;    INX
+;    
+;    ; check which direction we're scrolling in
+;    LDA <b
+;    BEQ .moveLeft
+;    
+;    ; move bullet right
+;    .moveRight:
+;      LDA bullets, x
+;      CLC
+;      ADC #$01
+;      BCS .offScreen
+;      STA bullets, x
+;      JMP .updateLoopCheck
+;    
+;    ; move bullet left
+;    .moveLeft:       
+;      LDA bullets, x
+;      SEC
+;      SBC #$01
+;      BCC .offScreen
+;      STA bullets, x
+;      JMP .updateLoopCheck
+;    
+;    ; if we got here, it means the bullet is off screen.
+;    ; load the pointer to the state, then clear the bullet.
+;    .offScreen:
+;      LDX <xPointerCache
+;      LDA #BULLET_S_NOT_EXIST 
+;      STA bullets, x 
+;      JMP .updateLoopCheck
+;        
+;    .updateLoopCheck:
+;      LDA <xPointerCache
+;      BEQ .updateDone
+;      JMP .updateLoop
+;  
+;  .updateDone:
+
   
-    ; subtract bullet size, and store it in x and xPointerCache
-    SEC
-    SBC #BULLET_MEMORY_BYTES
-    STA <xPointerCache
-    TAX
-  
-    ; load the bullet state, do nothing if the bullet doesn't exist (0 == BULLET_S_NOT_EXIST)
-    LDA bullets, x
-    BEQ .updateLoopCheck
-    
-    ; we must move the bullet. X += 2 to point to the x position
-    INX
-    INX
-    
-    ; check which direction we're scrolling in
-    LDA <b
-    BEQ .moveLeft
-    
-    ; move bullet right
-    .moveRight:
-      LDA bullets, x
-      CLC
-      ADC #$01
-      BCS .offScreen
-      STA bullets, x
-      JMP .updateLoopCheck
-    
-    ; move bullet left
-    .moveLeft:       
-      LDA bullets, x
-      SEC
-      SBC #$01
-      BCC .offScreen
-      STA bullets, x
-      JMP .updateLoopCheck
-    
-    ; if we got here, it means the bullet is off screen.
-    ; load the pointer to the state, then clear the bullet.
-    .offScreen:
-      LDX <xPointerCache
-      LDA #BULLET_S_NOT_EXIST 
-      STA bullets, x 
-      JMP .updateLoopCheck
-        
-    .updateLoopCheck:
-      LDA <xPointerCache
-      BEQ .updateDone
-      JMP .updateLoop
-  
-  .updateDone:
-    RTS      
-    
 ;****************************************************************
 ; Name:                                                         ;
 ;   CheckForCollisionsPlatThDoor                                ;
