@@ -15,7 +15,7 @@ EnemiesStart:
 ;    hitbox y off    : 1 byte
 ;    hitbox height   : 1 byte (inclusive)
 ;    orientation     : 1 byte (see ORIENTATION_* consts)
-;    bullet id       : 1 byte
+;    bullet pointer  : 1 byte
 ;    gun x off       : 1 byte (signed, 0 for non shooting)
 ;    gun y off       : 1 byte (signed, 0 for non shooting)
 ;    gun x off flip  : 1 byte (signed, 0 for non shooting)
@@ -39,8 +39,8 @@ BeetleConsts:
   .byte $02,$1B,$04,$10
 .orientation:
   .byte $01
-.bulletId:
-  .byte $00
+.bulletPointer:
+  .byte $4E
 .gunInfo:
   .byte $1E,$03,$F9,$03
 .animationSpeed:
@@ -61,7 +61,7 @@ BugConsts:
   .byte $02,$0B,$04,$0A
 .orientation:
   .byte $01
-.bulletId:
+.bulletPointer:
   .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
@@ -83,7 +83,7 @@ EyeConsts:
   .byte $03,$09,$02,$0B
 .orientation:
   .byte $01
-.bulletId:
+.bulletPointer:
   .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
@@ -105,7 +105,7 @@ SpikesConsts:
   .byte $02,$0A,$02,$0A
 .orientation:
   .byte $02
-.bulletId:
+.bulletPointer:
   .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
@@ -127,8 +127,8 @@ TurretVConsts:
   .byte $01,$0D,$01,$0D
 .orientation:
   .byte $00
-.bulletId:
-  .byte $00
+.bulletPointer:
+  .byte $0D
 .gunInfo:
   .byte $0A,$0F,$0A,$F8
 .animationSpeed:
@@ -149,7 +149,7 @@ TurretHConsts:
   .byte $01,$0D,$01,$0D
 .orientation:
   .byte $01
-.bulletId:
+.bulletPointer:
   .byte $00
 .gunInfo:
   .byte $0F,$01,$F8,$01
@@ -171,8 +171,8 @@ SphereConsts:
   .byte $01,$0D,$01,$0D
 .orientation:
   .byte $01
-.bulletId:
-  .byte $00
+.bulletPointer:
+  .byte $5B
 .gunInfo:
   .byte $0D,$06,$FA,$06
 .animationSpeed:
@@ -193,7 +193,7 @@ FlyingRobotConsts:
   .byte $01,$15,$02,$0D
 .orientation:
   .byte $02
-.bulletId:
+.bulletPointer:
   .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
@@ -215,7 +215,7 @@ WalkingRobotConsts:
   .byte $01,$15,$02,$0D
 .orientation:
   .byte $02
-.bulletId:
+.bulletPointer:
   .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
@@ -237,7 +237,7 @@ BarrierV6Consts:
   .byte $00,$07,$00,$2F
 .orientation:
   .byte $02
-.bulletId:
+.bulletPointer:
   .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
@@ -259,7 +259,7 @@ BarrierH6Consts:
   .byte $00,$2F,$00,$07
 .orientation:
   .byte $02
-.bulletId:
+.bulletPointer:
   .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
@@ -281,7 +281,7 @@ BlinkerConsts:
   .byte $02,$0B,$01,$06
 .orientation:
   .byte $02
-.bulletId:
+.bulletPointer:
   .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
@@ -303,7 +303,7 @@ GreenBlobConsts:
   .byte $01,$0D,$06,$09
 .orientation:
   .byte $01
-.bulletId:
+.bulletPointer:
   .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
@@ -325,7 +325,7 @@ PinkBlobConsts:
   .byte $01,$0D,$06,$09
 .orientation:
   .byte $01
-.bulletId:
+.bulletPointer:
   .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
@@ -347,8 +347,8 @@ TankConsts:
   .byte $05,$16,$01,$16
 .orientation:
   .byte $01
-.bulletId:
-  .byte $00
+.bulletPointer:
+  .byte $34
 .gunInfo:
   .byte $17,$01,$00,$01
 .animationSpeed:
@@ -369,7 +369,7 @@ AcidConsts:
   .byte $01,$0D,$08,$07
 .orientation:
   .byte $02
-.bulletId:
+.bulletPointer:
   .byte $00
 .gunInfo:
   .byte $00,$00,$00,$00
@@ -391,8 +391,8 @@ TurretD1Consts:
   .byte $01,$0D,$01,$0D
 .orientation:
   .byte $01
-.bulletId:
-  .byte $00
+.bulletPointer:
+  .byte $1A
 .gunInfo:
   .byte $0E,$FE,$F9,$FE
 .animationSpeed:
@@ -413,8 +413,8 @@ TurretD2Consts:
   .byte $01,$0D,$01,$0D
 .orientation:
   .byte $01
-.bulletId:
-  .byte $00
+.bulletPointer:
+  .byte $27
 .gunInfo:
   .byte $0E,$0D,$F9,$0D
 .animationSpeed:
@@ -435,8 +435,8 @@ GunnerRobotConsts:
   .byte $05,$0D,$01,$1E
 .orientation:
   .byte $01
-.bulletId:
-  .byte $00
+.bulletPointer:
+  .byte $41
 .gunInfo:
   .byte $17,$09,$F8,$09
 .animationSpeed:
