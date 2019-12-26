@@ -593,13 +593,56 @@ UpdateBullets:
 ;                                                               ;
 ; Used variables:                                               ;
 ;   X                                                           ;
+;   Y                                                           ;
 ;                                                               ;
 ; Tags:                                                         ;
 ;   depends_on_bullets_in_memory_format                         ;
 ;****************************************************************  
 
 ScrollBulletsLeft:
-  RTS      
+
+  ; start by pointing to the last bullet + 1 bullet ahead
+  LDA #TOTAL_BULLET_LAST + BULLET_MEMORY_BYTES
+  
+  .updateLoop:
+
+    ; subtract bullet size, and store it in x and xPointerCache
+    SEC
+    SBC #BULLET_MEMORY_BYTES
+    STA <xPointerCache
+    TAX
+  
+    ; load the bullet state, do nothing if the bullet doesn't exist (0 == BULLET_S_NOT_EXIST)
+    LDA bullets, x
+    BEQ .updateLoopCheck
+  
+    ; bullet exists. point to the x position
+    TXA
+    CLC
+    ADC #BULLET_MEMORY_X_OFF
+    TAX
+    
+    ; move the bullet
+    LDA bullets, x
+    SEC
+    SBC #$01
+    BCS .setX
+    
+    ; carry clear means bullet went off screen to the left. clear it.
+    .clearBullet:
+      LDX <xPointerCache
+      LDA #BULLET_S_NOT_EXIST
+      STA bullets, x
+      JMP .updateLoopCheck
+      
+    ; set position and flow into the loop check
+    .setX:
+      STA bullets, x
+  
+    .updateLoopCheck:
+      LDA <xPointerCache
+      BNE .updateLoop
+      RTS  
     
 ;****************************************************************
 ; Name:                                                         ;
@@ -611,69 +654,56 @@ ScrollBulletsLeft:
 ;                                                               ;
 ; Used variables:                                               ;
 ;   X                                                           ;
+;   Y                                                           ;
 ;                                                               ;
 ; Tags:                                                         ;
 ;   depends_on_bullets_in_memory_format                         ;
 ;****************************************************************  
 
 ScrollBulletsRight:
-  RTS
 
-;  ; update loop expects A to point to the bullet 4 bytes ahead of the one we want to update.
-;  LDA #TOTAL_BULLET_LAST + BULLET_MEMORY_BYTES
-;  .updateLoop:
-;  
-;    ; subtract bullet size, and store it in x and xPointerCache
-;    SEC
-;    SBC #BULLET_MEMORY_BYTES
-;    STA <xPointerCache
-;    TAX
-;  
-;    ; load the bullet state, do nothing if the bullet doesn't exist (0 == BULLET_S_NOT_EXIST)
-;    LDA bullets, x
-;    BEQ .updateLoopCheck
-;    
-;    ; we must move the bullet. X += 2 to point to the x position
-;    INX
-;    INX
-;    
-;    ; check which direction we're scrolling in
-;    LDA <b
-;    BEQ .moveLeft
-;    
-;    ; move bullet right
-;    .moveRight:
-;      LDA bullets, x
-;      CLC
-;      ADC #$01
-;      BCS .offScreen
-;      STA bullets, x
-;      JMP .updateLoopCheck
-;    
-;    ; move bullet left
-;    .moveLeft:       
-;      LDA bullets, x
-;      SEC
-;      SBC #$01
-;      BCC .offScreen
-;      STA bullets, x
-;      JMP .updateLoopCheck
-;    
-;    ; if we got here, it means the bullet is off screen.
-;    ; load the pointer to the state, then clear the bullet.
-;    .offScreen:
-;      LDX <xPointerCache
-;      LDA #BULLET_S_NOT_EXIST 
-;      STA bullets, x 
-;      JMP .updateLoopCheck
-;        
-;    .updateLoopCheck:
-;      LDA <xPointerCache
-;      BEQ .updateDone
-;      JMP .updateLoop
-;  
-;  .updateDone:
+  ; start by pointing to the last bullet + 1 bullet ahead
+  LDA #TOTAL_BULLET_LAST + BULLET_MEMORY_BYTES
+  
+  .updateLoop:
 
+    ; subtract bullet size, and store it in x and xPointerCache
+    SEC
+    SBC #BULLET_MEMORY_BYTES
+    STA <xPointerCache
+    TAX
+  
+    ; load the bullet state, do nothing if the bullet doesn't exist (0 == BULLET_S_NOT_EXIST)
+    LDA bullets, x
+    BEQ .updateLoopCheck
+  
+    ; bullet exists. point to the x position
+    TXA
+    CLC
+    ADC #BULLET_MEMORY_X_OFF
+    TAX
+    
+    ; move the bullet
+    LDA bullets, x
+    CLC
+    ADC #$01
+    BCC .setX
+    
+    ; carry set means bullet went off screen to the right. clear it.
+    .clearBullet:
+      LDX <xPointerCache
+      LDA #BULLET_S_NOT_EXIST
+      STA bullets, x
+      JMP .updateLoopCheck
+      
+    ; set position and flow into the loop check
+    .setX:
+      STA bullets, x
+  
+    .updateLoopCheck:
+      LDA <xPointerCache
+      BNE .updateLoop
+      RTS
   
 ;****************************************************************
 ; Name:                                                         ;

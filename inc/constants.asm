@@ -146,8 +146,8 @@ PLAYER_BULLET_COOLDOWN   = $0F
                          
 PLAYER_GUN_OFF_X_R       = $12
 PLAYER_GUN_OFF_X_L       = $FD - $08 ; -08 for rotation
-PLAYER_GUN_OFF_Y         = $EC - $02 ; -02 for bullet offset within the sprite
-PLAYER_GUN_OFF_Y_C       = $F4 - $02 ; same
+PLAYER_GUN_OFF_Y         = $EB
+PLAYER_GUN_OFF_Y_C       = $F3
                          
 PLAYER_Y_STATE_EXIT_UP   = $00 ; special values for the playerYState var
 PLAYER_Y_STATE_NORMAL    = $01 
