@@ -466,6 +466,7 @@ UpdateBullets:
             .setBY2:
               STA <by2
       
+      ; when we get here, X points to the y position and the 'b' boxes are set to the bullet
       .checkCollisions:
   
   ;      JSR CheckForCollisionsPlatThDoor
