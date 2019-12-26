@@ -461,7 +461,7 @@ UpdateBullets:
         ;   update the bullets memory;
         ;   set to renderYPos
         ;   add to by1 - on >SCREEN_HEIGHT clear the bullet
-        ;   by2 = by1 + genericWidth - on >SCREEN_HEIGHT cap at max
+        ;   by2 = by1 + genericWidth - no need to check for overflow
         .setYPosition:
           STA bullets, x
           STA renderYPos
@@ -474,15 +474,8 @@ UpdateBullets:
           .setBY1:
             STA <by1
             CLC
-            ADC genericWidth
-            CMP #SCREEN_HEIGHT
-            BCC .setBY2
-            
-            .capBY2:
-              LDA #SCREEN_HEIGHT
-              
-            .setBY2:
-              STA <by2
+            ADC genericWidth            
+            STA <by2
       
       ; when we get here, X points to the y position and the 'b' boxes are set to the bullet
       .checkCollisions: ; F5F3
