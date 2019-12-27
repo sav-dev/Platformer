@@ -42,7 +42,7 @@ BeetleConsts:
 .bulletPointer:
   .byte $4E
 .gunInfo:
-  .byte $1E,$03,$F9,$03
+  .byte $1F,$04,$F9,$04
 .animationSpeed:
   .byte $06
 .numberOfFrames:
@@ -130,7 +130,7 @@ TurretVConsts:
 .bulletPointer:
   .byte $0D
 .gunInfo:
-  .byte $0A,$0F,$0A,$F8
+  .byte $0A,$10,$0A,$F8
 .animationSpeed:
   .byte $00
 .numberOfFrames:
@@ -152,7 +152,7 @@ TurretHConsts:
 .bulletPointer:
   .byte $00
 .gunInfo:
-  .byte $0F,$01,$F8,$01
+  .byte $10,$02,$F8,$02
 .animationSpeed:
   .byte $00
 .numberOfFrames:
@@ -174,7 +174,7 @@ SphereConsts:
 .bulletPointer:
   .byte $5B
 .gunInfo:
-  .byte $0D,$06,$FA,$06
+  .byte $0D,$06,$FB,$06
 .animationSpeed:
   .byte $00
 .numberOfFrames:
@@ -350,7 +350,7 @@ TankConsts:
 .bulletPointer:
   .byte $34
 .gunInfo:
-  .byte $17,$01,$00,$01
+  .byte $17,$02,$01,$02
 .animationSpeed:
   .byte $04
 .numberOfFrames:
@@ -394,7 +394,7 @@ TurretD1Consts:
 .bulletPointer:
   .byte $1A
 .gunInfo:
-  .byte $0E,$FE,$F9,$FE
+  .byte $0E,$F9,$FA,$F9
 .animationSpeed:
   .byte $00
 .numberOfFrames:
@@ -416,7 +416,7 @@ TurretD2Consts:
 .bulletPointer:
   .byte $27
 .gunInfo:
-  .byte $0E,$0D,$F9,$0D
+  .byte $0E,$0F,$FA,$0F
 .animationSpeed:
   .byte $00
 .numberOfFrames:
@@ -438,7 +438,7 @@ GunnerRobotConsts:
 .bulletPointer:
   .byte $41
 .gunInfo:
-  .byte $17,$09,$F8,$09
+  .byte $18,$0B,$F8,$0B
 .animationSpeed:
   .byte $00
 .numberOfFrames:
