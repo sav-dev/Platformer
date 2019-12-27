@@ -96,6 +96,8 @@ EnemiesManagerStart:
 ;   removeEnemy - incremented if enemy should be exploded       ;
 ;   render vars                                                 ;
 ;   b                                                           ;
+;   xPointerCache                                               ;
+;   xPointerCache2                                              ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_enemy_in_memory_format                           ;
@@ -845,11 +847,11 @@ UpdateActiveEnemy:
       LDA [enemyConstsPointer], y
       STA <enemyOrientation
     
-    ; Y += 1 to point to bullet id, load
+    ; Y += 1 to point to bullet pointer, load
     .bulletId:
       INY
       LDA [enemyConstsPointer], y
-      STA <enemyBulletId
+      STA <enemyBulletPointer
     
     ; then do Y += 1 to point to gun x off, then check direction, and set enemyGunX and enemyGunY to a right const value.
     ; make sure we do Y += 4 (5 including the initial one) to point to animation speed.
@@ -1121,78 +1123,9 @@ UpdateActiveEnemy:
       ADC <genericY
       STA <enemyGunY
       
-    ; spawn enemy bullet using enemyGunX, enemyGunY, genericDirection: 
-    ;   - enemyGunX, enemyGunY - point to spawn the bullet at
-    ;   - genericDirection - current flip
-    ; depends_on_bullets_consts_format
-    SpawnEnemyBullet: ; todo 0002
-      
-      ;; first find a free slot, look for BULLET_S_NOT_EXIST == 0
-      ;LDY #ENEMY_BULLET_LAST
-      ;.findFreeSlotLoop:    
-      ;  LDA bullets, y
-      ;  BEQ .freeSlotFound
-      ;  CPY #ENEMY_BULLET_FIRST
-      ;  BEQ EnemyProcessAnimation
-      ;  DEY
-      ;  DEY
-      ;  DEY
-      ;  DEY
-      ;  JMP .findFreeSlotLoop
-      ;
-      ;; free slot found, Y points to it
-      ;; memory layout: state, direction, x, y
-      ;.freeSlotFound:
-      ;  
-      ;  ; state = just spawned
-      ;  .setBulletState:
-      ;    LDA #BULLET_S_JUST_SPAWNED
-      ;    STA bullets, y
-      ;    
-      ;  ; get bullet direction based on enemyOrientation and genericDirection (see comment above)
-      ;  .setBulletDirection:
-      ;    INY
-      ;    LDA <enemyOrientation
-      ;    BEQ .bulletDirectionVertical ; ORIENTATION_VERT = 0
-      ;    
-      ;    .bulletDirectionHorizontal:
-      ;      LDA <genericDirection
-      ;      BEQ .bulletDirectionRight
-      ;      
-      ;      .bulletDirectionLeft:
-      ;        LDA #DIRECTION_LEFT
-      ;        JMP .setBulletDirectionValue
-      ;    
-      ;      .bulletDirectionRight:
-      ;        LDA #DIRECTION_RIGHT
-      ;        JMP .setBulletDirectionValue
-      ;    
-      ;    .bulletDirectionVertical:
-      ;      LDA <genericDirection
-      ;      BEQ .bulletDirectionDown
-      ;      
-      ;      .bulletDirectionUp:
-      ;        LDA #DIRECTION_UP
-      ;        JMP .setBulletDirectionValue
-      ;      
-      ;      .bulletDirectionDown:
-      ;        LDA #DIRECTION_DOWN
-      ;    
-      ;    ; A = direction when we get here
-      ;    .setBulletDirectionValue:
-      ;      STA bullets, y
-      ;  
-      ;  ; set x position
-      ;  .setBulletX:
-      ;    INY
-      ;    LDA <enemyGunX
-      ;    STA bullets, y
-      ;
-      ;  ; set y position
-      ;  .setBulletY:
-      ;    INY
-      ;    LDA <enemyGunY
-      ;    STA bullets, y          
+    ; everything is set, spawn enemy bullet now.
+    .spawnEnemyBullet:
+      JSR SpawnEnemyBullet
         
   ; when we get here, X points to the animation timer.
   ; next byte is the current animation frame.
@@ -1486,6 +1419,8 @@ UpdateExplodingEnemy:
 ;   i                                                           ;
 ;   j                                                           ;
 ;   remove enemy                                                ;
+;   xPointerCache                                               ;
+;   xPointerCache2                                              ;
 ;                                                               ;
 ; Remarks:                                                      ;
 ;   depends_on_enemy_in_memory_format                           ;

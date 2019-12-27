@@ -167,6 +167,145 @@ SpawnPlayerBullet:
     STA bullets, x
     
     RTS
+    
+;****************************************************************
+; Name:                                                         ;
+;   SpawnEnemyBullet                                            ;
+;                                                               ;
+; Description:                                                  ;
+;   Spawns enemy bullet if possible                             ;
+;                                                               ;
+; Input:                                                        ;
+;   enemyGunX, enemyGunY - point to spawn the bullet at         ;
+;   genericDirection - current flip                             ;
+;   enemyBulletPointer - pointer to the bullet type             ;
+;   X - must be preserved!                                      ;
+;                                                               ;
+; Used variables:                                               ;
+;   Generic vars                                                ;
+;   X                                                           ;
+;   Y                                                           ;
+;   xPointerCache2                                              ;
+;                                                               ;
+; Tags:                                                         ;
+;   depends_on_bullets_consts_format                            ;
+;   depends_on_bullets_in_memory_format                         ;
+;****************************************************************
+
+SpawnEnemyBulletExit:
+  RTS
+
+SpawnEnemyBullet:
+    
+  ; first find a free slot, look for BULLET_S_NOT_EXIST == 0
+  LDY #ENEMY_BULLET_LAST
+  .findFreeSlotLoop:    
+    LDA bullets, y
+    BEQ .freeSlotFound ; BULLET_S_NOT_EXIST = 0
+    CPY #ENEMY_BULLET_FIRST
+    BEQ SpawnEnemyBulletExit
+    TYA
+    SEC
+    SBC #BULLET_MEMORY_BYTES
+    TAY
+    JMP .findFreeSlotLoop
+  
+  ; free slot found, Y points to it. 
+  ; cache X in xPointerCache2 (1st one is already used)
+  ; then set the state to JUST_SPAWNED and INY to point to x speed
+  .freeSlotFound:
+    STX <xPointerCache2
+    LDA #BULLET_S_JUST_SPAWNED
+    STA bullets, y
+    INY
+    
+    ; the first 5 bytes in the memory layout are: dx, dy, box dx, box dy, atts
+    ; these are also the bytes in order in the consts, but we have to know if the enemy is flipped or not
+    ; move the consts pointer if needed, copy, then move again if haven't moved already
+    LDA <genericDirection
+    BEQ .noFlip
+    
+    .flip:
+      LDA <enemyBulletPointer
+      CLC
+      ADC #$05
+      TAX
+      LDA BulletConsts, x
+      STA bullets, y
+      INX
+      INY
+      LDA BulletConsts, x
+      STA bullets, y
+      INX
+      INY
+      LDA BulletConsts, x
+      STA bullets, y
+      INX
+      INY
+      LDA BulletConsts, x
+      STA bullets, y
+      INX
+      INY
+      LDA BulletConsts, x
+      STA bullets, y
+      INX
+      INY
+      JMP .spriteAndBoxSize
+    
+    .noFlip:
+      LDX <enemyBulletPointer
+      LDA BulletConsts, x
+      STA bullets, y
+      INX
+      INY
+      LDA BulletConsts, x
+      STA bullets, y
+      INX
+      INY
+      LDA BulletConsts, x
+      STA bullets, y
+      INX
+      INY
+      LDA BulletConsts, x
+      STA bullets, y
+      INX
+      INY
+      LDA BulletConsts, x
+      STA bullets, y
+      INX
+      INY
+      TXA
+      CLC
+      ADC #$05
+      TAX
+    
+    ; when we get here:        
+    ; next 3 bytes in both bullet consts and bullet data are sprite id and box dimensions. copy those.
+    .spriteAndBoxSize:
+      LDA BulletConsts, x
+      STA bullets, y
+      INX
+      INY
+      LDA BulletConsts, x
+      STA bullets, y
+      INX
+      INY
+      LDA BulletConsts, x
+      STA bullets, y
+      INY
+      
+    ; consts are processed. remaining two bytes in bullet data are x and y position
+    .setPosition:
+      LDA <enemyGunX
+      STA bullets, y
+      INY
+      LDA <enemyGunY
+      STA bullets, y
+  
+    ; reload X from the cache
+    .reloadX:
+      LDX <xPointerCache2
+      RTS
 
 ;****************************************************************
 ; Name:                                                         ;

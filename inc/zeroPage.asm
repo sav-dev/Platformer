@@ -43,6 +43,7 @@ elevatorsPointer        .rs 2  ; points to the elevators data for *next* screen 
 enemyConstsPointer      .rs 2  ; used to iterate over enemy consts
 
 xPointerCache           .rs 1  ; for caching the initial value of the x register
+xPointerCache2          .rs 1  ; in case we need to cache it twice
 yPointerCache           .rs 1  ; for caching the initial value of the y register
 
 ;****************************************************************
@@ -152,7 +153,7 @@ enemyFrameCount         .rs 1  ; enemy frame count
 
 enemyOrientation        .rs 1  ; enemy orientation
 
-enemyBulletId           .rs 1  ; enemy bullet id
+enemyBulletPointer      .rs 1  ; enemy bullet pointer
 enemyGunX               .rs 1  ; enemy gun x position
 enemyGunY               .rs 1  ; enemy gun y position
 
