@@ -124,7 +124,7 @@
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -141,7 +141,7 @@
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -158,7 +158,7 @@
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -175,7 +175,7 @@
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -192,7 +192,7 @@
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -209,7 +209,7 @@
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -226,11 +226,11 @@
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
+      <string>0-0-0-0</string>
+      <string>0-0-0-0</string>
+      <string>0-0-0-0</string>
+      <string>0-0-0-0</string>
       <string>0-0-0-0</string>
       <string>0-0-0-0</string>
       <string>0-0-0-0</string>
@@ -1093,6 +1093,42 @@
     </ArrayOfString>
   </Tiles>
   <Enemies>
+    <Enemy>
+      <Name>TurretD2</Name>
+      <X>112</X>
+      <Y>32</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>10</ShootingFrequency>
+      <ShootingInitialFrequency>10</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>TurretD1</Name>
+      <X>112</X>
+      <Y>80</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>10</ShootingFrequency>
+      <ShootingInitialFrequency>10</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
     <Enemy>
       <Name>TurretV</Name>
       <X>128</X>

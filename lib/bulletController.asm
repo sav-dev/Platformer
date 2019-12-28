@@ -676,16 +676,19 @@ UpdateBullets:
         JMP ClearBullet    
         
       ; move the bullet to a place where it hit the obstacle.
+      ; set genericDX/DY to how much we'll have to shift the bullet by
+      ; also set genericX/Y to absolute values
+      ; this is kind of complex but only happens on bullet collision so it should be ok
       .moveBullet:
         LDA <genericDX
-        BEQ .onlyVertical
+        BEQ .checkVertical
         BPL .goingRight
         
-      ; bullet was moving left (and possibly vertically).
       .goingLeft:
         
         ; move right by: ax2 - bx1 + 8 - genericWidth
-        ; genericX = ax2 - bx1 + 8 - genericWidth
+        ; genericDX = ax2 - bx1 + 8 - genericWidth
+        ; genericX = genericDX
         LDA <ax2
         SEC
         SBC <bx1
@@ -694,14 +697,15 @@ UpdateBullets:
         SEC
         SBC <genericWidth
         STA <genericDX
-        JMP .updateBulletPosition
+        STA <genericX
+        JMP .checkVertical
         
-      ; bullet was moving right (and possibly vertically).
       .goingRight:
       
         ; move left by: bx2 - ax1 + 8 - genericWidth
-        ; -genericX = bx2 - ax1 + 8 - genericWidth
-        ; genericX = ax1 - bx2 - 8 + genericWidth
+        ; -genericDX = bx2 - ax1 + 8 - genericWidth
+        ; genericDX = ax1 - bx2 - 8 + genericWidth
+        ; genericX = -genericDX
         LDA <ax1
         SEC
         SBC <bx2
@@ -710,18 +714,21 @@ UpdateBullets:
         CLC
         ADC <genericWidth
         STA <genericDX
+        LDA #$00
+        SEC
+        SBC <genericDX
+        STA genericX
         JMP .updateBulletPosition
         
-      ; bullet was moving only vertically.
-      .onlyVertical:
+      .checkVertical:
         LDA <genericDY
         BPL .goingDown
         
-        ; bullet was moving only up.
         .goingUp:
         
           ; move down by: ay2 - by1 + 8 - genericHeight
-          ; genericY = ay2 - by1 + 8 - genericHeight
+          ; genericDY = ay2 - by1 + 8 - genericHeight
+          ; genericY = genericDY
           LDA <ay2
           SEC
           SBC <by1
@@ -730,14 +737,15 @@ UpdateBullets:
           SEC
           SBC <genericHeight
           STA <genericDY
+          STA <genericY
           JMP .updateBulletPosition
         
-        ; bullet was moving only down.
         .goingDown:
 
           ; move up by: by2 - ay1 + 8 - genericHeight
-          ; -genericY = by2 - ay1 + 8 - genericHeight
-          ; genericY = ay1 - by2 - 8 + genericHeight
+          ; -genericDY = by2 - ay1 + 8 - genericHeight
+          ; genericDY = ay1 - by2 - 8 + genericHeight
+          ; genericY = -genericDY
           LDA <ay1
           SEC
           SBC <by2
@@ -746,15 +754,34 @@ UpdateBullets:
           CLC
           ADC <genericHeight
           STA <genericDY
+          LDA #$00
+          SEC
+          SBC <genericDY
+          STA genericY
         
-      ; move the bullet. We expect dx and dy to be set to whatever we should move the bullet by. No need to check for overflow.
-      ; X still points to Y pos, we can then DEX to point to the X pos
-      .updateBulletPosition:        
+      ; genericDX and genericDY set to what we should move the bullets by.      
+      .updateBulletPosition:
+        LDA <genericDX
+        BEQ .movingOnlyVertically
+        LDA <genericDY
+        BEQ .movingOnlyHorizontally
+        
+      ; if we get here it means the bullet is moving in both planes.
+      ; pick the smaller movement distance and move in both planes by that much
+      .movingInBothPlans:
+        ; todo 0002
+        JMP .updateBulletState
+      
+      .movingOnlyVertically:
         LDA <renderYPos
         CLC
         ADC <genericDY
         STA <renderYPos
         STA bullets, x
+        JMP .updateBulletState
+        ; todo 0002 move bullet so expl is centered
+        
+      .movingOnlyHorizontally:
         DEX
         LDA <renderXPos
         CLC

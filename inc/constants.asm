@@ -192,10 +192,6 @@ BULLET_S_TO_CLEAR        = BULLET_S_SMTH_HIT + BULLET_E_DURATION
 ; atts for bullet explosion
 BULLET_ATTS_E            = $00
               
-; size of the bullet explosion              
-BULLET_E_WIDTH           = SPRITE_DIMENSION
-BULLET_E_HEIGHT          = SPRITE_DIMENSION
-                         
 ; pointer to the last and first player bullet in the combined var (and also the player var)
 PLAYER_BULLET_LAST       = PLAYER_BULLET_VAR_SIZE - BULLET_MEMORY_BYTES
 PLAYER_BULLET_FIRST      = $00
