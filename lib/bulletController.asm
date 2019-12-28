@@ -600,20 +600,20 @@ UpdateBullets:
         ;   update the bullets memory;
         ;   set to renderYPos
         ;   add to by1 - on >SCREEN_HEIGHT clear the bullet
-        ;   by2 = by1 + genericWidth - no need to check for overflow
+        ;   by2 = by1 + genericHeight - no need to check for overflow
         .setYPosition:
           STA bullets, x
-          STA renderYPos
+          STA <renderYPos
           CLC
           ADC <by1
           CMP #SCREEN_HEIGHT
-          BCC .setBY1
+          BCC .setBY1andBY2
           JMP ClearBullet
           
-          .setBY1:
+          .setBY1andBY2:
             STA <by1
             CLC
-            ADC genericWidth            
+            ADC <genericHeight
             STA <by2
       
       ; when we get here, X points to the y position and the 'b' boxes are set to the bullet
@@ -629,7 +629,8 @@ UpdateBullets:
       ; no collision with scenery. If needed, check for collision with player.  
       .noCollisionWithScenery:
         LDA <l
-        BEQ .noCollision
+        BNE .checkPlayerState
+        JMP .noCollision
         
         ; only check for collisions with player if player is PLAYER_NORMAL
         .checkPlayerState:
@@ -656,9 +657,11 @@ UpdateBullets:
           STA <ay2
           JSR CheckForCollision
           LDA <collision
-          BEQ .noCollision
+          BNE .explodePlayer
+          JMP .noCollision
           
-          ; collision with player detected - explode player, then flow to .collisionFound
+        ; collision with player detected - explode player, then flow to .collisionFound
+        .explodePlayer:
           JSR ExplodePlayer
         
       ; collision was found.
@@ -669,10 +672,99 @@ UpdateBullets:
       .collisionFound:
         LDA <genericFrame
         CMP #BULLET_S_JUST_SPAWNED
-        BEQ ClearBullet    
+        BNE .moveBullet
+        JMP ClearBullet    
         
-        ; todo 0002: move the bullet
+      ; move the bullet to a place where it hit the obstacle.
+      .moveBullet:
+        LDA <genericDX
+        BEQ .onlyVertical
+        BPL .goingRight
         
+      ; bullet was moving left (and possibly vertically).
+      .goingLeft:
+        
+        ; move right by: ax2 - bx1 + 8 - genericWidth
+        ; genericX = ax2 - bx1 + 8 - genericWidth
+        LDA <ax2
+        SEC
+        SBC <bx1
+        CLC
+        ADC #$08
+        SEC
+        SBC <genericWidth
+        STA <genericDX
+        JMP .updateBulletPosition
+        
+      ; bullet was moving right (and possibly vertically).
+      .goingRight:
+      
+        ; move left by: bx2 - ax1 + 8 - genericWidth
+        ; -genericX = bx2 - ax1 + 8 - genericWidth
+        ; genericX = ax1 - bx2 - 8 + genericWidth
+        LDA <ax1
+        SEC
+        SBC <bx2
+        SEC
+        SBC #$08
+        CLC
+        ADC <genericWidth
+        STA <genericDX
+        JMP .updateBulletPosition
+        
+      ; bullet was moving only vertically.
+      .onlyVertical:
+        LDA <genericDY
+        BPL .goingDown
+        
+        ; bullet was moving only up.
+        .goingUp:
+        
+          ; move down by: ay2 - by1 + 8 - genericHeight
+          ; genericY = ay2 - by1 + 8 - genericHeight
+          LDA <ay2
+          SEC
+          SBC <by1
+          CLC
+          ADC #$08
+          SEC
+          SBC <genericHeight
+          STA <genericDY
+          JMP .updateBulletPosition
+        
+        ; bullet was moving only down.
+        .goingDown:
+
+          ; move up by: by2 - ay1 + 8 - genericHeight
+          ; -genericY = by2 - ay1 + 8 - genericHeight
+          ; genericY = ay1 - by2 - 8 + genericHeight
+          LDA <ay1
+          SEC
+          SBC <by2
+          SEC
+          SBC #$08
+          CLC
+          ADC <genericHeight
+          STA <genericDY
+        
+      ; move the bullet. We expect dx and dy to be set to whatever we should move the bullet by. No need to check for overflow.
+      ; X still points to Y pos, we can then DEX to point to the X pos
+      .updateBulletPosition:        
+        LDA <renderYPos
+        CLC
+        ADC <genericDY
+        STA <renderYPos
+        STA bullets, x
+        DEX
+        LDA <renderXPos
+        CLC
+        ADC <genericDX
+        STA <renderXPos
+        STA bullets, x 
+        ; todo 0002 move bullet so expl is centered
+        
+      ; update bullet state.
+      .updateBulletState:
         LDX <xPointerCache
         LDA #BULLET_S_SMTH_HIT
         STA bullets, x
