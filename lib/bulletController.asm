@@ -686,14 +686,14 @@ UpdateBullets:
         
       .goingLeft:
         
-        ; move right by: ax2 - bx1 + 8 - genericWidth
-        ; genericDX = ax2 - bx1 + 8 - genericWidth
+        ; move right by: ax2 - bx1 + explosionWidth - genericWidth
+        ; genericDX = ax2 - bx1 + explosionWidth - genericWidth
         ; genericX = genericDX
         LDA <ax2
         SEC
         SBC <bx1
         CLC
-        ADC #$08
+        ADC #BULLET_E_WIDTH
         SEC
         SBC <genericWidth
         STA <genericDX
@@ -702,15 +702,15 @@ UpdateBullets:
         
       .goingRight:
       
-        ; move left by: bx2 - ax1 + 8 - genericWidth
-        ; -genericDX = bx2 - ax1 + 8 - genericWidth
-        ; genericDX = ax1 - bx2 - 8 + genericWidth
+        ; move left by: bx2 - ax1 + explosionWidth - genericWidth
+        ; -genericDX = bx2 - ax1 + explosionWidth - genericWidth
+        ; genericDX = ax1 - bx2 - explosionWidth + genericWidth
         ; genericX = -genericDX
         LDA <ax1
         SEC
         SBC <bx2
         SEC
-        SBC #$08
+        SBC #BULLET_E_WIDTH
         CLC
         ADC <genericWidth
         STA <genericDX
@@ -718,7 +718,6 @@ UpdateBullets:
         SEC
         SBC <genericDX
         STA genericX
-        JMP .updateBulletPosition
         
       .checkVertical:
         LDA <genericDY
@@ -726,14 +725,14 @@ UpdateBullets:
         
         .goingUp:
         
-          ; move down by: ay2 - by1 + 8 - genericHeight
-          ; genericDY = ay2 - by1 + 8 - genericHeight
+          ; move down by: ay2 - by1 + explosionHeight - genericHeight
+          ; genericDY = ay2 - by1 + explosionHeight - genericHeight
           ; genericY = genericDY
           LDA <ay2
           SEC
           SBC <by1
           CLC
-          ADC #$08
+          ADC #BULLET_E_HEIGHT
           SEC
           SBC <genericHeight
           STA <genericDY
@@ -742,15 +741,16 @@ UpdateBullets:
         
         .goingDown:
 
-          ; move up by: by2 - ay1 + 8 - genericHeight
-          ; -genericDY = by2 - ay1 + 8 - genericHeight
-          ; genericDY = ay1 - by2 - 8 + genericHeight
+          ; move up by: by2 - ay1 + explosionHeight - genericHeight
+          ; -genericDY = by2 - ay1 + explosionHeight - genericHeight
+          ; genericDY = ay1 - by2 - explosionHeight + genericHeight
           ; genericY = -genericDY
           LDA <ay1
           SEC
           SBC <by2
           SEC
-          SBC #$08
+         
+         SBC #BULLET_E_HEIGHT
           CLC
           ADC <genericHeight
           STA <genericDY
@@ -767,10 +767,59 @@ UpdateBullets:
         BEQ .movingOnlyHorizontally
         
       ; if we get here it means the bullet is moving in both planes.
-      ; pick the smaller movement distance and move in both planes by that much
-      .movingInBothPlans:
-        ; todo 0002
-        JMP .updateBulletState
+      ; pick the smaller movement distance and move in both planes by that much   
+      .movingInBothPlanes:
+        LDA <genericY
+        CMP <genericX
+        BCS .moveBothByGenericX ; carry set means genericY >= genericX
+        STA <genericX
+        
+        .moveBothByGenericX:
+        
+          .moveXByGenericX:
+            LDA <genericDX
+            BPL .moveXByGenericXPositive
+            
+            .moveXByGenericXNegative:
+              LDA #$00
+              SEC
+              SBC <genericX
+              STA <genericDX
+              JMP .moveYByGenericX
+            
+            .moveXByGenericXPositive:
+              LDA <genericX
+              STA <genericDX
+          
+          .moveYByGenericX:
+            LDA <genericDY
+            BPL .moveYByGenericXPositive
+            
+            .moveYByGenericXNegative:
+              LDA #$00
+              SEC
+              SBC <genericX
+              STA <genericDY
+              JMP .updatePositionInBothPlanes
+              
+            .moveYByGenericXPositive:
+              LDA <genericX
+              STA <genericDY
+          
+        ; when we get here, genericDX and genericDY are both set.
+        .updatePositionInBothPlanes:     
+          LDA <renderYPos
+          CLC
+          ADC <genericDY
+          STA <renderYPos
+          STA bullets, x        
+          DEX
+          LDA <renderXPos
+          CLC
+          ADC <genericDX
+          STA <renderXPos
+          STA bullets, x 
+          JMP .updateBulletState
       
       .movingOnlyVertically:
         LDA <renderYPos

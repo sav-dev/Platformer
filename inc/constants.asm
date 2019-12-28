@@ -179,8 +179,10 @@ BULLET_MEMORY_BOX_HEIGHT = BULLET_MEMORY_BOX_WIDTH + $01
 BULLET_MEMORY_X_OFF      = BULLET_MEMORY_BOX_HEIGHT + $01
 BULLET_MEMORY_Y_OFF      = BULLET_MEMORY_X_OFF + $01
 
-; duration of bullet explosion
+; duration and size of bullet explosion
 BULLET_E_DURATION        = $05
+BULLET_E_WIDTH           = SPRITE_DIMENSION
+BULLET_E_HEIGHT          = SPRITE_DIMENSION
 
 ; bullet states
 BULLET_S_NOT_EXIST       = $00

@@ -5,11 +5,11 @@
   <Tiles>
     <ArrayOfString>
       <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
+      <string>0-0-0-0</string>
+      <string>0-0-0-0</string>
+      <string>0-0-0-0</string>
+      <string>0-0-0-0</string>
       <string>0-0-0-0</string>
       <string>0-0-0-0</string>
       <string>0-0-0-0</string>
@@ -22,12 +22,12 @@
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -39,80 +39,12 @@
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
       <string>0-0-0-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
       <string>0-0-0-0</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
       <string>0-0-0-0</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
       <string>0-0-0-0</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
-      <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -197,6 +129,74 @@
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
+      <string>0-0-0-0</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
+      <string>0-0-0-0</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-1-0-1</string>
+      <string>0-0-0-0</string>
       <string>0-0-0-0</string>
       <string>0-1-0-1</string>
       <string>0-1-0-1</string>
@@ -1094,6 +1094,24 @@
   </Tiles>
   <Enemies>
     <Enemy>
+      <Name>TurretH</Name>
+      <X>32</X>
+      <Y>48</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>30</ShootingFrequency>
+      <ShootingInitialFrequency>30</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
       <Name>TurretD2</Name>
       <X>112</X>
       <Y>32</Y>
@@ -1105,8 +1123,8 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>10</ShootingFrequency>
-      <ShootingInitialFrequency>10</ShootingInitialFrequency>
+      <ShootingFrequency>20</ShootingFrequency>
+      <ShootingInitialFrequency>20</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
@@ -1123,8 +1141,8 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>10</ShootingFrequency>
-      <ShootingInitialFrequency>10</ShootingInitialFrequency>
+      <ShootingFrequency>20</ShootingFrequency>
+      <ShootingInitialFrequency>20</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
@@ -1141,8 +1159,8 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>true</InitialFlip>
-      <ShootingFrequency>10</ShootingFrequency>
-      <ShootingInitialFrequency>10</ShootingInitialFrequency>
+      <ShootingFrequency>20</ShootingFrequency>
+      <ShootingInitialFrequency>20</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
@@ -1159,8 +1177,26 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>10</ShootingFrequency>
-      <ShootingInitialFrequency>10</ShootingInitialFrequency>
+      <ShootingFrequency>20</ShootingFrequency>
+      <ShootingInitialFrequency>20</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>TurretH</Name>
+      <X>176</X>
+      <Y>64</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>true</InitialFlip>
+      <ShootingFrequency>30</ShootingFrequency>
+      <ShootingInitialFrequency>30</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
