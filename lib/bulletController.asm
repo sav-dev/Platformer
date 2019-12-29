@@ -995,7 +995,6 @@ UpdateBullets:
         ADC <genericDX
         STA <renderXPos
         STA bullets, x 
-        ; todo 0002 move bullet so expl is centered
         
       ; update bullet state.
       .updateBulletState:
