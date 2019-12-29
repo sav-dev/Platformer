@@ -37,7 +37,7 @@ Turret_Horizontal:
 .attsFlip:
   .byte $40
 .spriteId:
-  .byte $99
+  .byte $A6
 .boxSize:
   .byte $05, $03
 
@@ -55,7 +55,7 @@ Turret_Vertical:
 .attsFlip:
   .byte $80
 .spriteId:
-  .byte $9A
+  .byte $A7
 .boxSize:
   .byte $03, $05
 
@@ -73,7 +73,7 @@ Turret_Diag_1:
 .attsFlip:
   .byte $40
 .spriteId:
-  .byte $9B
+  .byte $A8
 .boxSize:
   .byte $05, $05
 
@@ -91,7 +91,7 @@ Turret_Diag_2:
 .attsFlip:
   .byte $C0
 .spriteId:
-  .byte $9B
+  .byte $A8
 .boxSize:
   .byte $05, $05
 
@@ -109,7 +109,7 @@ Tank:
 .attsFlip:
   .byte $41
 .spriteId:
-  .byte $9C
+  .byte $A9
 .boxSize:
   .byte $07, $03
 
@@ -119,15 +119,15 @@ Gunner_Robot:
 .boxOffset:
   .byte $00, $00
 .atts:
-  .byte $03
+  .byte $00
 .speedFlip:
   .byte $FA, $00
 .boxOffsetFlip:
   .byte $00, $00
 .attsFlip:
-  .byte $43
+  .byte $40
 .spriteId:
-  .byte $9D
+  .byte $AB
 .boxSize:
   .byte $07, $02
 
@@ -145,7 +145,7 @@ Beetle:
 .attsFlip:
   .byte $41
 .spriteId:
-  .byte $9F
+  .byte $AC
 .boxSize:
   .byte $07, $03
 
@@ -163,14 +163,14 @@ Sphere:
 .attsFlip:
   .byte $42
 .spriteId:
-  .byte $A0
+  .byte $AD
 .boxSize:
   .byte $07, $03
 
 ; Player consts
 ; note: box DX/DY = 0 for both flip and non-flip
 ;       speed DY = 0 for both flip and non-flip
-PLAYER_BULLET_SPRITE = $9E
+PLAYER_BULLET_SPRITE = $AB
 PLAYER_BULLET_BOX_WIDTH = $07
 PLAYER_BULLET_BOX_HEIGHT = $03
 PLAYER_BULLET_SPEED_X = $06
