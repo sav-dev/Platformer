@@ -1159,26 +1159,8 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>true</InitialFlip>
-      <ShootingFrequency>20</ShootingFrequency>
-      <ShootingInitialFrequency>20</ShootingInitialFrequency>
-      <BlinkingType>NotBlinking</BlinkingType>
-      <BlinkingFrequency>0</BlinkingFrequency>
-      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
-    </Enemy>
-    <Enemy>
-      <Name>TurretV</Name>
-      <X>176</X>
-      <Y>112</Y>
-      <MovementType>None</MovementType>
-      <Direction>None</Direction>
-      <SpecialMovement>None</SpecialMovement>
-      <Speed>0</Speed>
-      <ShouldFlip>true</ShouldFlip>
-      <MinPosition>0</MinPosition>
-      <MaxPosition>0</MaxPosition>
-      <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>20</ShootingFrequency>
-      <ShootingInitialFrequency>20</ShootingInitialFrequency>
+      <ShootingFrequency>30</ShootingFrequency>
+      <ShootingInitialFrequency>30</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
@@ -1195,6 +1177,24 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>true</InitialFlip>
+      <ShootingFrequency>30</ShootingFrequency>
+      <ShootingInitialFrequency>30</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>TurretV</Name>
+      <X>176</X>
+      <Y>112</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>false</InitialFlip>
       <ShootingFrequency>30</ShootingFrequency>
       <ShootingInitialFrequency>30</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>

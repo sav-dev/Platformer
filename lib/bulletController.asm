@@ -117,6 +117,8 @@ SpawnPlayerBullet:
     LDA #PLAYER_BULLET_COOLDOWN
     STA <playerBulletCooldown
     
+    ; todo 0002: play the sound when bullet transistions from state just spawned to normal
+    ; so a sound is not played if player is against the wall
     ; play the sound
     JSR SfxShot ; todo 0006 - is this the right place    
     
@@ -676,19 +678,41 @@ UpdateBullets:
         JMP ClearBullet    
         
       ; move the bullet to a place where it hit the obstacle.
-      ; set genericDX/DY to how much we'll have to shift the bullet by
-      ; also set genericX/Y to absolute values
-      ; this is kind of complex but only happens on bullet collision so it should be ok
       .moveBullet:
+        
+        ; genericX/genericY will dictate how to move the bullet.
+        ;   0 => don't move in this plane
+        ;   != 0 => move in this plane
+        LDA #$00
+        STA <genericX
+        STA <genericY
+      
+        ; check if bullet has moved horizontally.
         LDA <genericDX
-        BEQ .checkVertical
+        BEQ .checkVertical ; not moving horizontally
         BPL .goingRight
         
       .goingLeft:
         
-        ; move right by: ax2 - bx1 + explosionWidth - genericWidth
-        ; genericDX = ax2 - bx1 + explosionWidth - genericWidth
-        ; genericX = genericDX
+        ; we moved left by genericDX.
+        ; now we have to move right by some amount.
+        ; set genericHorDirLeft to 0 (meaning bullet should be moved right)
+        LDA #$00
+        STA <genericHorDirLeft
+        
+        ; set genericX to -genericDX for now
+        ; then add (explosionWidth - genericWidth) (see below)
+        LDA #$00
+        SEC
+        SBC <genericDX
+        CLC
+        ADC #BULLET_E_WIDTH
+        SEC
+        SBC <genericWidth
+        STA <genericX
+        
+        ; we want to move right by: ax2 - bx1 + explosionWidth - genericWidth
+        ; dx = ax2 - bx1 + explosionWidth - genericWidth
         LDA <ax2
         SEC
         SBC <bx1
@@ -697,10 +721,45 @@ UpdateBullets:
         SEC
         SBC <genericWidth
         STA <genericDX
-        STA <genericX
-        JMP .checkVertical
+          
+        ; A contains the amount we want to move by.
+        ; compare it to how much we moved by.
+        ; if the absolute value is higher it means the bullet is moving diagonally
+        ; and moving in the other plane caused the collision
+        CMP <genericX
+        BCS .goingLeftOtherPlaneCausedCollision ; carry set means A > genericX
+        
+        ; Moving in this plane caused the collision.
+        ; Set genericX to absolute value
+        .goingLeftCausedCollision:
+          STA <genericX
+          JMP .checkVertical
+          
+        ; Moving in the other plane caused the collision.
+        ; Set genericX to FF to mark this
+        .goingLeftOtherPlaneCausedCollision:
+          LDA #$FF
+          STA <genericX
+          JMP .checkVertical
         
       .goingRight:
+      
+        ; we moved right by genericDX.
+        ; now we have to move left by some amount.
+        ; set genericHorDirLeft to 1 (meaning bullet should be moved left)
+        LDA #$01
+        STA <genericHorDirLeft
+        
+        ; set genericX to -genericDX for now
+        ; then add (- explosionWidth + genericWidth) (see below)
+        LDA #$00
+        SEC
+        SBC <genericDX
+        SEC
+        SBC #BULLET_E_WIDTH
+        CLC
+        ADC <genericWidth
+        STA <genericX
       
         ; move left by: bx2 - ax1 + explosionWidth - genericWidth
         ; -genericDX = bx2 - ax1 + explosionWidth - genericWidth
@@ -714,95 +773,187 @@ UpdateBullets:
         CLC
         ADC <genericWidth
         STA <genericDX
-        LDA #$00
-        SEC
-        SBC <genericDX
-        STA genericX
+
+        ; A contains the amount we want to move by.
+        ; compare it to how much we moved by.
+        ; if the absolute value is higher it means the bullet is moving diagonally
+        ; and moving in the other plane caused the collision
+        CMP <genericX
+        BEQ .goingRightOtherPlaneCausedCollision
+        BCC .goingRightOtherPlaneCausedCollision ; carry clear means A < genericX but both are negative
+        
+        ; Moving in this plane caused the collision.
+        ; Set genericX to absolute value
+        .goingRightCausedCollision:
+          LDA #$00
+          SEC
+          SBC <genericDX
+          STA genericX
+          JMP .checkVertical
+          
+        ; Moving in the other plane caused the collision.
+        ; Set genericX to FF to mark this
+        .goingRightOtherPlaneCausedCollision:
+          LDA #$FF
+          STA <genericX              
         
       .checkVertical:
         LDA <genericDY
+        BEQ .updateBulletPosition ; not moving vertically
         BPL .goingDown
         
-        .goingUp:
+      .goingUp:
         
-          ; move down by: ay2 - by1 + explosionHeight - genericHeight
-          ; genericDY = ay2 - by1 + explosionHeight - genericHeight
-          ; genericY = genericDY
-          LDA <ay2
-          SEC
-          SBC <by1
-          CLC
-          ADC #BULLET_E_HEIGHT
-          SEC
-          SBC <genericHeight
-          STA <genericDY
+        ; we moved up by genericDY.
+        ; now we have to move down by some amount.
+        ; set genericHorDirUp to 0 (meaning bullet should be moved down)
+        LDA #$00
+        STA <genericHorDirUp
+        
+        ; set genericY to -genericDY for now
+        ; then add (explosionHeight - genericHeight) (see below)
+        LDA #$00
+        SEC
+        SBC <genericDY
+        CLC
+        ADC #BULLET_E_HEIGHT
+        SEC
+        SBC <genericHeight
+        STA <genericY
+        
+        ; move down by: ay2 - by1 + explosionHeight - genericHeight
+        ; genericDY = ay2 - by1 + explosionHeight - genericHeight
+        ; genericY = genericDY
+        LDA <ay2
+        SEC
+        SBC <by1
+        CLC
+        ADC #BULLET_E_HEIGHT
+        SEC
+        SBC <genericHeight
+        STA <genericDY
+
+        ; A contains the amount we want to move by.
+        ; compare it to how much we moved by.
+        ; if the absolute value is higher it means the bullet is moving diagonally
+        ; and moving in the other plane caused the collision
+        CMP <genericY
+        BCS .goingUpOtherPlaneCausedCollision ; carry set means A > genericY
+        
+        ; Moving in this plane caused the collision.
+        ; Set genericY to absolute value
+        .goingUpCausedCollision:
+          STA <genericY
+          JMP .updateBulletPosition
+          
+        ; Moving in the other plane caused the collision.
+        ; Set genericY to FF to mark this
+        .goingUpOtherPlaneCausedCollision:
+          LDA #$FF
           STA <genericY
           JMP .updateBulletPosition
         
-        .goingDown:
-
-          ; move up by: by2 - ay1 + explosionHeight - genericHeight
-          ; -genericDY = by2 - ay1 + explosionHeight - genericHeight
-          ; genericDY = ay1 - by2 - explosionHeight + genericHeight
-          ; genericY = -genericDY
-          LDA <ay1
-          SEC
-          SBC <by2
-          SEC
-         
-         SBC #BULLET_E_HEIGHT
-          CLC
-          ADC <genericHeight
-          STA <genericDY
+      .goingDown:
+      
+        ; we moved down by genericDY.
+        ; now we have to move up by some amount.
+        ; set genericHorDirUp to 1 (meaning bullet should be moved up)
+        LDA #$01
+        STA <genericHorDirUp
+        
+        ; set genericY to -genericDY for now
+        ; then add (-explosionHeight + genericHeight) (see below)
+        LDA #$00
+        SEC
+        SBC <genericDY
+        SEC         
+        SBC #BULLET_E_HEIGHT
+        CLC
+        ADC <genericHeight
+        STA <genericY
+      
+        ; move up by: by2 - ay1 + explosionHeight - genericHeight
+        ; -genericDY = by2 - ay1 + explosionHeight - genericHeight
+        ; genericDY = ay1 - by2 - explosionHeight + genericHeight
+        ; genericY = -genericDY
+        LDA <ay1
+        SEC
+        SBC <by2
+        SEC         
+        SBC #BULLET_E_HEIGHT
+        CLC
+        ADC <genericHeight
+        STA <genericDY
+        
+        ; A contains the amount we want to move by.
+        ; compare it to how much we moved by.
+        ; if the absolute value is higher it means the bullet is moving diagonally
+        ; and moving in the other plane caused the collision
+        CMP <genericY
+        BEQ .goingDownOtherPlaneCausedCollision
+        BCC .goingDownOtherPlaneCausedCollision ; carry clear means A < genericY but both are negative
+        
+        ; Moving in this plane caused the collision.
+        ; Set genericY to absolute value
+        .goingDownCausedCollision:          
           LDA #$00
           SEC
           SBC <genericDY
           STA genericY
+          JMP .updateBulletPosition
+          
+        ; Moving in the other plane caused the collision.
+        ; Set genericY to FF to mark this
+        .goingDownOtherPlaneCausedCollision:
+          LDA #$FF
+          STA <genericY
         
       ; genericDX and genericDY set to what we should move the bullets by.      
       .updateBulletPosition:
-        LDA <genericDX
+        LDA <genericX
         BEQ .movingOnlyVertically
-        LDA <genericDY
+        LDA <genericY
         BEQ .movingOnlyHorizontally
         
       ; if we get here it means the bullet is moving in both planes.
-      ; pick the smaller movement distance and move in both planes by that much   
+      ; move by the smaller absolute
+      ; it all works because we set genericX/Y to FF if moving in the other plane caused the collision
       .movingInBothPlanes:
         LDA <genericY
         CMP <genericX
         BCS .moveBothByGenericX ; carry set means genericY >= genericX
         STA <genericX
         
+        ; genericX now contains the value we should move the bullet by in both planes
         .moveBothByGenericX:
         
           .moveXByGenericX:
-            LDA <genericDX
-            BPL .moveXByGenericXPositive
+            LDA <genericHorDirLeft
+            BEQ .moveXByGenericXGoRight
             
-            .moveXByGenericXNegative:
+            .moveXByGenericXGoLeft:
               LDA #$00
               SEC
               SBC <genericX
               STA <genericDX
               JMP .moveYByGenericX
             
-            .moveXByGenericXPositive:
+            .moveXByGenericXGoRight:
               LDA <genericX
               STA <genericDX
           
           .moveYByGenericX:
-            LDA <genericDY
-            BPL .moveYByGenericXPositive
+            LDA <genericHorDirUp
+            BEQ .moveYByGenericXGoDown
             
-            .moveYByGenericXNegative:
+            .moveYByGenericXGoUp:
               LDA #$00
               SEC
               SBC <genericX
               STA <genericDY
               JMP .updatePositionInBothPlanes
               
-            .moveYByGenericXPositive:
+            .moveYByGenericXGoDown:
               LDA <genericX
               STA <genericDY
           

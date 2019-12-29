@@ -136,6 +136,9 @@ genericHeight           .rs 1
 genericDOther           .rs 1  ; how much to move in the 'other' plane. POITAG - save zero page - remove this and use a pseudo-register
 genericVisible          .rs 1  ; whether the object exists on this or the next screen. POITAG - save zero page - remove this and use a pseudo-register
 
+genericHorDirLeft       .rs 1  ; >0 means object should be moved left, 0 means should be moved right. POITAG - save zero page - remove this and use a pseudo-register
+genericHorDirUp         .rs 1  ; >0 means object should be moved up, 0 means should be moved down. POITAG - save zero page - remove this and use a pseudo-register
+
 ;****************************************************************
 ; Enemy processing                                              ;
 ;****************************************************************
