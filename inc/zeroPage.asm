@@ -78,6 +78,7 @@ needPpuRegLocal         .rs 1  ; local copy of need PPU reg
 nametable               .rs 1  ; main nametable, 0 or 1
 scroll                  .rs 2  ; current scroll value, LOW is the actual scroll, HIGH contains number of screens scrolled
 maxScroll               .rs 2  ; max scroll for current level
+frameScroll             .rs 1  ; by how much the screen have scrolled in a frame
 
 ;****************************************************************
 ; Controllers                                                   ;

@@ -133,7 +133,7 @@ UpdatePlayerJetpack:
     LDA <enemySpeed; this still contains scrollSpeed
     STA <m; use as counter. POITAG - possible issue - random pseudo-register use
     .scrollLoop:
-      JSR ScrollRight
+      JSR IncrementScroll
       DEC <m
       BNE .scrollLoop
    
@@ -1748,12 +1748,12 @@ MovePlayerHorizontallyNormalAndSetBoxes:
         BCC .scrollRight
                                        
         .scrollLeft:                   
-          JSR ScrollLeft
+          JSR DecrementScroll
           INC <genericDX
           JMP .checkIfShouldMoveMore  
           
         .scrollRight:
-          JSR ScrollRight
+          JSR IncrementScroll
           DEC <genericDX
     
     ; We;ve moved the player and updated DX. See if we should move the player any more. 
@@ -1818,7 +1818,7 @@ MovePlayerHorizontallyNormalAndSetBoxes:
           ;    - not rendering enemies - they will just appear          
           .scrollingLoop:          
             JSR ClearSprites
-            JSR ScrollRight
+            JSR IncrementScroll
             DEC <playerX
             JSR RenderPlayer
             JSR RenderElevators

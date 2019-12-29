@@ -25,6 +25,9 @@ GameFrame:
     LDA #$00
     STA <needDrawLocal
     STA <needPpuRegLocal
+    
+  .presetVars:
+    STA <frameScroll                  ; preset to 0 (A = 0 still)
 
   .incrementFrameCounter:
     INC <frameCount
@@ -45,6 +48,9 @@ GameFrame:
     
     .checkThreatsCollisions:          ; check for player collisions with threats, also checks if player is falling off the screen
       JSR CheckThreats                ;
+      
+    .scrollBullets:                   ; all the scrolling has been completed. We can now scroll the bullets
+      JSR ScrollBullets               ;
     
     .spawnPlayerBullets:              ; spawn a player bullet if needed 
       JSR SpawnPlayerBullets          ;

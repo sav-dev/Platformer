@@ -523,6 +523,8 @@ LoadLevelBackgroundDone:
 
 IncrementScroll:
 
+  INC <frameScroll
+
   LDA #$00
   STA <e                               ; e is a flag that is used later, init it with 0
 
@@ -834,6 +836,8 @@ NewAttsOnTheRight:
 ;****************************************************************
 
 DecrementScroll:
+  
+  DEC <frameScroll
 
   LDA #$00
   STA <e                                ; e is a flag that is used later, init it with 0
@@ -1319,50 +1323,4 @@ MoveBackAttsPointerBack:
   STA <attsBackPointer + $01
   RTS
   
-;****************************************************************
-; Name:                                                         ;
-;   ScrollLeft                                                  ;
-;                                                               ;
-; Description:                                                  ;
-;   Scroll left, move bullets.                                  ;
-;                                                               ;
-; Used variables:                                               ;
-;   X                                                           ;
-;   Y                                                           ;
-;   b                                                           ;
-;   c                                                           ;
-;   d                                                           ;
-;   e                                                           ;
-;****************************************************************
-
-; todo 0002 get rid of this, call inline
-ScrollLeft:
-  JSR DecrementScroll
-  JMP ScrollBulletsRight
-
-;****************************************************************
-; Name:                                                         ;
-;   ScrollRight                                                 ;
-;                                                               ;
-; Description:                                                  ;
-;   Scroll right, move bullets.                                 ;
-;                                                               ;
-; Used variables:                                               ;
-;   X                                                           ;
-;   Y                                                           ;
-;   b                                                           ;
-;   c                                                           ;
-;   d                                                           ;
-;   e                                                           ;
-;****************************************************************
-
-; todo 0002 get rid of this, call inline
-ScrollRight:
-  JSR IncrementScroll
-  JMP ScrollBulletsLeft
-  
-;****************************************************************
-; EOF                                                           ;
-;****************************************************************
-
 BackgroundManagerEnd:

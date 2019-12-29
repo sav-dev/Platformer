@@ -1049,10 +1049,34 @@ UpdateBullets:
       
 ;****************************************************************
 ; Name:                                                         ;
+;   ScrollBullets                                               ;
+;                                                               ;
+; Description:                                                  ;
+;   Moves all bullets by frameScroll as part of the scroll      ;
+;                                                               ;
+; Used variables:                                               ;
+;   X                                                           ;
+;   Y                                                           ;
+;                                                               ;
+; Tags:                                                         ;
+;   depends_on_bullets_in_memory_format                         ;
+;****************************************************************  
+
+ScrollBulletsExit:
+  RTS
+      
+ScrollBullets:
+  LDA <frameScroll
+  BEQ ScrollBulletsExit
+  BMI ScrollBulletsRight ; scroll < 0 means we should scroll right.
+  ; flow into ScrollBulletsLeft
+      
+;****************************************************************
+; Name:                                                         ;
 ;   ScrollBulletsLeft                                           ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Moves all bullets by 1 as part of the scroll                ;
+;   Moves all bullets by frameScroll as part of the scroll      ;
 ;   Called when incrementing scroll, we must move bullets left  ;
 ;                                                               ;
 ; Used variables:                                               ;
@@ -1089,7 +1113,7 @@ ScrollBulletsLeft:
     ; move the bullet
     LDA bullets, x
     SEC
-    SBC #$01
+    SBC <frameScroll
     BCS .setX
     
     ; carry clear means bullet went off screen to the left. clear it.
@@ -1113,7 +1137,7 @@ ScrollBulletsLeft:
 ;   ScrollBulletsRight                                          ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Moves all bullets by 1 as part of the scroll                ;
+;   Moves all bullets by frameScroll as part of the scroll      ;
 ;   Called when decrementing scroll, we must move bullets right ;
 ;                                                               ;
 ; Used variables:                                               ;
@@ -1149,8 +1173,8 @@ ScrollBulletsRight:
     
     ; move the bullet
     LDA bullets, x
-    CLC
-    ADC #$01
+    SEC
+    SBC <frameScroll
     BCC .setX
     
     ; carry set means bullet went off screen to the right. clear it.
