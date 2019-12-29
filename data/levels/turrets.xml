@@ -1105,8 +1105,8 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>30</ShootingFrequency>
-      <ShootingInitialFrequency>30</ShootingInitialFrequency>
+      <ShootingFrequency>60</ShootingFrequency>
+      <ShootingInitialFrequency>10</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
@@ -1123,8 +1123,8 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>20</ShootingFrequency>
-      <ShootingInitialFrequency>20</ShootingInitialFrequency>
+      <ShootingFrequency>60</ShootingFrequency>
+      <ShootingInitialFrequency>30</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
@@ -1141,8 +1141,8 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>20</ShootingFrequency>
-      <ShootingInitialFrequency>20</ShootingInitialFrequency>
+      <ShootingFrequency>60</ShootingFrequency>
+      <ShootingInitialFrequency>40</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
@@ -1159,8 +1159,8 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>true</InitialFlip>
-      <ShootingFrequency>30</ShootingFrequency>
-      <ShootingInitialFrequency>30</ShootingInitialFrequency>
+      <ShootingFrequency>60</ShootingFrequency>
+      <ShootingInitialFrequency>50</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
@@ -1177,8 +1177,8 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>true</InitialFlip>
-      <ShootingFrequency>30</ShootingFrequency>
-      <ShootingInitialFrequency>30</ShootingInitialFrequency>
+      <ShootingFrequency>60</ShootingFrequency>
+      <ShootingInitialFrequency>20</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
@@ -1195,8 +1195,8 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>30</ShootingFrequency>
-      <ShootingInitialFrequency>30</ShootingInitialFrequency>
+      <ShootingFrequency>60</ShootingFrequency>
+      <ShootingInitialFrequency>60</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>

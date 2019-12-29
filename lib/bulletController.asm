@@ -117,11 +117,6 @@ SpawnPlayerBullet:
     LDA #PLAYER_BULLET_COOLDOWN
     STA <playerBulletCooldown
     
-    ; todo 0002: play the sound when bullet transistions from state just spawned to normal
-    ; so a sound is not played if player is against the wall
-    ; play the sound
-    JSR SfxShot ; todo 0006 - is this the right place    
-    
     ; state
     LDA #BULLET_S_JUST_SPAWNED
     STA bullets, x
@@ -978,10 +973,22 @@ UpdateBullets:
         ADC <genericDY
         STA <renderYPos
         STA bullets, x
-        JMP .updateBulletState
-        ; todo 0002 move bullet so expl is centered
+        DEX
+        LDA <renderXPos
+        SEC
+        SBC #$02 ; we could move by width / 2 but it will pretty much always be 2
+        BCC ClearBullet
+        STA <renderXPos
+        STA bullets, x        
+        JMP .updateBulletState        
         
       .movingOnlyHorizontally:
+        LDA <renderYPos
+        SEC
+        SBC #$02 ; we could move by width / 2 but it will pretty much always be 2
+        BCC ClearBullet
+        STA <renderYPos
+        STA bullets, x
         DEX
         LDA <renderXPos
         CLC
@@ -1007,8 +1014,14 @@ UpdateBullets:
       ; then go to render the bullet.
       .noCollision:
         LDX <xPointerCache
+        LDA bullets, x
+        CMP #BULLET_S_JUST_SPAWNED
+        BNE RenderBullet
         LDA #BULLET_S_NORMAL
         STA bullets, x
+        LDA l        
+        BNE RenderBullet
+        JSR SfxShot ; todo 0006 - is this the right place        
         
       ; render the bullet
       ; we expect all 4 render vars to be set when we get here
