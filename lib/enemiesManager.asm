@@ -1386,7 +1386,7 @@ UpdateExplodingEnemy:
           
   ; all vars are set, render the explosion then exit
   .renderExplosion:
-    LDA #$00
+    LDA #$00 ; 0004 explosion id
     STA <genericPointer
     JSR RenderExplosion    
     RTS
