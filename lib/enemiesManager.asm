@@ -36,7 +36,7 @@ EnemiesManagerStart:
 ;
 ; - enemies in memory in the following format (24 bytes):
 ;    - state (1 byte)
-;    - 1st byte of id - pointer to the right variable (1 byte)
+;    - 1st byte of id - pointer to the right variable; for exploding enemy - pointer to expl. render data (1 byte)
 ;    - 2nd byte of id - a mask in the right variable (1 byte) 
 ;    - pointer to const. data (low) (1 byte)
 ;    - pointer to const. data (high) (1 byte)
