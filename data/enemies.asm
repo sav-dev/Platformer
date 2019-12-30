@@ -22,9 +22,9 @@ EnemiesStart:
 ;    gun y off flip  : 1 byte (signed, 0 for non shooting)
 ;    animation speed : 1 byte (0 for non animated)
 ;    # of frames     : 1 bytes
-;    rendering info  : 2 bytes
-;    expl. offsets   : 2 bytes (x/y)
+;    rendering info  : 2 bytes (pointer)
 ;    expl. pointer   : 1 byte
+;    expl. offsets   : 2 bytes (x/y)
 ;
 ;  ordered by animation id
 ;
@@ -49,10 +49,10 @@ BeetleConsts:
   .byte $04
 .renderingInfo:
   .byte LOW(BeetleRender), HIGH(BeetleRender)
-.explosionOffset:
-  .byte $08, $04
 .explosionPointer:
   .byte $00
+.explosionOffset:
+  .byte $08, $04
 
 BugConsts:
 .width:
@@ -71,10 +71,10 @@ BugConsts:
   .byte $02
 .renderingInfo:
   .byte LOW(BugRender), HIGH(BugRender)
-.explosionOffset:
-  .byte $00, $00
 .explosionPointer:
   .byte $03
+.explosionOffset:
+  .byte $00, $00
 
 EyeConsts:
 .width:
@@ -93,10 +93,10 @@ EyeConsts:
   .byte $01
 .renderingInfo:
   .byte LOW(EyeRender), HIGH(EyeRender)
-.explosionOffset:
-  .byte $00, $00
 .explosionPointer:
   .byte $06
+.explosionOffset:
+  .byte $00, $00
 
 SpikesConsts:
 .width:
@@ -115,10 +115,10 @@ SpikesConsts:
   .byte $01
 .renderingInfo:
   .byte LOW(SpikesRender), HIGH(SpikesRender)
-.explosionOffset:
-  .byte $00, $00
 .explosionPointer:
   .byte $00
+.explosionOffset:
+  .byte $00, $00
 
 TurretVConsts:
 .width:
@@ -137,10 +137,10 @@ TurretVConsts:
   .byte $01
 .renderingInfo:
   .byte LOW(TurretVRender), HIGH(TurretVRender)
-.explosionOffset:
-  .byte $00, $00
 .explosionPointer:
   .byte $00
+.explosionOffset:
+  .byte $00, $00
 
 TurretHConsts:
 .width:
@@ -159,10 +159,10 @@ TurretHConsts:
   .byte $01
 .renderingInfo:
   .byte LOW(TurretHRender), HIGH(TurretHRender)
-.explosionOffset:
-  .byte $00, $00
 .explosionPointer:
   .byte $00
+.explosionOffset:
+  .byte $00, $00
 
 SphereConsts:
 .width:
@@ -181,10 +181,10 @@ SphereConsts:
   .byte $01
 .renderingInfo:
   .byte LOW(SphereRender), HIGH(SphereRender)
-.explosionOffset:
-  .byte $00, $00
 .explosionPointer:
   .byte $00
+.explosionOffset:
+  .byte $00, $00
 
 FlyingRobotConsts:
 .width:
@@ -203,10 +203,10 @@ FlyingRobotConsts:
   .byte $02
 .renderingInfo:
   .byte LOW(FlyingRobotRender), HIGH(FlyingRobotRender)
-.explosionOffset:
-  .byte $04, $00
 .explosionPointer:
   .byte $00
+.explosionOffset:
+  .byte $04, $00
 
 WalkingRobotConsts:
 .width:
@@ -225,10 +225,10 @@ WalkingRobotConsts:
   .byte $04
 .renderingInfo:
   .byte LOW(WalkingRobotRender), HIGH(WalkingRobotRender)
-.explosionOffset:
-  .byte $04, $04
 .explosionPointer:
   .byte $00
+.explosionOffset:
+  .byte $04, $04
 
 BarrierV6Consts:
 .width:
@@ -247,10 +247,10 @@ BarrierV6Consts:
   .byte $01
 .renderingInfo:
   .byte LOW(BarrierV6Render), HIGH(BarrierV6Render)
-.explosionOffset:
-  .byte $FFFFFFFC, $10
 .explosionPointer:
   .byte $00
+.explosionOffset:
+  .byte $FFFFFFFC, $10
 
 BarrierH6Consts:
 .width:
@@ -269,10 +269,10 @@ BarrierH6Consts:
   .byte $01
 .renderingInfo:
   .byte LOW(BarrierH6Render), HIGH(BarrierH6Render)
-.explosionOffset:
-  .byte $10, $FFFFFFFC
 .explosionPointer:
   .byte $00
+.explosionOffset:
+  .byte $10, $FFFFFFFC
 
 BlinkerConsts:
 .width:
@@ -291,10 +291,10 @@ BlinkerConsts:
   .byte $04
 .renderingInfo:
   .byte LOW(BlinkerRender), HIGH(BlinkerRender)
-.explosionOffset:
-  .byte $00, $FFFFFFFC
 .explosionPointer:
   .byte $00
+.explosionOffset:
+  .byte $00, $FFFFFFFC
 
 GreenBlobConsts:
 .width:
@@ -313,10 +313,10 @@ GreenBlobConsts:
   .byte $04
 .renderingInfo:
   .byte LOW(GreenBlobRender), HIGH(GreenBlobRender)
-.explosionOffset:
-  .byte $00, $00
 .explosionPointer:
   .byte $03
+.explosionOffset:
+  .byte $00, $00
 
 PinkBlobConsts:
 .width:
@@ -335,10 +335,10 @@ PinkBlobConsts:
   .byte $04
 .renderingInfo:
   .byte LOW(PinkBlobRender), HIGH(PinkBlobRender)
-.explosionOffset:
-  .byte $00, $00
 .explosionPointer:
   .byte $06
+.explosionOffset:
+  .byte $00, $00
 
 TankConsts:
 .width:
@@ -357,10 +357,10 @@ TankConsts:
   .byte $02
 .renderingInfo:
   .byte LOW(TankRender), HIGH(TankRender)
-.explosionOffset:
-  .byte $08, $04
 .explosionPointer:
   .byte $00
+.explosionOffset:
+  .byte $08, $04
 
 AcidConsts:
 .width:
@@ -379,10 +379,10 @@ AcidConsts:
   .byte $0C
 .renderingInfo:
   .byte LOW(AcidRender), HIGH(AcidRender)
-.explosionOffset:
-  .byte $00, $00
 .explosionPointer:
   .byte $06
+.explosionOffset:
+  .byte $00, $00
 
 TurretD1Consts:
 .width:
@@ -401,10 +401,10 @@ TurretD1Consts:
   .byte $01
 .renderingInfo:
   .byte LOW(TurretD1Render), HIGH(TurretD1Render)
-.explosionOffset:
-  .byte $00, $00
 .explosionPointer:
   .byte $00
+.explosionOffset:
+  .byte $00, $00
 
 TurretD2Consts:
 .width:
@@ -423,10 +423,10 @@ TurretD2Consts:
   .byte $01
 .renderingInfo:
   .byte LOW(TurretD2Render), HIGH(TurretD2Render)
-.explosionOffset:
-  .byte $00, $00
 .explosionPointer:
   .byte $00
+.explosionOffset:
+  .byte $00, $00
 
 GunnerRobotConsts:
 .width:
@@ -445,10 +445,10 @@ GunnerRobotConsts:
   .byte $01
 .renderingInfo:
   .byte LOW(GunnerRobotRender), HIGH(GunnerRobotRender)
-.explosionOffset:
-  .byte $04, $08
 .explosionPointer:
   .byte $00
+.explosionOffset:
+  .byte $04, $08
 
 
 ;

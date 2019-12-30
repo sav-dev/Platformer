@@ -1281,12 +1281,20 @@ ProcessSpecialSpeed:
     
 UpdateExplodingEnemy:
   
-  ; X += ENEMY_SCREEN to point to the screen the enemy is on, load it and put it in enemyScren
+  ; X points to state on input.
+  ; X += 3 to point to the low consts pointer which now holds the explosion pointer.
+  ; load it and put it in genericPointer
+  .loadExplosionPointer:
+    INX
+    INX
+    INX
+    LDA enemies, x
+    STA <genericPointer
+    
+  ; X += 2 to point to the screen the enemy is on, load it and put it in enemyScren
   .loadScreen:
-    TXA
-    CLC
-    ADC #ENEMY_SCREEN
-    TAX
+    INX
+    INX
     LDA enemies, x
     STA <enemyScreen
   
@@ -1386,8 +1394,6 @@ UpdateExplodingEnemy:
           
   ; all vars are set, render the explosion then exit
   .renderExplosion:
-    LDA #$00 ; 0004 explosion id
-    STA <genericPointer
     JSR RenderExplosion    
     RTS
     
@@ -1497,8 +1503,10 @@ UpdateEnemies:
             BNE .loadConstsPointer
             ; todo 0001: if we get here, it means the boss has been destroyed. add explosions and stuff
           
-        ; X += 1 to point at the consts pointer, load it and store it in enemyConstsPointer
-        ; load CONST_ENEMY_EXPL_OFF in Y to point to the explosion offsets.
+        ; X += 1 to point at the consts pointer
+        ; load low byte, X += 1, load high byte
+        ; store the pointer in enemyConstsPointer
+        ; then X -= 1 to point back to the low byte        
         .loadConstsPointer:
           INX
           LDA enemies, x
@@ -1506,14 +1514,23 @@ UpdateEnemies:
           INX
           LDA enemies, x
           STA <enemyConstsPointer + $01          
-          LDY #CONST_ENEMY_EXPL_OFF
+          DEX
           
-        ; X += (ENEMY_X - ENEMY_POINTER_H) to point to the X position, update x using x off from consts.
+        ; load CONST_ENEMY_EXPL_POINTER in Y to point to the explosion pointer
+        ; load it and overwrite the low byte of consts pointer with it
+        .loadAndSetExplosionPointer:
+          LDY #CONST_ENEMY_EXPL_POINTER
+          LDA [enemyConstsPointer], y
+          STA enemies, x
+                    
+        ; load CONST_ENEMY_EXPL_OFF in Y to point to the explosion offsets.
+        ; X += (ENEMY_X - ENEMY_POINTER_L) to point to the X position, update x using x off from consts.
         ; X += 1 to point to the Y position, Y += 1, update y using y off from consts
         .updatePosition:
+          LDY #CONST_ENEMY_EXPL_OFF
           TXA
           CLC
-          ADC #(ENEMY_X - ENEMY_POINTER_H)
+          ADC #(ENEMY_X - ENEMY_POINTER_L)
           TAX
           LDA enemies, X
           CLC
