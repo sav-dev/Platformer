@@ -74,7 +74,7 @@ BugConsts:
 .explosionOffset:
   .byte $00, $00
 .explosionPointer:
-  .byte $00
+  .byte $03
 
 EyeConsts:
 .width:
@@ -96,7 +96,7 @@ EyeConsts:
 .explosionOffset:
   .byte $00, $00
 .explosionPointer:
-  .byte $00
+  .byte $06
 
 SpikesConsts:
 .width:
@@ -316,7 +316,7 @@ GreenBlobConsts:
 .explosionOffset:
   .byte $00, $00
 .explosionPointer:
-  .byte $00
+  .byte $03
 
 PinkBlobConsts:
 .width:
@@ -338,7 +338,7 @@ PinkBlobConsts:
 .explosionOffset:
   .byte $00, $00
 .explosionPointer:
-  .byte $00
+  .byte $06
 
 TankConsts:
 .width:
@@ -382,7 +382,7 @@ AcidConsts:
 .explosionOffset:
   .byte $00, $00
 .explosionPointer:
-  .byte $00
+  .byte $06
 
 TurretD1Consts:
 .width:

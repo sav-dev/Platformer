@@ -198,7 +198,6 @@ Explosion1Tiles:
   .byte $2C, $2E, $2D, $2F
   .byte $28, $2A, $29, $2B
   .byte $27, CLEAR_SPRITE, CLEAR_SPRITE, CLEAR_SPRITE
-
   
 ;****************************************************************
 ; EOF                                                           ;
