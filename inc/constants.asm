@@ -85,6 +85,16 @@ ORIENTATION_HOR   = $01
 ORIENTATION_NONE  = $02
  
 ;****************************************************************
+; Explosion related constans                                    ;
+;****************************************************************
+
+EXPLOSION_SPRITES_COUNT = $04
+EXPLOSION_ANIM_FRAMES   = $04   ; frames are counting down so 4 -> 3 -> 2 -> 1
+EXPLOSION_ANIM_SPEED    = $06
+EXPLOSION_WIDTH         = SPRITE_DIMENSION * $02
+EXPLOSION_DEF_SIZE      = $03
+ 
+;****************************************************************
 ; Player related constans                                       ;
 ;****************************************************************
 
@@ -153,14 +163,8 @@ PLAYER_Y_STATE_EXIT_UP   = $00 ; special values for the playerYState var
 PLAYER_Y_STATE_NORMAL    = $01 
 PLAYER_Y_STATE_EXIT_DOWN = $02
 
-;****************************************************************
-; Explosion related constans                                    ;
-;****************************************************************
-
-EXPLOSION_SPRITES_COUNT = $04
-EXPLOSION_ANIM_FRAMES   = $04   ; frames are counting down so 4 -> 3 -> 2 -> 1
-EXPLOSION_ANIM_SPEED    = $06
-EXPLOSION_WIDTH         = SPRITE_DIMENSION * $02
+PLAYER_EXPLOSION         = $02
+PLAYER_EXPLOSION_POINTER = PLAYER_EXPLOSION * EXPLOSION_DEF_SIZE
 
 ;****************************************************************
 ; Bullets related constans                                      ;

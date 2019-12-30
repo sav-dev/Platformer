@@ -542,6 +542,8 @@ UpdatePlayerExploding:
     STA <genericFrame
     LDA #$00
     STA <genericOffScreen
+    LDA #PLAYER_EXPLOSION_POINTER
+    STA <genericPointer
     JMP RenderExplosion
     
 ;****************************************************************
