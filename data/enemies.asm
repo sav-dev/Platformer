@@ -681,16 +681,16 @@ BlinkerRender:
 .flipXor:
   .byte %00000000
 .attributes:
-  .byte $00,$00
+  .byte $00,$40
 .tiles:
 .Frame3_Blinker3:
-  .byte $71,$72
+  .byte $6F,$6F
 .Frame2_Blinker1:
-  .byte $6D,$6E
+  .byte $6D,$6D
 .Frame1_Blinker2:
-  .byte $6F,$70
+  .byte $6E,$6E
 .Frame0_Blinker1:
-  .byte $6D,$6E
+  .byte $6D,$6D
 
 GreenBlobRender:
 .spriteCount:
@@ -703,13 +703,13 @@ GreenBlobRender:
   .byte $03,$03,$03,$03
 .tiles:
 .Frame3_Blob3:
-  .byte $7B,$7D,$7C,$7E
+  .byte $78,$7A,$79,$7B
 .Frame2_Blob1:
-  .byte $73,$75,$74,$76
+  .byte $70,$72,$71,$73
 .Frame1_Blob2:
-  .byte $77,$79,$78,$7A
+  .byte $74,$76,$75,$77
 .Frame0_Blob1:
-  .byte $73,$75,$74,$76
+  .byte $70,$72,$71,$73
 
 PinkBlobRender:
 .spriteCount:
@@ -722,13 +722,13 @@ PinkBlobRender:
   .byte $02,$02,$02,$02
 .tiles:
 .Frame3_Blob3:
-  .byte $7B,$7D,$7C,$7E
+  .byte $78,$7A,$79,$7B
 .Frame2_Blob1:
-  .byte $73,$75,$74,$76
+  .byte $70,$72,$71,$73
 .Frame1_Blob2:
-  .byte $77,$79,$78,$7A
+  .byte $74,$76,$75,$77
 .Frame0_Blob1:
-  .byte $73,$75,$74,$76
+  .byte $70,$72,$71,$73
 
 TankRender:
 .spriteCount:
@@ -741,9 +741,9 @@ TankRender:
   .byte $01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01
 .tiles:
 .Frame1_Tank2:
-  .byte $7F,$82,$89,$80,$83,$8A,$81,$84,$8B,CLEAR_SPRITE,CLEAR_SPRITE,$8C
+  .byte $7C,$7F,$86,$7D,$80,$87,$7E,$81,$88,CLEAR_SPRITE,CLEAR_SPRITE,$89
 .Frame0_Tank1:
-  .byte $7F,$82,$85,$80,$83,$86,$81,$84,$87,CLEAR_SPRITE,CLEAR_SPRITE,$88
+  .byte $7C,$7F,$82,$7D,$80,$83,$7E,$81,$84,CLEAR_SPRITE,CLEAR_SPRITE,$85
 
 AcidRender:
 .spriteCount:
@@ -756,29 +756,29 @@ AcidRender:
   .byte $01,$02,$01,$02
 .tiles:
 .Frame11_Acid8:
-  .byte CLEAR_SPRITE,$93,$98,$94
+  .byte CLEAR_SPRITE,$90,$95,$91
 .Frame10_Acid7:
-  .byte CLEAR_SPRITE,$91,$97,$92
+  .byte CLEAR_SPRITE,$8E,$94,$8F
 .Frame9_Acid6:
-  .byte CLEAR_SPRITE,$8F,$96,$90
+  .byte CLEAR_SPRITE,$8C,$93,$8D
 .Frame8_Acid5:
-  .byte CLEAR_SPRITE,$8D,CLEAR_SPRITE,$95
+  .byte CLEAR_SPRITE,$8A,CLEAR_SPRITE,$92
 .Frame7_Acid4:
-  .byte CLEAR_SPRITE,$93,CLEAR_SPRITE,$94
+  .byte CLEAR_SPRITE,$90,CLEAR_SPRITE,$91
 .Frame6_Acid3:
-  .byte CLEAR_SPRITE,$91,CLEAR_SPRITE,$92
+  .byte CLEAR_SPRITE,$8E,CLEAR_SPRITE,$8F
 .Frame5_Acid2:
-  .byte CLEAR_SPRITE,$8F,CLEAR_SPRITE,$90
+  .byte CLEAR_SPRITE,$8C,CLEAR_SPRITE,$8D
 .Frame4_Acid1:
-  .byte CLEAR_SPRITE,$8D,CLEAR_SPRITE,$8E
+  .byte CLEAR_SPRITE,$8A,CLEAR_SPRITE,$8B
 .Frame3_Acid4:
-  .byte CLEAR_SPRITE,$93,CLEAR_SPRITE,$94
+  .byte CLEAR_SPRITE,$90,CLEAR_SPRITE,$91
 .Frame2_Acid3:
-  .byte CLEAR_SPRITE,$91,CLEAR_SPRITE,$92
+  .byte CLEAR_SPRITE,$8E,CLEAR_SPRITE,$8F
 .Frame1_Acid2:
-  .byte CLEAR_SPRITE,$8F,CLEAR_SPRITE,$90
+  .byte CLEAR_SPRITE,$8C,CLEAR_SPRITE,$8D
 .Frame0_Acid1:
-  .byte CLEAR_SPRITE,$8D,CLEAR_SPRITE,$8E
+  .byte CLEAR_SPRITE,$8A,CLEAR_SPRITE,$8B
 
 TurretD1Render:
 .spriteCount:
@@ -791,7 +791,7 @@ TurretD1Render:
   .byte $01,$01,$01,$01
 .tiles:
 .Frame0_TurretD1:
-  .byte $99,$9B,$9A,$9C
+  .byte $96,$98,$97,$99
 
 TurretD2Render:
 .spriteCount:
@@ -804,7 +804,7 @@ TurretD2Render:
   .byte $81,$81,$81,$81
 .tiles:
 .Frame0_TurretD2:
-  .byte $9B,$99,$9C,$9A
+  .byte $98,$96,$99,$97
 
 GunnerRobotRender:
 .spriteCount:
@@ -817,7 +817,7 @@ GunnerRobotRender:
   .byte $01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01
 .tiles:
 .Frame0_GunnerRobot:
-  .byte $9D,$9F,$A2,$A4,$9E,$A0,$A3,$A5,CLEAR_SPRITE,$A1,CLEAR_SPRITE,CLEAR_SPRITE
+  .byte $9A,$9C,$9F,$A1,$9B,$9D,$A0,$A2,CLEAR_SPRITE,$9E,CLEAR_SPRITE,CLEAR_SPRITE
 
 
 EnemiesEnd:
