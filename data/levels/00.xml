@@ -2,6 +2,7 @@
 <Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <LevelType>Normal</LevelType>
   <BgPalette>0</BgPalette>
+  <TilesetId>0</TilesetId>
   <Tiles>
     <ArrayOfString>
       <string>0-1-2-0</string>
