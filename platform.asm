@@ -526,6 +526,17 @@ Bank02:
   .org $8000
 
 Bank02Start:  
+
+  .include "data\tilesets.asm"
+  
+  bg0chr:
+  .byte $08
+  .incbin "PlatformerGraphics\Chr\bg_0Processed.chr"
+
+  bg1chr:
+  .byte $0A
+  .incbin "PlatformerGraphics\Chr\bg_1processed.chr"
+  
 Bank02End:
   
 Bank03:

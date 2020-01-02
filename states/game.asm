@@ -159,9 +159,11 @@ LoadGame:
     JSR LoadLevel                 ; load level
   .loadLevelDone:
   
+  ; todo 0008: load the bg chr
+  
   .loadPalettes:
     JSR SetVramAddressingTo1
-    JSR LoadBgPalette  
+    JSR LoadBgPalette             ; paletteOffset set by LoadLevel  
     JSR LoadSpritesPalette
     INC <needDraw 
     JSR WaitForFrame              ; wait for values to be written

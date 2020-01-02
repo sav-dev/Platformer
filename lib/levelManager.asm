@@ -24,6 +24,7 @@ LevelManagerStart:
 ;   attsBackPointer                                             ;
 ;   platformsPointer                                            ;
 ;   threatsPointer                                              ;
+;   tilesetOffset                                               ;
 ;   paletteOffset                                               ;
 ;   playerX                                                     ;
 ;   playerY                                                     ;
@@ -59,13 +60,16 @@ LoadLevel:
   ; load door and keycard data - input is genericPointer, sets door and keycard vars and genericPointer (to 1st byte after door/keycard data)
   JSR LoadDoorAndKeycard
   
-  ; next byte is the bg palette
+  ; next 2 bytes are tilesetOffset and paletteOffset
   LDY #$00
+  LDA [genericPointer], y
+  STA <tilesetOffset
+  INY
   LDA [genericPointer], y
   STA <paletteOffset
   LDA <genericPointer
   CLC
-  ADC #$01
+  ADC #$02
   STA <genericPointer
   LDA <genericPointer + $01
   ADC #$00

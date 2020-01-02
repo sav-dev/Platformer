@@ -241,9 +241,8 @@ DOOR_DATA_SIZE = $07
 gameState           .rs 1 ; current gamestate
 currentLevel        .rs 1 ; current level
 paletteOffset       .rs 1 ; offset of the bg palette from the lvl data
+tilesetOffset       .rs 1 ; tileset offset in the lookup table from the lvl data
 levelBeaten         .rs 1 ; whether the level was beaten. only inced once and checked at the end of the level
-
-
 
 ;****************************************************************
 ; ggsound                                                       ;
