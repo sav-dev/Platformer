@@ -163,7 +163,7 @@ PLAYER_Y_STATE_EXIT_UP   = $00 ; special values for the playerYState var
 PLAYER_Y_STATE_NORMAL    = $01 
 PLAYER_Y_STATE_EXIT_DOWN = $02
 
-PLAYER_EXPLOSION         = $02
+PLAYER_EXPLOSION         = $00
 PLAYER_EXPLOSION_POINTER = PLAYER_EXPLOSION * EXPLOSION_DEF_SIZE
 
 ;****************************************************************
