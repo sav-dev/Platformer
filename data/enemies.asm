@@ -450,6 +450,50 @@ GunnerRobotConsts:
 .explosionOffset:
   .byte $04, $08
 
+LavaConsts:
+.width:
+  .byte $20
+.hitboxInfo:
+  .byte $01,$1D,$01,$05
+.orientation:
+  .byte $02
+.bulletPointer:
+  .byte $00
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $09
+.numberOfFrames:
+  .byte $04
+.renderingInfo:
+  .byte LOW(LavaRender), HIGH(LavaRender)
+.explosionPointer:
+  .byte $00
+.explosionOffset:
+  .byte $08, $FFFFFFFC
+
+TorchConsts:
+.width:
+  .byte $08
+.hitboxInfo:
+  .byte $01,$01,$01,$01
+.orientation:
+  .byte $02
+.bulletPointer:
+  .byte $00
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $07
+.numberOfFrames:
+  .byte $04
+.renderingInfo:
+  .byte LOW(TorchRender), HIGH(TorchRender)
+.explosionPointer:
+  .byte $00
+.explosionOffset:
+  .byte $FFFFFFFC, $00
+
 
 ;
 ;  all offsets for possible grids
@@ -499,6 +543,14 @@ YOff3x4:
   .byte $00, $08, $10, $18, $00, $08, $10, $18, $00, $08, $10, $18
 XOff3x4H:
   .byte $10, $10, $10, $10, $08, $08, $08, $08, $00, $00, $00, $00
+XOff4x1:
+  .byte $00, $08, $10, $18
+YOff4x1:
+  .byte $00, $00, $00, $00
+XOff1x2:
+  .byte $00, $00
+YOff1x2:
+  .byte $00, $08
 
 ;
 ;  all information needed to draw an enemy
@@ -818,6 +870,44 @@ GunnerRobotRender:
 .tiles:
 .Frame0_GunnerRobot:
   .byte $9A,$9C,$9F,$A1,$9B,$9D,$A0,$A2,CLEAR_SPRITE,$9E,CLEAR_SPRITE,CLEAR_SPRITE
+
+LavaRender:
+.spriteCount:
+  .byte $04
+.offsets:
+  .byte LOW(XOff4x1), HIGH(XOff4x1), LOW(YOff4x1), HIGH(YOff4x1), LOW(XOff4x1), HIGH(XOff4x1), LOW(YOff4x1), HIGH(YOff4x1)
+.flipXor:
+  .byte %00000000
+.attributes:
+  .byte $02,$02,$02,$02
+.tiles:
+.Frame3_Lava4:
+  .byte $A6,$A6,$A6,$A6
+.Frame2_Lava3:
+  .byte $A5,$A5,$A5,$A5
+.Frame1_Lava2:
+  .byte $A4,$A4,$A4,$A4
+.Frame0_Lava1:
+  .byte $A3,$A3,$A3,$A3
+
+TorchRender:
+.spriteCount:
+  .byte $02
+.offsets:
+  .byte LOW(XOff1x2), HIGH(XOff1x2), LOW(YOff1x2), HIGH(YOff1x2), LOW(XOff1x2), HIGH(XOff1x2), LOW(YOff1x2), HIGH(YOff1x2)
+.flipXor:
+  .byte %00000000
+.attributes:
+  .byte $02,$02
+.tiles:
+.Frame3_Torch4:
+  .byte $AC,$AD
+.Frame2_Torch3:
+  .byte $AB,$A8
+.Frame1_Torch2:
+  .byte $A9,$AA
+.Frame0_Torch1:
+  .byte $A7,$A8
 
 
 EnemiesEnd:
