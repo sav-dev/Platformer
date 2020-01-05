@@ -740,8 +740,26 @@ UpdateActiveEnemy:
     ; but first do a Y += 1 to skip the width and point at hitbox x off
     .hitboxX:  
       INY
-      LDA <genericOffScreen
-      BEQ .hitboxXOnScreen
+      
+      ; XOff = 255 is a special value meaning the enemy should not make any collision checks
+      .checkXOff:
+        LDA [enemyConstsPointer], y
+        CMP #$FF        
+        BNE .checkGenericOffScreen
+        
+        ; enemy should not make collision checks. dec enemyCollisions,
+        ; then do Y += 3 to point to one byte before orientation and go to .orientation
+        ; todo 0008 remove this if we don't use the torch
+        .noCollisionEnemy:        
+          DEC <enemyCollisions
+          INY
+          INY
+          INY
+          JMP .orientation        
+      
+      .checkGenericOffScreen:
+        LDA <genericOffScreen
+        BEQ .hitboxXOnScreen     
       
       ; if off screen:
       ;   - load generic X
@@ -750,7 +768,7 @@ UpdateActiveEnemy:
       .hitboxXOffScreen:
         LDA <genericX
         CLC
-        ADC [enemyConstsPointer], y        
+        ADC [enemyConstsPointer], y
         BCC .hitboxXPartiallyOffscreen
       
         ; box fully on screen, A still holds calculated x1

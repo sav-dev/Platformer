@@ -476,7 +476,7 @@ TorchConsts:
 .width:
   .byte $08
 .hitboxInfo:
-  .byte $01,$01,$01,$01
+  .byte $FF,$00,$00,$00
 .orientation:
   .byte $02
 .bulletPointer:
