@@ -503,7 +503,7 @@ Bank01:
 Bank01Start:  
 
   SprChr:
-  .byte $0C ; page count
+  .byte $10 ; page count
   .incbin "PlatformerGraphics\Chr\sprProcessed.chr"
   SprChrEnd:
   
