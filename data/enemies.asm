@@ -98,6 +98,28 @@ EyeConsts:
 .explosionOffset:
   .byte $00, $00
 
+BossrighthandConsts:
+.width:
+  .byte $20
+.hitboxInfo:
+  .byte $FF,$00,$00,$00
+.orientation:
+  .byte $02
+.bulletPointer:
+  .byte $00
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $00
+.numberOfFrames:
+  .byte $01
+.renderingInfo:
+  .byte LOW(BossrighthandRender), HIGH(BossrighthandRender)
+.explosionPointer:
+  .byte $00
+.explosionOffset:
+  .byte $08, $08
+
 SpikesConsts:
 .width:
   .byte $10
@@ -494,6 +516,94 @@ TorchConsts:
 .explosionOffset:
   .byte $FFFFFFFC, $00
 
+BossheadConsts:
+.width:
+  .byte $20
+.hitboxInfo:
+  .byte $FF,$00,$00,$00
+.orientation:
+  .byte $02
+.bulletPointer:
+  .byte $00
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $00
+.numberOfFrames:
+  .byte $01
+.renderingInfo:
+  .byte LOW(BossheadRender), HIGH(BossheadRender)
+.explosionPointer:
+  .byte $00
+.explosionOffset:
+  .byte $08, $10
+
+BossrightarmConsts:
+.width:
+  .byte $20
+.hitboxInfo:
+  .byte $FF,$00,$00,$00
+.orientation:
+  .byte $02
+.bulletPointer:
+  .byte $00
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $00
+.numberOfFrames:
+  .byte $01
+.renderingInfo:
+  .byte LOW(BossrightarmRender), HIGH(BossrightarmRender)
+.explosionPointer:
+  .byte $00
+.explosionOffset:
+  .byte $08, $08
+
+BosslefthandConsts:
+.width:
+  .byte $18
+.hitboxInfo:
+  .byte $FF,$00,$00,$00
+.orientation:
+  .byte $02
+.bulletPointer:
+  .byte $00
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $00
+.numberOfFrames:
+  .byte $01
+.renderingInfo:
+  .byte LOW(BosslefthandRender), HIGH(BosslefthandRender)
+.explosionPointer:
+  .byte $00
+.explosionOffset:
+  .byte $04, $04
+
+BossleftarmConsts:
+.width:
+  .byte $20
+.hitboxInfo:
+  .byte $FF,$00,$00,$00
+.orientation:
+  .byte $02
+.bulletPointer:
+  .byte $00
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $00
+.numberOfFrames:
+  .byte $01
+.renderingInfo:
+  .byte LOW(BossleftarmRender), HIGH(BossleftarmRender)
+.explosionPointer:
+  .byte $00
+.explosionOffset:
+  .byte $08, $0C
+
 
 ;
 ;  all offsets for possible grids
@@ -551,6 +661,18 @@ XOff1x2:
   .byte $00, $00
 YOff1x2:
   .byte $00, $08
+XOff4x6:
+  .byte $00, $00, $00, $00, $00, $00, $08, $08, $08, $08, $08, $08, $10, $10, $10, $10, $10, $10, $18, $18, $18, $18, $18, $18
+YOff4x6:
+  .byte $00, $08, $10, $18, $20, $28, $00, $08, $10, $18, $20, $28, $00, $08, $10, $18, $20, $28, $00, $08, $10, $18, $20, $28
+XOff4x4:
+  .byte $00, $00, $00, $00, $08, $08, $08, $08, $10, $10, $10, $10, $18, $18, $18, $18
+YOff4x4:
+  .byte $00, $08, $10, $18, $00, $08, $10, $18, $00, $08, $10, $18, $00, $08, $10, $18
+XOff4x5:
+  .byte $00, $00, $00, $00, $00, $08, $08, $08, $08, $08, $10, $10, $10, $10, $10, $18, $18, $18, $18, $18
+YOff4x5:
+  .byte $00, $08, $10, $18, $20, $00, $08, $10, $18, $20, $00, $08, $10, $18, $20, $00, $08, $10, $18, $20
 
 ;
 ;  all information needed to draw an enemy
@@ -908,6 +1030,71 @@ TorchRender:
   .byte $A9,$AA
 .Frame0_Torch1:
   .byte $A7,$A8
+
+BossheadRender:
+.spriteCount:
+  .byte $18
+.offsets:
+  .byte LOW(XOff4x6), HIGH(XOff4x6), LOW(YOff4x6), HIGH(YOff4x6), LOW(XOff4x6), HIGH(XOff4x6), LOW(YOff4x6), HIGH(YOff4x6)
+.flipXor:
+  .byte %00000000
+.attributes:
+  .byte $03,$03,$03,$03,$01,$01,$03,$03,$03,$03,$03,$03,$03,$03,$03,$03,$03,$03,$03,$03,$03,$01,$01,$01
+.tiles:
+.Frame0_Bosshead:
+  .byte $AE,$B2,$B6,$BA,CLEAR_SPRITE,CLEAR_SPRITE,$AF,$B3,$B7,$BB,$BD,$BF,$B0,$B4,$B8,$BC,$BE,$C0,$B1,$B5,$B9,CLEAR_SPRITE,CLEAR_SPRITE,CLEAR_SPRITE
+
+BossrighthandRender:
+.spriteCount:
+  .byte $10
+.offsets:
+  .byte LOW(XOff4x4), HIGH(XOff4x4), LOW(YOff4x4), HIGH(YOff4x4), LOW(XOff4x4), HIGH(XOff4x4), LOW(YOff4x4), HIGH(YOff4x4)
+.flipXor:
+  .byte %00000000
+.attributes:
+  .byte $03,$03,$03,$01,$03,$03,$03,$03,$01,$03,$03,$01,$01,$03,$03,$03
+.tiles:
+.Frame0_Bossrighthand:
+  .byte $C1,$C3,$C7,CLEAR_SPRITE,$C2,$C4,$C8,$CB,CLEAR_SPRITE,$C5,$C9,CLEAR_SPRITE,CLEAR_SPRITE,$C6,$CA,$CC
+
+BossrightarmRender:
+.spriteCount:
+  .byte $10
+.offsets:
+  .byte LOW(XOff4x4), HIGH(XOff4x4), LOW(YOff4x4), HIGH(YOff4x4), LOW(XOff4x4), HIGH(XOff4x4), LOW(YOff4x4), HIGH(YOff4x4)
+.flipXor:
+  .byte %00000000
+.attributes:
+  .byte $01,$01,$03,$03,$01,$01,$03,$03,$03,$03,$03,$01,$03,$03,$01,$01
+.tiles:
+.Frame0_Bossrightarm:
+  .byte CLEAR_SPRITE,CLEAR_SPRITE,$D1,$D4,CLEAR_SPRITE,CLEAR_SPRITE,$D2,$D5,$CD,$CF,$D3,CLEAR_SPRITE,$CE,$D0,CLEAR_SPRITE,CLEAR_SPRITE
+
+BosslefthandRender:
+.spriteCount:
+  .byte $09
+.offsets:
+  .byte LOW(XOff3x3), HIGH(XOff3x3), LOW(YOff3x3), HIGH(YOff3x3), LOW(XOff3x3), HIGH(XOff3x3), LOW(YOff3x3), HIGH(YOff3x3)
+.flipXor:
+  .byte %00000000
+.attributes:
+  .byte $03,$03,$03,$03,$03,$03,$03,$03,$03
+.tiles:
+.Frame0_Bossrighthand:
+  .byte $D6,$D9,$DC,$D7,$DA,$DD,$D8,$DB,$DE
+
+BossleftarmRender:
+.spriteCount:
+  .byte $14
+.offsets:
+  .byte LOW(XOff4x5), HIGH(XOff4x5), LOW(YOff4x5), HIGH(YOff4x5), LOW(XOff4x5), HIGH(XOff4x5), LOW(YOff4x5), HIGH(YOff4x5)
+.flipXor:
+  .byte %00000000
+.attributes:
+  .byte $01,$01,$01,$03,$03,$01,$03,$01,$03,$03,$03,$03,$03,$03,$03,$01,$03,$03,$03,$03
+.tiles:
+.Frame0_Bossleftarm:
+  .byte CLEAR_SPRITE,CLEAR_SPRITE,CLEAR_SPRITE,$E5,$E9,CLEAR_SPRITE,$E0,CLEAR_SPRITE,$E6,$EA,$DF,$E1,$E3,$E7,$EB,CLEAR_SPRITE,$E2,$E4,$E8,$EC
 
 
 EnemiesEnd:

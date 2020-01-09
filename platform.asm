@@ -545,6 +545,11 @@ Bank03:
   .org $A000
   
 Bank03Start:  
+
+  bg2chr:
+  .byte $0D
+  .incbin "PlatformerGraphics\Chr\bg_2processed.chr"
+
 Bank03End:
 
 ;****************************************************************
