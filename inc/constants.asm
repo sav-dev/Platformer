@@ -389,3 +389,9 @@ DOOR_HEIGHT            = $06 * SPRITE_DIMENSION - $01  ; -1 because collision ch
 KEYCARD_ATTS           = $03
 KEYCARD_WIDTH          = $02 * SPRITE_DIMENSION - $01  ; -1 because collision check is inclusive
 KEYCARD_HEIGHT         = SPRITE_DIMENSION - $01        ; -1 because collision check is inclusive
+
+;****************************************************************
+; Memory                                                        ;
+;****************************************************************
+
+CHR_BANK = $01

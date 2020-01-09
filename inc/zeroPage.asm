@@ -51,6 +51,7 @@ yPointerCache           .rs 1  ; for caching the initial value of the y register
 ;****************************************************************
 
 currentBank             .rs 1  ; currently selected bank
+previousBank            .rs 1  ; previously selected bank
 
 ;****************************************************************
 ; Buffering related variables                                   ;

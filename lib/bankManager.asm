@@ -17,6 +17,8 @@ BankManagerStart:
 ;****************************************************************
 
 SelectBank:
+  LDA <currentBank
+  STA <previousBank
   STY <currentBank
   LDA BankTable, y
   STA BankTable, y

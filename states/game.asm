@@ -129,23 +129,8 @@ LoadGame:
       STA <levelBeaten
     .clearLevelBeatenDone:
     
-  .clearMemoryDone:
-  
-  ; todo 0000 - this needs to be updated; only load sprites chr once; select bank
-  .loadChr:
-    JSR SetVramAddressingTo1
-    LDA #LOW(SprChr)
-    STA <genericPointer
-    LDA #HIGH(SprChr)
-    STA <genericPointer + $01
-    JSR LoadSprChr
-    LDA #LOW(BgChr)
-    STA <genericPointer
-    LDA #HIGH(BgChr)
-    STA <genericPointer + $01
-    JSR LoadBgChr
-  .loadChrDone:
-  
+  .clearMemoryDone:  
+
   .loadLevel:                     ; load level
     JSR SetVramAddressingTo32
     LDA <currentLevel
@@ -159,7 +144,35 @@ LoadGame:
     JSR LoadLevel                 ; load level
   .loadLevelDone:
   
-  ; todo 0008: load the bg chr
+  .loadChr:
+    JSR SetVramAddressingTo1
+    LDY #CHR_BANK
+    JSR SelectBank
+    
+    ; todo 0000: move this out, only load once
+    .loadSprChr:    
+      LDA #LOW(sprChr)
+      STA <genericPointer
+      LDA #HIGH(sprChr)
+      STA <genericPointer + $01
+      JSR LoadSprChr
+    .loadSprChrDone:
+    
+    .loadBgChr:
+  
+      LDX <tilesetOffset
+      LDA Tilesets, x
+      STA <genericPointer
+      INX
+      LDA Tilesets, x
+      STA <genericPointer + $01
+      JSR LoadBgChr                    
+    .loadBgChrDone:
+    
+    LDY <previousBank
+    JSR SelectBank
+    
+  .loadChrDone:
   
   .loadPalettes:
     JSR SetVramAddressingTo1
