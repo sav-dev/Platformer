@@ -549,7 +549,98 @@
       <string>0-1-0-0</string>
     </ArrayOfString>
   </Tiles>
-  <Enemies />
+  <Enemies>
+    <Enemy>
+      <Name>Boss right hand</Name>
+      <X>368</X>
+      <Y>40</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Boss right arm</Name>
+      <X>394</X>
+      <Y>56</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Boss left hand</Name>
+      <X>432</X>
+      <Y>128</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Boss head</Name>
+      <X>432</X>
+      <Y>64</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Boss left arm</Name>
+      <X>456</X>
+      <Y>102</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+  </Enemies>
   <Elevators />
   <PlayerStartingPosition>
     <X>20</X>

@@ -287,7 +287,7 @@ LoadLevelBackground:
     TAX                                ; X = columnCount - 16
     LDA #$00                           
     STA <maxScroll                     
-    STA <maxScroll + $01                ; reset max scroll to 0
+    STA <maxScroll + $01               ; reset max scroll to 0
     .maxScrollLoop:                    ; calculate max scroll in a loop
       LDA <maxScroll                   
       CLC                              
@@ -307,14 +307,14 @@ LoadLevelBackground:
     STA <levelPointer                  ; advance level pointer
     LDA <levelPointer + $01             
     ADC #$00                           ; add carry
-    LDA <levelPointer + $01
+    STA <levelPointer + $01
     JSR MoveLevelPointerForward        ; level pointer now points to the first actual column
   
   .setLevelBackPointer:                
     LDA <levelPointer                  
     STA <levelBackPointer              
     LDA <levelPointer + $01             
-    STA <levelBackPointer + $01         ; levelBackPointer points to the first actual column (which will be the left-most rendered column)
+    STA <levelBackPointer + $01        ; levelBackPointer points to the first actual column (which will be the left-most rendered column)
   
   .drawColumns:                        
     LDA #$00                           
@@ -322,7 +322,7 @@ LoadLevelBackground:
     .drawColumnLoop:                   ; each iteration of this loop draws one column 
   
       LDA <c                           
-      AND #%00010000                   
+      AND #%00010000                    
       LSR A                            
       LSR A                            ; after these operations, A contains 4 if c == $10 and 0 otherwise
       CLC                              
@@ -395,7 +395,7 @@ LoadLevelBackground:
     LDA <levelBackPointer              
     STA <genericPointer                   
     LDA <levelBackPointer + $01         
-    STA <genericPointer + $01           ; cache level back pointer in the generic pointer
+    STA <genericPointer + $01          ; cache level back pointer in the generic pointer
   
     INC <b                             ; b contains number of columns
     .skipColumnDataLoop:               ; increment it as we have to skip one more column of 0s at the end
@@ -406,7 +406,7 @@ LoadLevelBackground:
     LDA <levelBackPointer
     STA <attsPointer                   
     LDA <levelBackPointer + $01         
-    STA <attsPointer + $01              ; set the attsPointer to the first column of atts 0s
+    STA <attsPointer + $01             ; set the attsPointer to the first column of atts 0s
     JSR MoveAttsPointerForward         ; atts pointer points to the first atts column
     
     LDA <genericPointer                
@@ -418,7 +418,7 @@ LoadLevelBackground:
     LDA <attsPointer                   
     STA <attsBackPointer               
     LDA <attsPointer + $01              
-    STA <attsBackPointer + $01          ; attsBackPointer points to the first atts column
+    STA <attsBackPointer + $01         ; attsBackPointer points to the first atts column
     JSR MoveBackAttsPointerBack        ; attsBackPointer points to the column of att 0s
   
   .drawAtts:                           
