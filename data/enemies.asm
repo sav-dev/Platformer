@@ -98,28 +98,6 @@ EyeConsts:
 .explosionOffset:
   .byte $00, $00
 
-BossrighthandConsts:
-.width:
-  .byte $20
-.hitboxInfo:
-  .byte $FF,$00,$00,$00
-.orientation:
-  .byte $02
-.bulletPointer:
-  .byte $00
-.gunInfo:
-  .byte $00,$00,$00,$00
-.animationSpeed:
-  .byte $00
-.numberOfFrames:
-  .byte $01
-.renderingInfo:
-  .byte LOW(BossrighthandRender), HIGH(BossrighthandRender)
-.explosionPointer:
-  .byte $00
-.explosionOffset:
-  .byte $08, $08
-
 SpikesConsts:
 .width:
   .byte $10
@@ -537,6 +515,28 @@ BossheadConsts:
   .byte $00
 .explosionOffset:
   .byte $08, $10
+
+BossrighthandConsts:
+.width:
+  .byte $20
+.hitboxInfo:
+  .byte $FF,$00,$00,$00
+.orientation:
+  .byte $02
+.bulletPointer:
+  .byte $00
+.gunInfo:
+  .byte $00,$00,$00,$00
+.animationSpeed:
+  .byte $00
+.numberOfFrames:
+  .byte $01
+.renderingInfo:
+  .byte LOW(BossrighthandRender), HIGH(BossrighthandRender)
+.explosionPointer:
+  .byte $00
+.explosionOffset:
+  .byte $08, $08
 
 BossrightarmConsts:
 .width:

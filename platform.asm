@@ -517,7 +517,7 @@ Bank02Start:
   .include "data\tilesets.asm"
   
   bg0chr:
-  .byte $08
+  .byte $10
   .incbin "PlatformerGraphics\Chr\bg_0Processed.chr"
 
   bg1chr:
