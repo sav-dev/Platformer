@@ -853,7 +853,7 @@ AcidRender:
 .flipXor:
   .byte %00000000
 .attributes:
-  .byte $01,$02,$01,$02
+  .byte $01,$02,$02,$02
 .tiles:
 .Frame11_Acid8:
   .byte CLEAR_SPRITE,$90,$95,$91
@@ -978,7 +978,7 @@ BosshandRender:
 .flipXor:
   .byte %00000000
 .attributes:
-  .byte $03,$03,$03,$03,$03,$03,$01,$03,$03
+  .byte $03,$03,$03,$03,$03,$03,$03,$03,$03
 .tiles:
 .Frame5_Bosshand2:
   .byte $C9,$CC,$CF,$CA,$CD,$D0,$CB,$CE,$D1
