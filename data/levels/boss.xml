@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <LevelType>Boss</LevelType>
-  <BgPalette>7</BgPalette>
+  <BgPalette>6</BgPalette>
   <TilesetId>2</TilesetId>
   <Tiles>
     <ArrayOfString>
