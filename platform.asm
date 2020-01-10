@@ -521,7 +521,7 @@ Bank02Start:
   .incbin "PlatformerGraphics\Chr\bg_0Processed.chr"
 
   bg1chr:
-  .byte $0A
+  .byte $0F
   .incbin "PlatformerGraphics\Chr\bg_1processed.chr"
   
 Bank02End:
@@ -534,7 +534,7 @@ Bank03:
 Bank03Start:  
 
   bg2chr:
-  .byte $0D
+  .byte $0F
   .incbin "PlatformerGraphics\Chr\bg_2processed.chr"
   
   sprChr:
