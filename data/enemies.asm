@@ -516,51 +516,7 @@ BossheadConsts:
 .explosionOffset:
   .byte $08, $10
 
-BossrighthandConsts:
-.width:
-  .byte $20
-.hitboxInfo:
-  .byte $FF,$00,$00,$00
-.orientation:
-  .byte $02
-.bulletPointer:
-  .byte $00
-.gunInfo:
-  .byte $00,$00,$00,$00
-.animationSpeed:
-  .byte $00
-.numberOfFrames:
-  .byte $01
-.renderingInfo:
-  .byte LOW(BossrighthandRender), HIGH(BossrighthandRender)
-.explosionPointer:
-  .byte $00
-.explosionOffset:
-  .byte $08, $08
-
-BossrightarmConsts:
-.width:
-  .byte $20
-.hitboxInfo:
-  .byte $FF,$00,$00,$00
-.orientation:
-  .byte $02
-.bulletPointer:
-  .byte $00
-.gunInfo:
-  .byte $00,$00,$00,$00
-.animationSpeed:
-  .byte $00
-.numberOfFrames:
-  .byte $01
-.renderingInfo:
-  .byte LOW(BossrightarmRender), HIGH(BossrightarmRender)
-.explosionPointer:
-  .byte $00
-.explosionOffset:
-  .byte $08, $08
-
-BosslefthandConsts:
+BosshandConsts:
 .width:
   .byte $18
 .hitboxInfo:
@@ -572,37 +528,15 @@ BosslefthandConsts:
 .gunInfo:
   .byte $00,$00,$00,$00
 .animationSpeed:
-  .byte $00
+  .byte $06
 .numberOfFrames:
-  .byte $01
+  .byte $06
 .renderingInfo:
-  .byte LOW(BosslefthandRender), HIGH(BosslefthandRender)
+  .byte LOW(BosshandRender), HIGH(BosshandRender)
 .explosionPointer:
   .byte $00
 .explosionOffset:
   .byte $04, $04
-
-BossleftarmConsts:
-.width:
-  .byte $20
-.hitboxInfo:
-  .byte $FF,$00,$00,$00
-.orientation:
-  .byte $02
-.bulletPointer:
-  .byte $00
-.gunInfo:
-  .byte $00,$00,$00,$00
-.animationSpeed:
-  .byte $00
-.numberOfFrames:
-  .byte $01
-.renderingInfo:
-  .byte LOW(BossleftarmRender), HIGH(BossleftarmRender)
-.explosionPointer:
-  .byte $00
-.explosionOffset:
-  .byte $08, $0C
 
 
 ;
@@ -665,14 +599,6 @@ XOff4x6:
   .byte $00, $00, $00, $00, $00, $00, $08, $08, $08, $08, $08, $08, $10, $10, $10, $10, $10, $10, $18, $18, $18, $18, $18, $18
 YOff4x6:
   .byte $00, $08, $10, $18, $20, $28, $00, $08, $10, $18, $20, $28, $00, $08, $10, $18, $20, $28, $00, $08, $10, $18, $20, $28
-XOff4x4:
-  .byte $00, $00, $00, $00, $08, $08, $08, $08, $10, $10, $10, $10, $18, $18, $18, $18
-YOff4x4:
-  .byte $00, $08, $10, $18, $00, $08, $10, $18, $00, $08, $10, $18, $00, $08, $10, $18
-XOff4x5:
-  .byte $00, $00, $00, $00, $00, $08, $08, $08, $08, $08, $10, $10, $10, $10, $10, $18, $18, $18, $18, $18
-YOff4x5:
-  .byte $00, $08, $10, $18, $20, $00, $08, $10, $18, $20, $00, $08, $10, $18, $20, $00, $08, $10, $18, $20
 
 ;
 ;  all information needed to draw an enemy
@@ -1044,33 +970,7 @@ BossheadRender:
 .Frame0_Bosshead:
   .byte $AE,$B2,$B6,$BA,CLEAR_SPRITE,CLEAR_SPRITE,$AF,$B3,$B7,$BB,$BD,$BF,$B0,$B4,$B8,$BC,$BE,$C0,$B1,$B5,$B9,CLEAR_SPRITE,CLEAR_SPRITE,CLEAR_SPRITE
 
-BossrighthandRender:
-.spriteCount:
-  .byte $10
-.offsets:
-  .byte LOW(XOff4x4), HIGH(XOff4x4), LOW(YOff4x4), HIGH(YOff4x4), LOW(XOff4x4), HIGH(XOff4x4), LOW(YOff4x4), HIGH(YOff4x4)
-.flipXor:
-  .byte %00000000
-.attributes:
-  .byte $03,$03,$03,$01,$03,$03,$03,$03,$01,$03,$03,$01,$01,$03,$03,$03
-.tiles:
-.Frame0_Bossrighthand:
-  .byte $C1,$C3,$C7,CLEAR_SPRITE,$C2,$C4,$C8,$CB,CLEAR_SPRITE,$C5,$C9,CLEAR_SPRITE,CLEAR_SPRITE,$C6,$CA,$CC
-
-BossrightarmRender:
-.spriteCount:
-  .byte $10
-.offsets:
-  .byte LOW(XOff4x4), HIGH(XOff4x4), LOW(YOff4x4), HIGH(YOff4x4), LOW(XOff4x4), HIGH(XOff4x4), LOW(YOff4x4), HIGH(YOff4x4)
-.flipXor:
-  .byte %00000000
-.attributes:
-  .byte $01,$01,$03,$03,$01,$01,$03,$03,$03,$03,$03,$01,$03,$03,$01,$01
-.tiles:
-.Frame0_Bossrightarm:
-  .byte CLEAR_SPRITE,CLEAR_SPRITE,$D1,$D4,CLEAR_SPRITE,CLEAR_SPRITE,$D2,$D5,$CD,$CF,$D3,CLEAR_SPRITE,$CE,$D0,CLEAR_SPRITE,CLEAR_SPRITE
-
-BosslefthandRender:
+BosshandRender:
 .spriteCount:
   .byte $09
 .offsets:
@@ -1078,23 +978,20 @@ BosslefthandRender:
 .flipXor:
   .byte %00000000
 .attributes:
-  .byte $03,$03,$03,$03,$03,$03,$03,$03,$03
+  .byte $03,$03,$03,$03,$03,$03,$01,$03,$03
 .tiles:
-.Frame0_Bossrighthand:
-  .byte $D6,$D9,$DC,$D7,$DA,$DD,$D8,$DB,$DE
-
-BossleftarmRender:
-.spriteCount:
-  .byte $14
-.offsets:
-  .byte LOW(XOff4x5), HIGH(XOff4x5), LOW(YOff4x5), HIGH(YOff4x5), LOW(XOff4x5), HIGH(XOff4x5), LOW(YOff4x5), HIGH(YOff4x5)
-.flipXor:
-  .byte %00000000
-.attributes:
-  .byte $01,$01,$01,$03,$03,$01,$03,$01,$03,$03,$03,$03,$03,$03,$03,$01,$03,$03,$03,$03
-.tiles:
-.Frame0_Bossleftarm:
-  .byte CLEAR_SPRITE,CLEAR_SPRITE,CLEAR_SPRITE,$E5,$E9,CLEAR_SPRITE,$E0,CLEAR_SPRITE,$E6,$EA,$DF,$E1,$E3,$E7,$EB,CLEAR_SPRITE,$E2,$E4,$E8,$EC
+.Frame5_Bosshand2:
+  .byte $C9,$CC,$CF,$CA,$CD,$D0,$CB,$CE,$D1
+.Frame4_Bosshand3:
+  .byte $D2,$D5,$D8,$D3,$D6,$D9,$D4,$D7,$DA
+.Frame3_Bosshand4:
+  .byte $DB,$DE,$E1,$DC,$DF,$E2,$DD,$E0,$E3
+.Frame2_Bosshand3:
+  .byte $D2,$D5,$D8,$D3,$D6,$D9,$D4,$D7,$DA
+.Frame1_Bosshand2:
+  .byte $C9,$CC,$CF,$CA,$CD,$D0,$CB,$CE,$D1
+.Frame0_Bosshand1:
+  .byte $C1,$C3,$C6,$C2,$C4,$C7,CLEAR_SPRITE,$C5,$C8
 
 
 EnemiesEnd:
