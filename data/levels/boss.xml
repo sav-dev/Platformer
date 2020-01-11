@@ -642,7 +642,7 @@
     </Enemy>
     <Enemy>
       <Name>Boss right hand</Name>
-      <X>400</X>
+      <X>401</X>
       <Y>30</Y>
       <MovementType>None</MovementType>
       <Direction>None</Direction>
@@ -678,8 +678,8 @@
     </Enemy>
     <Enemy>
       <Name>Boss left hand</Name>
-      <X>460</X>
-      <Y>105</Y>
+      <X>461</X>
+      <Y>104</Y>
       <MovementType>None</MovementType>
       <Direction>None</Direction>
       <SpecialMovement>None</SpecialMovement>
