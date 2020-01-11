@@ -453,6 +453,7 @@ SetVramAddressingTo32:
   .include "lib\collisionManager.asm"
   .include "lib\explosionsController.asm"
   .include "lib\levelManager.asm"
+  .include "lib\doorManager.asm"
   
 Bank14End:
   
@@ -468,7 +469,6 @@ Bank15Start:
   
   .include "lib\bankManager.asm"
   .include "lib\paletteManager.asm"   
-  .include "lib\doorManager.asm"
   .include "lib\ggsoundInclude.asm"  
   .include "lib\controllerManager.asm" 
   .include "lib\bulletController.asm"

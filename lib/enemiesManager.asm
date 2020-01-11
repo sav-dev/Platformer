@@ -749,7 +749,6 @@ UpdateActiveEnemy:
         
         ; enemy should not make collision checks. dec enemyCollisions,
         ; then do Y += 3 to point to one byte before orientation and go to .orientation
-        ; todo 0008 remove this if we don't use the torch
         .noCollisionEnemy:        
           DEC <enemyCollisions
           INY

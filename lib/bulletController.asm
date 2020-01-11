@@ -219,6 +219,7 @@ SpawnEnemyBullet:
     ; the first 5 bytes in the memory layout are: dx, dy, box dx, box dy, atts
     ; these are also the bytes in order in the consts, but we have to know if the enemy is flipped or not
     ; move the consts pointer if needed, copy, then move again if haven't moved already
+    ; also there's a special subroutine for setting dy
     LDA <genericDirection
     BEQ .noFlip
     
@@ -231,8 +232,7 @@ SpawnEnemyBullet:
       STA bullets, y
       INX
       INY
-      LDA BulletConsts, x
-      STA bullets, y
+      JSR SetEnemyBulletDy
       INX
       INY
       LDA BulletConsts, x
@@ -255,8 +255,7 @@ SpawnEnemyBullet:
       STA bullets, y
       INX
       INY
-      LDA BulletConsts, x
-      STA bullets, y
+      JSR SetEnemyBulletDy
       INX
       INY
       LDA BulletConsts, x
@@ -303,6 +302,40 @@ SpawnEnemyBullet:
     .reloadX:
       LDX <xPointerCache2
       RTS
+
+    ; small subroutine for setting bullet dy.
+    ; x points to dy in consts, y points to dy in memory
+    ; enemyBulletPointer points to the bullet
+    SetEnemyBulletDy:
+      LDA <enemyBulletPointer
+      CMP #BOSS_RIGHT_HAND_BULLET ; BOSS_RIGHT_HAND_BULLET < BOSS_LEFT_HAND_BULLET
+      BCC .regularBullet
+      BEQ .bossRightHandBullet
+      
+      ; for bullets fired by the boss left hand, we want them to go upwards every other time
+      ; make sure the shooting frequency is odd!
+      .bossLeftHandBullet:
+        LDA <frameCount
+        AND #$01
+        BNE .regularBullet
+        LDA #$FF
+        STA bullets, y        
+        RTS
+      
+      ; for bullets fired by the boss right hand, we want them to go downwards every other time
+      ; make sure the shooting frequency is odd!
+      .bossRightHandBullet:
+        LDA <frameCount
+        AND #$01
+        BNE .regularBullet
+        LDA #$01
+        STA bullets, y
+        RTS           
+      
+      .regularBullet:
+        LDA BulletConsts, x
+        STA bullets, y
+        RTS
 
 ;****************************************************************
 ; Name:                                                         ;

@@ -516,7 +516,7 @@ BossheadConsts:
 .explosionOffset:
   .byte $08, $10
 
-BosshandConsts:
+BossrighthandConsts:
 .width:
   .byte $18
 .hitboxInfo:
@@ -532,7 +532,29 @@ BosshandConsts:
 .numberOfFrames:
   .byte $06
 .renderingInfo:
-  .byte LOW(BosshandRender), HIGH(BosshandRender)
+  .byte LOW(BossrighthandRender), HIGH(BossrighthandRender)
+.explosionPointer:
+  .byte $00
+.explosionOffset:
+  .byte $04, $04
+
+BosslefthandConsts:
+.width:
+  .byte $18
+.hitboxInfo:
+  .byte $05,$0F,$05,$0F
+.orientation:
+  .byte $01
+.bulletPointer:
+  .byte $75
+.gunInfo:
+  .byte $0B,$0A,$09,$0A
+.animationSpeed:
+  .byte $06
+.numberOfFrames:
+  .byte $06
+.renderingInfo:
+  .byte LOW(BosslefthandRender), HIGH(BosslefthandRender)
 .explosionPointer:
   .byte $00
 .explosionOffset:
@@ -974,7 +996,30 @@ BossheadRender:
 .Frame0_Bosshead:
   .byte $AE,$B2,$B6,CLEAR_SPRITE,CLEAR_SPRITE,CLEAR_SPRITE,$AF,$B3,$B7,$BA,$BD,$BF,$B0,$B4,$B8,$BB,$BE,$C0,$B1,$B5,$B9,$BC,CLEAR_SPRITE,CLEAR_SPRITE
 
-BosshandRender:
+BossrighthandRender:
+.spriteCount:
+  .byte $09
+.offsets:
+  .byte LOW(XOff3x3), HIGH(XOff3x3), LOW(YOff3x3), HIGH(YOff3x3), LOW(XOff3x3H), HIGH(XOff3x3H), LOW(YOff3x3), HIGH(YOff3x3)
+.flipXor:
+  .byte %01000000
+.attributes:
+  .byte $02,$02,$02,$02,$02,$02,$02,$02,$02
+.tiles:
+.Frame5_Bosshand2:
+  .byte $C9,$CC,$CF,$CA,$CD,$D0,$CB,$CE,$D1
+.Frame4_Bosshand3:
+  .byte $D2,$D5,$D8,$D3,$D6,$D9,$D4,$D7,$DA
+.Frame3_Bosshand4:
+  .byte $DB,$DE,$E1,$DC,$DF,$E2,$DD,$E0,$E3
+.Frame2_Bosshand3:
+  .byte $D2,$D5,$D8,$D3,$D6,$D9,$D4,$D7,$DA
+.Frame1_Bosshand2:
+  .byte $C9,$CC,$CF,$CA,$CD,$D0,$CB,$CE,$D1
+.Frame0_Bosshand1:
+  .byte CLEAR_SPRITE,$C3,$C6,$C1,$C4,$C7,$C2,$C5,$C8
+
+BosslefthandRender:
 .spriteCount:
   .byte $09
 .offsets:

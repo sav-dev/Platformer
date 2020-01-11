@@ -167,7 +167,25 @@ Sphere:
 .boxSize:
   .byte $07, $03
 
-Boss:
+Boss_Right_Hand:
+.speed:
+  .byte $03, $00
+.boxOffset:
+  .byte $00, $00
+.atts:
+  .byte $02
+.speedFlip:
+  .byte $FD, $00
+.boxOffsetFlip:
+  .byte $02, $00
+.attsFlip:
+  .byte $42
+.spriteId:
+  .byte $EC
+.boxSize:
+  .byte $05, $05
+
+Boss_Left_Hand:
 .speed:
   .byte $03, $00
 .boxOffset:
@@ -195,5 +213,8 @@ PLAYER_BULLET_SPEED_X = $06
 PLAYER_BULLET_SPEED_X_FLIP = $FA
 PLAYER_BULLET_ATTS = $00
 PLAYER_BULLET_ATTS_FLIP = $40
+
+BOSS_RIGHT_HAND_BULLET = $68
+BOSS_LEFT_HAND_BULLET = $75
 
 BulletsEnd:
