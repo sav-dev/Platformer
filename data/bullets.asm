@@ -167,6 +167,24 @@ Sphere:
 .boxSize:
   .byte $07, $03
 
+Boss:
+.speed:
+  .byte $03, $00
+.boxOffset:
+  .byte $00, $00
+.atts:
+  .byte $02
+.speedFlip:
+  .byte $FD, $00
+.boxOffsetFlip:
+  .byte $02, $00
+.attsFlip:
+  .byte $42
+.spriteId:
+  .byte $EC
+.boxSize:
+  .byte $05, $05
+
 ; Player consts
 ; note: box DX/DY = 0 for both flip and non-flip
 ;       speed DY = 0 for both flip and non-flip

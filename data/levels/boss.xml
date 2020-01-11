@@ -651,9 +651,9 @@
       <ShouldFlip>true</ShouldFlip>
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
-      <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>0</ShootingFrequency>
-      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <InitialFlip>true</InitialFlip>
+      <ShootingFrequency>30</ShootingFrequency>
+      <ShootingInitialFrequency>30</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
@@ -666,10 +666,10 @@
       <Direction>Up</Direction>
       <SpecialMovement>None</SpecialMovement>
       <Speed>0.5</Speed>
-      <ShouldFlip>true</ShouldFlip>
+      <ShouldFlip>false</ShouldFlip>
       <MinPosition>52</MinPosition>
       <MaxPosition>60</MaxPosition>
-      <InitialFlip>false</InitialFlip>
+      <InitialFlip>true</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
@@ -687,9 +687,9 @@
       <ShouldFlip>true</ShouldFlip>
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
-      <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>0</ShootingFrequency>
-      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <InitialFlip>true</InitialFlip>
+      <ShootingFrequency>30</ShootingFrequency>
+      <ShootingInitialFrequency>30</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
