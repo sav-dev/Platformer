@@ -51,6 +51,7 @@ destroyedEnemies  .rs 16
 ENEMIES_COUNT           = $0A ; = 10
 ENEMY_SIZE              = $18 ; = 24
 MAX_ENEMIES             = $80 ; = 128
+ENEMIES_TOTAL_SIZE      = ENEMY_SIZE * ENEMIES_COUNT 
 
 ; depends_on_elevator_in_memory_format
 ; size of elevators must be "max elevators loaded" (currently 6) * "elevator size" (currently 8)

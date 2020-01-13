@@ -57,7 +57,7 @@ UpdatePlayerNotVisible:
     INC <currentLevel
     LDA <currentLevel
     CMP #NUMBER_OF_LEVELS
-    BNE .resetLevel
+    BNE .resetLevel ; todo 0005: this is not needed
     LDA #$00
     STA <currentLevel
   

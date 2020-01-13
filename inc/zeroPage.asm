@@ -216,6 +216,8 @@ levelType           .rs 1
 levelTypeData1      .rs 1 ; normal: exit screen ; jetpack: scroll speed   ; boss: whether screen scrolled
 levelTypeData2      .rs 1 ; normal: exit X      ; jetpack: N/U            ; boss: victory condition
 levelTypeData3      .rs 1 ; normal: exit Y      ; jetpack: N/U            ; N/U
+levelHelperVar      .rs 1 ; a helper var
+levelHelperVar2     .rs 1 ; a 2nd helper var
 
 ;****************************************************************
 ; Door and keycard                                              ;
@@ -244,6 +246,7 @@ currentLevel        .rs 1 ; current level
 paletteOffset       .rs 1 ; offset of the bg palette from the lvl data
 tilesetOffset       .rs 1 ; tileset offset in the lookup table from the lvl data
 levelBeaten         .rs 1 ; whether the level was beaten. only inced once and checked at the end of the level
+isPaused            .rs 1 ; whether the game is paused
 
 ;****************************************************************
 ; ggsound                                                       ;

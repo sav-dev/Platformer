@@ -1308,7 +1308,7 @@ UpdateExplodingEnemy:
     LDA enemies, x
     STA <genericPointer
     
-  ; X += 2 to point to the screen the enemy is on, load it and put it in enemyScren
+  ; X += 2 to point to the screen the enemy is on, load it and put it in enemyScreen
   .loadScreen:
     INX
     INX
@@ -1518,7 +1518,12 @@ UpdateEnemies:
             AND destroyedEnemies, y
             CMP <levelTypeData2
             BNE .loadConstsPointer
-            ; todo 0001: if we get here, it means the boss has been destroyed. add explosions and stuff
+            
+            ; if we get here, it means the boss has been destroyed
+            ; change state to GAMESTATE_EXPL
+            .levelBeaten:
+              LDA #GAMESTATE_EXPL
+              STA <gameState
           
         ; X += 1 to point at the consts pointer
         ; load low byte, X += 1, load high byte

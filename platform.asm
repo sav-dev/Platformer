@@ -68,17 +68,6 @@ vblankwait2:        ; Second wait for vblank, PPU is ready after this
 ;****************************************************************
 ; Initialization logic                                          ;
 ;****************************************************************
-
-; todo 0000 - should this be here
-initialBankSelect:
-  LDY #$00
-  JSR SelectBank
-  
-initGame:
-  LDA #GAMESTATE_NONE
-  STA <gameState
-  LDA #$00
-  STA <currentLevel 
   
 initPPU:
   LDA #$00                 
@@ -95,7 +84,7 @@ initPPU:
   LDA #%00000110           ; init PPU - disable sprites and background
   STA <soft2001            
   STA $2001                
-  LDA #%10010000           ; enable NMI, sprites from PT 0, bg from PT 1
+  LDA #%10010000           ; enable NMI, sprites from PT 0, bg from PT 1, 1 VRAM inc
   STA <soft2000            
   STA $2000                
   BIT $2002                
@@ -107,6 +96,30 @@ initPPU:
   INC <needDma
   INC <needDraw
   JSR WaitForFrame         ; wait for one frame for everything to get loaded
+  
+initSprChr:
+  LDY #CHR_BANK
+  JSR SelectBank
+  LDA #LOW(sprChr)
+  STA <genericPointer
+  LDA #HIGH(sprChr)
+  STA <genericPointer + $01
+  JSR LoadSprChr
+  
+; todo 0010 - tweak the stuff below
+; we may need to keep selecting bank 0 here since that's what the game may expect
+; unless we have all the 'load state x' routines in the common banks
+; anyway, add a comment here
+  
+initBankSelect:
+  LDY #$00
+  JSR SelectBank
+  
+initGame:
+  LDA #GAMESTATE_NONE ; todo 0100 - set this to title screen immediately
+  STA <gameState
+  LDA #$00
+  STA <currentLevel 
   
 ;****************************************************************
 ; Game loop                                                     ;
@@ -120,8 +133,10 @@ GameLoop:
                                                         
   .checkGameState:          
     LDA <gameState
-    CMP #GAMESTATE_GAME
+    ;CMP #GAMESTATE_GAME    ; GAMESTATE_GAME = 0
     BEQ .gameStateGame
+    CMP #GAMESTATE_EXPL
+    BEQ .gameStateExpl
     JMP .gameStateNone      ; nothing was matched => game state is "none"  
   .checkGameStateDone:      
 
@@ -129,6 +144,11 @@ GameLoop:
     JSR GameFrame
     JMP GameLoopDone
   .gameStateGameDone:
+  
+  .gameStateExpl:
+    JSR ExplFrame
+    JMP GameLoopDone
+  .gameStateExplDone:
   
   .gameStateNone:
     LDA #$00
@@ -355,6 +375,22 @@ FadeOut:
   
 ;****************************************************************
 ; Name:                                                         ;
+;   FlipGreyscale                                               ;
+;                                                               ;
+; Description:                                                  ;
+;   Flip greyscale                                              ;
+;****************************************************************
+
+FlipGreyscale:
+
+  LDA <soft2001
+  EOR #%00000001           ; flip the greyscale bit
+  STA <soft2001            
+  INC <needPpuReg          
+  RTS
+  
+;****************************************************************
+; Name:                                                         ;
 ;   EnablePPU                                                   ;
 ;                                                               ;
 ; Description:                                                  ;
@@ -455,6 +491,8 @@ SetVramAddressingTo32:
   .include "lib\levelManager.asm"
   .include "lib\doorManager.asm"
   
+  .include "states\game.asm"
+  
 Bank14End:
   
 Bank15:
@@ -473,9 +511,7 @@ Bank15Start:
   .include "lib\controllerManager.asm" 
   .include "lib\bulletController.asm"
   .include "lib\chrManager.asm"
-  .include "lib\elevatorManager.asm"
-  
-  .include "states\game.asm"
+  .include "lib\elevatorManager.asm" 
  
 Bank15End:
 
