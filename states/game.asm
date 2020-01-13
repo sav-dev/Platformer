@@ -29,11 +29,20 @@ GameFrame:
     BEQ .checkPause
     
   .changePause:
+    JSR FlipGreyscale
+    ; todo 0006: play a sound  
     LDA <isPaused         
     EOR #%00000001
-    STA <isPaused    
-    JSR FlipGreyscale
-    ; todo 0006: play a sound
+    STA <isPaused        
+    CMP #$00
+    BEQ .resumeSong
+    
+    .pauseSong:
+      JSR StopSong
+      JMP .checkPause
+      
+    .resumeSong:
+      JSR ResumeSong    
     
   .checkPause:
     LDA <isPaused
