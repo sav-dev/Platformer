@@ -53,6 +53,7 @@ GameFrame:
     JSR ClearSprites
     
   .presetVars:
+    LDA #$00
     STA <frameScroll                  ; preset to 0 (A = 0 still)
 
   .incrementFrameCounter:
