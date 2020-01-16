@@ -133,6 +133,12 @@ GameLoop:
     BEQ .gameStateExpl
     CMP #GAMESTATE_TITLE
     BEQ .gameStateTitle
+    CMP #GAMESTATE_STAGE_SELECT
+    BEQ .gameStateStageSelect
+    CMP #GAMESTATE_CREDITS
+    BEQ .gameStateCredits
+    CMP #GAMESTATE_STORY
+    BEQ .gameStateStory
   
   .gameStateGame:
     JSR GameFrame
@@ -143,7 +149,20 @@ GameLoop:
     JMP GameLoopDone
   
   .gameStateTitle:
-    JSR TitleFrame    
+    JSR TitleFrame
+    JMP GameLoopDone
+    
+  .gameStateStageSelect:
+    ;JSR StageSelectFrame
+    JMP GameLoopDone
+  
+  .gameStateCredits:
+    ;JSR CreditsFrame
+    JMP GameLoopDone
+  
+  .gameStateStory:
+    ;JSR StoryFrame
+    JMP GameLoopDone
   
 GameLoopDone:
 

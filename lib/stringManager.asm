@@ -13,7 +13,7 @@ StringManagerStart:
 ;   Draws a string                                              ;
 ;                                                               ;
 ; Input variables:                                              ;
-;   genericDX/DY = position                                     ;
+;   genericX/Y = position                                       ;
 ;   genericPointer (low) = string id                            ;
 ;****************************************************************
 
@@ -42,7 +42,7 @@ DrawString:
 ;   Clears a string                                             ;
 ;                                                               ;
 ; Input variables:                                              ;
-;   genericDX/DY = position                                     ;
+;   genericX/Y = position                                       ;
 ;   genericPointer (low) = string id                            ;
 ;****************************************************************
 
@@ -62,6 +62,7 @@ ClearString:
     STX <bufferOffset
   
   RTS
+  
 ;****************************************************************
 ; Name:                                                         ;
 ;   SetStringCommon                                             ;
@@ -74,7 +75,7 @@ ClearString:
 ;     [genericPointer], y points to the 1st byte of the string  ;
 ;                                                               ;
 ; Input variables:                                              ;
-;   genericDX/DY = position                                     ;
+;   genericX/Y = position                                       ;
 ;   genericPointer (low) = string id                            ;
 ;****************************************************************  
 SetStringCommon:
@@ -100,23 +101,7 @@ SetStringCommon:
     INX
     
   .calculateAddress:
-    LDA <genericDX
-    STA <c ; low byte
-    LDA #$20
-    STA <d ; high byte
-    
-    .moveAddressLoop:
-      LDA <genericDY
-      BEQ .setAddress
-      LDA <c
-      CLC
-      ADC #$20
-      STA <c
-      LDA <d
-      ADC #$00
-      STA <d
-      DEC <genericDY
-      JMP .moveAddressLoop
+    JSR CalculatePpuAddress
         
   .setAddress:
     LDA <d
@@ -130,6 +115,37 @@ SetStringCommon:
     INX
   
   RTS
+
+;****************************************************************
+; Name:                                                         ;
+;   CalculatePpuAddress                                         ;
+;                                                               ;
+; Description:                                                  ;
+;   Based on genericX/Y sets the PPU address in [c,d]           ;
+;****************************************************************  
+  
+CalculatePpuAddress:
+
+  LDA <genericX
+  STA <c ; low byte
+  LDA #$20
+  STA <d ; high byte
+  
+  .moveAddressLoop:
+    LDA <genericY
+    BEQ .done
+    LDA <c
+    CLC
+    ADC #$20
+    STA <c
+    LDA <d
+    ADC #$00
+    STA <d
+    DEC <genericY
+    JMP .moveAddressLoop
+    
+  .done:
+    RTS
   
 ;****************************************************************
 ; EOF                                                           ;

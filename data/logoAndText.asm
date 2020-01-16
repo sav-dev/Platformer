@@ -28,22 +28,46 @@ Logo:
 ;****************************************************************
 
 ; 0
-; "Test string"
+; "Press start"
 STR_0 = 0
 
 ; 1
-; "Test string 2"
+; "Start game"
 STR_1 = 2
+
+; 2
+; "Stage select"
+STR_2 = 4
+
+; 3
+; "Credits"
+STR_3 = 6
+
+; 4
+; "Sav 2020"
+STR_4 = 8
 
 StringPointers:
   .byte LOW(string0), HIGH(string0)
   .byte LOW(string1), HIGH(string1)
+  .byte LOW(string2), HIGH(string2)
+  .byte LOW(string3), HIGH(string3)
+  .byte LOW(string4), HIGH(string4)
 
 Strings:
 string0:
-  .byte $0B, $1E, $0F, $1D, $1E, $00, $1D, $1E, $1C, $13, $18, $11
+  .byte $0B, $1A, $1C, $0F, $1D, $1D, $00, $1D, $1E, $0B, $1C, $1E
 string1:
-  .byte $0D, $1E, $0F, $1D, $1E, $00, $1D, $1E, $1C, $13, $18, $11, $00, $03
+  .byte $0A, $1D, $1E, $0B, $1C, $1E, $00, $11, $0B, $17, $0F
+string2:
+  .byte $0C, $1D, $1E, $0B, $11, $0F, $00, $1D, $0F, $16, $0F, $0D, $1E
+string3:
+  .byte $07, $0D, $1C, $0F, $0E, $13, $1E, $1D
+string4:
+  .byte $08, $1D, $0B, $20, $00, $03, $01, $03, $01
+
+
+CURSOR_TILE = $92
 
 
 LogoAndTextDataEnd:

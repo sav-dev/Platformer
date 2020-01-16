@@ -10,6 +10,26 @@ StateTitleStart:
 
 TITLE_PALETTE_OFFSET = $07 * $10
 
+SAV_2020_X = $0C
+SAV_2020_Y = $1A
+
+PRESS_START_X = $0A
+PRESS_START_Y = $12
+
+MENU_ITEMS_X = $0C
+START_GAME_Y = $10
+STAGE_SELECT_Y = $12
+CREDITS_Y = $14
+
+CURSOR_X = MENU_ITEMS_X - $02
+CURSOR_Y_INIT = START_GAME_Y
+CURSOR_Y_INCR = $02
+
+START_GAME_INDEX = $00
+STAGE_SELECT_INDEX = $01
+CREDITS_INDEX = $02
+MAX_INDEX = $03
+
 ;****************************************************************
 ; Name:                                                         ;
 ;   TitleFrame                                                  ;
@@ -25,7 +45,146 @@ TitleFrame:
     STA <needDrawLocal
         
   .processFrame:
-    ; ...
+    LDA <levelHelperVar
+    BNE .startWasPressed
+    
+    .waitForStart:
+      LDA <controllerPressed
+      AND #CONTROLLER_START
+      BEQ .processBlinking
+      INC <levelHelperVar ; start pressed, inc the var
+      LDA #$01
+      STA <levelHelperVar2 ; hideString will decrement it back to 0
+      ; todo 0006: play a sound when start is pressed
+      JMP .hideString
+      
+      .processBlinking:
+        LDA <frameCount
+        AND #%00110000
+        CMP #%00110000
+        BEQ .changeState
+        JMP .setNmiFlags
+        
+        .changeState:
+          LDA #$00
+          STA <frameCount
+          LDA <levelHelperVar2
+          BNE .hideString
+        
+        .showString:
+          INC <levelHelperVar2
+          LDA #PRESS_START_X
+          STA <genericX
+          LDA #PRESS_START_Y
+          STA <genericY
+          LDA #STR_0
+          STA <genericPointer
+          JSR DrawString
+          JMP .setNmiFlags
+          
+        .hideString:
+          DEC <levelHelperVar2
+          LDA #PRESS_START_X
+          STA <genericX
+          LDA #PRESS_START_Y
+          STA <genericY
+          LDA #STR_0
+          STA <genericPointer
+          JSR ClearString
+          JMP .setNmiFlags
+          
+    .startWasPressed:
+      LDA <levelHelperVar2
+      BNE .checkInput
+      INC <levelHelperVar2
+      
+      .renderMenu:
+        LDA #MENU_ITEMS_X
+        STA <genericX
+        LDA #START_GAME_Y
+        STA <genericY
+        LDA #STR_1
+        STA <genericPointer
+        JSR DrawString
+        LDA #MENU_ITEMS_X
+        STA <genericX
+        LDA #STAGE_SELECT_Y
+        STA <genericY
+        LDA #STR_2
+        STA <genericPointer
+        JSR DrawString
+        LDA #MENU_ITEMS_X
+        STA <genericX
+        LDA #CREDITS_Y
+        STA <genericY
+        LDA #STR_3
+        STA <genericPointer
+        JSR DrawString
+        
+      .setCursor:
+        LDA #START_GAME_INDEX
+        STA <playerCounter
+        LDA #CURSOR_X
+        STA <genericX
+        LDA #CURSOR_Y_INIT
+        STA <genericY
+        JSR SetCursor        
+      
+    .checkInput:
+      LDA <controllerPressed
+      AND #CONTROLLER_START
+      BNE .optionSelected
+      LDA <controllerPressed
+      AND #CONTROLLER_SEL
+      BNE .changeSelection
+      JMP .setNmiFlags
+      
+      .optionSelected:
+        ; todo 0006: play a sound when start is pressed
+        LDA <playerCounter
+        BEQ .startGame ; START_GAME_INDEX = 0
+        CMP #STAGE_SELECT_INDEX
+        BEQ .stageSelect
+        
+        .credits:
+          ; todo 0010
+          JMP GameLoopDone
+        
+        .stageSelect:
+          ; todo 0010
+          JMP GameLoopDone
+        
+        .startGame:
+          ; todo 0010
+          JMP GameLoopDone
+        
+        JMP .setNmiFlags
+      
+      .changeSelection:
+        ; todo 0006: play a sound when selection changes
+        INC <playerCounter
+        LDA <playerCounter
+        CMP #MAX_INDEX
+        BEQ .resetCursor
+        
+        .moveCursor:
+          LDA <playerX
+          STA <genericX
+          LDA <playerY
+          CLC
+          ADC #CURSOR_Y_INCR
+          STA <genericY
+          JSR MoveCursor
+          JMP .setNmiFlags
+        
+        .resetCursor:
+          LDA #START_GAME_INDEX
+          STA <playerCounter
+          LDA #CURSOR_X
+          STA <genericX
+          LDA #CURSOR_Y_INIT
+          STA <genericY
+          JSR MoveCursor  
       
   .setNmiFlags:
     LDA <needDrawLocal
@@ -82,7 +241,7 @@ LoadTitle:
     INC <needDraw
     
   .setAllAtts:
-    LDA #$01 ; 2nd palette = text
+    LDA #$00 ; 2nd palette = text
     STA <renderAtts
     LDA #$08 ; 8 atts rows = entire screen
     STA <genericHeight
@@ -90,7 +249,16 @@ LoadTitle:
     
   .drawLogo:
     JSR DrawLogo
- 
+
+  .drawStrings:
+    LDA #SAV_2020_X
+    STA <genericX
+    LDA #SAV_2020_Y
+    STA <genericY
+    LDA #STR_4
+    STA <genericPointer
+    JSR DrawString
+    
   .fadeIn:
     JSR FadeIn ; this enables PPU
 
@@ -98,7 +266,12 @@ LoadTitle:
   .initializeSound:
     JSR InitializeSound
     JSR PlaySong
-  
+
+  .initVars:
+    LDA #$00
+    STA <levelHelperVar  ; = whether start was pressed
+    STA <levelHelperVar2 ; = whether press start is currently printed
+    
   JMP WaitForFrame 
   
 ;****************************************************************
@@ -158,13 +331,6 @@ DrawLogo:
       JMP .drawingLoopOuter
       
   .drawingDone:
-
-  .setLogoAtts:
-    LDA #$00 ; 1st palette = logo
-    STA <renderAtts
-    LDA #$03 ; set atts for the top 3 rows to cover the logo
-    STA <genericHeight
-    JSR SetAttributes
   
     RTS
 
