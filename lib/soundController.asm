@@ -3,12 +3,7 @@ SoundControllerStart:
 ;****************************************************************
 ; SoundController                                               ;
 ; Responsible for processing the sound                          ;
-; todo 0006 - this is all very temporary                        ;
 ;****************************************************************
-
-SongsStart:
-  .include "ggsound\sound.asm"
-SongsEnd:
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -48,7 +43,6 @@ InitializeSound:
 ;****************************************************************
 
 PlaySong:
-  ; todo 0006 - keep the track of currently played song
   LDA #song_index_song
   STA sound_param_byte_0
   JSR play_song

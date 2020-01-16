@@ -105,21 +105,13 @@ initSprChr:
   LDA #HIGH(sprChr)
   STA <genericPointer + $01
   JSR LoadSprChr
-  
-; todo 0010 - tweak the stuff below
-; we may need to keep selecting bank 0 here since that's what the game may expect
-; unless we have all the 'load state x' routines in the common banks
-; anyway, add a comment here
-  
-initBankSelect:
+
+initGame:
+  LDA #GAMESTATE_TITLE
+  STA <gameState
   LDY #$00
   JSR SelectBank
-  
-initGame:
-  LDA #GAMESTATE_NONE ; todo 0100 - set this to title screen immediately
-  STA <gameState
-  LDA #$00
-  STA <currentLevel 
+  JSR LoadTitle
   
 ;****************************************************************
 ; Game loop                                                     ;
@@ -129,7 +121,6 @@ GameLoop:
   
   .readController:
     JSR ReadController      ; always read controller input first    
-  .readControllerDone:      
                                                         
   .checkGameState:          
     LDA <gameState
@@ -137,26 +128,20 @@ GameLoop:
     BEQ .gameStateGame
     CMP #GAMESTATE_EXPL
     BEQ .gameStateExpl
-    JMP .gameStateNone      ; nothing was matched => game state is "none"  
-  .checkGameStateDone:      
-
+    CMP #GAMESTATE_TITLE
+    BEQ .gameStateTitle
+  
   .gameStateGame:
     JSR GameFrame
     JMP GameLoopDone
-  .gameStateGameDone:
   
   .gameStateExpl:
     JSR ExplFrame
     JMP GameLoopDone
-  .gameStateExplDone:
   
-  .gameStateNone:
-    LDA #$00
-    STA <currentLevel       ; set current level to 0
-    JSR LoadGame
-    JMP GameLoopDone        
-  .gameStateNoneDone:       
-                            
+  .gameStateTitle:
+    JSR TitleFrame    
+  
 GameLoopDone:
 
   JSR WaitForFrame          ; always wait for a frame at the end of the loop iteration
@@ -505,6 +490,7 @@ Bank15Start:
   .include "data\enemies.asm" ; this has to be in this place
   .include "data\bullets.asm"
   
+  .include "lib\soundController.asm"
   .include "lib\bankManager.asm"
   .include "lib\paletteManager.asm"   
   .include "lib\ggsoundInclude.asm"  
@@ -525,10 +511,10 @@ Bank00:
   .org $8000
   
 Bank00Start:
-    
-  .include "lib\soundController.asm" ; todo 0006 move this to the const banks?
-  .include "data\levels.asm"
-  
+              
+  .include "states\title.asm"
+  .include "data\logoAndText.asm"
+              
 Bank00End:
 
 Bank01:
@@ -536,7 +522,15 @@ Bank01:
   .bank 1
   .org $A000
   
-Bank01Start:  
+Bank01Start:
+
+  titleChr:
+    .byte $0A
+    .incbin "PlatformerGraphics\Chr\titleProcessed.chr"
+
+  titleSound:
+    .include "ggsound\sound.asm"  
+
 Bank01End:
 
 ;****************************************************************
@@ -589,6 +583,10 @@ Bank04:
   .org $8000
 
 Bank04Start:  
+
+  ; todo: move this somewhere appropriate
+  .include "data\levels.asm"
+
 Bank04End:
   
 Bank05:

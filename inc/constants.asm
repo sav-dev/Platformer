@@ -65,9 +65,9 @@ RENDER_ENEMY_FLIP     = $01 ; 0000 0001
 ; Game state                                                    ;
 ;****************************************************************
 
-GAMESTATE_GAME = $00 ; regular game state
-GAMESTATE_EXPL = $01 ; state where a boss has been beaten and everything explodes
-GAMESTATE_NONE = $FF
+GAMESTATE_GAME  = $00 ; regular game state
+GAMESTATE_EXPL  = $01 ; state where a boss has been beaten and everything explodes
+GAMESTATE_TITLE = $02 ; title screen
 
 ;****************************************************************
 ; Physics related constans                                      ;
