@@ -51,9 +51,6 @@ GameFrame:
   .presetVars:
     LDA #$00
     STA <frameScroll                  ; preset to 0 (A = 0 still)
-
-  .incrementFrameCounter:
-    INC <frameCount
     
   .processFrame:
     
@@ -120,9 +117,6 @@ GameFrame:
 ;****************************************************************
 
 ExplFrame:
-
-  .incrementFrameCounter:
-    INC <frameCount
 
   ; wait for a bit before be start exploding everything
   ; use levelType3 to keep track, it's initialized with 0 for boss lvl type

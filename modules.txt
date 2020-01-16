@@ -12,8 +12,13 @@ LevelManager
 PaletteManager
 PlayerController
 SoundController
+StringManager
 GGSoundInclude
 StateGame
-Enemies
+StateTitle
 Bullets
+Enemies
+LogoAndTextData
+Tilesets
+Levels
 Songs

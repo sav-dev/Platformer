@@ -1323,4 +1323,58 @@ MoveBackAttsPointerBack:
   STA <attsBackPointer + $01
   RTS
   
+;****************************************************************
+; Name:                                                         ;
+;   SetAttributes                                               ;
+;                                                               ;
+; Description:                                                  ;
+;   Sets atts in nametable 01. Must be called with PPU disabled ;
+;                                                               ;
+; Input variables:                                              ;
+;   genericHeight - how many rows to set                        ;
+;   renderAtts - atts to set                                    ;
+;                                                               ;
+; Used variables:                                               ;
+;   b                                                           ;
+;   c                                                           ;
+;   d                                                           ;
+;****************************************************************
+
+SetAttributes:
+    
+  .getValueToSet:
+    LDA <renderAtts
+    ASL A
+    ASL A
+    ORA <renderAtts
+    ASL A
+    ASL A
+    ORA <renderAtts
+    ASL A
+    ASL A
+    ORA <renderAtts
+    STA <renderAtts
+  
+  .getBytesToWrite:
+    LDA <genericHeight
+    ASL A
+    ASL A
+    ASL A
+    TAX ; x = # of rows * 8 (8 bytes per row)
+  
+  .setAddress:
+    LDA $2002
+    LDA #$23
+    STA $2006
+    LDA #$C0
+    STA $2006
+    
+  LDA <renderAtts
+  .loop:
+    STA $2007
+    DEX
+    BNE .loop
+    
+  RTS
+  
 BackgroundManagerEnd:

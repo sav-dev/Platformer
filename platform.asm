@@ -118,6 +118,9 @@ initGame:
 ;****************************************************************
 
 GameLoop:
+
+  .incrementFrameCounter:
+    INC <frameCount
   
   .readController:
     JSR ReadController      ; always read controller input first    
@@ -474,7 +477,6 @@ SetVramAddressingTo32:
   .include "lib\collisionManager.asm"
   .include "lib\explosionsController.asm"
   .include "lib\levelManager.asm"
-  .include "lib\doorManager.asm"
   
   .include "states\game.asm"
   
@@ -498,6 +500,7 @@ Bank15Start:
   .include "lib\bulletController.asm"
   .include "lib\chrManager.asm"
   .include "lib\elevatorManager.asm" 
+  .include "lib\doorManager.asm"
  
 Bank15End:
 
@@ -513,6 +516,7 @@ Bank00:
 Bank00Start:
               
   .include "states\title.asm"
+  .include "lib\stringManager.asm"
   .include "data\logoAndText.asm"
               
 Bank00End:

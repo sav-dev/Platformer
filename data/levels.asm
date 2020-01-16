@@ -1,3 +1,5 @@
+LevelsStart:
+
 ;****************************************************************
 ; Levels                                                        ;                           
 ; Holds information about all levels                            ;
@@ -41,3 +43,5 @@ levels:
   
 level00:
   .incbin "data\levels\00.bin"
+
+LevelsEnd:

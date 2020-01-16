@@ -25,11 +25,12 @@ TitleFrame:
     STA <needDrawLocal
         
   .processFrame:
+    ; ...
       
   .setNmiFlags:
     LDA <needDrawLocal
     BEQ .frameDone
-    INC <needDraw
+    INC <needDraw ; we only do draw in this state - no sprites or scrolling
   
   .frameDone:
     RTS
@@ -79,6 +80,13 @@ LoadTitle:
     STA <paletteOffset
     JSR LoadBgPalette    
     INC <needDraw
+    
+  .setAllAtts:
+    LDA #$01 ; 2nd palette = text
+    STA <renderAtts
+    LDA #$08 ; 8 atts rows = entire screen
+    STA <genericHeight
+    JSR SetAttributes
     
   .drawLogo:
     JSR DrawLogo
@@ -151,7 +159,15 @@ DrawLogo:
       STA <b
       JMP .drawingLoopOuter
       
-  .drawingDone:      
+  .drawingDone:
+
+  .setLogoAtts:
+    LDA #$00 ; 1st palette = logo
+    STA <renderAtts
+    LDA #$03 ; set atts for the top 3 rows to cover the logo
+    STA <genericHeight
+    JSR SetAttributes
+  
     RTS
 
   
