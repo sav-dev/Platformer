@@ -45,7 +45,7 @@ TitleFrame:
 
 LoadTitle:  
 
-  ; todo : most of this will be common for all bank 0 states
+  ; todo 0010 - most of this will be common for all bank 0 states
 
   .disablePPUAndSleep:  
     JSR DisablePPU
@@ -91,10 +91,8 @@ LoadTitle:
   .drawLogo:
     JSR DrawLogo
  
-  .enablePPU:                                    
-    JSR EnablePPU
-    
-  ; todo: fade in?
+  .fadeIn:
+    JSR FadeIn ; this enables PPU
 
   ; todo 0006 - is this the right place to call this
   .initializeSound:

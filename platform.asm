@@ -363,6 +363,36 @@ FadeOut:
   
 ;****************************************************************
 ; Name:                                                         ;
+;   FadeIn                                                      ;
+;                                                               ;
+; Description:                                                  ;
+;   Fades in from black                                         ;
+;****************************************************************
+
+FadeIn: ; todo 0010 - is this required
+
+  LDA #%01111110           ; enable PPU with reds and greens intensified
+  STA <soft2001            
+  INC <needPpuReg          
+  LDX #$04
+  JSR SleepForXFrames
+  
+  LDA #%00111110           ; deintensify greens
+  STA <soft2001            
+  INC <needPpuReg          
+  LDX #$04
+  JSR SleepForXFrames
+  
+  LDA #%00011110           ; deintensify reds
+  STA <soft2001            
+  INC <needPpuReg          
+  LDX #$04
+  JSR SleepForXFrames
+  
+  RTS
+  
+;****************************************************************
+; Name:                                                         ;
 ;   FlipGreyscale                                               ;
 ;                                                               ;
 ; Description:                                                  ;
@@ -517,6 +547,7 @@ Bank00Start:
               
   .include "states\title.asm"
   .include "lib\stringManager.asm"
+  .include "lib\cursorController.asm"
   .include "data\logoAndText.asm"
               
 Bank00End:

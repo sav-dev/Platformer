@@ -93,7 +93,7 @@ controllerPressed       .rs 1  ; buttons that have been pressed since the last f
 ; Player data                                                   ;
 ;****************************************************************
 
-playerX                 .rs 1  ; player position (on screen: bottom left)
+playerX                 .rs 1  ; player position (on screen: bottom left). also: cursor position
 playerY                 .rs 1
 
 playerPlatformBoxX1     .rs 1  ; can be removed for a slight performance decrease (4 bytes freed though)

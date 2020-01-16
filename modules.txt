@@ -4,6 +4,7 @@ BulletController
 ChrManager
 CollisionManager
 ControllerManager
+CursorController
 DoorManager
 ElevatorManager
 EnemiesManager
