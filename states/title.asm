@@ -44,17 +44,28 @@ TitleFrame:
 
 LoadTitle:  
 
+  ; todo : most of this will be common for all bank 0 states
+
   .disablePPUAndSleep:  
     JSR DisablePPU
     JSR ClearSprites
     INC <needDma
-    JSR WaitForFrame              ; wait for values to be written
+    JSR WaitForFrame
  
   .clearBackground:
     JSR ClearBackground
     
   .setVramAddressingTo1:
-    JSR SetVramAddressingTo1      ; this never changes for this state
+    JSR SetVramAddressingTo1
+      
+  .selectNameTable0AndSetScrollTo0:
+    LDA <soft2000
+    AND #%11111100 ; last 2 bits = nametable address
+    STA <soft2000
+    LDA #$00
+    STA <scroll
+    INC <needPpuReg
+    JSR WaitForFrame ; this sets both
       
   .loadBgChr:   
     LDA #LOW(titleChr)
@@ -94,9 +105,54 @@ LoadTitle:
 
 DrawLogo:
 
+  ; generic pointer will keep track of the starting address
+  LDA #INITIAL_LOGO_ADDR_L
+  STA <genericPointer
+  LDA #INITIAL_LOGO_ADDR_H
+  STA <genericPointer + $01
   
-
-  RTS
+  ; X will be the pointer in the table
+  LDX #$00
+  
+  ; b will count characters in a row
+  LDA #LOGO_ROW_LENGTH
+  STA <b
+  
+  ; Y will count rows
+  LDY #LOGO_ROWS 
+  
+  .drawingLoopOuter:
+  
+    .setAddress:
+      LDA $2002
+      LDA <genericPointer + $01
+      STA $2006
+      LDA <genericPointer
+      STA $2006
+      
+    .drawingLoopInner:
+      LDA Logo, x
+      STA $2007
+      INX
+      DEC b
+      BNE .drawingLoopInner
+      
+    .moveRow:
+      DEY
+      BEQ .drawingDone
+      LDA <genericPointer
+      CLC
+      ADC #$20
+      STA <genericPointer
+      LDA <genericPointer + $01
+      ADC #$00
+      STA <genericPointer + $01
+      LDA #LOGO_ROW_LENGTH
+      STA <b
+      JMP .drawingLoopOuter
+      
+  .drawingDone:      
+    RTS
 
   
 ;****************************************************************
