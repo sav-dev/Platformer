@@ -49,6 +49,10 @@ UpdatePlayerNotVisible:
   BEQ .counterAt0
   RTS
   
+  ; todo 0010: update this logic for going to the next lvl
+  ; if level not beaten: we can just JSR LoadGame
+  ; if level beaten: select bank 0 and call into a 'go to next lvl' piece of logic
+  ; todo 0006: make sure sound is  not playing?
   .counterAt0:
     LDA <levelBeaten
     BEQ .resetLevel

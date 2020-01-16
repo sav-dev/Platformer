@@ -187,6 +187,7 @@ ExplFrame:
       BEQ .levelDone
       JMP .renderBoss
       
+      ; todo 0010: update this logic for going to the next lvl
       .levelDone:
         INC <currentLevel
         LDA <currentLevel
@@ -429,7 +430,7 @@ LoadGame:
     JSR EnablePPU
   .enablePPUDone:  
 
-  ; todo 0006 - is this the right place to call this
+  ; todo 0006 - is this the right place to call this?
   .initializeSound:
     JSR InitializeSound
     JSR PlaySong

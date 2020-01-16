@@ -10,6 +10,8 @@ StateTitleStart:
 
 TITLE_PALETTE_OFFSET = $07 * $10
 
+START_BLINKING_FREQ = %00110000
+
 SAV_2020_X = $0C
 SAV_2020_Y = $1A
 
@@ -60,8 +62,8 @@ TitleFrame:
       
       .processBlinking:
         LDA <frameCount
-        AND #%00110000
-        CMP #%00110000
+        AND #START_BLINKING_FREQ
+        CMP #START_BLINKING_FREQ
         BEQ .changeState
         JMP .setNmiFlags
         
@@ -156,6 +158,8 @@ TitleFrame:
         
         .startGame:
           ; todo 0010
+          ; set current lvl
+          ; load 1st lvl
           JMP GameLoopDone
         
         JMP .setNmiFlags
@@ -204,8 +208,46 @@ TitleFrame:
 
 LoadTitle:  
 
-  ; todo 0010 - most of this will be common for all bank 0 states
+  .commonLogic:
+    JSR CommonBank0Init
+    
+  .drawLogo:
+    JSR DrawLogo
 
+  .drawStrings:
+    LDA #SAV_2020_X
+    STA <genericX
+    LDA #SAV_2020_Y
+    STA <genericY
+    LDA #STR_4
+    STA <genericPointer
+    JSR DrawString
+    
+  .fadeIn:
+    JSR FadeIn ; this enables PPU
+
+  ; todo 0006 - is this the right place to call this?
+  .initializeSound:
+    JSR InitializeSound
+    JSR PlaySong
+
+  .initVars:
+    LDA #$00
+    STA <levelHelperVar  ; = whether start was pressed
+    STA <levelHelperVar2 ; = whether press start is currently printed
+    
+  JMP WaitForFrame 
+  
+;****************************************************************
+; Name:                                                         ;
+;   CommonBank0Init                                             ;
+;                                                               ;
+; Description:                                                  ;
+;   Common bank 0 initialization logic                          ;
+;****************************************************************
+  
+CommonBank0Init:
+  
   .disablePPUAndSleep:  
     JSR DisablePPU
     JSR ClearSprites
@@ -246,33 +288,8 @@ LoadTitle:
     LDA #$08 ; 8 atts rows = entire screen
     STA <genericHeight
     JSR SetAttributes
-    
-  .drawLogo:
-    JSR DrawLogo
-
-  .drawStrings:
-    LDA #SAV_2020_X
-    STA <genericX
-    LDA #SAV_2020_Y
-    STA <genericY
-    LDA #STR_4
-    STA <genericPointer
-    JSR DrawString
-    
-  .fadeIn:
-    JSR FadeIn ; this enables PPU
-
-  ; todo 0006 - is this the right place to call this
-  .initializeSound:
-    JSR InitializeSound
-    JSR PlaySong
-
-  .initVars:
-    LDA #$00
-    STA <levelHelperVar  ; = whether start was pressed
-    STA <levelHelperVar2 ; = whether press start is currently printed
-    
-  JMP WaitForFrame 
+  
+  RTS
   
 ;****************************************************************
 ; Name:                                                         ;

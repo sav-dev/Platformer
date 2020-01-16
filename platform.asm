@@ -153,15 +153,15 @@ GameLoop:
     JMP GameLoopDone
     
   .gameStateStageSelect:
-    ;JSR StageSelectFrame
+    ;JSR StageSelectFrame todo 0010
     JMP GameLoopDone
   
   .gameStateCredits:
-    ;JSR CreditsFrame
+    ;JSR CreditsFrame todo 0010
     JMP GameLoopDone
   
   .gameStateStory:
-    ;JSR StoryFrame
+    JSR StoryFrame
     JMP GameLoopDone
   
 GameLoopDone:
@@ -565,6 +565,7 @@ Bank00:
 Bank00Start:
               
   .include "states\title.asm"
+  .include "states\story.asm"
   .include "lib\stringManager.asm"
   .include "lib\cursorController.asm"
   .include "data\logoAndText.asm"

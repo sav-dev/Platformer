@@ -17,6 +17,7 @@ StringManager
 GGSoundInclude
 StateGame
 StateTitle
+StateStory
 Bullets
 Enemies
 LogoAndTextData
