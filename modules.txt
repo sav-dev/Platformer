@@ -19,6 +19,7 @@ GGSoundInclude
 StateGame
 StateTitle
 StateStory
+StateStageSelect
 Bullets
 Enemies
 LogoAndTextData

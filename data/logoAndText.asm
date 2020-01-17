@@ -184,6 +184,236 @@ STR_33 = 66
 STR_34 = 68
   .byte LOW(string34), HIGH(string34)
 
+; 35
+; placeholder
+  .byte $00, $00
+
+; 36
+; placeholder
+  .byte $00, $00
+
+; 37
+; placeholder
+  .byte $00, $00
+
+; 38
+; placeholder
+  .byte $00, $00
+
+; 39
+; placeholder
+  .byte $00, $00
+
+; 40
+; placeholder
+  .byte $00, $00
+
+; 41
+; placeholder
+  .byte $00, $00
+
+; 42
+; placeholder
+  .byte $00, $00
+
+; 43
+; placeholder
+  .byte $00, $00
+
+; 44
+; placeholder
+  .byte $00, $00
+
+; 45
+; placeholder
+  .byte $00, $00
+
+; 46
+; placeholder
+  .byte $00, $00
+
+; 47
+; placeholder
+  .byte $00, $00
+
+; 48
+; placeholder
+  .byte $00, $00
+
+; 49
+; placeholder
+  .byte $00, $00
+
+; 50
+; placeholder
+  .byte $00, $00
+
+; 51
+; placeholder
+  .byte $00, $00
+
+; 52
+; placeholder
+  .byte $00, $00
+
+; 53
+; placeholder
+  .byte $00, $00
+
+; 54
+; placeholder
+  .byte $00, $00
+
+; 55
+; placeholder
+  .byte $00, $00
+
+; 56
+; placeholder
+  .byte $00, $00
+
+; 57
+; placeholder
+  .byte $00, $00
+
+; 58
+; placeholder
+  .byte $00, $00
+
+; 59
+; placeholder
+  .byte $00, $00
+
+; 60
+; placeholder
+  .byte $00, $00
+
+; 61
+; placeholder
+  .byte $00, $00
+
+; 62
+; placeholder
+  .byte $00, $00
+
+; 63
+; placeholder
+  .byte $00, $00
+
+; 64
+; placeholder
+  .byte $00, $00
+
+; 65
+; placeholder
+  .byte $00, $00
+
+; 66
+; placeholder
+  .byte $00, $00
+
+; 67
+; placeholder
+  .byte $00, $00
+
+; 68
+; placeholder
+  .byte $00, $00
+
+; 69
+; placeholder
+  .byte $00, $00
+
+; 70
+; placeholder
+  .byte $00, $00
+
+; 71
+; placeholder
+  .byte $00, $00
+
+; 72
+; placeholder
+  .byte $00, $00
+
+; 73
+; placeholder
+  .byte $00, $00
+
+; 74
+; placeholder
+  .byte $00, $00
+
+; 75
+; placeholder
+  .byte $00, $00
+
+; 76
+; placeholder
+  .byte $00, $00
+
+; 77
+; placeholder
+  .byte $00, $00
+
+; 78
+; placeholder
+  .byte $00, $00
+
+; 79
+; placeholder
+  .byte $00, $00
+
+; 80
+; placeholder
+  .byte $00, $00
+
+; 81
+; placeholder
+  .byte $00, $00
+
+; 82
+; placeholder
+  .byte $00, $00
+
+; 83
+; placeholder
+  .byte $00, $00
+
+; 84
+; placeholder
+  .byte $00, $00
+
+; 85
+; placeholder
+  .byte $00, $00
+
+; 86
+; placeholder
+  .byte $00, $00
+
+; 87
+; placeholder
+  .byte $00, $00
+
+; 88
+; placeholder
+  .byte $00, $00
+
+; 89
+; placeholder
+  .byte $00, $00
+
+; 90
+; "Credits:"
+STR_90 = 180
+  .byte LOW(string90), HIGH(string90)
+
+; 91
+; "Todo"
+STR_91 = 182
+  .byte LOW(string91), HIGH(string91)
+
 
 Strings:
 string0:
@@ -218,6 +448,10 @@ string33:
   .byte $1E, $0C, $0F, $00, $1D, $12, $19, $21, $18, $00, $1C, $13, $11, $12, $1E, $00, $0B, $10, $1E, $0F, $1C, $00, $1E, $12, $0F, $00, $10, $13, $1C, $1D, $1E
 string34:
   .byte $18, $19, $18, $0F, $00, $13, $18, $00, $1E, $12, $13, $1D, $00, $16, $13, $1E, $1E, $16, $0F, $00, $1E, $0F, $1D, $1E, $2B
+string90:
+  .byte $08, $0D, $1C, $0F, $0E, $13, $1E, $1D, $29
+string91:
+  .byte $04, $1E, $19, $0E, $19
 
 
 CURSOR_TILE = $94

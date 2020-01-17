@@ -157,11 +157,16 @@ TitleFrame:
         BEQ .stageSelect
         
         .credits:
-          ; todo 0010
+          LDA #NUMBER_OF_LEVELS
+          STA <currentLevel
+          DEC <currentLevel ; last level = credits
+          JSR ProgressGame ; no need to bank switch as we are already in 0
           JMP GameLoopDone
         
         .stageSelect:
-          ; todo 0010
+          LDA #GAMESTATE_STAGE_SELECT
+          STA <gameState
+          JSR LoadStageSelect ; no need to bank switch as we are already in 0
           JMP GameLoopDone
         
         .startGame:

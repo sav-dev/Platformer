@@ -151,7 +151,7 @@ GameLoop:
     JMP GameLoopDone
     
   .gameStateStageSelect:
-    ;JSR StageSelectFrame todo 0010
+    JSR StageSelectFrame
     JMP GameLoopDone
   
   .gameStateStory:
@@ -561,6 +561,7 @@ Bank00Start:
                             
   .include "states\title.asm"
   .include "states\story.asm"
+  .include "states\stageSelect.asm"
   .include "lib\stringManager.asm"
   .include "lib\cursorController.asm"
   .include "lib\progressManager.asm"
@@ -572,6 +573,9 @@ Bank00Start:
   
   story1:
   .incbin "data\stories\testStory2.bin"
+  
+  credits:
+  .incbin "data\stories\credits.bin"
               
 Bank00End:
 

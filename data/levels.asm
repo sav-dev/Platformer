@@ -9,7 +9,7 @@ LevelsStart:
 ; Constants                                                     ;                           
 ;****************************************************************
 
-NUMBER_OF_LEVELS = $02
+NUMBER_OF_LEVELS = $03
 
 LEVEL_TYPE_GAME = $00
 LEVEL_TYPE_STORY = $01
@@ -26,6 +26,9 @@ LEVEL_TYPE_STORY = $01
 levels:
   ; 1st story
   .byte $00, LOW(story0), HIGH(story0), LEVEL_TYPE_STORY
+  ; 2nd story
   .byte $00, LOW(story1), HIGH(story1), LEVEL_TYPE_STORY
+  ; credits: must be last
+  .byte $00, LOW(credits), HIGH(credits), LEVEL_TYPE_STORY
   
 LevelsEnd:
