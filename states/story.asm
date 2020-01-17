@@ -90,18 +90,57 @@ LoadStory:
     JSR CommonBank0Init    
     
   .fadeIn:
-    JSR FadeIn ; this enables PPU
-
+    JSR FadeIn ; this enables PPU  
+  
+  .drawStrings:
+    JSR DrawStoryStrings
+  
+  .initVars:
+    LDA #$00
+    STA <levelHelperVar2 ; = whether press start is currently printed
+    
   ; todo 0006 - is this the right place to call this? 
   .initializeSound:
     JSR InitializeSound
     JSR StopSong
     
-  .initVars:
-    LDA #$00
-    STA <levelHelperVar2 ; = whether press start is currently printed
-    
   JMP WaitForFrame 
+
+;****************************************************************
+; Name:                                                         ;
+;   DrawStoryStrings                                            ;
+;                                                               ;
+; Description:                                                  ;
+;   Draws story strings based on level pointer                  ;
+;****************************************************************
+  
+DrawStoryStrings:
+  
+  LDY #$00
+  LDA [levelPointer], y ; number of strings
+  TAX
+  INY
+  
+  .drawStringLoop:
+    LDA [levelPointer], y ; x
+    STA <genericX
+    INY
+    LDA [levelPointer], y ; y
+    STA <genericY
+    INY
+    LDA [levelPointer], y ; strings id
+    STA <genericPointer
+    INY
+    STX <xPointerCache
+    STY <yPointerCache
+    JSR DrawString ; changes x & y
+    JSR WaitForFrame
+    LDX <xPointerCache
+    LDY <yPointerCache
+    DEX
+    BNE .drawStringLoop
+    
+  RTS
   
 ;****************************************************************
 ; EOF                                                           ;

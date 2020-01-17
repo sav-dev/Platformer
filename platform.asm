@@ -573,6 +573,9 @@ Bank00Start:
   .include "data\logoAndText.asm"
   .include "data\levels.asm"
               
+  story0:
+  .incbin "data\stories\testStory.bin"
+              
 Bank00End:
 
 Bank01:
