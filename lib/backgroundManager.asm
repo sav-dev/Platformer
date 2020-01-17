@@ -136,88 +136,27 @@ LoadBackground:
 ; Description:                                                  ;
 ;   Clears nametables 0 and 1                                   ;
 ;   Must be called with PPU disabled                            ;
-;   Sets all tiles to the "clear tile"                          ;
-;   Sets all atts to the "clear atts"                           ;
-;                                                               ;
-; Used variables:                                               ;
-;   b                                                           ;
-;   c                                                           ;
-;   d                                                           ;
 ;****************************************************************
     
 ClearBackgrounds:
 
-  LDA #$00
-  STA <d
-  JSR ClearBackground   ; clear nametable 0
-  
-  INC <d
-  JSR ClearBackground   ; clear nametable 1              
-
-  RTS
-    
-;****************************************************************
-; Name:                                                         ;
-;   ClearBackground                                             ;
-;                                                               ;
-; Description:                                                  ;
-;   Clears nametables 0 and 1. Must be called with PPU disabled ;
-;   Sets all tiles to the "clear tile"                          ;
-;                                                               ;
-; Used variables:                                               ;
-;   b                                                           ;
-;   c                                                           ;
-;   d                                                           ;
-;****************************************************************
-
-ClearBackground:
-  
-  LDA $2002                 ; read PPU status to reset the high/low latch
-  LDA <d                    ; nametable index (0 or 1)
-  ASL A
-  ASL A                     ; A = d * 4
-  CLC
-  ADC #$20                  ; A = $20 or $24 (high byte of nametable 0 or 1)
-  STA $2006                 ; write the high byte of the address
+  LDA $2002 ; read PPU status to reset the high/low latch
+  LDA #$20
+  STA $2006 ; write the high byte of the address
   LDA #$00                            
-  STA $2006                 ; write the low byte of the address (always #$00)
+  STA $2006 ; write the low byte of the address (always #$00)
   
-  LDA #$00
-  STA <b                    ; b and c will serve as a counter
-  STA <c         
+  LDX #$00 ; counter
+  LDY #$08 ; page counter
+  LDA #CLEAR_TILE
        
-  .clearTilesLoop:
-    LDA #CLEAR_TILE
-    STA $2007               ; write a byte
-    
-    LDA <b
-    CLC
-    ADC #$01
-    STA <b
-    LDA <c
-    ADC #$00
-    STA <c                  ; increment the counter
-    
-    CMP #$03
+  ; clear all bytes from $2000 - $27FF (nametables 0 and 1)
+  .clearTilesLoop:    
+    STA $2007 ; write a byte
+    INX
     BNE .clearTilesLoop
-    LDA <b
-    CMP #$C0
+    DEY
     BNE .clearTilesLoop
-    
-  .clearAttsLoop:
-    LDA #CLEAR_ATTS
-    STA $2007
-    
-    LDA <b
-    CLC
-    ADC #$01
-    STA <b
-    LDA <c
-    ADC #$00
-    STA <c
-    
-    CMP #$04
-    BNE .clearAttsLoop
   
   RTS
 

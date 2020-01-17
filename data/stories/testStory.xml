@@ -1,0 +1,10 @@
+<Story>
+  <Strings>
+    <StoryString> <X>1</X> <Y>2</Y> <StringId>20</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>3</Y> <StringId>21</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>5</Y> <StringId>22</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>6</Y> <StringId>23</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>7</Y> <StringId>24</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>9</Y> <StringId>25</StringId> </StoryString>
+  </Strings>
+</Story>

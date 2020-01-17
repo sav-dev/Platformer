@@ -263,11 +263,11 @@ CommonBank0Init:
     INC <needDma
     JSR WaitForFrame
  
-  .clearBackground:
-    JSR ClearBackground
-
   .setVramAddressingTo1:
     JSR SetVramAddressingTo1
+ 
+  .clearBackground:
+    JSR ClearBackgrounds
       
   .selectNameTable0AndSetScrollTo0:
     LDA <soft2000

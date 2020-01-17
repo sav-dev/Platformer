@@ -179,6 +179,11 @@ STR_32 = 64
 STR_33 = 66
   .byte LOW(string33), HIGH(string33)
 
+; 34
+; "one in this little test."
+STR_34 = 68
+  .byte LOW(string34), HIGH(string34)
+
 
 Strings:
 string0:
