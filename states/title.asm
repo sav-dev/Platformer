@@ -165,7 +165,7 @@ TitleFrame:
         .startGame:
           LDA #$00
           STA <currentLevel
-          JSR ProgressGame
+          JSR ProgressGame ; no need to bank switch as we are already in 0
           JMP GameLoopDone
         
         JMP .setNmiFlags

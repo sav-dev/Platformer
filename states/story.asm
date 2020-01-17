@@ -29,10 +29,24 @@ StoryFrame:
     AND #CONTROLLER_START
     BEQ .processBlinking
     
-    .nextLevel:
-      ; todo
-      ; handle currentLevel overflow
-      JMP GameLoopDone
+    .startPressed:
+      JSR WaitForFrame
+      JSR FadeOut
+      LDX #STATE_CHANGE_TIMEOUT
+      JSR SleepForXFrames
+      INC <currentLevel
+      CMP #NUMBER_OF_LEVELS
+      BEQ .goBackToMenu
+      
+      .goToNextLevel:
+        JSR ProgressGame ; no need to bank switch as we are already in 0
+        JMP GameLoopDone
+      
+      .goBackToMenu:
+        LDA #GAMESTATE_TITLE
+        STA <gameState
+        JSR LoadTitle ; no need to bank switch as we are already in 0
+        JMP GameLoopDone
       
     .processBlinking:
       LDA <frameCount

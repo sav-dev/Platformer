@@ -26,5 +26,6 @@ LEVEL_TYPE_STORY = $01
 levels:
   ; 1st story
   .byte $00, LOW(story0), HIGH(story0), LEVEL_TYPE_STORY
+  .byte $00, LOW(story1), HIGH(story1), LEVEL_TYPE_STORY
   
 LevelsEnd:

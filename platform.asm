@@ -575,6 +575,9 @@ Bank00Start:
               
   story0:
   .incbin "data\stories\testStory.bin"
+  
+  story1:
+  .incbin "data\stories\testStory2.bin"
               
 Bank00End:
 
