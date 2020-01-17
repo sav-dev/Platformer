@@ -72,6 +72,8 @@ GAMESTATE_STAGE_SELECT = $03 ; stage select
 GAMESTATE_CREDITS      = $04 ; credits
 GAMESTATE_STORY        = $05 ; story screen
 
+STATE_CHANGE_TIMEOUT   = $22 ; how long the black screen stays on between game states
+
 ;****************************************************************
 ; Physics related constans                                      ;
 ;****************************************************************
@@ -149,7 +151,7 @@ PLAYER_ANIM_SPEED        = $08
                          
 PLAYER_NOT_V_COOLDOWN    = $60   ; how much time should pass after player is dead/level has been beaten before the screen fades out
 PLAYER_JETPACK_LVL_END   = $01   ; special not_v_cooldown value for jetpack levels - the player will disappear for one frame and then next level will start
-PLAYER_NOT_V_FADED_OUT   = $22   ; how much time should pass after the screen fades out before the game is restarted/next level starts
+PLAYER_NOT_V_FADED_OUT   = STATE_CHANGE_TIMEOUT
                          
 SPRITES_PLAYER           = SPRITES_ADDRESS
 PLAYER_SPRITES_COUNT     = $09   ; for iterating all sprites
@@ -415,4 +417,5 @@ KEYCARD_HEIGHT         = SPRITE_DIMENSION - $01        ; -1 because collision ch
 ; Memory                                                        ;
 ;****************************************************************
 
+FIRST_BANK = $00
 CHR_BANK = $01

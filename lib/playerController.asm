@@ -49,28 +49,21 @@ UpdatePlayerNotVisible:
   BEQ .counterAt0
   RTS
   
-  ; todo 0010: update this logic for going to the next lvl
-  ; if level not beaten: we can just JSR LoadGame
-  ; if level beaten: select bank 0 and call into a 'go to next lvl' piece of logic
-  ; todo 0006: make sure sound is  not playing?
-  .counterAt0:
+  .counterAt0:    
     LDA <levelBeaten
     BEQ .resetLevel
   
   .nextLevel:
-    INC <currentLevel
-    LDA <currentLevel
-    CMP #NUMBER_OF_LEVELS
-    BNE .resetLevel ; todo 0005: this is not needed
-    LDA #$00
-    STA <currentLevel
-  
+    INC <currentLevel ; last level will be a story one, no need to check for overflow
+    
   .resetLevel:
     JSR WaitForFrame
     JSR FadeOut
     LDX #PLAYER_NOT_V_FADED_OUT
     JSR SleepForXFrames
-    JSR LoadGame
+    LDY #FIRST_BANK
+    JSR SelectBank
+    JSR ProgressGame ; if level was not beaten this will just reload the level
     JMP GameLoopDone
 
 ;****************************************************************

@@ -143,6 +143,12 @@ TitleFrame:
       
       .optionSelected:
         ; todo 0006: play a sound when start is pressed
+
+        JSR WaitForFrame
+        JSR FadeOut
+        LDX #STATE_CHANGE_TIMEOUT
+        JSR SleepForXFrames
+        
         LDA <playerCounter
         BEQ .startGame ; START_GAME_INDEX = 0
         CMP #STAGE_SELECT_INDEX
@@ -157,9 +163,9 @@ TitleFrame:
           JMP GameLoopDone
         
         .startGame:
-          ; todo 0010
-          ; set current lvl
-          ; load 1st lvl
+          LDA #$00
+          STA <currentLevel
+          JSR ProgressGame
           JMP GameLoopDone
         
         JMP .setNmiFlags

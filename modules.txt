@@ -12,6 +12,7 @@ ExplosionsController
 LevelManager
 PaletteManager
 PlayerController
+ProgressManager
 SoundController
 StringManager
 GGSoundInclude
@@ -22,5 +23,4 @@ Bullets
 Enemies
 LogoAndTextData
 Tilesets
-Levels
 Songs

@@ -187,21 +187,15 @@ ExplFrame:
       BEQ .levelDone
       JMP .renderBoss
       
-      ; todo 0010: update this logic for going to the next lvl
       .levelDone:
-        INC <currentLevel
-        LDA <currentLevel
-        CMP #NUMBER_OF_LEVELS
-        BNE .resetLevel ; todo 0005: this is not needed
-        LDA #$00
-        STA <currentLevel
-  
-      .resetLevel:
+        INC <currentLevel ; last level will be a story one, no need to check for overflow
         JSR WaitForFrame
         JSR FadeOut
         LDX #PLAYER_NOT_V_FADED_OUT
         JSR SleepForXFrames
-        JSR LoadGame
+        LDY #FIRST_BANK
+        JSR SelectBank
+        JSR ProgressGame 
         JMP GameLoopDone
       
     .spawnExplosions:

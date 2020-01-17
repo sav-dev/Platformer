@@ -109,7 +109,7 @@ initSprChr:
 initGame:
   LDA #GAMESTATE_TITLE
   STA <gameState
-  LDY #$00
+  LDY #FIRST_BANK
   JSR SelectBank
   JSR LoadTitle
   
@@ -525,8 +525,9 @@ SetVramAddressingTo32:
   .include "lib\enemiesManager.asm"  
   .include "lib\collisionManager.asm"
   .include "lib\explosionsController.asm"
-  .include "lib\levelManager.asm"
-  
+  .include "lib\paletteManager.asm"   
+  .include "lib\bankManager.asm"
+
   .include "states\game.asm"
   
 Bank14End:
@@ -542,15 +543,15 @@ Bank15Start:
   .include "data\bullets.asm"
   
   .include "lib\soundController.asm"
-  .include "lib\bankManager.asm"
-  .include "lib\paletteManager.asm"   
   .include "lib\ggsoundInclude.asm"  
   .include "lib\controllerManager.asm" 
   .include "lib\bulletController.asm"
   .include "lib\chrManager.asm"
   .include "lib\elevatorManager.asm" 
   .include "lib\doorManager.asm"
- 
+  .include "lib\levelManager.asm"
+
+  
 Bank15End:
 
 ;****************************************************************
@@ -568,7 +569,9 @@ Bank00Start:
   .include "states\story.asm"
   .include "lib\stringManager.asm"
   .include "lib\cursorController.asm"
+  .include "lib\progressManager.asm"
   .include "data\logoAndText.asm"
+  .include "data\levels.asm"
               
 Bank00End:
 
@@ -638,10 +641,6 @@ Bank04:
   .org $8000
 
 Bank04Start:  
-
-  ; todo: move this somewhere appropriate
-  .include "data\levels.asm"
-
 Bank04End:
   
 Bank05:

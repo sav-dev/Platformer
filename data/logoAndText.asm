@@ -27,32 +27,32 @@ Logo:
 ; Strings                                                       ;
 ;****************************************************************
 
+StringPointers:
 ; 0
 ; "Press start"
 STR_0 = 0
+  .byte LOW(string0), HIGH(string0)
 
 ; 1
 ; "Start game"
 STR_1 = 2
+  .byte LOW(string1), HIGH(string1)
 
 ; 2
 ; "Stage select"
 STR_2 = 4
+  .byte LOW(string2), HIGH(string2)
 
 ; 3
 ; "Credits"
 STR_3 = 6
+  .byte LOW(string3), HIGH(string3)
 
 ; 4
 ; "Sav 2020"
 STR_4 = 8
-
-StringPointers:
-  .byte LOW(string0), HIGH(string0)
-  .byte LOW(string1), HIGH(string1)
-  .byte LOW(string2), HIGH(string2)
-  .byte LOW(string3), HIGH(string3)
   .byte LOW(string4), HIGH(string4)
+
 
 Strings:
 string0:
