@@ -135,8 +135,6 @@ GameLoop:
     BEQ .gameStateTitle
     CMP #GAMESTATE_STAGE_SELECT
     BEQ .gameStateStageSelect
-    CMP #GAMESTATE_CREDITS
-    BEQ .gameStateCredits
     CMP #GAMESTATE_STORY
     BEQ .gameStateStory
   
@@ -154,10 +152,6 @@ GameLoop:
     
   .gameStateStageSelect:
     ;JSR StageSelectFrame todo 0010
-    JMP GameLoopDone
-  
-  .gameStateCredits:
-    ;JSR CreditsFrame todo 0010
     JMP GameLoopDone
   
   .gameStateStory:
@@ -220,7 +214,7 @@ NMI:
   STA <needDraw
   STA <needPpuReg
   STA <sleeping             
-                         
+
   soundengine_update        ; update the sound engine
                          
   PLA                       ; restore regs and exit
@@ -564,7 +558,7 @@ Bank00:
   .org $8000
   
 Bank00Start:
-              
+                            
   .include "states\title.asm"
   .include "states\story.asm"
   .include "lib\stringManager.asm"
@@ -646,7 +640,7 @@ Bank04:
   .bank 4
   .org $8000
 
-Bank04Start:  
+Bank04Start:
 Bank04End:
   
 Bank05:

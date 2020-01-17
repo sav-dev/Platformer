@@ -297,6 +297,10 @@ CommonBank0Init:
     LDA #$08 ; 8 atts rows = entire screen
     STA <genericHeight
     JSR SetAttributes
+    
+  .initVars:
+    LDA #$00
+    STA <frameCount
   
   RTS
   
