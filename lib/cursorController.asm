@@ -93,7 +93,7 @@ SetCursor:
   INX
   STX <bufferOffset ; move buffer
 
-  INC <needDraw
+  INC <needDrawLocal
   
   RTS
   

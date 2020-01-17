@@ -35,6 +35,7 @@ StoryFrame:
       LDX #STATE_CHANGE_TIMEOUT
       JSR SleepForXFrames
       INC <currentLevel
+      LDA <currentLevel
       CMP #NUMBER_OF_LEVELS
       BEQ .goBackToMenu
       
@@ -56,6 +57,7 @@ StoryFrame:
       JMP .setNmiFlags
       
       .changeState:
+        INC <needDrawLocal ; we'll be drawing
         LDA #$00
         STA <frameCount
         LDA <levelHelperVar2
@@ -102,12 +104,12 @@ LoadStory:
 
   .commonLogic:
     JSR CommonBank0Init    
-    
-  .fadeIn:
-    JSR FadeIn ; this enables PPU  
   
   .drawStrings:
     JSR DrawStoryStrings
+    
+  .fadeIn:
+    JSR FadeIn ; this enables PPU    
   
   .initVars:
     LDA #$00
@@ -148,9 +150,10 @@ DrawStoryStrings:
     STX <xPointerCache
     STY <yPointerCache
     JSR DrawString ; changes x & y
-    JSR WaitForFrame
     LDX <xPointerCache
     LDY <yPointerCache
+    INC <needDraw ; we'll be drawing (must be needDraw, not local as this is in the init)
+    JSR WaitForFrame
     DEX
     BNE .drawStringLoop
     

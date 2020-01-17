@@ -68,6 +68,7 @@ TitleFrame:
         JMP .setNmiFlags
         
         .changeState:
+          INC <needDrawLocal ; we'll be drawing
           LDA #$00
           STA <frameCount
           LDA <levelHelperVar2
@@ -81,7 +82,7 @@ TitleFrame:
           STA <genericY
           LDA #STR_0
           STA <genericPointer
-          JSR DrawString
+          JSR DrawString         
           JMP .setNmiFlags
           
         .hideString:
@@ -99,6 +100,7 @@ TitleFrame:
       LDA <levelHelperVar2
       BNE .checkInput
       INC <levelHelperVar2
+      INC <needDrawLocal ; we'll be drawing
       
       .renderMenu:
         LDA #MENU_ITEMS_X
@@ -184,7 +186,7 @@ TitleFrame:
           CLC
           ADC #CURSOR_Y_INCR
           STA <genericY
-          JSR MoveCursor
+          JSR MoveCursor ; this increments needDrawLocal
           JMP .setNmiFlags
         
         .resetCursor:
@@ -194,7 +196,7 @@ TitleFrame:
           STA <genericX
           LDA #CURSOR_Y_INIT
           STA <genericY
-          JSR MoveCursor  
+          JSR MoveCursor ; this increments needDrawLocal 
       
   .setNmiFlags:
     LDA <needDrawLocal
@@ -227,6 +229,7 @@ LoadTitle:
     STA <genericY
     LDA #STR_4
     STA <genericPointer
+    INC <needDraw ; we'll be drawing (must be needDraw, not local as this is in the init)
     JSR DrawString
     
   .fadeIn:
@@ -262,7 +265,7 @@ CommonBank0Init:
  
   .clearBackground:
     JSR ClearBackground
-    
+
   .setVramAddressingTo1:
     JSR SetVramAddressingTo1
       

@@ -53,30 +53,131 @@ STR_3 = 6
 STR_4 = 8
   .byte LOW(string4), HIGH(string4)
 
+; 5
+; placeholder
+  .byte $00, $00
+
+; 6
+; placeholder
+  .byte $00, $00
+
+; 7
+; placeholder
+  .byte $00, $00
+
+; 8
+; placeholder
+  .byte $00, $00
+
+; 9
+; placeholder
+  .byte $00, $00
+
+; 10
+; placeholder
+  .byte $00, $00
+
+; 11
+; placeholder
+  .byte $00, $00
+
+; 12
+; placeholder
+  .byte $00, $00
+
+; 13
+; placeholder
+  .byte $00, $00
+
+; 14
+; placeholder
+  .byte $00, $00
+
+; 15
+; placeholder
+  .byte $00, $00
+
+; 16
+; placeholder
+  .byte $00, $00
+
+; 17
+; placeholder
+  .byte $00, $00
+
+; 18
+; placeholder
+  .byte $00, $00
+
+; 19
+; placeholder
+  .byte $00, $00
+
 ; 20
 ; "This is some string, for the"
-STR_20 = 10
+STR_20 = 40
   .byte LOW(string20), HIGH(string20)
 
 ; 21
 ; "first story screen."
-STR_21 = 12
+STR_21 = 42
   .byte LOW(string21), HIGH(string21)
 
 ; 22
 ; "It will be displayed on"
-STR_22 = 14
+STR_22 = 44
   .byte LOW(string22), HIGH(string22)
 
 ; 23
 ; "the story screen right after"
-STR_23 = 16
+STR_23 = 46
   .byte LOW(string23), HIGH(string23)
 
 ; 24
 ; "the title screen."
-STR_24 = 18
+STR_24 = 48
   .byte LOW(string24), HIGH(string24)
+
+; 25
+; "Cool, isn't it?"
+STR_25 = 50
+  .byte LOW(string25), HIGH(string25)
+
+; 26
+; placeholder
+  .byte $00, $00
+
+; 27
+; placeholder
+  .byte $00, $00
+
+; 28
+; placeholder
+  .byte $00, $00
+
+; 29
+; placeholder
+  .byte $00, $00
+
+; 30
+; "Yet another string, this time"
+STR_30 = 60
+  .byte LOW(string30), HIGH(string30)
+
+; 31
+; "it will be displayed on the"
+STR_31 = 62
+  .byte LOW(string31), HIGH(string31)
+
+; 32
+; "second story screen which will"
+STR_32 = 64
+  .byte LOW(string32), HIGH(string32)
+
+; 33
+; "be shown right after the first"
+STR_33 = 66
+  .byte LOW(string33), HIGH(string33)
 
 
 Strings:
@@ -100,6 +201,18 @@ string23:
   .byte $1C, $1E, $12, $0F, $00, $1D, $1E, $19, $1C, $23, $00, $1D, $0D, $1C, $0F, $0F, $18, $00, $1C, $13, $11, $12, $1E, $00, $0B, $10, $1E, $0F, $1C
 string24:
   .byte $11, $1E, $12, $0F, $00, $1E, $13, $1E, $16, $0F, $00, $1D, $0D, $1C, $0F, $0F, $18, $2B
+string25:
+  .byte $0F, $0D, $19, $19, $16, $2A, $00, $13, $1D, $18, $28, $1E, $00, $13, $1E, $26
+string30:
+  .byte $1D, $23, $0F, $1E, $00, $0B, $18, $19, $1E, $12, $0F, $1C, $00, $1D, $1E, $1C, $13, $18, $11, $2A, $00, $1E, $12, $13, $1D, $00, $1E, $13, $17, $0F
+string31:
+  .byte $1B, $13, $1E, $00, $21, $13, $16, $16, $00, $0C, $0F, $00, $0E, $13, $1D, $1A, $16, $0B, $23, $0F, $0E, $00, $19, $18, $00, $1E, $12, $0F
+string32:
+  .byte $1E, $1D, $0F, $0D, $19, $18, $0E, $00, $1D, $1E, $19, $1C, $23, $00, $1D, $0D, $1C, $0F, $0F, $18, $00, $21, $12, $13, $0D, $12, $00, $21, $13, $16, $16
+string33:
+  .byte $1E, $0C, $0F, $00, $1D, $12, $19, $21, $18, $00, $1C, $13, $11, $12, $1E, $00, $0B, $10, $1E, $0F, $1C, $00, $1E, $12, $0F, $00, $10, $13, $1C, $1D, $1E
+string34:
+  .byte $18, $19, $18, $0F, $00, $13, $18, $00, $1E, $12, $13, $1D, $00, $16, $13, $1E, $1E, $16, $0F, $00, $1E, $0F, $1D, $1E, $2B
 
 
 CURSOR_TILE = $94

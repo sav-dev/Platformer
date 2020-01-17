@@ -80,9 +80,6 @@ ClearString:
 ;****************************************************************  
 SetStringCommon:
 
-  .needDraw:
-    INC <needDrawLocal
-
   .setStringPointerAndLoadOffset:
     LDX <genericPointer
     LDA StringPointers, x

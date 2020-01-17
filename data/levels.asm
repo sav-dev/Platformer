@@ -9,7 +9,7 @@ LevelsStart:
 ; Constants                                                     ;                           
 ;****************************************************************
 
-NUMBER_OF_LEVELS = $01
+NUMBER_OF_LEVELS = $02
 
 LEVEL_TYPE_GAME = $00
 LEVEL_TYPE_STORY = $01
