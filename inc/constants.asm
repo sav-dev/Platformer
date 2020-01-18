@@ -418,3 +418,4 @@ KEYCARD_HEIGHT         = SPRITE_DIMENSION - $01        ; -1 because collision ch
 
 FIRST_BANK = $00
 CHR_BANK = $01
+SOUND_BANK = $06

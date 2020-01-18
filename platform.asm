@@ -96,7 +96,7 @@ initPPU:
   INC <needDma
   INC <needDraw
   JSR WaitForFrame         ; wait for one frame for everything to get loaded
-  
+   
 initSprChr:
   LDY #CHR_BANK
   JSR SelectBank
@@ -106,6 +106,11 @@ initSprChr:
   STA <genericPointer + $01
   JSR LoadSprChr
 
+initSound:
+  LDY #SOUND_BANK
+  JSR SelectBank
+  JSR InitializeSound
+  
 initGame:
   LDA #GAMESTATE_TITLE
   STA <gameState
@@ -224,9 +229,11 @@ NMI:
   STA <needPpuReg
   STA <sleeping             
 
-  
-  ; todo 0006
-  ;soundengine_update        ; update the sound engine
+  LDY #SOUND_BANK
+  JSR SelectBank
+  soundengine_update        ; update the sound engine
+  LDY <previousBank
+  JSR SelectBank
                          
   PLA                       ; restore regs and exit
   TAY                       
@@ -547,7 +554,7 @@ Bank15Start:
   .include "data\enemies.asm" ; this has to be in this place
   .include "data\bullets.asm"
   
-  ;.include "lib\soundController.asm"
+  .include "lib\soundController.asm"
   .include "lib\ggsoundInclude.asm"  
   .include "lib\controllerManager.asm" 
   .include "lib\bulletController.asm"
@@ -655,9 +662,6 @@ Bank04Start:
 
   level00:
   .incbin "data\levels\00.bin"
-  
-  levelBoss:
-  .incbin "data\levels\boss.bin"
 
 Bank04End:
   
@@ -679,6 +683,10 @@ Bank06:
   .org $8000
 
 Bank06Start:  
+  
+  levelBoss:
+  .incbin "data\levels\boss.bin"
+
 Bank06End:
   
 Bank07:
@@ -739,6 +747,10 @@ Bank12:
   .org $8000
 
 Bank12Start:  
+
+  Sound:
+  .include "ggsound\sound.asm" ; todo 0006
+
 Bank12End:
   
 Bank13:

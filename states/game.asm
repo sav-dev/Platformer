@@ -197,7 +197,7 @@ ExplFrame:
         LDX #PLAYER_NOT_V_FADED_OUT
         JSR SleepForXFrames        
         INC <progressGame
-        JMP GameLoopDone
+        JMP .setNmiFlags
       
     .spawnExplosions:
       LDA <frameCount
@@ -414,11 +414,8 @@ LoadGame:
     JSR EnablePPU
   .enablePPUDone:  
 
-  ; todo 0006 - is this the right place to call this?
   .initializeSound:
-    ;JSR InitializeSound
-    ;JSR PlaySong
-  .initializeSoundDone:
+    JSR PlaySong ; todo 0006
   
   JMP WaitForFrame 
 

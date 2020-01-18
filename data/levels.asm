@@ -25,9 +25,9 @@ LEVEL_TYPE_STORY = $01
 
 levels:
   .byte $00, LOW(story0), HIGH(story0), LEVEL_TYPE_STORY
-  .byte $00, LOW(story1), HIGH(story1), LEVEL_TYPE_STORY
   .byte $02, LOW(level00), HIGH(level00), LEVEL_TYPE_GAME
-  .byte $02, LOW(levelBoss), HIGH(levelBoss), LEVEL_TYPE_GAME
+  .byte $00, LOW(story1), HIGH(story1), LEVEL_TYPE_STORY
+  .byte $03, LOW(levelBoss), HIGH(levelBoss), LEVEL_TYPE_GAME
   .byte $00, LOW(credits), HIGH(credits), LEVEL_TYPE_STORY
   
 LevelsEnd:

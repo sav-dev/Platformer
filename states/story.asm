@@ -47,7 +47,7 @@ StoryFrame:
         LDA #GAMESTATE_TITLE
         STA <gameState
         JSR LoadTitle ; no need to bank switch as we are already in 0
-        JMP GameLoopDone
+        JMP .setNmiFlags
       
     .processBlinking:
       LDA <frameCount
@@ -115,10 +115,8 @@ LoadStory:
     LDA #$00
     STA <levelHelperVar2 ; = whether press start is currently printed
     
-  ; todo 0006 - is this the right place to call this? 
   .initializeSound:
-    ;JSR InitializeSound
-    ;JSR StopSong
+    JSR StopSong ; todo 0006
     
   JMP WaitForFrame 
 

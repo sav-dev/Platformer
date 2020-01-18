@@ -53,10 +53,8 @@ LoadStageSelect:
   .fadeIn:
     JSR FadeIn ; this enables PPU    
   
-  ; todo 0006 - is this the right place to call this? 
   .initializeSound:
-    ;JSR InitializeSound
-    ;JSR StopSong
+    JSR StopSong ; todo 0006
     
   JMP WaitForFrame 
 

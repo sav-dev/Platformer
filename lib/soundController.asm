@@ -10,7 +10,7 @@ SoundControllerStart:
 ;   InitializeSound                                             ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Initializes sound                                           ;
+;   Initializes sound. Expects the sound bank to be loaded.     ;
 ;****************************************************************
 
 InitializeSound:
@@ -32,18 +32,7 @@ InitializeSound:
   ;STA sound_param_word_3
   ;LDA #HIGH(dpcm_list)
   ;STA sound_param_word_3 + $01
-  JSR sound_initialize
-
-;****************************************************************
-; Name:                                                         ;
-;   StopSound                                                   ;
-;                                                               ;
-; Description:                                                  ;
-;   Stops all sound                                             ;
-;****************************************************************
-  
-StopSound:
-  JMP sound_stop
+  JMP sound_initialize
   
 ;****************************************************************
 ; Name:                                                         ;
@@ -54,10 +43,13 @@ StopSound:
 ;****************************************************************
 
 PlaySong:
+  LDY #SOUND_BANK
+  JSR SelectBank
   LDA #song_index_song
   STA sound_param_byte_0
   JSR play_song
-  RTS
+  LDY <previousBank
+  JMP SelectBank
   
 ;****************************************************************
 ; Name:                                                         ;
@@ -68,7 +60,11 @@ PlaySong:
 ;****************************************************************
 
 StopSong:
-  JMP pause_song
+  LDY #SOUND_BANK
+  JSR SelectBank
+  JSR pause_song
+  LDY <previousBank
+  JMP SelectBank
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -79,37 +75,41 @@ StopSong:
 ;****************************************************************
 
 ResumeSong:
-  JMP resume_song
+  LDY #SOUND_BANK
+  JSR SelectBank
+  JSR resume_song
+  LDY <previousBank
+  JMP SelectBank
   
-;****************************************************************
-; Name:                                                         ;
-;   SfxShot                                                     ;
-;                                                               ;
-; Description:                                                  ;
-;   Play the 'shot' sfx                                         ;
-;****************************************************************
-
-SfxShot:
-  LDA #sfx_index_sfx_shot
-  STA sound_param_byte_0
-  LDA #soundeffect_one
-  STA sound_param_byte_1
-  JMP play_sfx
-  
-;****************************************************************
-; Name:                                                         ;
-;   SfxExplode                                                  ;
-;                                                               ;
-; Description:                                                  ;
-;   Play the 'explode' sfx                                      ;
-;****************************************************************
-
-SfxExplode:
-  LDA #sfx_index_sfx_explode
-  STA sound_param_byte_0
-  LDA #soundeffect_one
-  STA sound_param_byte_1
-  JMP play_sfx
+;;****************************************************************
+;; Name:                                                         ;
+;;   SfxShot                                                     ;
+;;                                                               ;
+;; Description:                                                  ;
+;;   Play the 'shot' sfx                                         ;
+;;****************************************************************
+;
+;SfxShot:
+;  LDA #sfx_index_sfx_shot
+;  STA sound_param_byte_0
+;  LDA #soundeffect_one
+;  STA sound_param_byte_1
+;  JMP play_sfx
+;  
+;;****************************************************************
+;; Name:                                                         ;
+;;   SfxExplode                                                  ;
+;;                                                               ;
+;; Description:                                                  ;
+;;   Play the 'explode' sfx                                      ;
+;;****************************************************************
+;
+;SfxExplode:
+;  LDA #sfx_index_sfx_explode
+;  STA sound_param_byte_0
+;  LDA #soundeffect_one
+;  STA sound_param_byte_1
+;  JMP play_sfx
   
 ;****************************************************************
 ; EOF                                                           ;
