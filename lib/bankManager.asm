@@ -17,7 +17,6 @@ BankManagerStart:
 ;****************************************************************
 
 SelectBank:
-  JSR StopSound ; stop all sounds just in case
   LDA <currentBank
   STA <previousBank
   STY <currentBank

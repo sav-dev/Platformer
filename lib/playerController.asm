@@ -63,8 +63,8 @@ UpdatePlayerNotVisible:
     JSR SleepForXFrames
     LDY #FIRST_BANK
     JSR SelectBank
-    JSR ProgressGame ; if level was not beaten this will just reload the level
-    JMP GameLoopDone
+    INC <progressGame
+    RTS
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -525,7 +525,7 @@ UpdatePlayerExploding:
     STA <playerCounter
     LDA #PLAYER_NOT_VISIBLE
     STA <playerState
-    JSR StopSong ; todo 0006 - not the right place for this
+    ;JSR StopSong ; todo 0006 - not the right place for this
     RTS
     
   .renderExplosion:
@@ -619,7 +619,7 @@ CheckVictoryConditions:
       STA <playerCounter
       LDA #PLAYER_NOT_VISIBLE
       STA <playerState
-      JSR StopSong ; todo 0006 - not the right place for this
+      ;JSR StopSong ; todo 0006 - not the right place for this
       INC <levelBeaten
     
     .exitRoutine:
@@ -710,7 +710,7 @@ CheckVictoryConditions:
         STA <playerCounter
         LDA #PLAYER_NOT_VISIBLE
         STA <playerState
-        JSR StopSong ; todo 0006 - not the right place for this
+        ;JSR StopSong ; todo 0006 - not the right place for this
         INC <levelBeaten
         
       .playerNotAtExit:
@@ -1570,7 +1570,7 @@ SetPlayerBoxesVertical:
         STA <playerCounter
         LDA #PLAYER_NOT_VISIBLE
         STA <playerState
-        JSR StopSong ; todo 0006 - not the right place for this
+        ;JSR StopSong ; todo 0006 - not the right place for this
         RTS
       
 ;****************************************************************
@@ -1880,7 +1880,7 @@ ExplodePlayer:
   STA <playerAnimationFrame
   LDA #EXPLOSION_ANIM_SPEED
   STA <playerCounter
-  JSR SfxExplode ; todo 0006 - is this the right place
+  ;JSR SfxExplode ; todo 0006 - is this the right place
   RTS   
   
 ;****************************************************************

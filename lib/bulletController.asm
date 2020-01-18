@@ -1053,7 +1053,7 @@ UpdateBullets:
         STA bullets, x
         LDA l        
         BNE RenderBullet
-        JSR SfxShot ; todo 0006 - is this the right place        
+        ;JSR SfxShot ; todo 0006 - is this the right place
         
       ; render the bullet
       ; we expect all 4 render vars to be set when we get here

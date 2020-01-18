@@ -34,11 +34,11 @@ GameFrame:
     BEQ .resumeSong
     
     .pauseSong:
-      JSR StopSong
+      ;JSR StopSong ;todo 0006
       JMP .checkPause
       
     .resumeSong:
-      JSR ResumeSong    
+      ;JSR ResumeSong ;todo 0006
     
   .checkPause:
     LDA <isPaused
@@ -56,6 +56,9 @@ GameFrame:
     
     .updatePlayer:                    ; move player, check for collisions with platforms and elevators  
       JSR UpdatePlayer                ; checks input, updates player dX and dY
+      LDA <progressGame               ; if we should progress the game, just exit
+      BEQ .updateElevators            ; no need to do any of the other stuff
+      JMP .setNmiFlags                ; 
       
     .updateElevators:                 ; move all elevators, move player if standing on or hit by an elevator
       JSR UpdateElevators             ; moves elevator, updates player dX and dY if needed
@@ -129,7 +132,7 @@ ExplFrame:
   
   .firstFrame:
   
-    JSR StopSong ; todo 0006 - not the right place for this
+    ;JSR StopSong ; todo 0006 - not the right place for this
   
     ; level type data 1 will serve as explosion counter, together with levelHelperVar2
     LDA #$00
@@ -192,10 +195,8 @@ ExplFrame:
         JSR WaitForFrame
         JSR FadeOut
         LDX #PLAYER_NOT_V_FADED_OUT
-        JSR SleepForXFrames
-        LDY #FIRST_BANK
-        JSR SelectBank
-        JSR ProgressGame 
+        JSR SleepForXFrames        
+        INC <progressGame
         JMP GameLoopDone
       
     .spawnExplosions:
@@ -314,11 +315,10 @@ ExplFrame:
       
     .updateEnemies:
       JSR UpdateEnemies ; this will just update the explosions since we've cleared enemy data
-      
+
     .setNmiFlags:
       INC <needDma ; only do DMA. we never scroll or draw background  
-  
-  RTS
+      RTS
   
 ;****************************************************************
 ; Name:                                                         ;
@@ -364,15 +364,7 @@ LoadGame:
   .clearMemoryDone:  
 
   .loadLevel:                     ; load level
-    JSR SetVramAddressingTo32
-    LDA <currentLevel
-    ASL A
-    TAX                           ; X = currentLevel * 2
-    LDA levels, x                 ; low byte of level address
-    STA <levelPointer             ; set the pointer
-    INX
-    LDA levels, x                 ; high byte of level address
-    STA <levelPointer + $01       ; set the pointer
+    JSR SetVramAddressingTo32    
     JSR LoadLevel                 ; load level
   .loadLevelDone:
   
@@ -411,8 +403,6 @@ LoadGame:
   .loadPlayerDone:
  
   .initVars:
-    LDA #GAMESTATE_GAME
-    STA <gameState
     LDA #$00
     STA <nametable                ; show nametable 0 first
     STA <scroll                   ; scroll starts at 0
@@ -426,8 +416,8 @@ LoadGame:
 
   ; todo 0006 - is this the right place to call this?
   .initializeSound:
-    JSR InitializeSound
-    JSR PlaySong
+    ;JSR InitializeSound
+    ;JSR PlaySong
   .initializeSoundDone:
   
   JMP WaitForFrame 

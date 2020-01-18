@@ -55,8 +55,8 @@ LoadStageSelect:
   
   ; todo 0006 - is this the right place to call this? 
   .initializeSound:
-    JSR InitializeSound
-    JSR StopSong
+    ;JSR InitializeSound
+    ;JSR StopSong
     
   JMP WaitForFrame 
 

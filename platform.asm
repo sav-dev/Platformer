@@ -119,15 +119,19 @@ initGame:
 
 GameLoop:
 
+  .initVars:
+    LDA #$00
+    STA <progressGame
+
   .incrementFrameCounter:
     INC <frameCount
   
   .readController:
-    JSR ReadController      ; always read controller input first    
+    JSR ReadController
                                                         
   .checkGameState:          
     LDA <gameState
-    ;CMP #GAMESTATE_GAME    ; GAMESTATE_GAME = 0
+    ;CMP #GAMESTATE_GAME ; GAMESTATE_GAME = 0
     BEQ .gameStateGame
     CMP #GAMESTATE_EXPL
     BEQ .gameStateExpl
@@ -160,8 +164,13 @@ GameLoop:
   
 GameLoopDone:
 
-  JSR WaitForFrame          ; always wait for a frame at the end of the loop iteration
-  JMP GameLoop
+  LDA <progressGame
+  BEQ .waitForFrameAndLoop
+  JSR ProgressGame
+
+  .waitForFrameAndLoop:
+    JSR WaitForFrame
+    JMP GameLoop
   
 ;****************************************************************
 ; NMI handler                                                   ;
@@ -215,7 +224,9 @@ NMI:
   STA <needPpuReg
   STA <sleeping             
 
-  soundengine_update        ; update the sound engine
+  
+  ; todo 0006
+  ;soundengine_update        ; update the sound engine
                          
   PLA                       ; restore regs and exit
   TAY                       
@@ -536,7 +547,7 @@ Bank15Start:
   .include "data\enemies.asm" ; this has to be in this place
   .include "data\bullets.asm"
   
-  .include "lib\soundController.asm"
+  ;.include "lib\soundController.asm"
   .include "lib\ggsoundInclude.asm"  
   .include "lib\controllerManager.asm" 
   .include "lib\bulletController.asm"
@@ -544,7 +555,7 @@ Bank15Start:
   .include "lib\elevatorManager.asm" 
   .include "lib\doorManager.asm"
   .include "lib\levelManager.asm"
-
+  .include "lib\progressManager.asm"
   
 Bank15End:
 
@@ -564,7 +575,6 @@ Bank00Start:
   .include "states\stageSelect.asm"
   .include "lib\stringManager.asm"
   .include "lib\cursorController.asm"
-  .include "lib\progressManager.asm"
   .include "data\logoAndText.asm"
   .include "data\levels.asm"
               
@@ -589,9 +599,6 @@ Bank01Start:
   titleChr:
     .byte $0A
     .incbin "PlatformerGraphics\Chr\titleProcessed.chr"
-
-  titleSound:
-    .include "ggsound\sound.asm"  
 
 Bank01End:
 
@@ -645,6 +652,13 @@ Bank04:
   .org $8000
 
 Bank04Start:
+
+  level00:
+  .incbin "data\levels\00.bin"
+  
+  levelBoss:
+  .incbin "data\levels\boss.bin"
+
 Bank04End:
   
 Bank05:
@@ -712,7 +726,7 @@ Bank11:
   .bank 11
   .org $A000
 
-Bank11Start:  
+Bank11Start:
 Bank11End:
 
 ;****************************************************************

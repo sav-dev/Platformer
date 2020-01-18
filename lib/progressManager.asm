@@ -22,8 +22,7 @@ ProgressGame:
   ASL A
   ASL A
   TAX
-  LDY levels, x ; load bank
-  JSR SelectBank ; switch bank
+  LDY levels, x ; load bank, keep it in Y for now
   INX  
   LDA levels, x ; pointer low
   STA <levelPointer
@@ -35,11 +34,13 @@ ProgressGame:
   BEQ .game ; LEVEL_TYPE_GAME = 0
   
   .story:
+    JSR SelectBank ; everything loaded from levels, switch the bank now
     LDA #GAMESTATE_STORY
     STA <gameState
     JMP LoadStory 
   
   .game:
+    JSR SelectBank ; everything loaded from levels, switch the bank now
     LDA #GAMESTATE_GAME
     STA <gameState
     JMP LoadGame

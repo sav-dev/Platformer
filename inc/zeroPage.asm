@@ -123,6 +123,8 @@ playerYState            .rs 1  ; special var describing if player exited the scr
 
 frameCount              .rs 1  ; frame counter
 
+progressGame            .rs 1  ; whether game should be progressed at the end of the game loop
+
 genericX                .rs 1  ; generic position
 genericY                .rs 1 
 genericFrame            .rs 1  ; generic frame count

@@ -160,8 +160,8 @@ TitleFrame:
           LDA #NUMBER_OF_LEVELS
           STA <currentLevel
           DEC <currentLevel ; last level = credits
-          JSR ProgressGame ; no need to bank switch as we are already in 0
-          JMP GameLoopDone
+          INC <progressGame
+          JMP .setNmiFlags
         
         .stageSelect:
           LDA #GAMESTATE_STAGE_SELECT
@@ -172,8 +172,8 @@ TitleFrame:
         .startGame:
           LDA #$00
           STA <currentLevel
-          JSR ProgressGame ; no need to bank switch as we are already in 0
-          JMP GameLoopDone
+          INC <progressGame
+          JMP .setNmiFlags
         
         JMP .setNmiFlags
       
@@ -242,8 +242,8 @@ LoadTitle:
 
   ; todo 0006 - is this the right place to call this?
   .initializeSound:
-    JSR InitializeSound
-    JSR PlaySong
+    ;JSR InitializeSound
+    ;JSR PlaySong
 
   .initVars:
     LDA #$00

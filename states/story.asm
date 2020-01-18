@@ -40,8 +40,8 @@ StoryFrame:
       BEQ .goBackToMenu
       
       .goToNextLevel:
-        JSR ProgressGame ; no need to bank switch as we are already in 0
-        JMP GameLoopDone
+        INC <progressGame
+        JMP .setNmiFlags
       
       .goBackToMenu:
         LDA #GAMESTATE_TITLE
@@ -117,8 +117,8 @@ LoadStory:
     
   ; todo 0006 - is this the right place to call this? 
   .initializeSound:
-    JSR InitializeSound
-    JSR StopSong
+    ;JSR InitializeSound
+    ;JSR StopSong
     
   JMP WaitForFrame 
 
