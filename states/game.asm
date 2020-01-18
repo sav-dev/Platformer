@@ -371,7 +371,7 @@ LoadGame:
   .loadChr:
     JSR SetVramAddressingTo1
     LDY #CHR_BANK
-    JSR SelectBank
+    JSR SwitchBank
       
     .loadBgChr:
   
@@ -384,8 +384,7 @@ LoadGame:
       JSR LoadBgChr                    
     .loadBgChrDone:
     
-    LDY <previousBank
-    JSR SelectBank
+    JSR RestoreBank
     
   .loadChrDone:
   

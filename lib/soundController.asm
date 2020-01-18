@@ -44,12 +44,11 @@ InitializeSound:
 
 PlaySong:
   LDY #SOUND_BANK
-  JSR SelectBank
+  JSR SwitchBank
   LDA #song_index_song
   STA sound_param_byte_0
   JSR play_song
-  LDY <previousBank
-  JMP SelectBank
+  JMP RestoreBank
   
 ;****************************************************************
 ; Name:                                                         ;
@@ -61,10 +60,9 @@ PlaySong:
 
 StopSong:
   LDY #SOUND_BANK
-  JSR SelectBank
+  JSR SwitchBank
   JSR pause_song
-  LDY <previousBank
-  JMP SelectBank
+  JMP RestoreBank
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -76,10 +74,9 @@ StopSong:
 
 ResumeSong:
   LDY #SOUND_BANK
-  JSR SelectBank
+  JSR SwitchBank
   JSR resume_song
-  LDY <previousBank
-  JMP SelectBank
+  JMP RestoreBank
   
 ;;****************************************************************
 ;; Name:                                                         ;

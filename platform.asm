@@ -116,7 +116,7 @@ initGame:
   STA <gameState
   LDY #FIRST_BANK
   JSR SelectBank
-  JSR LoadTitle
+  JSR LoadTitle  
   
 ;****************************************************************
 ; Game loop                                                     ;
@@ -223,17 +223,22 @@ NMI:
     STA $2005               
   PpuRegDone:
                      
-  LDA #$00                  ; clear the sleeping flag so that WaitForFrame will exit, also clear all conditional flags
-  STA <needDma
-  STA <needDraw
-  STA <needPpuReg
-  STA <sleeping             
-
-  LDY #SOUND_BANK
-  JSR SelectBank
-  soundengine_update        ; update the sound engine
-  LDY <previousBank
-  JSR SelectBank
+  LDA <skipSoundUpdate
+  BNE SoundUpdateDone       ; we don't want this bank switching to get in the way of other switches
+  SoundUpdate:
+    LDY #SOUND_BANK
+    JSR SelectBank
+    soundengine_update      ; update the sound engine
+    JSR RestoreBank
+  SoundUpdateDone:
+                  
+  ClearFlags:
+    LDA #$00                ; clear the sleeping flag so that WaitForFrame will exit, also clear all conditional flags
+    STA <needDma
+    STA <needDraw
+    STA <needPpuReg
+    STA <sleeping             
+  ClearFlagsDone:
                          
   PLA                       ; restore regs and exit
   TAY                       

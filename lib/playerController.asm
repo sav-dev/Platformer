@@ -61,8 +61,6 @@ UpdatePlayerNotVisible:
     JSR FadeOut
     LDX #PLAYER_NOT_V_FADED_OUT
     JSR SleepForXFrames
-    LDY #FIRST_BANK
-    JSR SelectBank
     INC <progressGame
     RTS
 

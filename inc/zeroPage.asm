@@ -71,6 +71,7 @@ needPpuReg              .rs 1  ; nonzero if NMI should update $2000/$2001/$2005
 sleeping                .rs 1  ; nonzero if main thread is waiting for VBlank
 needDrawLocal           .rs 1  ; local copy of need draw
 needPpuRegLocal         .rs 1  ; local copy of need PPU reg
+skipSoundUpdate         .rs 1  ; if set it means we want to skip the sound updates
 
 ;****************************************************************
 ; Scrolling                                                     ;
