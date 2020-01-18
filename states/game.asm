@@ -34,11 +34,11 @@ GameFrame:
     BEQ .resumeSong
     
     .pauseSong:
-      ;JSR StopSong ;todo 0006
+      JSR StopSong
       JMP .checkPause
       
     .resumeSong:
-      ;JSR ResumeSong ;todo 0006
+      JSR ResumeSong
     
   .checkPause:
     LDA <isPaused
@@ -132,7 +132,7 @@ ExplFrame:
   
   .firstFrame:
   
-    ;JSR StopSong ; todo 0006 - not the right place for this
+    JSR StopSong
   
     ; level type data 1 will serve as explosion counter, together with levelHelperVar2
     LDA #$00

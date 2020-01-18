@@ -78,35 +78,41 @@ ResumeSong:
   JSR resume_song
   JMP RestoreBank
   
-;;****************************************************************
-;; Name:                                                         ;
-;;   SfxShot                                                     ;
-;;                                                               ;
-;; Description:                                                  ;
-;;   Play the 'shot' sfx                                         ;
-;;****************************************************************
-;
-;SfxShot:
-;  LDA #sfx_index_sfx_shot
-;  STA sound_param_byte_0
-;  LDA #soundeffect_one
-;  STA sound_param_byte_1
-;  JMP play_sfx
-;  
-;;****************************************************************
-;; Name:                                                         ;
-;;   SfxExplode                                                  ;
-;;                                                               ;
-;; Description:                                                  ;
-;;   Play the 'explode' sfx                                      ;
-;;****************************************************************
-;
-;SfxExplode:
-;  LDA #sfx_index_sfx_explode
-;  STA sound_param_byte_0
-;  LDA #soundeffect_one
-;  STA sound_param_byte_1
-;  JMP play_sfx
+;****************************************************************
+; Name:                                                         ;
+;   SfxShot                                                     ;
+;                                                               ;
+; Description:                                                  ;
+;   Play the 'shot' sfx                                         ;
+;****************************************************************
+
+SfxShot:
+  LDY #SOUND_BANK
+  JSR SwitchBank
+  LDA #sfx_index_sfx_shot
+  STA sound_param_byte_0
+  LDA #soundeffect_one
+  STA sound_param_byte_1
+  JSR play_sfx
+  JMP RestoreBank
+  
+;****************************************************************
+; Name:                                                         ;
+;   SfxExplode                                                  ;
+;                                                               ;
+; Description:                                                  ;
+;   Play the 'explode' sfx                                      ;
+;****************************************************************
+
+SfxExplode:
+  LDY #SOUND_BANK
+  JSR SwitchBank
+  LDA #sfx_index_sfx_explode
+  STA sound_param_byte_0
+  LDA #soundeffect_one
+  STA sound_param_byte_1
+  JSR play_sfx
+  JMP RestoreBank
   
 ;****************************************************************
 ; EOF                                                           ;

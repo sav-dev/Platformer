@@ -523,7 +523,7 @@ UpdatePlayerExploding:
     STA <playerCounter
     LDA #PLAYER_NOT_VISIBLE
     STA <playerState
-    ;JSR StopSong ; todo 0006 - not the right place for this
+    JSR StopSong ; todo 0006
     RTS
     
   .renderExplosion:
@@ -617,7 +617,7 @@ CheckVictoryConditions:
       STA <playerCounter
       LDA #PLAYER_NOT_VISIBLE
       STA <playerState
-      ;JSR StopSong ; todo 0006 - not the right place for this
+      JSR StopSong ; todo 0006
       INC <levelBeaten
     
     .exitRoutine:
@@ -708,7 +708,7 @@ CheckVictoryConditions:
         STA <playerCounter
         LDA #PLAYER_NOT_VISIBLE
         STA <playerState
-        ;JSR StopSong ; todo 0006 - not the right place for this
+        JSR StopSong ; todo 0006
         INC <levelBeaten
         
       .playerNotAtExit:
@@ -1568,7 +1568,7 @@ SetPlayerBoxesVertical:
         STA <playerCounter
         LDA #PLAYER_NOT_VISIBLE
         STA <playerState
-        ;JSR StopSong ; todo 0006 - not the right place for this
+        JSR StopSong ; todo 0006
         RTS
       
 ;****************************************************************
@@ -1878,7 +1878,7 @@ ExplodePlayer:
   STA <playerAnimationFrame
   LDA #EXPLOSION_ANIM_SPEED
   STA <playerCounter
-  ;JSR SfxExplode ; todo 0006 - is this the right place
+  JSR SfxExplode ; todo 0006
   RTS   
   
 ;****************************************************************
