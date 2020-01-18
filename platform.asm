@@ -105,11 +105,16 @@ initSprChr:
   LDA #HIGH(sprChr)
   STA <genericPointer + $01
   JSR LoadSprChr
-
+ 
 initSound:
   LDY #SOUND_BANK
   JSR SelectBank
   JSR InitializeSound
+
+initSprPalette:
+  JSR LoadSpritesPalette
+  INC <needDraw 
+  JSR WaitForFrame
   
 initGame:
   LDA #GAMESTATE_TITLE

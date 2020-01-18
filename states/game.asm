@@ -338,80 +338,55 @@ LoadGame:
     JSR ClearSprites
     INC <needDma
     JSR WaitForFrame              ; wait for values to be written
-  .disablePPUAndSleepDone:
-
-  .clearMemory:                   ; clear all loaded enemies, elevators and bullets data
   
-    .clearArrays:                 ; clear data between levels
-      
-      LDA #$00
-      LDX #$00
-      
-      .clear400Loop:        
-        STA $0400, x
-        STA $0500, x
-        STA $0600, x
-        INX
-        BNE .clear400Loop
-                  
-    .clearArraysDone:
+  .clearMemory:                   ; clear all loaded enemies, elevators and bullets data
+    LDA #$00
+    LDX #$00      
+    .clear400Loop:        
+      STA $0400, x
+      STA $0500, x
+      STA $0600, x
+      INX
+      BNE .clear400Loop                      
     
-    .clearLevelBeaten:            ; clear the level beat flag
-      LDA #$00
-      STA <levelBeaten
-    .clearLevelBeatenDone:
-    
-  .clearMemoryDone:  
-
   .loadLevel:                     ; load level
     JSR SetVramAddressingTo32    
     JSR LoadLevel                 ; load level
-  .loadLevelDone:
   
-  .loadChr:
+  .loadBgChr:
     JSR SetVramAddressingTo1
     LDY #CHR_BANK
-    JSR SwitchBank
-      
-    .loadBgChr:
-  
-      LDX <tilesetOffset
-      LDA Tilesets, x
-      STA <genericPointer
-      INX
-      LDA Tilesets, x
-      STA <genericPointer + $01
-      JSR LoadBgChr                    
-    .loadBgChrDone:
-    
+    JSR SwitchBank    
+    LDX <tilesetOffset
+    LDA Tilesets, x
+    STA <genericPointer
+    INX
+    LDA Tilesets, x
+    STA <genericPointer + $01
+    JSR LoadBgChr                    
     JSR RestoreBank
     
-  .loadChrDone:
-  
-  .loadPalettes:
-    JSR SetVramAddressingTo1
-    JSR LoadBgPalette             ; paletteOffset set by LoadLevel  
-    JSR LoadSpritesPalette
+  .loadPalette:
+    JSR LoadBgPalette             ; paletteOffset set by LoadLevel, Vram addressing still 1 from above
     INC <needDraw 
     JSR WaitForFrame              ; wait for values to be written
+    
+  .restoreVramAddressing:
     JSR SetVramAddressingTo32
-  .loadPalettesDone:
   
-  .loadPlayer:                    ; playerX and playerY should be set by LoadLevel  
-    JSR LoadPlayer
-  .loadPlayerDone:
- 
   .initVars:
     LDA #$00
     STA <nametable                ; show nametable 0 first
     STA <scroll                   ; scroll starts at 0
     STA <scroll + $01
     STA <isPaused
-  .initVarsDone:
+    STA <levelBeaten  
+  
+  .loadPlayer:                    ; playerX and playerY should be set by LoadLevel  
+    JSR LoadPlayer
  
   .enablePPU:                                    
     JSR EnablePPU
-  .enablePPUDone:  
 
   .initializeSound:
     JSR PlaySong ; todo 0006
