@@ -694,6 +694,9 @@ Bank06Start:
   levelBoss:
   .incbin "data\levels\boss.bin"
 
+  levelPaletteTest:
+  .incbin "data\levels\paletteTest.bin"
+  
 Bank06End:
   
 Bank07:
@@ -756,7 +759,7 @@ Bank12:
 Bank12Start:  
 
   Sound:
-  .include "ggsound\sound.asm" ; todo 0006
+  .include "ggsound\sound.asm"
 
 Bank12End:
   

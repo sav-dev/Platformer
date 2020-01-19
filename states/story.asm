@@ -30,6 +30,8 @@ StoryFrame:
     BEQ .processBlinking
     
     .startPressed:
+      JSR PauseSong
+      JSR SfxOptionSelected
       JSR WaitForFrame
       JSR FadeOut
       LDX #STATE_CHANGE_TIMEOUT
@@ -139,7 +141,8 @@ LoadStory:
     STA <levelHelperVar2 ; = whether press start is currently printed
     
   .initializeSound:
-    ; todo 0006
+    LDX #song_index_song ; todo 0007: song id should be coming from the lvl data
+    JSR PlaySong
     
   JMP WaitForFrame 
 

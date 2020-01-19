@@ -5,6 +5,8 @@ SoundControllerStart:
 ; Responsible for processing the sound                          ;
 ;****************************************************************
 
+; POITAG - ROM savings - lots of code duplication here
+
 ;****************************************************************
 ; Name:                                                         ;
 ;   InitializeSound                                             ;
@@ -39,26 +41,28 @@ InitializeSound:
 ;   PlaySong                                                    ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Play the song from this module                              ;
+;   Start playing a song.                                       ;
+;                                                               ;
+; Input variables:                                              ;
+;   X points to the id of the song we want to play.             ;
 ;****************************************************************
 
 PlaySong:
   LDY #SOUND_BANK
   JSR SwitchBank
-  LDA #song_index_song
-  STA sound_param_byte_0
+  STX sound_param_byte_0
   JSR play_song
   JMP RestoreBank
   
 ;****************************************************************
 ; Name:                                                         ;
-;   StopSong                                                    ;
+;   PauseSong                                                   ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Stop playing the song                                       ;
+;   Pauses playing the song                                     ;
 ;****************************************************************
 
-StopSong:
+PauseSong:
   LDY #SOUND_BANK
   JSR SwitchBank
   JSR pause_song
@@ -76,6 +80,42 @@ ResumeSong:
   LDY #SOUND_BANK
   JSR SwitchBank
   JSR resume_song
+  JMP RestoreBank
+  
+;****************************************************************
+; Name:                                                         ;
+;   SfxOptionSelected                                           ;
+;                                                               ;
+; Description:                                                  ;
+;   Play the 'option selected' sfx                              ;
+;****************************************************************
+  
+SfxOptionSelected:
+  LDY #SOUND_BANK
+  JSR SwitchBank
+  LDA #sfx_index_sfx_shot ; todo 0007: update with the correct id
+  STA sound_param_byte_0
+  LDA #soundeffect_one
+  STA sound_param_byte_1
+  JSR play_sfx
+  JMP RestoreBank
+
+;****************************************************************
+; Name:                                                         ;
+;   SfxOptionChanged                                            ;
+;                                                               ;
+; Description:                                                  ;
+;   Play the 'option changed' sfx                               ;
+;****************************************************************
+  
+SfxOptionChanged:
+  LDY #SOUND_BANK
+  JSR SwitchBank
+  LDA #sfx_index_sfx_shot ; todo 0007: update with the correct id
+  STA sound_param_byte_0
+  LDA #soundeffect_one
+  STA sound_param_byte_1
+  JSR play_sfx
   JMP RestoreBank
   
 ;****************************************************************

@@ -24,6 +24,7 @@ LEVEL_TYPE_STORY = $01
 ; 4th byte = lvl type (0 = game, 1 = story)
 
 levels:
+  ;.byte $03, LOW(levelPaletteTest), HIGH(levelPaletteTest), LEVEL_TYPE_GAME
   .byte $00, LOW(story0), HIGH(story0), LEVEL_TYPE_STORY
   .byte $02, LOW(level00), HIGH(level00), LEVEL_TYPE_GAME
   .byte $00, LOW(story1), HIGH(story1), LEVEL_TYPE_STORY

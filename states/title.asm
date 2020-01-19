@@ -58,7 +58,7 @@ TitleFrame:
       INC <levelHelperVar ; start pressed, inc the var
       LDA #$01
       STA <levelHelperVar2 ; hideString will decrement it back to 0
-      ; todo 0006: play a sound when start is pressed
+      JSR SfxOptionSelected
       JMP .hideString
       
       .processBlinking:
@@ -142,8 +142,8 @@ TitleFrame:
       JMP .setNmiFlags
       
       .optionSelected:
-        ; todo 0006: play a sound when option is selected
-        JSR StopSong
+        JSR SfxOptionSelected
+        JSR PauseSong
 
         JSR WaitForFrame
         JSR FadeOut
@@ -175,7 +175,7 @@ TitleFrame:
           JMP .setNmiFlags
       
       .changeSelectionDown:
-        ; todo 0006: play a sound when selection changes
+        JSR SfxOptionChanged
         INC <playerCounter
         LDA <playerCounter
         CMP #MAX_INDEX
@@ -202,7 +202,7 @@ TitleFrame:
           JMP .setNmiFlags
         
       .changeSelectionUp:
-        ; todo 0006: play a sound when selection changes
+        JSR SfxOptionChanged
         DEC <playerCounter        
         LDA <playerCounter
         CMP #$FF
@@ -301,7 +301,8 @@ LoadTitle:
     JSR FadeIn ; this enables PPU
 
   .initializeSound:
-    JSR PlaySong ; todo 0006
+    LDX #song_index_song ; todo 0007: update the song id
+    JSR PlaySong
 
   .initVars:
     LDA #$00

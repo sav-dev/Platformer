@@ -522,8 +522,7 @@ UpdatePlayerExploding:
     LDA #PLAYER_NOT_V_COOLDOWN
     STA <playerCounter
     LDA #PLAYER_NOT_VISIBLE
-    STA <playerState
-    JSR StopSong ; todo 0006
+    STA <playerState    
     RTS
     
   .renderExplosion:
@@ -617,7 +616,7 @@ CheckVictoryConditions:
       STA <playerCounter
       LDA #PLAYER_NOT_VISIBLE
       STA <playerState
-      JSR StopSong ; todo 0006
+      JSR PauseSong
       INC <levelBeaten
     
     .exitRoutine:
@@ -708,7 +707,7 @@ CheckVictoryConditions:
         STA <playerCounter
         LDA #PLAYER_NOT_VISIBLE
         STA <playerState
-        JSR StopSong ; todo 0006
+        JSR PauseSong
         INC <levelBeaten
         
       .playerNotAtExit:
@@ -1568,7 +1567,7 @@ SetPlayerBoxesVertical:
         STA <playerCounter
         LDA #PLAYER_NOT_VISIBLE
         STA <playerState
-        JSR StopSong ; todo 0006
+        JSR PauseSong
         RTS
       
 ;****************************************************************
@@ -1878,6 +1877,7 @@ ExplodePlayer:
   STA <playerAnimationFrame
   LDA #EXPLOSION_ANIM_SPEED
   STA <playerCounter
+  JSR PauseSong
   JSR SfxExplode ; todo 0006
   RTS   
   

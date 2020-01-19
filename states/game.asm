@@ -34,7 +34,7 @@ GameFrame:
     BEQ .resumeSong
     
     .pauseSong:
-      JSR StopSong
+      JSR PauseSong
       JMP .checkPause
       
     .resumeSong:
@@ -132,7 +132,7 @@ ExplFrame:
   
   .firstFrame:
   
-    JSR StopSong
+    JSR PauseSong
   
     ; level type data 1 will serve as explosion counter, together with levelHelperVar2
     LDA #$00
@@ -389,7 +389,8 @@ LoadGame:
     JSR EnablePPU
 
   .initializeSound:
-    JSR PlaySong ; todo 0006
+    LDX #song_index_song ; todo 0007: song id should be coming from the level data
+    JSR PlaySong
   
   JMP WaitForFrame 
 
