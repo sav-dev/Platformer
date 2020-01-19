@@ -62,7 +62,7 @@ LoadSprChr:
   LDA #$00
   STA $2006
   STA $2006     
-  JMP LoadChr
+  JMP LoadChr ; POITAG - ROM savings - move this up and let flow into LoadChr to save a few bytes
 
 ;****************************************************************
 ; Name:                                                         ;

@@ -172,10 +172,8 @@ TitleFrame:
         .startGame:
           LDA #$00
           STA <currentLevel
-          INC <progressGame
+          INC <progressGame        
           JMP .setNmiFlags
-        
-        JMP .setNmiFlags
       
       .changeSelection:
         ; todo 0006: play a sound when selection changes

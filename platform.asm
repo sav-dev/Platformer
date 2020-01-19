@@ -141,8 +141,7 @@ GameLoop:
                                                         
   .checkGameState:          
     LDA <gameState
-    ;CMP #GAMESTATE_GAME ; GAMESTATE_GAME = 0
-    BEQ .gameStateGame
+    BEQ .gameStateGame ; GAMESTATE_GAME = 0
     CMP #GAMESTATE_EXPL
     BEQ .gameStateExpl
     CMP #GAMESTATE_TITLE
@@ -170,7 +169,7 @@ GameLoop:
   
   .gameStateStory:
     JSR StoryFrame
-    JMP GameLoopDone
+    ;JMP GameLoopDone
   
 GameLoopDone:
 
@@ -460,9 +459,8 @@ EnablePPU:
   LDA #%00011110                ; enable sprites and background
   STA <soft2001                 
   INC <needPpuReg               
-  JSR WaitForFrame              
-  RTS
-
+  JMP WaitForFrame              
+  
 ;****************************************************************
 ; Name:                                                         ;
 ;   DisablePPU                                                  ;
@@ -475,8 +473,7 @@ DisablePPU:
   LDA #%00000110                ; disable sprites and background
   STA <soft2001                 
   INC <needPpuReg               
-  JSR WaitForFrame              
-  RTS
+  JMP WaitForFrame              
   
 ;****************************************************************
 ; Name:                                                         ;
