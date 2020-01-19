@@ -1877,7 +1877,7 @@ ExplodePlayer:
   STA <playerAnimationFrame
   LDA #EXPLOSION_ANIM_SPEED
   STA <playerCounter
-  JSR PauseSong
+  JSR PauseSong ; todo 0006: this breaks stuff...
   JSR SfxExplode ; todo 0006
   RTS   
   
