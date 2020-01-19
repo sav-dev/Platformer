@@ -26,6 +26,7 @@ CREDITS_Y = $14
 CURSOR_X = MENU_ITEMS_X - $02
 CURSOR_Y_INIT = START_GAME_Y
 CURSOR_Y_INCR = $02
+CURSOR_Y_MAX = CREDITS_Y
 
 START_GAME_INDEX = $00
 STAGE_SELECT_INDEX = $01
@@ -76,24 +77,12 @@ TitleFrame:
         
         .showString:
           INC <levelHelperVar2
-          LDA #PRESS_START_X
-          STA <genericX
-          LDA #PRESS_START_Y
-          STA <genericY
-          LDA #STR_0
-          STA <genericPointer
-          JSR DrawString         
+          JSR ShowPressStartStringTitle
           JMP .setNmiFlags
           
         .hideString:
           DEC <levelHelperVar2
-          LDA #PRESS_START_X
-          STA <genericX
-          LDA #PRESS_START_Y
-          STA <genericY
-          LDA #STR_0
-          STA <genericPointer
-          JSR ClearString
+          JSR HidePressStartStringTitle
           JMP .setNmiFlags
           
     .startWasPressed:
@@ -139,12 +128,22 @@ TitleFrame:
       AND #CONTROLLER_START
       BNE .optionSelected
       LDA <controllerPressed
+      AND #CONTROLLER_A
+      BNE .optionSelected
+      LDA <controllerPressed
       AND #CONTROLLER_SEL
-      BNE .changeSelection
+      BNE .changeSelectionDown
+      LDA <controllerPressed
+      AND #CONTROLLER_DOWN
+      BNE .changeSelectionDown
+      LDA <controllerPressed
+      AND #CONTROLLER_UP
+      BNE .changeSelectionUp
       JMP .setNmiFlags
       
       .optionSelected:
-        ; todo 0006: play a sound when start is pressed
+        ; todo 0006: play a sound when option is selected
+        JSR StopSong
 
         JSR WaitForFrame
         JSR FadeOut
@@ -175,14 +174,14 @@ TitleFrame:
           INC <progressGame        
           JMP .setNmiFlags
       
-      .changeSelection:
+      .changeSelectionDown:
         ; todo 0006: play a sound when selection changes
         INC <playerCounter
         LDA <playerCounter
         CMP #MAX_INDEX
-        BEQ .resetCursor
+        BEQ .resetCursorTo0
         
-        .moveCursor:
+        .moveCursorDown:
           LDA <playerX
           STA <genericX
           LDA <playerY
@@ -192,15 +191,43 @@ TitleFrame:
           JSR MoveCursor ; this increments needDrawLocal
           JMP .setNmiFlags
         
-        .resetCursor:
+        .resetCursorTo0:
           LDA #START_GAME_INDEX
           STA <playerCounter
           LDA #CURSOR_X
           STA <genericX
           LDA #CURSOR_Y_INIT
           STA <genericY
-          JSR MoveCursor ; this increments needDrawLocal 
-      
+          JSR MoveCursor ; this increments needDrawLocal           
+          JMP .setNmiFlags
+        
+      .changeSelectionUp:
+        ; todo 0006: play a sound when selection changes
+        DEC <playerCounter        
+        LDA <playerCounter
+        CMP #$FF
+        BEQ .resetCursorToMax
+        
+        .moveCursorUp:
+          LDA <playerX
+          STA <genericX
+          LDA <playerY
+          SEC
+          SBC #CURSOR_Y_INCR
+          STA <genericY
+          JSR MoveCursor ; this increments needDrawLocal
+          JMP .setNmiFlags       
+          
+        .resetCursorToMax:
+          LDA #MAX_INDEX - $01
+          STA <playerCounter
+          LDA #CURSOR_X
+          STA <genericX
+          LDA #CURSOR_Y_MAX
+          STA <genericY
+          JSR MoveCursor ; this increments needDrawLocal           
+          JMP .setNmiFlags
+          
   .setNmiFlags:
     LDA <needDrawLocal
     BEQ .frameDone
@@ -209,6 +236,40 @@ TitleFrame:
   .frameDone:
     RTS
     
+;****************************************************************
+; Name:                                                         ;
+;   ShowPressStartStringTitle                                   ;
+;                                                               ;
+; Description:                                                  ;
+;   Shows the "press start" string.                             ;
+;****************************************************************
+    
+ShowPressStartStringTitle:
+  LDA #PRESS_START_X
+  STA <genericX
+  LDA #PRESS_START_Y
+  STA <genericY
+  LDA #STR_0
+  STA <genericPointer
+  JMP DrawString       
+  
+;****************************************************************
+; Name:                                                         ;
+;   HidePressStartStringTitle                                   ;
+;                                                               ;
+; Description:                                                  ;
+;   Hides the "press start" string.                             ;
+;****************************************************************
+    
+HidePressStartStringTitle:
+  LDA #PRESS_START_X
+  STA <genericX
+  LDA #PRESS_START_Y
+  STA <genericY
+  LDA #STR_0
+  STA <genericPointer
+  JMP ClearString
+          
 ;****************************************************************
 ; Name:                                                         ;
 ;   LoadTitle                                                   ;
@@ -232,8 +293,9 @@ LoadTitle:
     STA <genericY
     LDA #STR_4
     STA <genericPointer
-    INC <needDraw ; we'll be drawing (must be needDraw, not local as this is in the init)
     JSR DrawString
+    JSR ShowPressStartStringTitle
+    INC <needDraw ; we'll be drawing (must be needDraw, not local as this is in the init)
     
   .fadeIn:
     JSR FadeIn ; this enables PPU
@@ -244,6 +306,7 @@ LoadTitle:
   .initVars:
     LDA #$00
     STA <levelHelperVar  ; = whether start was pressed
+    LDA #$01
     STA <levelHelperVar2 ; = whether press start is currently printed
     
   JMP WaitForFrame 

@@ -65,24 +65,12 @@ StoryFrame:
       
       .showString:
         INC <levelHelperVar2
-        LDA #PRESS_START_X
-        STA <genericX
-        LDA #PRESS_START_Y_STORY
-        STA <genericY
-        LDA #STR_0
-        STA <genericPointer
-        JSR DrawString
+        JSR ShowPressStartStringStory
         JMP .setNmiFlags
         
       .hideString:
         DEC <levelHelperVar2
-        LDA #PRESS_START_X
-        STA <genericX
-        LDA #PRESS_START_Y_STORY
-        STA <genericY
-        LDA #STR_0
-        STA <genericPointer
-        JSR ClearString
+        JSR HidePressStartStringStory
     
   .setNmiFlags:
     LDA <needDrawLocal
@@ -91,6 +79,40 @@ StoryFrame:
   
   .frameDone:
     RTS
+    
+;****************************************************************
+; Name:                                                         ;
+;   ShowPressStartStringStory                                   ;
+;                                                               ;
+; Description:                                                  ;
+;   Shows the "press start" string.                             ;
+;****************************************************************
+    
+ShowPressStartStringStory:
+  LDA #PRESS_START_X
+  STA <genericX
+  LDA #PRESS_START_Y_STORY
+  STA <genericY
+  LDA #STR_0
+  STA <genericPointer
+  JMP DrawString
+  
+;****************************************************************
+; Name:                                                         ;
+;   HidePressStartStringStory                                   ;
+;                                                               ;
+; Description:                                                  ;
+;   Hides the "press start" string.                             ;
+;****************************************************************
+    
+HidePressStartStringStory:
+  LDA #PRESS_START_X
+  STA <genericX
+  LDA #PRESS_START_Y_STORY
+  STA <genericY
+  LDA #STR_0
+  STA <genericPointer
+  JMP ClearString
     
 ;****************************************************************
 ; Name:                                                         ;
@@ -106,17 +128,18 @@ LoadStory:
     JSR CommonBank0Init    
   
   .drawStrings:
+    JSR ShowPressStartStringStory ; no need to set need draw, DrawStoryStrings will do that
     JSR DrawStoryStrings
     
   .fadeIn:
     JSR FadeIn ; this enables PPU    
   
   .initVars:
-    LDA #$00
+    LDA #$01
     STA <levelHelperVar2 ; = whether press start is currently printed
     
   .initializeSound:
-    JSR StopSong ; todo 0006
+    ; todo 0006
     
   JMP WaitForFrame 
 

@@ -54,7 +54,7 @@ LoadStageSelect:
     JSR FadeIn ; this enables PPU    
   
   .initializeSound:
-    JSR StopSong ; todo 0006
+    ; todo 0006
     
   JMP WaitForFrame 
 

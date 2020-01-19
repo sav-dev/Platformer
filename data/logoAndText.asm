@@ -54,52 +54,64 @@ STR_4 = 8
   .byte LOW(string4), HIGH(string4)
 
 ; 5
-; placeholder
-  .byte $00, $00
+; "Programming  : Sav"
+STR_5 = 10
+  .byte LOW(string5), HIGH(string5)
 
 ; 6
-; placeholder
-  .byte $00, $00
+; "SFX, music   : Sav"
+STR_6 = 12
+  .byte LOW(string6), HIGH(string6)
 
 ; 7
-; placeholder
-  .byte $00, $00
+; "Sound engine : Gradual Games"
+STR_7 = 14
+  .byte LOW(string7), HIGH(string7)
 
 ; 8
-; placeholder
-  .byte $00, $00
+; "Graphics from opengameart.com"
+STR_8 = 16
+  .byte LOW(string8), HIGH(string8)
 
 ; 9
-; placeholder
-  .byte $00, $00
+; "by the following users:"
+STR_9 = 18
+  .byte LOW(string9), HIGH(string9)
 
 ; 10
-; placeholder
-  .byte $00, $00
+; "Surt"
+STR_10 = 20
+  .byte LOW(string10), HIGH(string10)
 
 ; 11
-; placeholder
-  .byte $00, $00
+; "Master484"
+STR_11 = 22
+  .byte LOW(string11), HIGH(string11)
 
 ; 12
-; placeholder
-  .byte $00, $00
+; "Redshrike"
+STR_12 = 24
+  .byte LOW(string12), HIGH(string12)
 
 ; 13
-; placeholder
-  .byte $00, $00
+; "chipmunk"
+STR_13 = 26
+  .byte LOW(string13), HIGH(string13)
 
 ; 14
-; placeholder
-  .byte $00, $00
+; "Daniel Cook"
+STR_14 = 28
+  .byte LOW(string14), HIGH(string14)
 
 ; 15
-; placeholder
-  .byte $00, $00
+; "Monster Logix Studio"
+STR_15 = 30
+  .byte LOW(string15), HIGH(string15)
 
 ; 16
-; placeholder
-  .byte $00, $00
+; "Credits"
+STR_16 = 32
+  .byte LOW(string16), HIGH(string16)
 
 ; 17
 ; placeholder
@@ -184,236 +196,6 @@ STR_33 = 66
 STR_34 = 68
   .byte LOW(string34), HIGH(string34)
 
-; 35
-; placeholder
-  .byte $00, $00
-
-; 36
-; placeholder
-  .byte $00, $00
-
-; 37
-; placeholder
-  .byte $00, $00
-
-; 38
-; placeholder
-  .byte $00, $00
-
-; 39
-; placeholder
-  .byte $00, $00
-
-; 40
-; placeholder
-  .byte $00, $00
-
-; 41
-; placeholder
-  .byte $00, $00
-
-; 42
-; placeholder
-  .byte $00, $00
-
-; 43
-; placeholder
-  .byte $00, $00
-
-; 44
-; placeholder
-  .byte $00, $00
-
-; 45
-; placeholder
-  .byte $00, $00
-
-; 46
-; placeholder
-  .byte $00, $00
-
-; 47
-; placeholder
-  .byte $00, $00
-
-; 48
-; placeholder
-  .byte $00, $00
-
-; 49
-; placeholder
-  .byte $00, $00
-
-; 50
-; placeholder
-  .byte $00, $00
-
-; 51
-; placeholder
-  .byte $00, $00
-
-; 52
-; placeholder
-  .byte $00, $00
-
-; 53
-; placeholder
-  .byte $00, $00
-
-; 54
-; placeholder
-  .byte $00, $00
-
-; 55
-; placeholder
-  .byte $00, $00
-
-; 56
-; placeholder
-  .byte $00, $00
-
-; 57
-; placeholder
-  .byte $00, $00
-
-; 58
-; placeholder
-  .byte $00, $00
-
-; 59
-; placeholder
-  .byte $00, $00
-
-; 60
-; placeholder
-  .byte $00, $00
-
-; 61
-; placeholder
-  .byte $00, $00
-
-; 62
-; placeholder
-  .byte $00, $00
-
-; 63
-; placeholder
-  .byte $00, $00
-
-; 64
-; placeholder
-  .byte $00, $00
-
-; 65
-; placeholder
-  .byte $00, $00
-
-; 66
-; placeholder
-  .byte $00, $00
-
-; 67
-; placeholder
-  .byte $00, $00
-
-; 68
-; placeholder
-  .byte $00, $00
-
-; 69
-; placeholder
-  .byte $00, $00
-
-; 70
-; placeholder
-  .byte $00, $00
-
-; 71
-; placeholder
-  .byte $00, $00
-
-; 72
-; placeholder
-  .byte $00, $00
-
-; 73
-; placeholder
-  .byte $00, $00
-
-; 74
-; placeholder
-  .byte $00, $00
-
-; 75
-; placeholder
-  .byte $00, $00
-
-; 76
-; placeholder
-  .byte $00, $00
-
-; 77
-; placeholder
-  .byte $00, $00
-
-; 78
-; placeholder
-  .byte $00, $00
-
-; 79
-; placeholder
-  .byte $00, $00
-
-; 80
-; placeholder
-  .byte $00, $00
-
-; 81
-; placeholder
-  .byte $00, $00
-
-; 82
-; placeholder
-  .byte $00, $00
-
-; 83
-; placeholder
-  .byte $00, $00
-
-; 84
-; placeholder
-  .byte $00, $00
-
-; 85
-; placeholder
-  .byte $00, $00
-
-; 86
-; placeholder
-  .byte $00, $00
-
-; 87
-; placeholder
-  .byte $00, $00
-
-; 88
-; placeholder
-  .byte $00, $00
-
-; 89
-; placeholder
-  .byte $00, $00
-
-; 90
-; "Credits:"
-STR_90 = 180
-  .byte LOW(string90), HIGH(string90)
-
-; 91
-; "Todo"
-STR_91 = 182
-  .byte LOW(string91), HIGH(string91)
-
 
 Strings:
 string0:
@@ -426,6 +208,30 @@ string3:
   .byte $07, $0D, $1C, $0F, $0E, $13, $1E, $1D
 string4:
   .byte $08, $1D, $0B, $20, $00, $03, $01, $03, $01
+string5:
+  .byte $12, $1A, $1C, $19, $11, $1C, $0B, $17, $17, $13, $18, $11, $00, $00, $29, $00, $1D, $0B, $20
+string6:
+  .byte $12, $1D, $10, $22, $2A, $00, $17, $1F, $1D, $13, $0D, $00, $00, $00, $29, $00, $1D, $0B, $20
+string7:
+  .byte $1C, $1D, $19, $1F, $18, $0E, $00, $0F, $18, $11, $13, $18, $0F, $00, $29, $00, $11, $1C, $0B, $0E, $1F, $0B, $16, $00, $11, $0B, $17, $0F, $1D
+string8:
+  .byte $1D, $11, $1C, $0B, $1A, $12, $13, $0D, $1D, $00, $10, $1C, $19, $17, $00, $19, $1A, $0F, $18, $11, $0B, $17, $0F, $0B, $1C, $1E, $2B, $0D, $19, $17
+string9:
+  .byte $17, $0C, $23, $00, $1E, $12, $0F, $00, $10, $19, $16, $16, $19, $21, $13, $18, $11, $00, $1F, $1D, $0F, $1C, $1D, $29
+string10:
+  .byte $04, $1D, $1F, $1C, $1E
+string11:
+  .byte $09, $17, $0B, $1D, $1E, $0F, $1C, $05, $09, $05
+string12:
+  .byte $09, $1C, $0F, $0E, $1D, $12, $1C, $13, $15, $0F
+string13:
+  .byte $08, $0D, $12, $13, $1A, $17, $1F, $18, $15
+string14:
+  .byte $0B, $0E, $0B, $18, $13, $0F, $16, $00, $0D, $19, $19, $15
+string15:
+  .byte $14, $17, $19, $18, $1D, $1E, $0F, $1C, $00, $16, $19, $11, $13, $22, $00, $1D, $1E, $1F, $0E, $13, $19
+string16:
+  .byte $07, $0D, $1C, $0F, $0E, $13, $1E, $1D
 string20:
   .byte $1C, $1E, $12, $13, $1D, $00, $13, $1D, $00, $1D, $19, $17, $0F, $00, $1D, $1E, $1C, $13, $18, $11, $2A, $00, $10, $19, $1C, $00, $1E, $12, $0F
 string21:
@@ -448,10 +254,6 @@ string33:
   .byte $1E, $0C, $0F, $00, $1D, $12, $19, $21, $18, $00, $1C, $13, $11, $12, $1E, $00, $0B, $10, $1E, $0F, $1C, $00, $1E, $12, $0F, $00, $10, $13, $1C, $1D, $1E
 string34:
   .byte $18, $19, $18, $0F, $00, $13, $18, $00, $1E, $12, $13, $1D, $00, $16, $13, $1E, $1E, $16, $0F, $00, $1E, $0F, $1D, $1E, $2B
-string90:
-  .byte $08, $0D, $1C, $0F, $0E, $13, $1E, $1D, $29
-string91:
-  .byte $04, $1E, $19, $0E, $19
 
 
 CURSOR_TILE = $94
