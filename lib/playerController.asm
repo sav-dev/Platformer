@@ -1895,7 +1895,7 @@ ExplodePlayer:
 
 SpawnPlayerBullets:  
 
-  LDA playerState
+  LDA <playerState
   BNE .return ; PLAYER_NORMAL = 0
 
   LDA <playerBulletCooldown

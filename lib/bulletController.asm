@@ -561,10 +561,10 @@ UpdateBullets:
         STA <renderTile
         INX ; 7 = box width
         LDA bullets, x
-        STA genericWidth
+        STA <genericWidth
         INX ; 8 = box height
         LDA bullets, x
-        STA genericHeight        
+        STA <genericHeight       
               
       .updateXPosition:
         INX ; 9 = x position
@@ -816,7 +816,7 @@ UpdateBullets:
           LDA #$00
           SEC
           SBC <genericDX
-          STA genericX
+          STA <genericX
           JMP .checkVertical
           
         ; Moving in the other plane caused the collision.
@@ -927,7 +927,7 @@ UpdateBullets:
           LDA #$00
           SEC
           SBC <genericDY
-          STA genericY
+          STA <genericY
           JMP .updateBulletPosition
           
         ; Moving in the other plane caused the collision.
@@ -1051,7 +1051,7 @@ UpdateBullets:
         BNE RenderBullet
         LDA #BULLET_S_NORMAL
         STA bullets, x
-        LDA l        
+        LDA <l       
         BNE RenderBullet
         JSR SfxShot ; todo 0006
         

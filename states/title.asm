@@ -408,7 +408,7 @@ DrawLogo:
       LDA Logo, x
       STA $2007
       INX
-      DEC b
+      DEC <b
       BNE .drawingLoopInner
       
     .moveRow:
