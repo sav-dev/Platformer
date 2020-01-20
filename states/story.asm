@@ -141,7 +141,7 @@ LoadStory:
     STA <levelHelperVar2 ; = whether press start is currently printed
     
   .initializeSound:
-    LDX #song_index_song ; todo 0007: song id should be coming from the lvl data
+    LDX <songToPlay ; this was set by the progress manager
     JSR PlaySong
     
   JMP WaitForFrame 

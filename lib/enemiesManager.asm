@@ -1559,8 +1559,8 @@ UpdateEnemies:
           ADC #EXPLOSION_DEF_SOUND ; point to expl sound in expl consts
           TAX
           LDA Explosions, x ; A contains the explosion sound
-          STA <b ; cache it in b to be used as a param
-          PlaySfxLowPriZp b
+          STA <sfxToPlay
+          JSR SfxLowPri
           LDX <xPointerCache2
                     
         ; load CONST_ENEMY_EXPL_OFF in Y to point to the explosion offsets.

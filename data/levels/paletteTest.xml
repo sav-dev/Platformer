@@ -1,25 +1,501 @@
 <?xml version="1.0"?>
 <Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <LevelType>Normal</LevelType>
-  <BgPalette>0</BgPalette>
+  <BgPalette>2</BgPalette>
   <TilesetId>0</TilesetId>
   <Tiles>
     <ArrayOfString>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>2-0-2-6</string>
-      <string>2-0-0-7</string>
-      <string>2-0-2-7</string>
-      <string>2-0-0-7</string>
-      <string>2-0-2-7</string>
-      <string>2-0-0-7</string>
-      <string>2-0-2-7</string>
-      <string>2-0-0-7</string>
-      <string>2-0-2-7</string>
-      <string>2-0-0-7</string>
-      <string>2-0-2-7</string>
-      <string>2-0-0-7</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-0-0-2</string>
+      <string>0-0-0-3</string>
+      <string>0-0-4-0</string>
+      <string>0-0-4-1</string>
+      <string>0-0-4-0</string>
+      <string>0-0-4-1</string>
+      <string>0-0-0-2</string>
+      <string>0-0-0-3</string>
+      <string>0-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-0-3-0</string>
+      <string>0-0-3-1</string>
+      <string>0-0-5-0</string>
+      <string>0-0-5-1</string>
+      <string>0-0-5-0</string>
+      <string>0-0-5-1</string>
+      <string>0-0-3-0</string>
+      <string>0-0-3-1</string>
+      <string>0-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-0-2-0</string>
+      <string>0-0-2-1</string>
+      <string>0-0-4-0</string>
+      <string>0-0-4-1</string>
+      <string>0-0-4-3</string>
+      <string>0-0-4-3</string>
+      <string>0-0-2-0</string>
+      <string>0-0-2-1</string>
+      <string>0-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-0-3-0</string>
+      <string>0-0-3-1</string>
+      <string>0-0-5-0</string>
+      <string>0-0-5-1</string>
+      <string>0-0-4-3</string>
+      <string>0-0-4-3</string>
+      <string>0-0-3-0</string>
+      <string>0-0-3-1</string>
+      <string>0-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-1-5-0</string>
+      <string>0-1-0-2</string>
+      <string>0-0-2-0</string>
+      <string>0-0-2-1</string>
+      <string>0-0-4-0</string>
+      <string>0-0-4-1</string>
+      <string>0-0-4-0</string>
+      <string>0-0-4-1</string>
+      <string>0-0-2-0</string>
+      <string>0-0-2-1</string>
+      <string>0-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-0-3-0</string>
+      <string>0-0-3-1</string>
+      <string>0-0-5-0</string>
+      <string>0-0-5-1</string>
+      <string>0-0-5-0</string>
+      <string>0-0-5-1</string>
+      <string>0-0-3-0</string>
+      <string>0-0-3-1</string>
+      <string>0-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-0-2-0</string>
+      <string>0-0-2-1</string>
+      <string>0-0-4-3</string>
+      <string>0-0-4-3</string>
+      <string>0-0-4-0</string>
+      <string>0-0-4-1</string>
+      <string>0-0-2-0</string>
+      <string>0-0-2-1</string>
+      <string>0-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-1-5-0</string>
+      <string>0-1-0-2</string>
+      <string>0-0-3-0</string>
+      <string>0-0-3-1</string>
+      <string>0-0-4-3</string>
+      <string>0-0-4-3</string>
+      <string>0-0-5-0</string>
+      <string>0-0-5-1</string>
+      <string>0-0-3-0</string>
+      <string>0-0-3-1</string>
+      <string>0-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-0-2-0</string>
+      <string>0-0-2-1</string>
+      <string>0-0-4-0</string>
+      <string>0-0-4-1</string>
+      <string>0-0-4-0</string>
+      <string>0-0-4-1</string>
+      <string>0-0-2-0</string>
+      <string>0-0-2-1</string>
+      <string>0-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-0-3-0</string>
+      <string>0-0-3-1</string>
+      <string>0-0-5-0</string>
+      <string>0-0-5-1</string>
+      <string>0-0-5-0</string>
+      <string>0-0-5-1</string>
+      <string>0-0-3-0</string>
+      <string>0-0-3-1</string>
+      <string>0-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-1-5-0</string>
+      <string>0-1-0-2</string>
+      <string>0-0-2-0</string>
+      <string>0-0-2-1</string>
+      <string>0-0-4-0</string>
+      <string>0-0-4-1</string>
+      <string>0-0-4-3</string>
+      <string>0-0-4-3</string>
+      <string>0-0-2-0</string>
+      <string>0-0-2-1</string>
+      <string>0-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-0-3-0</string>
+      <string>0-0-3-1</string>
+      <string>0-0-5-0</string>
+      <string>0-0-5-1</string>
+      <string>0-0-4-3</string>
+      <string>0-0-4-3</string>
+      <string>0-0-3-0</string>
+      <string>0-0-3-1</string>
+      <string>0-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-0-2-0</string>
+      <string>0-0-2-1</string>
+      <string>0-0-4-0</string>
+      <string>0-0-4-1</string>
+      <string>0-0-4-0</string>
+      <string>0-0-4-1</string>
+      <string>0-0-2-0</string>
+      <string>0-0-2-1</string>
+      <string>0-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-1-2-0</string>
+      <string>2-1-2-1</string>
+      <string>2-1-2-1</string>
+      <string>2-1-2-1</string>
+      <string>0-0-3-0</string>
+      <string>0-0-3-1</string>
+      <string>0-0-5-0</string>
+      <string>0-0-5-1</string>
+      <string>0-0-5-0</string>
+      <string>0-0-5-1</string>
+      <string>0-0-3-0</string>
+      <string>0-0-3-1</string>
+      <string>0-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-0-4-2</string>
+      <string>0-0-2-0</string>
+      <string>0-0-1-0</string>
+      <string>0-0-2-2</string>
+      <string>0-0-2-3</string>
+      <string>0-0-2-2</string>
+      <string>0-0-2-3</string>
+      <string>0-0-1-1</string>
+      <string>0-0-2-1</string>
+      <string>0-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-0-4-2</string>
+      <string>2-0-5-4</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-0-4-4</string>
+      <string>0-0-1-2</string>
+      <string>0-0-3-3</string>
+      <string>0-0-3-2</string>
+      <string>0-0-3-3</string>
+      <string>0-0-3-2</string>
+      <string>0-0-3-3</string>
+      <string>0-0-3-2</string>
+      <string>0-0-1-3</string>
+      <string>0-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>2-1-4-0</string>
+      <string>2-1-4-1</string>
+      <string>2-1-4-1</string>
+      <string>2-1-4-1</string>
+      <string>2-1-4-1</string>
+      <string>2-1-4-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>1-0-3-4</string>
+      <string>1-0-3-5</string>
+      <string>1-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-1-3-0</string>
+      <string>2-1-3-1</string>
+      <string>2-1-4-1</string>
+      <string>2-1-4-1</string>
+      <string>2-1-2-3</string>
+      <string>2-1-2-4</string>
+      <string>2-1-0-3</string>
+      <string>1-0-3-4</string>
+      <string>1-0-3-5</string>
+      <string>1-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-1-0-1</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-1-3-3</string>
+      <string>2-1-3-4</string>
+      <string>2-1-1-3</string>
+      <string>1-0-3-4</string>
+      <string>1-0-3-5</string>
+      <string>1-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-1-0-1</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>1-0-3-4</string>
+      <string>1-0-3-5</string>
+      <string>1-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-1-3-0</string>
+      <string>2-1-3-1</string>
+      <string>2-1-4-1</string>
+      <string>2-1-4-1</string>
+      <string>2-1-2-3</string>
+      <string>2-1-2-4</string>
+      <string>3-1-0-4</string>
+      <string>1-0-3-4</string>
+      <string>1-0-3-5</string>
+      <string>1-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-1-0-1</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-1-3-3</string>
+      <string>2-1-3-4</string>
+      <string>3-1-1-4</string>
+      <string>1-0-3-4</string>
+      <string>1-0-3-5</string>
+      <string>1-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-1-0-1</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>1-0-3-4</string>
+      <string>1-0-3-5</string>
+      <string>1-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-1-1-0</string>
+      <string>2-1-3-1</string>
+      <string>2-1-4-1</string>
+      <string>2-1-4-1</string>
+      <string>2-1-2-3</string>
+      <string>3-1-2-3</string>
+      <string>3-1-0-3</string>
+      <string>1-0-3-4</string>
+      <string>1-0-3-5</string>
+      <string>1-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-1-3-3</string>
+      <string>3-1-3-3</string>
+      <string>3-1-1-3</string>
+      <string>1-0-3-4</string>
+      <string>1-0-3-5</string>
+      <string>1-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>1-0-3-4</string>
+      <string>1-0-3-5</string>
+      <string>1-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>1-0-3-4</string>
+      <string>1-0-3-5</string>
+      <string>1-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>1-0-3-4</string>
+      <string>1-0-3-5</string>
+      <string>1-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>1-0-3-4</string>
+      <string>1-0-3-5</string>
+      <string>1-0-4-3</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -35,144 +511,8 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-5</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-6</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-2-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-1-6</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-1-5</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-5-7</string>
-      <string>2-0-5-7</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-5</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-1-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-1-5</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-1-6</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-6</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-2-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-1-5</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
+      <string>3-1-0-7</string>
+      <string>3-1-0-7</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -188,59 +528,8 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-1-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-1-6</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-6</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-2-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-5</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-6</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
+      <string>3-1-0-7</string>
+      <string>3-1-0-7</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -255,9 +544,9 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>3-2-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
+      <string>1-0-3-4</string>
+      <string>1-0-3-5</string>
+      <string>1-0-4-3</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -272,281 +561,9 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>3-2-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-2-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-1-5</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-0-6</string>
-      <string>2-0-0-7</string>
-      <string>2-0-2-7</string>
-      <string>2-0-0-7</string>
-      <string>2-0-2-7</string>
-      <string>2-0-0-7</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-6</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>3-0-5-7</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-1-6</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>3-0-5-7</string>
-      <string>1-1-5-3</string>
-      <string>2-1-2-5</string>
-      <string>2-1-2-6</string>
-      <string>2-1-2-6</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>3-0-5-7</string>
-      <string>1-1-5-3</string>
-      <string>2-1-3-5</string>
-      <string>2-1-3-6</string>
-      <string>2-1-3-6</string>
-      <string>2-0-1-6</string>
-      <string>1-0-1-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>3-2-0-2</string>
-      <string>2-0-1-6</string>
-      <string>3-0-5-7</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-1-6</string>
-      <string>0-1-0-2</string>
-      <string>0-1-1-5</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>3-0-5-7</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-2-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>3-0-5-7</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>0-1-0-2</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-1-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>3-2-0-2</string>
-      <string>2-0-1-6</string>
-      <string>3-0-5-7</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-5</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>0-1-0-2</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-2-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>3-0-5-7</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>0-1-0-2</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>3-2-0-2</string>
-      <string>2-0-1-6</string>
-      <string>3-0-5-7</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-1-6</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-1-6</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>0-1-0-2</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-2-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>3-0-5-7</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-2-6</string>
-      <string>2-0-0-7</string>
-      <string>2-0-2-7</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
+      <string>1-0-3-4</string>
+      <string>1-0-3-5</string>
+      <string>1-0-4-3</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -557,30 +574,13 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>3-2-0-0</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-6</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>3-2-0-0</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-1-9</string>
+      <string>0-1-0-2</string>
+      <string>3-1-0-7</string>
+      <string>3-1-0-7</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -591,13 +591,13 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>3-2-0-0</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>3-1-0-7</string>
+      <string>3-1-0-7</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -608,47 +608,13 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>3-2-0-0</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-2-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-5</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>3-2-0-0</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-6</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>3-2-0-0</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-1-9</string>
+      <string>1-0-3-4</string>
+      <string>1-0-3-5</string>
+      <string>1-0-4-3</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -659,30 +625,13 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>3-2-0-0</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-1-6</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>3-2-0-0</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-2-9</string>
+      <string>1-0-3-4</string>
+      <string>1-0-3-5</string>
+      <string>1-0-4-3</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -693,13 +642,13 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>3-2-0-0</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -710,30 +659,13 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>3-2-0-0</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>0-1-1-5</string>
       <string>0-1-0-2</string>
-      <string>2-0-0-6</string>
-      <string>2-0-2-7</string>
-      <string>2-0-0-7</string>
-      <string>2-0-2-7</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-2-9</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -742,15 +674,15 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-10</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -759,32 +691,15 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-10</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-6</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>0-1-1-6</string>
       <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-11</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -793,15 +708,15 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-10</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-5-7</string>
-      <string>2-0-1-6</string>
-      <string>1-0-1-9</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -810,32 +725,15 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-11</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-5-7</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>0-1-0-6</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-10</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-5-7</string>
-      <string>2-0-1-6</string>
-      <string>1-0-2-9</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -844,15 +742,15 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-10</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -861,32 +759,15 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-11</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-1-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>0-1-1-6</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>0-1-1-5</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-10</string>
-      <string>2-0-1-6</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -895,15 +776,15 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>2-0-2-6</string>
-      <string>2-0-2-7</string>
-      <string>2-0-0-7</string>
-      <string>2-0-2-7</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-2-9</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -912,19 +793,6 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>3-2-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-1-5</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
@@ -933,168 +801,364 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>3-2-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
+      <string>0-1-0-2</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>2-0-0-6</string>
-      <string>2-0-0-7</string>
-      <string>2-0-2-7</string>
-      <string>2-0-0-7</string>
-      <string>2-0-2-7</string>
-      <string>2-0-0-7</string>
-      <string>2-0-2-7</string>
-      <string>2-0-0-7</string>
-      <string>2-0-2-7</string>
-      <string>2-0-0-7</string>
-      <string>2-0-2-7</string>
-      <string>2-0-0-7</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
     </ArrayOfString>
   </Tiles>
   <Enemies>
     <Enemy>
-      <Name>Spikes</Name>
+      <Name>Sphere</Name>
       <X>96</X>
-      <Y>192</Y>
-      <MovementType>Horizontal</MovementType>
-      <Direction>Right</Direction>
+      <Y>80</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
       <SpecialMovement>None</SpecialMovement>
-      <Speed>3</Speed>
-      <ShouldFlip>false</ShouldFlip>
-      <MinPosition>96</MinPosition>
-      <MaxPosition>207</MaxPosition>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
-      <BlinkingType>NotBlinking</BlinkingType>
-      <BlinkingFrequency>0</BlinkingFrequency>
-      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
-    </Enemy>
-    <Enemy>
-      <Name>TurretV</Name>
-      <X>368</X>
-      <Y>128</Y>
-      <MovementType>None</MovementType>
-      <Direction>None</Direction>
-      <SpecialMovement>None</SpecialMovement>
-      <Speed>0</Speed>
-      <ShouldFlip>false</ShouldFlip>
-      <MinPosition>0</MinPosition>
-      <MaxPosition>0</MaxPosition>
-      <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>40</ShootingFrequency>
-      <ShootingInitialFrequency>40</ShootingInitialFrequency>
-      <BlinkingType>NotBlinking</BlinkingType>
-      <BlinkingFrequency>0</BlinkingFrequency>
-      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
-    </Enemy>
-    <Enemy>
-      <Name>TurretV</Name>
-      <X>400</X>
-      <Y>128</Y>
-      <MovementType>None</MovementType>
-      <Direction>None</Direction>
-      <SpecialMovement>None</SpecialMovement>
-      <Speed>0</Speed>
-      <ShouldFlip>false</ShouldFlip>
-      <MinPosition>0</MinPosition>
-      <MaxPosition>0</MaxPosition>
-      <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>40</ShootingFrequency>
-      <ShootingInitialFrequency>20</ShootingInitialFrequency>
-      <BlinkingType>NotBlinking</BlinkingType>
-      <BlinkingFrequency>0</BlinkingFrequency>
-      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
-    </Enemy>
-    <Enemy>
-      <Name>TurretV</Name>
-      <X>432</X>
-      <Y>128</Y>
-      <MovementType>None</MovementType>
-      <Direction>None</Direction>
-      <SpecialMovement>None</SpecialMovement>
-      <Speed>0</Speed>
-      <ShouldFlip>false</ShouldFlip>
-      <MinPosition>0</MinPosition>
-      <MaxPosition>0</MaxPosition>
-      <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>40</ShootingFrequency>
-      <ShootingInitialFrequency>40</ShootingInitialFrequency>
-      <BlinkingType>NotBlinking</BlinkingType>
-      <BlinkingFrequency>0</BlinkingFrequency>
-      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
-    </Enemy>
-    <Enemy>
-      <Name>TurretV</Name>
-      <X>464</X>
-      <Y>128</Y>
-      <MovementType>None</MovementType>
-      <Direction>None</Direction>
-      <SpecialMovement>None</SpecialMovement>
-      <Speed>0</Speed>
-      <ShouldFlip>false</ShouldFlip>
-      <MinPosition>0</MinPosition>
-      <MaxPosition>0</MaxPosition>
-      <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>40</ShootingFrequency>
-      <ShootingInitialFrequency>20</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>Bug</Name>
-      <X>608</X>
-      <Y>192</Y>
-      <MovementType>Horizontal</MovementType>
-      <Direction>Right</Direction>
-      <SpecialMovement>None</SpecialMovement>
-      <Speed>3</Speed>
-      <ShouldFlip>true</ShouldFlip>
-      <MinPosition>608</MinPosition>
-      <MaxPosition>716</MaxPosition>
-      <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>0</ShootingFrequency>
-      <ShootingInitialFrequency>0</ShootingInitialFrequency>
-      <BlinkingType>NotBlinking</BlinkingType>
-      <BlinkingFrequency>0</BlinkingFrequency>
-      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
-    </Enemy>
-    <Enemy>
-      <Name>Sphere</Name>
-      <X>656</X>
-      <Y>165</Y>
+      <X>144</X>
+      <Y>80</Y>
       <MovementType>None</MovementType>
       <Direction>None</Direction>
       <SpecialMovement>None</SpecialMovement>
       <Speed>0</Speed>
-      <ShouldFlip>false</ShouldFlip>
+      <ShouldFlip>true</ShouldFlip>
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>110</ShootingFrequency>
-      <ShootingInitialFrequency>110</ShootingInitialFrequency>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
-      <Name>Spikes</Name>
-      <X>672</X>
-      <Y>16</Y>
-      <MovementType>Vertical</MovementType>
-      <Direction>Down</Direction>
+      <Name>Barrier V 6</Name>
+      <X>244</X>
+      <Y>32</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
       <SpecialMovement>None</SpecialMovement>
-      <Speed>2</Speed>
-      <ShouldFlip>false</ShouldFlip>
-      <MinPosition>16</MinPosition>
-      <MaxPosition>80</MaxPosition>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>ConstInitVisible</BlinkingType>
+      <BlinkingFrequency>44</BlinkingFrequency>
+      <BlinkingInitialFrequency>44</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Lava</Name>
+      <X>464</X>
+      <Y>200</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
@@ -1103,53 +1167,17 @@
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
-      <Name>Spikes</Name>
-      <X>704</X>
-      <Y>80</Y>
-      <MovementType>Vertical</MovementType>
-      <Direction>Up</Direction>
+      <Name>Lava</Name>
+      <X>528</X>
+      <Y>200</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
       <SpecialMovement>None</SpecialMovement>
-      <Speed>2</Speed>
-      <ShouldFlip>false</ShouldFlip>
-      <MinPosition>16</MinPosition>
-      <MaxPosition>80</MaxPosition>
-      <InitialFlip>true</InitialFlip>
-      <ShootingFrequency>0</ShootingFrequency>
-      <ShootingInitialFrequency>0</ShootingInitialFrequency>
-      <BlinkingType>NotBlinking</BlinkingType>
-      <BlinkingFrequency>0</BlinkingFrequency>
-      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
-    </Enemy>
-    <Enemy>
-      <Name>Spikes</Name>
-      <X>736</X>
-      <Y>16</Y>
-      <MovementType>Vertical</MovementType>
-      <Direction>Down</Direction>
-      <SpecialMovement>None</SpecialMovement>
-      <Speed>2</Speed>
-      <ShouldFlip>false</ShouldFlip>
-      <MinPosition>16</MinPosition>
-      <MaxPosition>80</MaxPosition>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>0</ShootingFrequency>
-      <ShootingInitialFrequency>0</ShootingInitialFrequency>
-      <BlinkingType>NotBlinking</BlinkingType>
-      <BlinkingFrequency>0</BlinkingFrequency>
-      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
-    </Enemy>
-    <Enemy>
-      <Name>Spikes</Name>
-      <X>832</X>
-      <Y>56</Y>
-      <MovementType>Horizontal</MovementType>
-      <Direction>Left</Direction>
-      <SpecialMovement>None</SpecialMovement>
-      <Speed>1</Speed>
-      <ShouldFlip>false</ShouldFlip>
-      <MinPosition>768</MinPosition>
-      <MaxPosition>832</MaxPosition>
-      <InitialFlip>true</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
@@ -1157,36 +1185,22 @@
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
     </Enemy>
   </Enemies>
-  <Elevators>
-    <Elevator>
-      <X>228</X>
-      <Y>176</Y>
-      <Size>3</Size>
-      <MovementType>Vertical</MovementType>
-      <Speed>1</Speed>
-      <MinPosition>120</MinPosition>
-      <MaxPosition>184</MaxPosition>
-      <Direction>Down</Direction>
-    </Elevator>
-    <Elevator>
-      <X>568</X>
-      <Y>96</Y>
-      <Size>4</Size>
-      <MovementType>Horizontal</MovementType>
-      <Speed>1</Speed>
-      <MinPosition>529</MinPosition>
-      <MaxPosition>623</MaxPosition>
-      <Direction>Right</Direction>
-    </Elevator>
-  </Elevators>
+  <Elevators />
+  <DoorAndKeycard>
+    <DoorExists>false</DoorExists>
+    <DoorX>192</DoorX>
+    <DoorY>48</DoorY>
+    <KeycardX>136</KeycardX>
+    <KeycardY>79</KeycardY>
+  </DoorAndKeycard>
   <PlayerStartingPosition>
-    <X>42</X>
-    <Y>207</Y>
+    <X>30</X>
+    <Y>95</Y>
   </PlayerStartingPosition>
   <ScrollSpeed>1</ScrollSpeed>
   <ExitPosition>
-    <X>292</X>
-    <Y>173</Y>
+    <X>4</X>
+    <Y>13</Y>
   </ExitPosition>
   <Song>song_index_song</Song>
 </Level>

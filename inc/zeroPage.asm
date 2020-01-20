@@ -252,8 +252,11 @@ levelBeaten         .rs 1 ; whether the level was beaten. only inced once and ch
 isPaused            .rs 1 ; whether the game is paused
 
 ;****************************************************************
-; ggsound                                                       ;
+; sound                                                         ;
 ;****************************************************************
+
+sfxToPlay           .rs 1 ; which SFX to play
+songToPlay          .rs 1 ; which song to play
 
   .include "ggsound\ggsound_zp.inc" ; uses between 61 or 72 bytes based on what's enabled 
   ; sound .rs 72

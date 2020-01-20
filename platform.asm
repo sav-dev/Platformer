@@ -760,7 +760,7 @@ Bank12:
 Bank12Start:  
 
   Sound:
-  .include "ggsound\sound.asm" ; todo 0007: move to a different dir where it can be checked in
+  .include "ggsound\sound.asm" ; todo 0007: move to a different dir where it can be checked in; update the path in the tool also
 
 Bank12End:
   

@@ -86,6 +86,48 @@ ResumeSong:
 
 ;****************************************************************
 ; Name:                                                         ;
+;   SfxHighPri                                                  ;
+;                                                               ;
+; Description:                                                  ;
+;   Play an SFX with high priority                              ;
+;                                                               ;
+; Input variables:                                              ;
+;   sfxToPlay                                                   ;
+;****************************************************************
+  
+SfxHighPri:
+  LDY #SOUND_BANK
+  JSR SwitchBank
+  LDA <sfxToPlay
+  STA <sound_param_byte_0
+  LDA #soundeffect_two ; high pri
+  STA <sound_param_byte_1
+  JSR play_sfx
+  JMP RestoreBank
+
+;****************************************************************
+; Name:                                                         ;
+;   SfxLowPri                                                   ;
+;                                                               ;
+; Description:                                                  ;
+;   Play an SFX with low priority                               ;
+;                                                               ;
+; Input variables:                                              ;
+;   sfxToPlay                                                   ;
+;****************************************************************
+  
+SfxLowPri:
+  LDY #SOUND_BANK
+  JSR SwitchBank
+  LDA <sfxToPlay
+  STA <sound_param_byte_0
+  LDA #soundeffect_one ; low pri
+  STA <sound_param_byte_1
+  JSR play_sfx
+  JMP RestoreBank
+  
+;****************************************************************
+; Name:                                                         ;
 ;   SfxOptionSelected                                           ;
 ;                                                               ;
 ; Description:                                                  ;
