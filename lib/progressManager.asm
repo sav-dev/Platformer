@@ -19,12 +19,6 @@ ProgressManagerStart:
 
 ProgressGame:
 
-  ; loading bank 0 because levels are in bank 0.
-  ; todo 0011: if we move them to bank 15 this is not needed
-  .changeBank:
-    LDY #$00
-    JSR SelectBank
-  
   ; this sets X = 3 * currentLevel  
   .setLevelPointer:
     LDA #$00
@@ -37,21 +31,17 @@ ProgressGame:
       BNE .incrementLoop
       TAX
     
-  ; load the target bank to x, load the level pointer
-  ; todo 0011: if we move them to bank 15 this is not needed, can load the bank immediately
+  ; switch bank, load the level pointer
   .loadLevelData:
     LDY levels, x ; load bank, keep it in Y for now
+    JSR SelectBank
     INX  
     LDA levels, x ; pointer low
     STA <levelPointer
     INX
     LDA levels, x ; pointer high
     STA <levelPointer + $01    
-  
-  ; we can do the bank switch now
-  .switchBank:
-    JSR SelectBank
-  
+    
   ; the 1st byte is always song to play. load that now
   .loadSongToPlay:
     LDY #$00

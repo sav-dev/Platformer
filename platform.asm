@@ -546,7 +546,8 @@ SetVramAddressingTo32:
   .include "lib\collisionManager.asm"
   .include "lib\explosionsController.asm"
   .include "lib\paletteManager.asm"     
-
+  .include "lib\chrManager.asm"
+  
   .include "states\game.asm"
   
 Bank14End:
@@ -560,12 +561,12 @@ Bank15Start:
  
   .include "data\enemies.asm" ; this has to be in this place
   .include "data\bullets.asm"
+  .include "data\levels.asm"
   
   .include "lib\soundController.asm"
-  .include "lib\ggsoundInclude.asm"  
+  .include "lib\ggsoundInclude.asm" ; this can be moved to the sound bank if needed
   .include "lib\controllerManager.asm" 
   .include "lib\bulletController.asm"
-  .include "lib\chrManager.asm"
   .include "lib\elevatorManager.asm" 
   .include "lib\doorManager.asm"
   .include "lib\levelManager.asm"
@@ -591,7 +592,6 @@ Bank00Start:
   .include "lib\stringManager.asm"
   .include "lib\cursorController.asm"
   .include "data\logoAndText.asm"
-  .include "data\levels.asm"
               
   story0:
   .incbin "data\stories\testStory.bin"
