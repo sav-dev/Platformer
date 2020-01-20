@@ -26,7 +26,7 @@ GameFrame:
     
   .changePause:
     JSR FlipGreyscale
-    ; todo 0006: play a sound  
+    JSR SfxPause
     LDA <isPaused         
     EOR #%00000001
     STA <isPaused        

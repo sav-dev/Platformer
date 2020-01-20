@@ -65,7 +65,11 @@ PlaySong:
 PauseSong:
   LDY #SOUND_BANK
   JSR SwitchBank
+  TXA
+  PHA ; pause_song doesn't restore X register
   JSR pause_song
+  PLA
+  TAX
   JMP RestoreBank
 
 ;****************************************************************
@@ -117,6 +121,25 @@ SfxOptionChanged:
   STA sound_param_byte_1
   JSR play_sfx
   JMP RestoreBank
+  
+;****************************************************************
+; Name:                                                         ;
+;   SfxPause                                                    ;
+;                                                               ;
+; Description:                                                  ;
+;   Play the 'pause' sfx                                        ;
+;****************************************************************
+  
+SfxPause:
+  LDY #SOUND_BANK
+  JSR SwitchBank
+  LDA #sfx_index_sfx_shot ; todo 0007: update with the correct id
+  STA sound_param_byte_0
+  LDA #soundeffect_one
+  STA sound_param_byte_1
+  JSR play_sfx
+  JMP RestoreBank
+  
   
 ;****************************************************************
 ; Name:                                                         ;
