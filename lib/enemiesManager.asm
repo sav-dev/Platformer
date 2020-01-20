@@ -1495,6 +1495,7 @@ UpdateEnemies:
         ; explode the enemy.        
         ; first update state:
         .explodeEnemy:
+          ; todo 0006: play sfx
           LDX <xPointerCache
           LDA #ENEMY_STATE_EXPLODING
           STA enemies, x        

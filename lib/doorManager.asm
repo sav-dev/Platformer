@@ -63,6 +63,7 @@ ProcessDoorAndKeycard:
       RTS
     
     .keycardCollision:
+      JSR SfxKeycard
       LDA #$00
       STA <doorExists; keycard collision, simply disable the door, next frame both door and keycard will disappear
       RTS

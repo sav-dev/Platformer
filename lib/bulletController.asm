@@ -1052,8 +1052,11 @@ UpdateBullets:
         LDA #BULLET_S_NORMAL
         STA bullets, x
         LDA <l       
-        BNE RenderBullet
-        JSR SfxShot ; todo 0006
+        BNE .enemyBulletSfx
+        JSR SfxPlayerShot
+        JMP RenderBullet        
+        .enemyBulletSfx:
+          JSR SfxEnemyShot        
         
       ; render the bullet
       ; we expect all 4 render vars to be set when we get here

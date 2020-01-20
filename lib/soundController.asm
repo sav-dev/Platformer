@@ -6,6 +6,7 @@ SoundControllerStart:
 ;****************************************************************
 
 ; POITAG - ROM savings - lots of code duplication here
+; todo 0001: do that do save ROM bytes
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -99,7 +100,7 @@ SfxOptionSelected:
   JSR SwitchBank
   LDA #sfx_index_sfx_shot ; todo 0007: update with the correct id
   STA sound_param_byte_0
-  LDA #soundeffect_one
+  LDA #soundeffect_two ; higher priority
   STA sound_param_byte_1
   JSR play_sfx
   JMP RestoreBank
@@ -117,7 +118,7 @@ SfxOptionChanged:
   JSR SwitchBank
   LDA #sfx_index_sfx_shot ; todo 0007: update with the correct id
   STA sound_param_byte_0
-  LDA #soundeffect_one
+  LDA #soundeffect_one ; lower priority
   STA sound_param_byte_1
   JSR play_sfx
   JMP RestoreBank
@@ -135,44 +136,97 @@ SfxPause:
   JSR SwitchBank
   LDA #sfx_index_sfx_shot ; todo 0007: update with the correct id
   STA sound_param_byte_0
-  LDA #soundeffect_one
+  LDA #soundeffect_two ; higher priority
+  STA sound_param_byte_1
+  JSR play_sfx
+  JMP RestoreBank
+    
+;****************************************************************
+; Name:                                                         ;
+;   SfxKeycard                                                  ;
+;                                                               ;
+; Description:                                                  ;
+;   Play the 'keycard' sfx                                      ;
+;****************************************************************
+  
+SfxKeycard:
+  LDY #SOUND_BANK
+  JSR SwitchBank
+  LDA #sfx_index_sfx_shot ; todo 0007: update with the correct id
+  STA sound_param_byte_0
+  LDA #soundeffect_two ; higher priority
+  STA sound_param_byte_1
+  JSR play_sfx
+  JMP RestoreBank
+    
+;****************************************************************
+; Name:                                                         ;
+;   SfxPlayerShot                                               ;
+;                                                               ;
+; Description:                                                  ;
+;   Play the 'player shot' sfx                                  ;
+;****************************************************************
+
+SfxPlayerShot:
+  LDY #SOUND_BANK
+  JSR SwitchBank
+  LDA #sfx_index_sfx_shot ; todo 0007: update with the correct id
+  STA sound_param_byte_0
+  LDA #soundeffect_two ; higher priority
   STA sound_param_byte_1
   JSR play_sfx
   JMP RestoreBank
   
-  
 ;****************************************************************
 ; Name:                                                         ;
-;   SfxShot                                                     ;
+;   SfxEnemyShot                                                ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Play the 'shot' sfx                                         ;
+;   Play the 'enemy shot' sfx                                   ;
 ;****************************************************************
 
-SfxShot:
+SfxEnemyShot:
   LDY #SOUND_BANK
   JSR SwitchBank
-  LDA #sfx_index_sfx_shot
+  LDA #sfx_index_sfx_shot ; todo 0007: update with the correct id
   STA sound_param_byte_0
-  LDA #soundeffect_one
+  LDA #soundeffect_one ; lower priority
   STA sound_param_byte_1
   JSR play_sfx
   JMP RestoreBank
   
 ;****************************************************************
 ; Name:                                                         ;
-;   SfxExplode                                                  ;
+;   SfxPlayerExplode                                            ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Play the 'explode' sfx                                      ;
+;   Play the 'player explodes' sfx                              ;
 ;****************************************************************
 
-SfxExplode:
+SfxPlayerExplode:
   LDY #SOUND_BANK
   JSR SwitchBank
-  LDA #sfx_index_sfx_explode
+  LDA #sfx_index_sfx_explode ; todo 0007: update with the correct id
   STA sound_param_byte_0
-  LDA #soundeffect_one
+  LDA #soundeffect_two ; higher priority
+  STA sound_param_byte_1
+  JSR play_sfx
+  JMP RestoreBank
+  
+;****************************************************************
+; Name:                                                         ;
+;   SfxBossExplode                                              ;
+;                                                               ;
+; Description:                                                  ;
+;   Play the 'boss explodes' sfx                                ;
+;****************************************************************
+
+SfxBossExplode:
+  LDY #SOUND_BANK
+  JSR SwitchBank
+  LDA #sfx_index_sfx_explode ; todo 0007: update with the correct id
+  STA sound_param_byte_0
+  LDA #soundeffect_two ; higher priority
   STA sound_param_byte_1
   JSR play_sfx
   JMP RestoreBank

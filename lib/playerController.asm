@@ -1878,7 +1878,7 @@ ExplodePlayer:
   LDA #EXPLOSION_ANIM_SPEED
   STA <playerCounter
   JSR PauseSong
-  JSR SfxExplode ; todo 0006
+  JSR SfxPlayerExplode
   RTS   
   
 ;****************************************************************

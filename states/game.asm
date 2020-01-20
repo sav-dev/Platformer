@@ -260,7 +260,7 @@ ExplFrame:
         LDA #EXPLOSION_ANIM_FRAMES
         STA enemies, x ; set frame counter        
        
-      ; todo 0006: play the expl sound
+        JSR SfxBossExplode
        
       .updateCounters:
         INC <levelTypeData1
