@@ -176,16 +176,22 @@ Explosion0:
   .byte $00
 .pointer:
   .byte LOW(Explosion0Tiles), HIGH(Explosion0Tiles)
+.sound:
+  .byte sfx_index_sfx_explode
 Explosion1:
 .attributes:
   .byte $03
 .pointer:
   .byte LOW(Explosion1Tiles), HIGH(Explosion1Tiles)
+.sound:
+  .byte sfx_index_sfx_zap
 Explosion2:
 .attributes:
   .byte $02
 .pointer:
   .byte LOW(Explosion1Tiles), HIGH(Explosion1Tiles)
+.sound:
+  .byte sfx_index_sfx_zap
 
 ExplosionTiles:
 Explosion0Tiles:

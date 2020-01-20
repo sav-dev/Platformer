@@ -97,7 +97,12 @@ EXPLOSION_SPRITES_COUNT = $04
 EXPLOSION_ANIM_FRAMES   = $04   ; frames are counting down so 4 -> 3 -> 2 -> 1
 EXPLOSION_ANIM_SPEED    = $06
 EXPLOSION_WIDTH         = SPRITE_DIMENSION * $02
-EXPLOSION_DEF_SIZE      = $03
+EXPLOSION_DEF_SIZE      = $04
+
+EXPLOSION_DEF_ATTS      = $00
+EXPLOSION_DEF_POINT_L   = EXPLOSION_DEF_ATTS + $01
+EXPLOSION_DEF_POINT_H   = EXPLOSION_DEF_POINT_L + $01
+EXPLOSION_DEF_SOUND     = EXPLOSION_DEF_POINT_H + $01
  
 ;****************************************************************
 ; Player related constans                                       ;

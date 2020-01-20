@@ -72,7 +72,7 @@ BugConsts:
 .renderingInfo:
   .byte LOW(BugRender), HIGH(BugRender)
 .explosionPointer:
-  .byte $03
+  .byte $04
 .explosionOffset:
   .byte $00, $00
 
@@ -94,7 +94,7 @@ EyeConsts:
 .renderingInfo:
   .byte LOW(EyeRender), HIGH(EyeRender)
 .explosionPointer:
-  .byte $06
+  .byte $08
 .explosionOffset:
   .byte $00, $00
 
@@ -314,7 +314,7 @@ GreenBlobConsts:
 .renderingInfo:
   .byte LOW(GreenBlobRender), HIGH(GreenBlobRender)
 .explosionPointer:
-  .byte $03
+  .byte $04
 .explosionOffset:
   .byte $00, $00
 
@@ -336,7 +336,7 @@ PinkBlobConsts:
 .renderingInfo:
   .byte LOW(PinkBlobRender), HIGH(PinkBlobRender)
 .explosionPointer:
-  .byte $06
+  .byte $08
 .explosionOffset:
   .byte $00, $00
 
@@ -380,7 +380,7 @@ AcidConsts:
 .renderingInfo:
   .byte LOW(AcidRender), HIGH(AcidRender)
 .explosionPointer:
-  .byte $06
+  .byte $08
 .explosionOffset:
   .byte $00, $00
 
