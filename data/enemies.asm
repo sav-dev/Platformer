@@ -40,7 +40,7 @@ BeetleConsts:
 .orientation:
   .byte $01
 .bulletPointer:
-  .byte $4E
+  .byte $54
 .gunInfo:
   .byte $1F,$04,$F9,$04
 .animationSpeed:
@@ -128,7 +128,7 @@ TurretVConsts:
 .orientation:
   .byte $00
 .bulletPointer:
-  .byte $0D
+  .byte $0E
 .gunInfo:
   .byte $0A,$10,$0A,$F8
 .animationSpeed:
@@ -172,7 +172,7 @@ SphereConsts:
 .orientation:
   .byte $01
 .bulletPointer:
-  .byte $5B
+  .byte $62
 .gunInfo:
   .byte $0D,$06,$FB,$06
 .animationSpeed:
@@ -348,7 +348,7 @@ TankConsts:
 .orientation:
   .byte $01
 .bulletPointer:
-  .byte $34
+  .byte $38
 .gunInfo:
   .byte $17,$02,$01,$02
 .animationSpeed:
@@ -392,7 +392,7 @@ TurretD1Consts:
 .orientation:
   .byte $01
 .bulletPointer:
-  .byte $1A
+  .byte $1C
 .gunInfo:
   .byte $0E,$F9,$FA,$F9
 .animationSpeed:
@@ -414,7 +414,7 @@ TurretD2Consts:
 .orientation:
   .byte $01
 .bulletPointer:
-  .byte $27
+  .byte $2A
 .gunInfo:
   .byte $0E,$0F,$FA,$0F
 .animationSpeed:
@@ -436,7 +436,7 @@ GunnerRobotConsts:
 .orientation:
   .byte $01
 .bulletPointer:
-  .byte $41
+  .byte $46
 .gunInfo:
   .byte $18,$0B,$F8,$0B
 .animationSpeed:
@@ -524,7 +524,7 @@ BossrighthandConsts:
 .orientation:
   .byte $01
 .bulletPointer:
-  .byte $68
+  .byte $70
 .gunInfo:
   .byte $0B,$0A,$09,$0A
 .animationSpeed:
@@ -546,7 +546,7 @@ BosslefthandConsts:
 .orientation:
   .byte $01
 .bulletPointer:
-  .byte $75
+  .byte $7E
 .gunInfo:
   .byte $0B,$0A,$09,$0A
 .animationSpeed:

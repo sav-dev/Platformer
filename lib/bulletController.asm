@@ -288,9 +288,19 @@ SpawnEnemyBullet:
       INY
       LDA BulletConsts, x
       STA bullets, y
+      INX
       INY
       
-    ; consts are processed. remaining two bytes in bullet data are x and y position
+    ; the last byte in consts is the sound to play. play the sound.
+    ; first cache y since playing the sound messes it up
+    .playSound:
+      LDA BulletConsts, x
+      STA <sfxToPlay
+      STY <yPointerCache
+      JSR SfxLowPri
+      LDY <yPointerCache
+      
+    ; consts are processed. next two bytes in bullet data are x and y position
     .setPosition:
       LDA <enemyGunX
       STA bullets, y
@@ -1051,15 +1061,15 @@ UpdateBullets:
         BNE RenderBullet
         LDA #BULLET_S_NORMAL
         STA bullets, x
+        
+      ; for player bullets, we don't want to play the sound if the player is against the wall 
+      ; and the bullet doesn't show up. Play it here.
+      ; for enemy bullets, we play the sound when the bullet is spawned as we control the position 
+      ; and we can make sure they won't fire when against the wall.
+      .playSoundIfPlayerBullet:
         LDA <l       
-        BNE .enemyBulletSfx
+        BNE RenderBullet
         PlaySfxHighPri #sfx_index_sfx_shot ; todo 0007: update the sound
-        JMP RenderBullet        
-        .enemyBulletSfx:
-          ; todo 0008: different sound per bullet? Would need to move this to SpawnEnemyBullet
-          ; but this logic maybe is not needed. it's only to not play the gun sound if player is against the wall
-          ; maybe that's ok. Also for enemies it's definitely OK as we control where they stand etc.
-          PlaySfxLowPri #sfx_index_sfx_shot ; todo 0007: update the sound
 
       ; render the bullet
       ; we expect all 4 render vars to be set when we get here
