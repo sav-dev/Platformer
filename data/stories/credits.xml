@@ -13,5 +13,5 @@
     <StoryString> <X>3</X> <Y>17</Y> <StringId>14</StringId> </StoryString>
     <StoryString> <X>3</X> <Y>18</Y> <StringId>15</StringId> </StoryString>
   </Strings>
-  <Song>song_index_song</Song>
+  <Song>song_index_song</Song> <!-- todo 0007: update -->
 </Story>

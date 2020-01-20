@@ -7,5 +7,5 @@
     <StoryString> <X>1</X> <Y>7</Y> <StringId>24</StringId> </StoryString>
     <StoryString> <X>1</X> <Y>9</Y> <StringId>25</StringId> </StoryString>
   </Strings>
-  <Song>song_index_song</Song>
+  <Song>song_index_song</Song> <!-- todo 0007: update -->
 </Story>
