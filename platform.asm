@@ -8,10 +8,11 @@
   .inesmir 1  ; vertical mirroring for horizontal scrolling
   
 ;****************************************************************
-; Variables                                                     ;
+; Variables etc.                                                ;
 ;****************************************************************
     
   .include "ggsound\ggsound.inc"
+  .include "inc\macros.asm"
   .include "inc\zeroPage.asm"
   .include "inc\variables.asm"
   
@@ -544,8 +545,7 @@ SetVramAddressingTo32:
   .include "lib\enemiesManager.asm"  
   .include "lib\collisionManager.asm"
   .include "lib\explosionsController.asm"
-  .include "lib\paletteManager.asm"   
-  .include "lib\bankManager.asm"
+  .include "lib\paletteManager.asm"     
 
   .include "states\game.asm"
   
@@ -570,6 +570,7 @@ Bank15Start:
   .include "lib\doorManager.asm"
   .include "lib\levelManager.asm"
   .include "lib\progressManager.asm"
+  .include "lib\bankManager.asm"
   
 Bank15End:
 
@@ -759,7 +760,7 @@ Bank12:
 Bank12Start:  
 
   Sound:
-  .include "ggsound\sound.asm"
+  .include "ggsound\sound.asm" ; todo 0007: move to a different dir where it can be checked in
 
 Bank12End:
   

@@ -675,7 +675,13 @@ UpdateActiveEnemy:
       EOR #$01 ; this will flip the state between 0 and 1
       STA enemies, x
       BEQ .blinkingCurrentlyInvisible
-      JMP .blinkingCurrentlyVisible
+      
+      ; play the sound when enemy becomes visible
+      .enemyBecomesVisible:
+        STY <yPointerCache ; playing sounds messes up Y
+        PlaySfxLowPri #sfx_index_sfx_zap ; todo 0007: update the sound
+        LDY <yPointerCache
+        JMP .blinkingCurrentlyVisible
   
   ; X is pointing to remaining life.
   ; we have to figure out if the enemy should even be rendered. 
@@ -1481,7 +1487,8 @@ UpdateEnemies:
     
     .checkIfExploding:
       CMP #ENEMY_STATE_EXPLODING
-      BEQ .enemyExploding
+      BNE .enemyActive
+      JMP .enemyExploding
       
     ; active enemy - call into a subroutine, jump to the loop condition
     .enemyActive:
@@ -1490,12 +1497,12 @@ UpdateEnemies:
       ; check if enemy should be exploded
       .checkRemoveEnemyActive:
         LDA <removeEnemy
-        BEQ .checkIfEnemyHit
+        BNE .explodeEnemy
+        JMP .checkIfEnemyHit
         
         ; explode the enemy.        
         ; first update state:
-        .explodeEnemy:
-          ; todo 0006: play sfx
+        .explodeEnemy:          
           LDX <xPointerCache
           LDA #ENEMY_STATE_EXPLODING
           STA enemies, x        
@@ -1545,6 +1552,16 @@ UpdateEnemies:
           LDY #CONST_ENEMY_EXPL_POINTER
           LDA [enemyConstsPointer], y
           STA enemies, x
+          
+          .playExplosionSound:
+          STX <xPointerCache2 ; OK to use, only used in SpawnEnemyBullet
+          CLC
+          ADC #EXPLOSION_DEF_SOUND ; point to expl sound in expl consts
+          TAX
+          LDA Explosions, x ; A contains the explosion sound
+          STA <b ; cache it in b to be used as a param
+          PlaySfxLowPriZp b
+          LDX <xPointerCache2
                     
         ; load CONST_ENEMY_EXPL_OFF in Y to point to the explosion offsets.
         ; X += (ENEMY_X - ENEMY_POINTER_L) to point to the X position, update x using x off from consts.

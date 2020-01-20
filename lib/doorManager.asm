@@ -63,7 +63,7 @@ ProcessDoorAndKeycard:
       RTS
     
     .keycardCollision:
-      JSR SfxKeycard
+      PlaySfxHighPri #sfx_index_sfx_shot ; todo 0007: update the sound
       LDA #$00
       STA <doorExists; keycard collision, simply disable the door, next frame both door and keycard will disappear
       RTS

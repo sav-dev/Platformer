@@ -1053,11 +1053,14 @@ UpdateBullets:
         STA bullets, x
         LDA <l       
         BNE .enemyBulletSfx
-        JSR SfxPlayerShot
+        PlaySfxHighPri #sfx_index_sfx_shot ; todo 0007: update the sound
         JMP RenderBullet        
         .enemyBulletSfx:
-          JSR SfxEnemyShot        
-        
+          ; todo 0008: different sound per bullet? Would need to move this to SpawnEnemyBullet
+          ; but this logic maybe is not needed. it's only to not play the gun sound if player is against the wall
+          ; maybe that's ok. Also for enemies it's definitely OK as we control where they stand etc.
+          PlaySfxLowPri #sfx_index_sfx_shot ; todo 0007: update the sound
+
       ; render the bullet
       ; we expect all 4 render vars to be set when we get here
       RenderBullet:      
