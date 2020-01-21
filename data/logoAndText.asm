@@ -114,54 +114,59 @@ STR_16 = 32
   .byte LOW(string16), HIGH(string16)
 
 ; 17
-; placeholder
-  .byte $00, $00
+; "Stage"
+STR_17 = 34
+  .byte LOW(string17), HIGH(string17)
 
 ; 18
-; placeholder
-  .byte $00, $00
+; "Part"
+STR_18 = 36
+  .byte LOW(string18), HIGH(string18)
 
 ; 19
-; placeholder
-  .byte $00, $00
+; "1"
+STR_19 = 38
+  .byte LOW(string19), HIGH(string19)
 
 ; 20
-; "This is some string, for the"
+; "2"
 STR_20 = 40
   .byte LOW(string20), HIGH(string20)
 
 ; 21
-; "first story screen."
+; "3"
 STR_21 = 42
   .byte LOW(string21), HIGH(string21)
 
 ; 22
-; "It will be displayed on"
+; "4"
 STR_22 = 44
   .byte LOW(string22), HIGH(string22)
 
 ; 23
-; "the story screen right after"
+; "5"
 STR_23 = 46
   .byte LOW(string23), HIGH(string23)
 
 ; 24
-; "the title screen."
+; "6"
 STR_24 = 48
   .byte LOW(string24), HIGH(string24)
 
 ; 25
-; "Cool, isn't it?"
+; "7"
 STR_25 = 50
   .byte LOW(string25), HIGH(string25)
 
 ; 26
-; placeholder
-  .byte $00, $00
+; "8"
+STR_26 = 52
+  .byte LOW(string26), HIGH(string26)
 
 ; 27
-; placeholder
-  .byte $00, $00
+; "9"
+STR_27 = 54
+  .byte LOW(string27), HIGH(string27)
 
 ; 28
 ; placeholder
@@ -172,29 +177,75 @@ STR_25 = 50
   .byte $00, $00
 
 ; 30
-; "Yet another string, this time"
+; "This is some string, for the"
 STR_30 = 60
   .byte LOW(string30), HIGH(string30)
 
 ; 31
-; "it will be displayed on the"
+; "first story screen."
 STR_31 = 62
   .byte LOW(string31), HIGH(string31)
 
 ; 32
-; "second story screen which will"
+; "It will be displayed on"
 STR_32 = 64
   .byte LOW(string32), HIGH(string32)
 
 ; 33
-; "be shown right after the first"
+; "the story screen right after"
 STR_33 = 66
   .byte LOW(string33), HIGH(string33)
 
 ; 34
-; "one in this little test."
+; "the title screen."
 STR_34 = 68
   .byte LOW(string34), HIGH(string34)
+
+; 35
+; "Cool, isn't it?"
+STR_35 = 70
+  .byte LOW(string35), HIGH(string35)
+
+; 36
+; placeholder
+  .byte $00, $00
+
+; 37
+; placeholder
+  .byte $00, $00
+
+; 38
+; placeholder
+  .byte $00, $00
+
+; 39
+; placeholder
+  .byte $00, $00
+
+; 40
+; "Yet another string, this time"
+STR_40 = 80
+  .byte LOW(string40), HIGH(string40)
+
+; 41
+; "it will be displayed on the"
+STR_41 = 82
+  .byte LOW(string41), HIGH(string41)
+
+; 42
+; "second story screen which will"
+STR_42 = 84
+  .byte LOW(string42), HIGH(string42)
+
+; 43
+; "be shown right after the first"
+STR_43 = 86
+  .byte LOW(string43), HIGH(string43)
+
+; 44
+; "one in this little test."
+STR_44 = 88
+  .byte LOW(string44), HIGH(string44)
 
 
 Strings:
@@ -232,27 +283,49 @@ string15:
   .byte $14, $17, $19, $18, $1D, $1E, $0F, $1C, $00, $16, $19, $11, $13, $22, $00, $1D, $1E, $1F, $0E, $13, $19
 string16:
   .byte $07, $0D, $1C, $0F, $0E, $13, $1E, $1D
+string17:
+  .byte $05, $1D, $1E, $0B, $11, $0F
+string18:
+  .byte $04, $1A, $0B, $1C, $1E
+string19:
+  .byte $01, $02
 string20:
-  .byte $1C, $1E, $12, $13, $1D, $00, $13, $1D, $00, $1D, $19, $17, $0F, $00, $1D, $1E, $1C, $13, $18, $11, $2A, $00, $10, $19, $1C, $00, $1E, $12, $0F
+  .byte $01, $03
 string21:
-  .byte $13, $10, $13, $1C, $1D, $1E, $00, $1D, $1E, $19, $1C, $23, $00, $1D, $0D, $1C, $0F, $0F, $18, $2B
+  .byte $01, $04
 string22:
-  .byte $17, $13, $1E, $00, $21, $13, $16, $16, $00, $0C, $0F, $00, $0E, $13, $1D, $1A, $16, $0B, $23, $0F, $0E, $00, $19, $18
+  .byte $01, $05
 string23:
-  .byte $1C, $1E, $12, $0F, $00, $1D, $1E, $19, $1C, $23, $00, $1D, $0D, $1C, $0F, $0F, $18, $00, $1C, $13, $11, $12, $1E, $00, $0B, $10, $1E, $0F, $1C
+  .byte $01, $06
 string24:
-  .byte $11, $1E, $12, $0F, $00, $1E, $13, $1E, $16, $0F, $00, $1D, $0D, $1C, $0F, $0F, $18, $2B
+  .byte $01, $07
 string25:
-  .byte $0F, $0D, $19, $19, $16, $2A, $00, $13, $1D, $18, $28, $1E, $00, $13, $1E, $26
+  .byte $01, $08
+string26:
+  .byte $01, $09
+string27:
+  .byte $01, $0A
 string30:
-  .byte $1D, $23, $0F, $1E, $00, $0B, $18, $19, $1E, $12, $0F, $1C, $00, $1D, $1E, $1C, $13, $18, $11, $2A, $00, $1E, $12, $13, $1D, $00, $1E, $13, $17, $0F
+  .byte $1C, $1E, $12, $13, $1D, $00, $13, $1D, $00, $1D, $19, $17, $0F, $00, $1D, $1E, $1C, $13, $18, $11, $2A, $00, $10, $19, $1C, $00, $1E, $12, $0F
 string31:
-  .byte $1B, $13, $1E, $00, $21, $13, $16, $16, $00, $0C, $0F, $00, $0E, $13, $1D, $1A, $16, $0B, $23, $0F, $0E, $00, $19, $18, $00, $1E, $12, $0F
+  .byte $13, $10, $13, $1C, $1D, $1E, $00, $1D, $1E, $19, $1C, $23, $00, $1D, $0D, $1C, $0F, $0F, $18, $2B
 string32:
-  .byte $1E, $1D, $0F, $0D, $19, $18, $0E, $00, $1D, $1E, $19, $1C, $23, $00, $1D, $0D, $1C, $0F, $0F, $18, $00, $21, $12, $13, $0D, $12, $00, $21, $13, $16, $16
+  .byte $17, $13, $1E, $00, $21, $13, $16, $16, $00, $0C, $0F, $00, $0E, $13, $1D, $1A, $16, $0B, $23, $0F, $0E, $00, $19, $18
 string33:
-  .byte $1E, $0C, $0F, $00, $1D, $12, $19, $21, $18, $00, $1C, $13, $11, $12, $1E, $00, $0B, $10, $1E, $0F, $1C, $00, $1E, $12, $0F, $00, $10, $13, $1C, $1D, $1E
+  .byte $1C, $1E, $12, $0F, $00, $1D, $1E, $19, $1C, $23, $00, $1D, $0D, $1C, $0F, $0F, $18, $00, $1C, $13, $11, $12, $1E, $00, $0B, $10, $1E, $0F, $1C
 string34:
+  .byte $11, $1E, $12, $0F, $00, $1E, $13, $1E, $16, $0F, $00, $1D, $0D, $1C, $0F, $0F, $18, $2B
+string35:
+  .byte $0F, $0D, $19, $19, $16, $2A, $00, $13, $1D, $18, $28, $1E, $00, $13, $1E, $26
+string40:
+  .byte $1D, $23, $0F, $1E, $00, $0B, $18, $19, $1E, $12, $0F, $1C, $00, $1D, $1E, $1C, $13, $18, $11, $2A, $00, $1E, $12, $13, $1D, $00, $1E, $13, $17, $0F
+string41:
+  .byte $1B, $13, $1E, $00, $21, $13, $16, $16, $00, $0C, $0F, $00, $0E, $13, $1D, $1A, $16, $0B, $23, $0F, $0E, $00, $19, $18, $00, $1E, $12, $0F
+string42:
+  .byte $1E, $1D, $0F, $0D, $19, $18, $0E, $00, $1D, $1E, $19, $1C, $23, $00, $1D, $0D, $1C, $0F, $0F, $18, $00, $21, $12, $13, $0D, $12, $00, $21, $13, $16, $16
+string43:
+  .byte $1E, $0C, $0F, $00, $1D, $12, $19, $21, $18, $00, $1C, $13, $11, $12, $1E, $00, $0B, $10, $1E, $0F, $1C, $00, $1E, $12, $0F, $00, $10, $13, $1C, $1D, $1E
+string44:
   .byte $18, $19, $18, $0F, $00, $13, $18, $00, $1E, $12, $13, $1D, $00, $16, $13, $1E, $1E, $16, $0F, $00, $1E, $0F, $1D, $1E, $2B
 
 

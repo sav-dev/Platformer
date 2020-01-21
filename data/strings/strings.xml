@@ -73,51 +73,97 @@
       <Value>Credits</Value>
     </StringConfig>
     
-    <!-- 1st story screen -->
+    <!-- Stage select -->
+    <StringConfig>
+      <Id>17</Id>
+      <Value>Stage</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>18</Id>
+      <Value>Part</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>19</Id>
+      <Value>1</Value>
+    </StringConfig>
     <StringConfig>
       <Id>20</Id>
-      <Value>This is some string, for the</Value>
+      <Value>2</Value>
     </StringConfig>
     <StringConfig>
       <Id>21</Id>
-      <Value>first story screen.</Value>
+      <Value>3</Value>
     </StringConfig>
     <StringConfig>
       <Id>22</Id>
-      <Value>It will be displayed on</Value>
+      <Value>4</Value>
     </StringConfig>
     <StringConfig>
       <Id>23</Id>
-      <Value>the story screen right after</Value>
+      <Value>5</Value>
     </StringConfig>
     <StringConfig>
       <Id>24</Id>
-      <Value>the title screen.</Value>
+      <Value>6</Value>
     </StringConfig>
     <StringConfig>
       <Id>25</Id>
+      <Value>7</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>26</Id>
+      <Value>8</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>27</Id>
+      <Value>9</Value>
+    </StringConfig>
+    
+    <!-- 1st story screen -->
+    <StringConfig>
+      <Id>30</Id>
+      <Value>This is some string, for the</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>31</Id>
+      <Value>first story screen.</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>32</Id>
+      <Value>It will be displayed on</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>33</Id>
+      <Value>the story screen right after</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>34</Id>
+      <Value>the title screen.</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>35</Id>
       <Value>Cool, isn't it?</Value>
     </StringConfig>
     
     <!-- 2nd story screen -->
     <StringConfig>
-      <Id>30</Id>
+      <Id>40</Id>
       <Value>Yet another string, this time</Value>
     </StringConfig>
     <StringConfig>
-      <Id>31</Id>
+      <Id>41</Id>
       <Value>it will be displayed on the</Value>
     </StringConfig>
     <StringConfig>
-      <Id>32</Id>
+      <Id>42</Id>
       <Value>second story screen which will</Value>
     </StringConfig>
     <StringConfig>
-      <Id>33</Id>
+      <Id>43</Id>
       <Value>be shown right after the first</Value>
     </StringConfig>
     <StringConfig>
-      <Id>34</Id>
+      <Id>44</Id>
       <Value>one in this little test.</Value>
     </StringConfig>
     

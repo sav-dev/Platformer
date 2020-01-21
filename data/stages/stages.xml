@@ -1,0 +1,10 @@
+<Stages>
+  <!-- todo 0005 update as needed -->
+  <StageList>
+    <StageData><LevelCount>7</LevelCount></StageData>
+    <StageData><LevelCount>6</LevelCount></StageData>
+    <StageData><LevelCount>8</LevelCount></StageData>
+    <StageData><LevelCount>8</LevelCount></StageData>
+    <StageData><LevelCount>5</LevelCount></StageData>
+  </StageList>
+</Stages>
