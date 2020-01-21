@@ -8,6 +8,7 @@ CursorController
 DoorManager
 ElevatorManager
 EnemiesManager
+Explosions
 ExplosionsController
 LevelManager
 PaletteManager

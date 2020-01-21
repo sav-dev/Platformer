@@ -540,6 +540,8 @@ SetVramAddressingTo32:
 ; Modules import                                                ;
 ;****************************************************************
 
+  .include "data\explosions.asm"
+
   .include "lib\backgroundManager.asm"    
   .include "lib\playerController.asm"    
   .include "lib\enemiesManager.asm"  
