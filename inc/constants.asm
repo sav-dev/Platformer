@@ -14,6 +14,7 @@
 SPRITES_LOW_BYTE  = $00   ; low byte of the sprites page
 SPRITES_HIGH_BYTE = $02   ; high sprite of the sprites page
 SPRITES_ADDRESS   = $0200 ; above combined
+DRAW_BUFFER_SIZE  = $A0
 
 ;****************************************************************
 ; Controllers                                                   ;
@@ -155,7 +156,6 @@ PLAYER_ANIM_SPEED        = $08
                          
 PLAYER_NOT_V_COOLDOWN    = $60   ; how much time should pass after player is dead/level has been beaten before the screen fades out
 PLAYER_JETPACK_LVL_END   = $01   ; special not_v_cooldown value for jetpack levels - the player will disappear for one frame and then next level will start
-PLAYER_NOT_V_FADED_OUT   = STATE_CHANGE_TIMEOUT
                          
 SPRITES_PLAYER           = SPRITES_ADDRESS
 PLAYER_SPRITES_COUNT     = $09   ; for iterating all sprites
@@ -431,3 +431,10 @@ SOUND_BANK = $06
 
 PROGRESS_GAME = $00
 PROGRESS_STORY = $01
+
+;****************************************************************
+; Strings                                                       ;
+;****************************************************************
+
+MAX_STRING_LENGTH = $1E
+MAX_STRING_BUFFER_SIZE = MAX_STRING_LENGTH + $04

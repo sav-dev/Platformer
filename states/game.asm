@@ -194,7 +194,7 @@ ExplFrame:
         INC <currentLevel ; last level will be a story one, no need to check for overflow
         JSR WaitForFrame
         JSR FadeOut
-        LDX #PLAYER_NOT_V_FADED_OUT
+        LDX #STATE_CHANGE_TIMEOUT
         JSR SleepForXFrames        
         INC <progressGame
         JMP .setNmiFlags

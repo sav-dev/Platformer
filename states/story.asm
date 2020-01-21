@@ -176,12 +176,24 @@ DrawStoryStrings:
     JSR DrawString ; changes x & y
     LDX <xPointerCache
     LDY <yPointerCache
-    INC <needDraw ; we'll be drawing (must be needDraw, not local as this is in the init)
-    JSR WaitForFrame
-    DEX
-    BNE .drawStringLoop
     
-  RTS
+    LDA <bufferOffset
+    CMP #(DRAW_BUFFER_SIZE - MAX_STRING_BUFFER_SIZE) ; if there's no room for another string, draw
+    BCS .drawStrings
+    JMP .checkLoopCondition
+    
+    .drawStrings:
+      INC <needDraw ; we'll be drawing (must be needDraw, not local as this is in the init)
+      JSR WaitForFrame
+    
+     .checkLoopCondition:
+      DEX
+      BNE .drawStringLoop
+    
+  .drawStringsAgain:
+    INC <needDraw ; draw the remaining strings (this may be a no-op)
+    JSR WaitForFrame    
+    RTS
   
 ;****************************************************************
 ; EOF                                                           ;

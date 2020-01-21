@@ -59,7 +59,7 @@ UpdatePlayerNotVisible:
   .resetLevel:
     JSR WaitForFrame
     JSR FadeOut
-    LDX #PLAYER_NOT_V_FADED_OUT
+    LDX #STATE_CHANGE_TIMEOUT
     JSR SleepForXFrames
     INC <progressGame
     RTS
@@ -1814,6 +1814,8 @@ MovePlayerHorizontallyNormalAndSetBoxes:
           .scrollingLoop:          
             JSR ClearSprites
             JSR IncrementScroll
+            JSR IncrementScroll
+            DEC <playerX
             DEC <playerX
             JSR RenderPlayer
             JSR RenderElevators
