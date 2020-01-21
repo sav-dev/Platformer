@@ -410,7 +410,7 @@ FadeOut:
 ;   Fades in from black                                         ;
 ;****************************************************************
 
-FadeIn: ; todo 0010 - is this required
+FadeIn:
 
   LDA #%01111110           ; enable PPU with reds and greens intensified
   STA <soft2001            

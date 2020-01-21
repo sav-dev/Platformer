@@ -8,7 +8,7 @@ StateStageSelectStart:
 ; Constants                                                     ;
 ;****************************************************************
 
-; todo 0010: stage select
+; todo 0005: stage select
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -25,7 +25,7 @@ StageSelectFrame:
     STA <needDrawLocal
         
   .processFrame:
-    ; todo 0010: stage select
+    ; todo 0005: stage select
     
   .setNmiFlags:
     LDA <needDrawLocal
@@ -48,7 +48,7 @@ LoadStageSelect:
   .commonLogic:
     JSR CommonBank0Init    
   
-  ; todo 0010: stage select
+  ; todo 0005: stage select
     
   .fadeIn:
     JSR FadeIn ; this enables PPU    
