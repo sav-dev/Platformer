@@ -1,0 +1,125 @@
+<StringsConfig>
+  <Strings>
+  
+    <!-- Title screen -->
+    <StringConfig>
+      <Id>0</Id>
+      <Value>Press start</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>1</Id>
+      <Value>Start game</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>2</Id>
+      <Value>Stage select</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>3</Id>
+      <Value>Credits</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>4</Id>
+      <Value>Sav 2020</Value>
+    </StringConfig>
+    
+    <!-- Credits -->
+    <StringConfig>
+      <Id>5</Id>
+      <Value>Programming  : Sav</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>6</Id>
+      <Value>SFX, music   : Sav</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>7</Id>
+      <Value>Sound engine : Gradual Games</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>8</Id>
+      <Value>Graphics from opengameart.com</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>9</Id>
+      <Value>by the following users:</Value>
+    </StringConfig>    
+    <StringConfig>
+      <Id>10</Id>
+      <Value>Surt</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>11</Id>
+      <Value>Master484</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>12</Id>
+      <Value>Redshrike</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>13</Id>
+      <Value>chipmunk</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>14</Id>
+      <Value>Daniel Cook</Value>
+    </StringConfig>    
+    <StringConfig>
+      <Id>15</Id>
+      <Value>Monster Logix Studio</Value>
+    </StringConfig>    
+    <StringConfig>
+      <Id>16</Id>
+      <Value>Credits</Value>
+    </StringConfig>
+    
+    <!-- 1st story screen -->
+    <StringConfig>
+      <Id>20</Id>
+      <Value>This is some string, for the</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>21</Id>
+      <Value>first story screen.</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>22</Id>
+      <Value>It will be displayed on</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>23</Id>
+      <Value>the story screen right after</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>24</Id>
+      <Value>the title screen.</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>25</Id>
+      <Value>Cool, isn't it?</Value>
+    </StringConfig>
+    
+    <!-- 2nd story screen -->
+    <StringConfig>
+      <Id>30</Id>
+      <Value>Yet another string, this time</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>31</Id>
+      <Value>it will be displayed on the</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>32</Id>
+      <Value>second story screen which will</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>33</Id>
+      <Value>be shown right after the first</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>34</Id>
+      <Value>one in this little test.</Value>
+    </StringConfig>
+    
+  </Strings>
+</StringsConfig>
