@@ -46,11 +46,12 @@ InitializeSound:
 ;****************************************************************
 
 PlaySong:
-  LDY #SOUND_BANK
-  JSR SwitchBank
-  STX <sound_param_byte_0
-  JSR play_song
-  JMP RestoreBank
+  ;LDY #SOUND_BANK
+  ;JSR SwitchBank
+  ;STX <sound_param_byte_0
+  ;JSR play_song
+  ;JMP RestoreBank
+  RTS
   
 ;****************************************************************
 ; Name:                                                         ;
@@ -61,15 +62,16 @@ PlaySong:
 ;****************************************************************
 
 PauseSong:
-  LDY #SOUND_BANK
-  JSR SwitchBank
-  TXA
-  PHA ; pause_song doesn't restore X register
-  JSR pause_song
-  PLA
-  TAX
-  JMP RestoreBank
-
+  ;LDY #SOUND_BANK
+  ;JSR SwitchBank
+  ;TXA
+  ;PHA ; pause_song doesn't restore X register
+  ;JSR pause_song
+  ;PLA
+  ;TAX
+  ;JMP RestoreBank
+  RTS
+  
 ;****************************************************************
 ; Name:                                                         ;
 ;   ResumeSong                                                  ;
@@ -79,11 +81,12 @@ PauseSong:
 ;****************************************************************
 
 ResumeSong:
-  LDY #SOUND_BANK
-  JSR SwitchBank
-  JSR resume_song
-  JMP RestoreBank
-
+  ;LDY #SOUND_BANK
+  ;JSR SwitchBank
+  ;JSR resume_song
+  ;JMP RestoreBank
+  RTS
+  
 ;****************************************************************
 ; Name:                                                         ;
 ;   SfxHighPri                                                  ;
