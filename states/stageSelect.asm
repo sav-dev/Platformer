@@ -54,7 +54,7 @@ LoadStageSelect:
     JSR FadeIn ; this enables PPU    
   
   .initializeSound:
-    LDX #song_index_song ; todo 0007: update the song id
+    LDX #song_index_song_none ; todo 0007: update the song id
     JSR PlaySong
     
   JMP WaitForFrame 

@@ -26,7 +26,7 @@ GameFrame:
     
   .changePause:
     JSR FlipGreyscale
-    PlaySfxHighPri #sfx_index_sfx_shot ; todo 0007: update the sound
+    PlaySfxHighPri #sfx_index_sfx_pause
     LDA <isPaused         
     EOR #%00000001
     STA <isPaused        
@@ -260,7 +260,7 @@ ExplFrame:
         LDA #EXPLOSION_ANIM_FRAMES
         STA enemies, x ; set frame counter        
        
-        PlaySfxHighPri #sfx_index_sfx_explode ; todo 0007: update the sound
+        PlaySfxHighPri #sfx_index_sfx_expl_blast
        
       .updateCounters:
         INC <levelTypeData1

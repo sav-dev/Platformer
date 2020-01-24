@@ -1880,7 +1880,7 @@ ExplodePlayer:
   LDA #EXPLOSION_ANIM_SPEED
   STA <playerCounter
   JSR PauseSong
-  PlaySfxHighPri #sfx_index_sfx_explode ; todo 0007: update the sound
+  PlaySfxHighPri #sfx_index_sfx_expl_player
   RTS   
   
 ;****************************************************************

@@ -23,21 +23,21 @@ Explosion0:
 .pointer:
   .byte LOW(Explosion0Tiles), HIGH(Explosion0Tiles)
 .sound:
-  .byte sfx_index_sfx_explode
+  .byte sfx_index_sfx_expl_blast
 Explosion1:
 .attributes:
   .byte $03
 .pointer:
   .byte LOW(Explosion1Tiles), HIGH(Explosion1Tiles)
 .sound:
-  .byte sfx_index_sfx_zap
+  .byte sfx_index_sfx_expl_org
 Explosion2:
 .attributes:
   .byte $02
 .pointer:
   .byte LOW(Explosion1Tiles), HIGH(Explosion1Tiles)
 .sound:
-  .byte sfx_index_sfx_zap
+  .byte sfx_index_sfx_expl_org
 
 ExplosionTiles:
 Explosion0Tiles:

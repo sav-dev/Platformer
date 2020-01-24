@@ -1069,7 +1069,7 @@ UpdateBullets:
       .playSoundIfPlayerBullet:
         LDA <l       
         BNE RenderBullet
-        PlaySfxHighPri #sfx_index_sfx_shot ; todo 0007: update the sound
+        PlaySfxHighPri #sfx_index_sfx_shot_player
 
       ; render the bullet
       ; we expect all 4 render vars to be set when we get here

@@ -679,7 +679,7 @@ UpdateActiveEnemy:
       ; play the sound when enemy becomes visible
       .enemyBecomesVisible:
         STY <yPointerCache ; playing sounds messes up Y
-        PlaySfxLowPri #sfx_index_sfx_zap ; todo 0007: update the sound
+        PlaySfxLowPri #sfx_index_sfx_blinker
         LDY <yPointerCache
         JMP .blinkingCurrentlyVisible
   

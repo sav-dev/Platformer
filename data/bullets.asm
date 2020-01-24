@@ -41,7 +41,7 @@ Turret_Horizontal:
 .boxSize:
   .byte $05, $03
 .sound:
-  .byte sfx_index_sfx_shot
+  .byte sfx_index_sfx_shot_turret
 
 Turret_Vertical:
 .speed:
@@ -61,7 +61,7 @@ Turret_Vertical:
 .boxSize:
   .byte $03, $05
 .sound:
-  .byte sfx_index_sfx_shot
+  .byte sfx_index_sfx_shot_turret
 
 Turret_Diag_1:
 .speed:
@@ -81,7 +81,7 @@ Turret_Diag_1:
 .boxSize:
   .byte $05, $05
 .sound:
-  .byte sfx_index_sfx_shot
+  .byte sfx_index_sfx_shot_turret
 
 Turret_Diag_2:
 .speed:
@@ -101,7 +101,7 @@ Turret_Diag_2:
 .boxSize:
   .byte $05, $05
 .sound:
-  .byte sfx_index_sfx_shot
+  .byte sfx_index_sfx_shot_turret
 
 Tank:
 .speed:
@@ -121,7 +121,7 @@ Tank:
 .boxSize:
   .byte $07, $03
 .sound:
-  .byte sfx_index_sfx_shot
+  .byte sfx_index_sfx_shot_tank
 
 Gunner_Robot:
 .speed:
@@ -141,7 +141,7 @@ Gunner_Robot:
 .boxSize:
   .byte $07, $02
 .sound:
-  .byte sfx_index_sfx_shot
+  .byte sfx_index_sfx_shot_gunrob
 
 Beetle:
 .speed:
@@ -161,7 +161,7 @@ Beetle:
 .boxSize:
   .byte $07, $03
 .sound:
-  .byte sfx_index_sfx_shot
+  .byte sfx_index_sfx_shot_tank
 
 Sphere:
 .speed:
@@ -181,7 +181,7 @@ Sphere:
 .boxSize:
   .byte $07, $03
 .sound:
-  .byte sfx_index_sfx_zap
+  .byte sfx_index_sfx_shot_turret
 
 Boss_Right_Hand:
 .speed:
@@ -201,7 +201,7 @@ Boss_Right_Hand:
 .boxSize:
   .byte $05, $05
 .sound:
-  .byte sfx_index_sfx_shot
+  .byte sfx_index_sfx_shot_boss
 
 Boss_Left_Hand:
 .speed:
@@ -221,7 +221,7 @@ Boss_Left_Hand:
 .boxSize:
   .byte $05, $05
 .sound:
-  .byte sfx_index_sfx_shot
+  .byte sfx_index_sfx_shot_boss
 
 ; Player consts
 ; note: box DX/DY = 0 for both flip and non-flip
@@ -234,7 +234,7 @@ PLAYER_BULLET_SPEED_X_FLIP = $FA
 PLAYER_BULLET_ATTS = $00
 PLAYER_BULLET_ATTS_FLIP = $40
 ; For some reason this is causing issues, ref the sound directly
-;PLAYER_BULLET_SOUND = sfx_index_sfx_shot
+;PLAYER_BULLET_SOUND = sfx_index_sfx_shot_player
 
 BOSS_RIGHT_HAND_BULLET = $70
 BOSS_LEFT_HAND_BULLET = $7E
