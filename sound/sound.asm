@@ -1,4 +1,4 @@
-song_index_song_none = 0
+song_index_song_title = 0
 
 sfx_index_sfx_option_selected = 0
 sfx_index_sfx_option_changed = 1
@@ -15,7 +15,7 @@ sfx_index_sfx_expl_blast = 11
 sfx_index_sfx_expl_org = 12
 
 song_list:
-  .dw _song_none
+  .dw _song_title
 
 sfx_list:
   .dw _sfx_option_selected
@@ -47,6 +47,7 @@ volume:
   .dw volume5
   .dw volume6
   .dw volume7
+  .dw volume8
 
 arpeggio:
   .dw arpeggio0
@@ -78,6 +79,8 @@ volume5:
 volume6:
   .db 10,8,6,3,2,3,4,5,5,5,5,5,4,4,3,2,2,2,2,1,1,1,1,0,ENV_STOP
 volume7:
+  .db 3,ENV_STOP
+volume8:
   .db 0,ENV_STOP
 
 arpeggio0:
@@ -101,16 +104,26 @@ duty0:
 duty1:
   .db 0,DUTY_ENV_STOP
 
-_song_none:
+_song_title:
   .db 0
   .db 6
   .db 0
   .db 5
   .dw 0
+  .dw _song_title_square2
   .dw 0
   .dw 0
   .dw 0
-  .dw 0
+
+_song_title_square2:
+_song_title_square2_loop:
+  .db CAL,low(_song_title_square2_0),high(_song_title_square2_0)
+  .db GOT
+  .dw _song_title_square2_loop
+
+_song_title_square2_0:
+  .db STV,7,SAR,1,STP,4,SDU,1,SL0,C3,SL8,E3,F3,SL0,C3,SL8,E3,F3
+  .db RET
 
 _sfx_option_selected:
   .db 0, 1

@@ -1814,8 +1814,6 @@ MovePlayerHorizontallyNormalAndSetBoxes:
           .scrollingLoop:          
             JSR ClearSprites
             JSR IncrementScroll
-            JSR IncrementScroll
-            DEC <playerX
             DEC <playerX
             JSR RenderPlayer
             JSR RenderElevators
