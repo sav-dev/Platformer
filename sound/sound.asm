@@ -67,7 +67,6 @@ volume:
   .dw volume11
   .dw volume12
   .dw volume13
-  .dw volume14
 
 arpeggio:
   .dw arpeggio0
@@ -115,10 +114,8 @@ volume10:
 volume11:
   .db 6,5,4,3,2,2,2,1,0,ENV_STOP
 volume12:
-  .db 4,5,6,7,8,8,8,9,9,9,9,9,9,9,9,9,9,8,8,8,7,7,6,6,5,4,4,3,2,2,2,2,2,3,3,3,4,4,5,6,7,7,7,7,7,6,5,4,4,3,3,2,2,2,1,1,1,1,1,1,ENV_STOP
+  .db 1,1,2,2,2,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,3,3,3,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,3,3,3,3,2,2,2,2,2,1,1,1,1,1,1,1,ENV_STOP
 volume13:
-  .db 1,ENV_STOP
-volume14:
   .db 0,ENV_STOP
 
 arpeggio0:
@@ -183,7 +180,7 @@ _song_story_square2_loop:
   .dw _song_story_square2_loop
 
 _song_story_square2_0:
-  .db STV,12,SAR,3,STP,5,SDU,0,SL4,D4,F4,A4,D4,D4,F3,A3,D3,F3,A3
+  .db STV,12,SAR,3,STP,5,SDU,0,SL4,D4,F4,A4,D4,D4,F3,A3,D4,F3,A3
   .db C4,F3,F3,A3,C4,F4
   .db RET
 
@@ -234,16 +231,16 @@ _song_stage_base_noise_loop:
   .dw _song_stage_base_noise_loop
 
 _song_stage_base_square1_0:
-  .db STV,14,SAR,3,STP,7,SDU,2,SLL,64,A0
+  .db STV,13,SAR,3,STP,7,SDU,2,SLL,64,A0
   .db RET
 
 _song_stage_base_square1_1:
-  .db STV,14,SAR,3,STP,7,SDU,2,SL2,A0,STV,9,SL4,G1,G1,G1,G1,C2
+  .db STV,13,SAR,3,STP,7,SDU,2,SL2,A0,STV,9,SL4,G1,G1,G1,G1,C2
   .db C2,C2,C2,G1,G1,G1,G1,C2,C2,C2,SL2,C2
   .db RET
 
 _song_stage_base_square1_2:
-  .db STV,14,SAR,3,STP,7,SDU,2,SL2,A0,STV,9,SL4,G1,G1,G1,G1,A1
+  .db STV,13,SAR,3,STP,7,SDU,2,SL2,A0,STV,9,SL4,G1,G1,G1,G1,A1
   .db A1,A1,A1,G1,G1,G1,G1,A1,A1,A1,SL2,A1
   .db RET
 
@@ -259,7 +256,7 @@ _song_stage_base_square2_1:
   .db RET
 
 _song_stage_base_noise_0:
-  .db STV,14,SAR,3,STP,7,SDU,2,SLL,64,A0
+  .db STV,13,SAR,3,STP,7,SDU,2,SLL,64,A0
   .db RET
 
 _song_stage_base_noise_1:
@@ -352,7 +349,7 @@ _song_stage_space_square2_4:
   .db RET
 
 _song_stage_space_triangle_0:
-  .db STV,14,SAR,3,STP,7,SDU,2,SLL,64,A0
+  .db STV,13,SAR,3,STP,7,SDU,2,SLL,64,A0
   .db RET
 
 _song_stage_space_triangle_1:
@@ -456,7 +453,7 @@ _song_stage_caves_square2_2:
   .db RET
 
 _song_stage_caves_triangle_0:
-  .db STV,14,SAR,3,STP,7,SDU,2,SLL,64,A0
+  .db STV,13,SAR,3,STP,7,SDU,2,SLL,64,A0
   .db RET
 
 _song_stage_caves_triangle_1:
@@ -543,7 +540,7 @@ _song_stage_skulls_square2_1:
   .db RET
 
 _song_stage_skulls_triangle_0:
-  .db STV,14,SAR,3,STP,7,SDU,2,SLL,64,A0
+  .db STV,13,SAR,3,STP,7,SDU,2,SLL,64,A0
   .db RET
 
 _song_stage_skulls_triangle_1:
