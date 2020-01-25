@@ -100,13 +100,13 @@ volume5:
 volume6:
   .db 10,8,6,3,2,3,4,5,5,5,5,5,4,4,3,2,2,2,2,1,1,1,1,0,ENV_STOP
 volume7:
-  .db 4,ENV_STOP
+  .db 5,4,3,2,1,0,ENV_STOP
 volume8:
-  .db 4,3,3,2,1,1,1,1,0,ENV_STOP
+  .db 10,7,4,3,2,2,1,1,0,ENV_STOP
 volume9:
-  .db 4,3,2,1,0,ENV_STOP
+  .db 10,4,2,1,0,ENV_STOP
 volume10:
-  .db 5,5,5,4,4,4,4,4,4,4,4,4,3,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,0,ENV_STOP
+  .db 7,7,7,7,6,6,6,6,6,5,5,5,5,4,4,4,4,3,3,3,3,3,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,0,ENV_STOP
 volume11:
   .db 0,ENV_STOP
 
@@ -141,26 +141,16 @@ _song_title:
   .db 0
   .db 5
   .dw 0
-  .dw _song_title_square2
+  .dw 0
   .dw 0
   .dw _song_title_noise
   .dw 0
-
-_song_title_square2:
-_song_title_square2_loop:
-  .db CAL,low(_song_title_square2_0),high(_song_title_square2_0)
-  .db GOT
-  .dw _song_title_square2_loop
 
 _song_title_noise:
 _song_title_noise_loop:
   .db CAL,low(_song_title_noise_0),high(_song_title_noise_0)
   .db GOT
   .dw _song_title_noise_loop
-
-_song_title_square2_0:
-  .db STV,7,SAR,2,STP,5,SDU,1,SL0,C3,SL8,E3,F3,SL0,C3,SL8,E3,F3
-  .db RET
 
 _song_title_noise_0:
   .db STV,8,SAR,2,STP,5,SDU,1,SL2,1,STV,9,SL1,13,13,STV,8,SAR,1
