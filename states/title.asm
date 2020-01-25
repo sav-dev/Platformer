@@ -144,7 +144,7 @@ TitleFrame:
       .optionSelected:
         JSR SfxOptionSelected
         JSR PauseSong
-
+        
         JSR WaitForFrame
         JSR FadeOut
         LDX #STATE_CHANGE_TIMEOUT
