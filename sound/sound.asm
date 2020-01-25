@@ -1,4 +1,12 @@
 song_index_song_title = 0
+song_index_song_story = 1
+song_index_song_stage_1 = 2
+song_index_song_stage_2 = 3
+song_index_song_stage_3 = 4
+song_index_song_stage_4 = 5
+song_index_song_stage_5 = 6
+song_index_song_boss = 7
+song_index_song_congrats = 8
 
 sfx_index_sfx_option_selected = 0
 sfx_index_sfx_option_changed = 1
@@ -16,6 +24,14 @@ sfx_index_sfx_expl_org = 12
 
 song_list:
   .dw _song_title
+  .dw _song_story
+  .dw _song_stage_1
+  .dw _song_stage_2
+  .dw _song_stage_3
+  .dw _song_stage_4
+  .dw _song_stage_5
+  .dw _song_boss
+  .dw _song_congrats
 
 sfx_list:
   .dw _sfx_option_selected
@@ -153,6 +169,94 @@ _song_title_noise_0:
   .db SAR,1,SL2,6,STV,9,SAR,2,SL1,13,13,STV,8,SAR,1,SL2,1,STV,9
   .db SAR,2,SL1,13,13,STV,8,SAR,1,SL2,6,STV,9,SAR,2,SL1,13,13
   .db RET
+
+_song_story:
+  .db 0
+  .db 6
+  .db 0
+  .db 5
+  .dw 0
+  .dw 0
+  .dw 0
+  .dw 0
+  .dw 0
+
+_song_stage_1:
+  .db 0
+  .db 6
+  .db 0
+  .db 5
+  .dw 0
+  .dw 0
+  .dw 0
+  .dw 0
+  .dw 0
+
+_song_stage_2:
+  .db 0
+  .db 6
+  .db 0
+  .db 5
+  .dw 0
+  .dw 0
+  .dw 0
+  .dw 0
+  .dw 0
+
+_song_stage_3:
+  .db 0
+  .db 6
+  .db 0
+  .db 5
+  .dw 0
+  .dw 0
+  .dw 0
+  .dw 0
+  .dw 0
+
+_song_stage_4:
+  .db 0
+  .db 6
+  .db 0
+  .db 5
+  .dw 0
+  .dw 0
+  .dw 0
+  .dw 0
+  .dw 0
+
+_song_stage_5:
+  .db 0
+  .db 6
+  .db 0
+  .db 5
+  .dw 0
+  .dw 0
+  .dw 0
+  .dw 0
+  .dw 0
+
+_song_boss:
+  .db 0
+  .db 6
+  .db 0
+  .db 5
+  .dw 0
+  .dw 0
+  .dw 0
+  .dw 0
+  .dw 0
+
+_song_congrats:
+  .db 0
+  .db 6
+  .db 0
+  .db 5
+  .dw 0
+  .dw 0
+  .dw 0
+  .dw 0
+  .dw 0
 
 _sfx_option_selected:
   .db 0, 1

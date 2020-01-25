@@ -125,6 +125,46 @@ ROW 3D : ... .. . ... : ... .. . ... : ... .. . ... : ... .. . ... : ... .. . ..
 ROW 3E : ... .. . ... : ... .. . ... : ... .. . ... : D-# 0D . ... : ... .. . ...
 ROW 3F : ... .. . ... : ... .. . ... : ... .. . ... : D-# 0D . ... : ... .. . ...
 
+TRACK  64   6 150 "song_story"
+COLUMNS : 1 1 1 1 1
+
+ORDER 00 : 00 00 00 00 00
+
+TRACK  64   6 150 "song_stage_1"
+COLUMNS : 1 1 1 1 1
+
+ORDER 00 : 00 00 00 00 00
+
+TRACK  64   6 150 "song_stage_2"
+COLUMNS : 1 1 1 1 1
+
+ORDER 00 : 00 00 00 00 00
+
+TRACK  64   6 150 "song_stage_3"
+COLUMNS : 1 1 1 1 1
+
+ORDER 00 : 00 00 00 00 00
+
+TRACK  64   6 150 "song_stage_4"
+COLUMNS : 1 1 1 1 1
+
+ORDER 00 : 00 00 00 00 00
+
+TRACK  64   6 150 "song_stage_5"
+COLUMNS : 1 1 1 1 1
+
+ORDER 00 : 00 00 00 00 00
+
+TRACK  64   6 150 "song_boss"
+COLUMNS : 1 1 1 1 1
+
+ORDER 00 : 00 00 00 00 00
+
+TRACK  64   6 150 "song_congrats"
+COLUMNS : 1 1 1 1 1
+
+ORDER 00 : 00 00 00 00 00
+
 TRACK  64   6 150 "sfx_option_selected"
 COLUMNS : 1 1 1 1 1
 
