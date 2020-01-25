@@ -67,6 +67,7 @@ volume:
   .dw volume9
   .dw volume10
   .dw volume11
+  .dw volume12
 
 arpeggio:
   .dw arpeggio0
@@ -109,6 +110,8 @@ volume9:
 volume10:
   .db 9,9,7,7,6,6,6,6,6,5,5,5,5,4,4,4,4,3,3,3,3,3,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,0,ENV_STOP
 volume11:
+  .db 5,ENV_STOP
+volume12:
   .db 0,ENV_STOP
 
 arpeggio0:
@@ -139,15 +142,37 @@ duty1:
   .db 0,DUTY_ENV_STOP
 
 _song_title:
-  .db 0
-  .db 6
-  .db 0
-  .db 5
+  .db 23
+  .db 4
+  .db 104
+  .db 3
   .dw 0
+  .dw _song_title_square2
   .dw 0
+  .dw _song_title_noise
   .dw 0
-  .dw 0
-  .dw 0
+
+_song_title_square2:
+_song_title_square2_loop:
+  .db CAL,low(_song_title_square2_0),high(_song_title_square2_0)
+  .db GOT
+  .dw _song_title_square2_loop
+
+_song_title_noise:
+_song_title_noise_loop:
+  .db CAL,low(_song_title_noise_0),high(_song_title_noise_0)
+  .db GOT
+  .dw _song_title_noise_loop
+
+_song_title_square2_0:
+  .db STV,8,SAR,3,STP,5,SDU,1,SL4,E2,FS2,E2,CS2,E2,FS2,SL2,E2,CS2
+  .db SL4,E2,E2,FS2,E2,CS2,E2,FS2,GS2,A2
+  .db RET
+
+_song_title_noise_0:
+  .db STV,9,SAR,3,STP,5,SDU,1,SL2,11,11,11,11,STV,8,7,STV,9
+  .db 11,11,SLL,50,11
+  .db RET
 
 _song_story:
   .db 0
@@ -254,7 +279,7 @@ _song_stage_caves_square2_2:
   .db RET
 
 _song_stage_caves_triangle_0:
-  .db STV,11,SAR,3,STP,5,SDU,1,SLL,64,A0
+  .db STV,12,SAR,3,STP,5,SDU,1,SLL,64,A0
   .db RET
 
 _song_stage_caves_triangle_1:
