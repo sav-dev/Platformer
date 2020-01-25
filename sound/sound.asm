@@ -465,7 +465,7 @@ _sfx_option_changed_square1:
   .db CAL,low(_sfx_option_changed_square1_0),high(_sfx_option_changed_square1_0)
   .db TRM
 _sfx_option_changed_square1_0:
-  .db STV,1,SAR,3,STP,5,SDU,1,SLL,122,SLH,1,B3,SLL,4,B3
+  .db SLL,4,STV,1,SAR,3,STP,5,SDU,1,B3
   .db RET
 
 _sfx_pause:
