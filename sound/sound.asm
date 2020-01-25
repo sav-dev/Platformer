@@ -48,10 +48,13 @@ volume:
   .dw volume6
   .dw volume7
   .dw volume8
+  .dw volume9
+  .dw volume10
 
 arpeggio:
   .dw arpeggio0
   .dw arpeggio1
+  .dw arpeggio2
 
 pitch:
   .dw pitch0
@@ -79,13 +82,19 @@ volume5:
 volume6:
   .db 10,8,6,3,2,3,4,5,5,5,5,5,4,4,3,2,2,2,2,1,1,1,1,0,ENV_STOP
 volume7:
-  .db 3,ENV_STOP
+  .db 4,ENV_STOP
 volume8:
+  .db 4,3,3,2,1,1,1,1,0,ENV_STOP
+volume9:
+  .db 4,3,2,1,0,ENV_STOP
+volume10:
   .db 0,ENV_STOP
 
 arpeggio0:
   .db ARP_TYPE_ABSOLUTE,0,4,7,4,0,ENV_LOOP,1
 arpeggio1:
+  .db ARP_TYPE_ABSOLUTE,0,0,-1,-1,-2,ENV_STOP
+arpeggio2:
   .db ARP_TYPE_ABSOLUTE,ENV_STOP
 
 pitch0:
@@ -100,7 +109,7 @@ pitch4:
   .db 0,ENV_STOP
 
 duty0:
-  .db 64,DUTY_ENV_STOP
+  .db 0,DUTY_ENV_STOP
 duty1:
   .db 0,DUTY_ENV_STOP
 
@@ -112,7 +121,7 @@ _song_title:
   .dw 0
   .dw _song_title_square2
   .dw 0
-  .dw 0
+  .dw _song_title_noise
   .dw 0
 
 _song_title_square2:
@@ -121,8 +130,28 @@ _song_title_square2_loop:
   .db GOT
   .dw _song_title_square2_loop
 
+_song_title_noise:
+_song_title_noise_loop:
+  .db CAL,low(_song_title_noise_0),high(_song_title_noise_0)
+  .db GOT
+  .dw _song_title_noise_loop
+
 _song_title_square2_0:
-  .db STV,7,SAR,1,STP,4,SDU,1,SL0,C3,SL8,E3,F3,SL0,C3,SL8,E3,F3
+  .db STV,7,SAR,2,STP,4,SDU,1,SL0,C3,SL8,E3,F3,SL0,C3,SL8,E3,F3
+  .db RET
+
+_song_title_noise_0:
+  .db STV,8,SAR,1,STP,4,SDU,1,SL2,1,STV,9,SAR,2,SL1,13,13,STV,8
+  .db SAR,1,SL2,6,STV,9,SAR,2,SL1,13,13,STV,8,SAR,1,SL2,1,STV,9
+  .db SAR,2,SL1,13,13,STV,8,SAR,1,SL2,6,STV,9,SAR,2,SL1,13,13,STV,8
+  .db SAR,1,SL2,1,STV,9,SAR,2,SL1,13,13,STV,8,SAR,1,SL2,6,STV,9
+  .db SAR,2,SL1,13,13,STV,8,SAR,1,SL2,1,STV,9,SAR,2,SL1,13,13,STV,8
+  .db SAR,1,SL2,6,STV,9,SAR,2,SL1,13,13,STV,8,SAR,1,SL2,1,STV,9
+  .db SAR,2,SL1,13,13,STV,8,SAR,1,SL2,6,STV,9,SAR,2,SL1,13,13,STV,8
+  .db SAR,1,SL2,1,STV,9,SAR,2,SL1,13,13,STV,8,SAR,1,SL2,6,STV,9
+  .db SAR,2,SL1,13,13,STV,8,SAR,1,SL2,1,STV,9,SAR,2,SL1,13,13,STV,8
+  .db SAR,1,SL2,6,STV,9,SAR,2,SL1,13,13,STV,8,SAR,1,SL2,1,STV,9
+  .db SAR,2,SL1,13,13,STV,8,SAR,1,SL2,6,STV,9,SAR,2,SL1,13,13
   .db RET
 
 _sfx_option_selected:
@@ -138,7 +167,7 @@ _sfx_option_selected_square1:
   .db CAL,low(_sfx_option_selected_square1_0),high(_sfx_option_selected_square1_0)
   .db TRM
 _sfx_option_selected_square1_0:
-  .db SLL,15,STV,0,SAR,1,STP,0,SDU,1,E3
+  .db SLL,15,STV,0,SAR,2,STP,0,SDU,1,E3
   .db RET
 
 _sfx_option_changed:
@@ -154,7 +183,7 @@ _sfx_option_changed_square1:
   .db CAL,low(_sfx_option_changed_square1_0),high(_sfx_option_changed_square1_0)
   .db TRM
 _sfx_option_changed_square1_0:
-  .db STV,1,SAR,1,STP,4,SDU,1,SLL,122,SLH,1,B3,SLL,4,B3
+  .db STV,1,SAR,2,STP,4,SDU,1,SLL,122,SLH,1,B3,SLL,4,B3
   .db RET
 
 _sfx_pause:
@@ -170,7 +199,7 @@ _sfx_pause_square1:
   .db CAL,low(_sfx_pause_square1_0),high(_sfx_pause_square1_0)
   .db TRM
 _sfx_pause_square1_0:
-  .db STV,0,SAR,1,STP,0,SDU,1,SLL,6,D4,C4,SLL,1,STV,2,STP,4
+  .db STV,0,SAR,2,STP,0,SDU,1,SLL,6,D4,C4,SLL,1,STV,2,STP,4
   .db C4
   .db RET
 
@@ -187,7 +216,7 @@ _sfx_keycard_square1:
   .db CAL,low(_sfx_keycard_square1_0),high(_sfx_keycard_square1_0)
   .db TRM
 _sfx_keycard_square1_0:
-  .db STV,1,SAR,1,STP,4,SDU,1,SLL,6,F4,FS4,SLL,4,G4
+  .db STV,1,SAR,2,STP,4,SDU,1,SLL,6,F4,FS4,SLL,4,G4
   .db RET
 
 _sfx_blinker:
@@ -219,7 +248,7 @@ _sfx_shot_player_square1:
   .db CAL,low(_sfx_shot_player_square1_0),high(_sfx_shot_player_square1_0)
   .db TRM
 _sfx_shot_player_square1_0:
-  .db SLL,15,STV,0,SAR,1,STP,1,SDU,1,C4
+  .db SLL,15,STV,0,SAR,2,STP,1,SDU,1,C4
   .db RET
 
 _sfx_shot_turret:
@@ -235,7 +264,7 @@ _sfx_shot_turret_square1:
   .db CAL,low(_sfx_shot_turret_square1_0),high(_sfx_shot_turret_square1_0)
   .db TRM
 _sfx_shot_turret_square1_0:
-  .db SLL,12,STV,4,SAR,1,STP,2,SDU,1,C6
+  .db SLL,12,STV,4,SAR,2,STP,2,SDU,1,C6
   .db RET
 
 _sfx_shot_tank:
@@ -251,7 +280,7 @@ _sfx_shot_tank_noise:
   .db CAL,low(_sfx_shot_tank_noise_0),high(_sfx_shot_tank_noise_0)
   .db TRM
 _sfx_shot_tank_noise_0:
-  .db SLL,12,STV,4,SAR,1,STP,2,SDU,1,0
+  .db SLL,12,STV,4,SAR,2,STP,2,SDU,1,0
   .db RET
 
 _sfx_shot_gunrob:
@@ -267,7 +296,7 @@ _sfx_shot_gunrob_triangle:
   .db CAL,low(_sfx_shot_gunrob_triangle_0),high(_sfx_shot_gunrob_triangle_0)
   .db TRM
 _sfx_shot_gunrob_triangle_0:
-  .db SLL,12,STV,4,SAR,1,STP,2,SDU,1,C4
+  .db SLL,12,STV,4,SAR,2,STP,2,SDU,1,C4
   .db RET
 
 _sfx_shot_boss:
@@ -283,7 +312,7 @@ _sfx_shot_boss_noise:
   .db CAL,low(_sfx_shot_boss_noise_0),high(_sfx_shot_boss_noise_0)
   .db TRM
 _sfx_shot_boss_noise_0:
-  .db SLL,12,STV,4,SAR,1,STP,3,SDU,1,4
+  .db SLL,12,STV,4,SAR,2,STP,3,SDU,1,4
   .db RET
 
 _sfx_expl_player:
@@ -299,7 +328,7 @@ _sfx_expl_player_noise:
   .db CAL,low(_sfx_expl_player_noise_0),high(_sfx_expl_player_noise_0)
   .db TRM
 _sfx_expl_player_noise_0:
-  .db SLL,24,STV,5,SAR,1,STP,4,SDU,1,7
+  .db SLL,24,STV,5,SAR,2,STP,4,SDU,1,7
   .db RET
 
 _sfx_expl_blast:
@@ -315,7 +344,7 @@ _sfx_expl_blast_noise:
   .db CAL,low(_sfx_expl_blast_noise_0),high(_sfx_expl_blast_noise_0)
   .db TRM
 _sfx_expl_blast_noise_0:
-  .db SLL,24,STV,6,SAR,1,STP,3,SDU,1,7
+  .db SLL,24,STV,6,SAR,2,STP,3,SDU,1,7
   .db RET
 
 _sfx_expl_org:
@@ -331,6 +360,6 @@ _sfx_expl_org_noise:
   .db CAL,low(_sfx_expl_org_noise_0),high(_sfx_expl_org_noise_0)
   .db TRM
 _sfx_expl_org_noise_0:
-  .db SLL,24,STV,6,SAR,1,STP,4,SDU,0,6
+  .db SLL,24,STV,6,SAR,2,STP,4,SDU,0,6
   .db RET
 
