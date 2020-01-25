@@ -5,9 +5,7 @@ song_index_song_stage_base = 3
 song_index_song_stage_space = 4
 song_index_song_stage_caves = 5
 song_index_song_stage_skulls = 6
-song_index_song_boss = 7
-song_index_song_boss_scroll = 8
-song_index_song_congrats = 9
+song_index_song_congrats = 7
 
 sfx_index_sfx_option_selected = 0
 sfx_index_sfx_option_changed = 1
@@ -31,8 +29,6 @@ song_list:
   .dw _song_stage_space
   .dw _song_stage_caves
   .dw _song_stage_skulls
-  .dw _song_boss
-  .dw _song_boss_scroll
   .dw _song_congrats
 
 sfx_list:
@@ -499,80 +495,37 @@ _song_stage_caves_noise_2:
   .db RET
 
 _song_stage_skulls:
-  .db 0
-  .db 6
-  .db 0
-  .db 5
-  .dw 0
-  .dw 0
-  .dw 0
-  .dw 0
-  .dw 0
-
-_song_boss:
   .db 160
   .db 5
   .db 176
   .db 4
   .dw 0
-  .dw _song_boss_square2
-  .dw _song_boss_triangle
-  .dw _song_boss_noise
+  .dw _song_stage_skulls_square2
+  .dw 0
+  .dw _song_stage_skulls_noise
   .dw 0
 
-_song_boss_square2:
-_song_boss_square2_loop:
-  .db CAL,low(_song_boss_square2_0),high(_song_boss_square2_0)
+_song_stage_skulls_square2:
+_song_stage_skulls_square2_loop:
+  .db CAL,low(_song_stage_skulls_square2_0),high(_song_stage_skulls_square2_0)
   .db GOT
-  .dw _song_boss_square2_loop
+  .dw _song_stage_skulls_square2_loop
 
-_song_boss_triangle:
-_song_boss_triangle_loop:
-  .db CAL,low(_song_boss_triangle_0),high(_song_boss_triangle_0)
+_song_stage_skulls_noise:
+_song_stage_skulls_noise_loop:
+  .db CAL,low(_song_stage_skulls_noise_0),high(_song_stage_skulls_noise_0)
   .db GOT
-  .dw _song_boss_triangle_loop
+  .dw _song_stage_skulls_noise_loop
 
-_song_boss_noise:
-_song_boss_noise_loop:
-  .db CAL,low(_song_boss_noise_0),high(_song_boss_noise_0)
-  .db GOT
-  .dw _song_boss_noise_loop
-
-_song_boss_square2_0:
+_song_stage_skulls_square2_0:
   .db STV,8,SAR,3,STP,7,SDU,2,SL4,E1,E1,E1,E1,E1,E1,E1,SL2,E1,G1
   .db SL4,A1,A1,A1,A1,A1,A1,A1,G1
   .db RET
 
-_song_boss_triangle_0:
-  .db STV,7,SAR,3,STP,6,SDU,2,SL8,C4,C4,SL4,C4,C4,SL2,C4,C4,C4
-  .db C4,SL8,C4,C4,SL4,C4,C4,C4,C4
-  .db RET
-
-_song_boss_noise_0:
+_song_stage_skulls_noise_0:
   .db STV,9,SAR,3,STP,7,SDU,2,SL2,14,14,14,14,14,14,14,14,14,14
   .db 14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14
   .db 14,14,14
-  .db RET
-
-_song_boss_scroll:
-  .db 0
-  .db 6
-  .db 0
-  .db 5
-  .dw 0
-  .dw _song_boss_scroll_square2
-  .dw 0
-  .dw 0
-  .dw 0
-
-_song_boss_scroll_square2:
-_song_boss_scroll_square2_loop:
-  .db CAL,low(_song_boss_scroll_square2_0),high(_song_boss_scroll_square2_0)
-  .db GOT
-  .dw _song_boss_scroll_square2_loop
-
-_song_boss_scroll_square2_0:
-  .db STV,13,SAR,3,STP,5,SDU,2,SL8,E1
   .db RET
 
 _song_congrats:
