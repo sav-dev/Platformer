@@ -6,7 +6,8 @@ song_index_song_stage_space = 4
 song_index_song_stage_caves = 5
 song_index_song_stage_skulls = 6
 song_index_song_boss = 7
-song_index_song_congrats = 8
+song_index_song_boss_scroll = 8
+song_index_song_congrats = 9
 
 sfx_index_sfx_option_selected = 0
 sfx_index_sfx_option_changed = 1
@@ -31,6 +32,7 @@ song_list:
   .dw _song_stage_caves
   .dw _song_stage_skulls
   .dw _song_boss
+  .dw _song_boss_scroll
   .dw _song_congrats
 
 sfx_list:
@@ -69,6 +71,7 @@ volume:
   .dw volume11
   .dw volume12
   .dw volume13
+  .dw volume14
 
 arpeggio:
   .dw arpeggio0
@@ -84,6 +87,7 @@ pitch:
   .dw pitch4
   .dw pitch5
   .dw pitch6
+  .dw pitch7
 
 duty:
   .dw duty0
@@ -99,7 +103,7 @@ volume2:
 volume3:
   .db 9,9,9,9,9,9,9,9,0,ENV_STOP
 volume4:
-  .db 8,8,8,8,8,8,8,8,8,8,8,0,ENV_STOP
+  .db 4,4,4,4,4,4,4,4,4,4,4,0,ENV_STOP
 volume5:
   .db 15,10,7,7,10,12,13,12,10,8,5,3,3,3,3,4,5,6,5,3,2,1,1,0,ENV_STOP
 volume6:
@@ -117,6 +121,8 @@ volume11:
 volume12:
   .db 4,5,6,7,8,8,8,9,9,9,9,9,9,9,9,9,9,8,8,8,7,7,6,6,5,4,4,3,2,2,2,2,2,3,3,3,4,4,5,6,7,7,7,7,7,6,5,4,4,3,3,2,2,2,1,1,1,1,1,1,ENV_STOP
 volume13:
+  .db 1,ENV_STOP
+volume14:
   .db 0,ENV_STOP
 
 arpeggio0:
@@ -141,6 +147,8 @@ pitch4:
 pitch5:
   .db 0,0,0,0,0,0,0,0,-1,-1,1,1,1,1,-1,-1,-1,-1,ENV_LOOP,10
 pitch6:
+  .db 82,ENV_LOOP,0
+pitch7:
   .db 0,ENV_STOP
 
 duty0:
@@ -230,43 +238,43 @@ _song_stage_base_noise_loop:
   .dw _song_stage_base_noise_loop
 
 _song_stage_base_square1_0:
-  .db STV,13,SAR,3,STP,6,SDU,2,SLL,64,A0
+  .db STV,14,SAR,3,STP,7,SDU,2,SLL,64,A0
   .db RET
 
 _song_stage_base_square1_1:
-  .db STV,13,SAR,3,STP,6,SDU,2,SL2,A0,STV,9,SL4,G1,G1,G1,G1,C2
+  .db STV,14,SAR,3,STP,7,SDU,2,SL2,A0,STV,9,SL4,G1,G1,G1,G1,C2
   .db C2,C2,C2,G1,G1,G1,G1,C2,C2,C2,SL2,C2
   .db RET
 
 _song_stage_base_square1_2:
-  .db STV,13,SAR,3,STP,6,SDU,2,SL2,A0,STV,9,SL4,G1,G1,G1,G1,A1
+  .db STV,14,SAR,3,STP,7,SDU,2,SL2,A0,STV,9,SL4,G1,G1,G1,G1,A1
   .db A1,A1,A1,G1,G1,G1,G1,A1,A1,A1,SL2,A1
   .db RET
 
 _song_stage_base_square2_0:
-  .db STV,8,SAR,3,STP,6,SDU,2,SL4,G5,E5,D5,SL2,B4,D5,SL4,C5,A4
+  .db STV,8,SAR,3,STP,7,SDU,2,SL4,G5,E5,D5,SL2,B4,D5,SL4,C5,A4
   .db C5,SL2,D5,E5,SL4,G5,E5,D5,SL2,B4,D5,SL4,C5,A4,C5,SL2,D5,E5
   .db RET
 
 _song_stage_base_square2_1:
-  .db STV,8,SAR,3,STP,6,SDU,2,SL4,G5,A5,SL2,B5,G5,SL4,B5,A5,C6
+  .db STV,8,SAR,3,STP,7,SDU,2,SL4,G5,A5,SL2,B5,G5,SL4,B5,A5,C6
   .db SL2,A5,F5,SL4,A5,G5,A5,SL2,B5,G5,SL4,B5,A5,C6,SL2,A5,F5,SL4
   .db A5
   .db RET
 
 _song_stage_base_noise_0:
-  .db STV,13,SAR,3,STP,6,SDU,2,SLL,64,A0
+  .db STV,14,SAR,3,STP,7,SDU,2,SLL,64,A0
   .db RET
 
 _song_stage_base_noise_1:
-  .db STV,11,SAR,3,STP,6,SDU,2,SL4,7,STV,9,13,STV,11,SAR,1,9,SAR,3
+  .db STV,11,SAR,3,STP,7,SDU,2,SL4,7,STV,9,13,STV,11,SAR,1,9,SAR,3
   .db SL2,7,7,SL4,7,STV,9,13,STV,11,SAR,1,9,SAR,3,SL2,7,7,SL4
   .db 7,STV,9,13,STV,11,SAR,1,9,SAR,3,SL2,7,7,SL4,7,STV,9,13,STV,11
   .db SAR,1,9,SAR,3,SL2,7,7
   .db RET
 
 _song_stage_base_noise_2:
-  .db STV,11,SAR,3,STP,6,SDU,2,SL4,7,STV,9,13,STV,11,SAR,1,9,SAR,3
+  .db STV,11,SAR,3,STP,7,SDU,2,SL4,7,STV,9,13,STV,11,SAR,1,9,SAR,3
   .db SL2,7,7,SL4,7,STV,9,13,STV,11,SAR,1,9,SAR,3,SL2,7,7,SL4
   .db 7,STV,9,13,STV,11,SAR,1,9,SAR,3,SL2,7,7,SL4,7,STV,9,13,STV,11
   .db SAR,1,9,SAR,3,SL2,7,7
@@ -323,71 +331,71 @@ _song_stage_space_noise_loop:
   .dw _song_stage_space_noise_loop
 
 _song_stage_space_square2_0:
-  .db STV,8,SAR,3,STP,6,SDU,2,SL4,E2,FS2,E2,CS2,E2,FS2,SL2,E2,CS2
+  .db STV,8,SAR,3,STP,7,SDU,2,SL4,E2,FS2,E2,CS2,E2,FS2,SL2,E2,CS2
   .db SL4,E2,E2,FS2,E2,CS2,E2,FS2,GS2,A2
   .db RET
 
 _song_stage_space_square2_1:
-  .db STV,7,SAR,2,STP,6,SDU,2,SL4,E3,FS3,E3,CS3,E3,FS3,SL2,E3,CS3
+  .db STV,7,SAR,2,STP,7,SDU,2,SL4,E3,FS3,E3,CS3,E3,FS3,SL2,E3,CS3
   .db SL4,E3,E3,FS3,E3,CS3,E3,FS3,GS3,A3
   .db RET
 
 _song_stage_space_square2_2:
-  .db STV,8,SAR,3,STP,6,SDU,2,SL4,E2,SLC,E2,SL4,E2,SLC,E2,SL4
+  .db STV,8,SAR,3,STP,7,SDU,2,SL4,E2,SLC,E2,SL4,E2,SLC,E2,SL4
   .db E2,SLC,E2,SL4,E2,FS2,GS2,A2
   .db RET
 
 _song_stage_space_square2_3:
-  .db STV,8,SAR,3,STP,6,SDU,2,SL4,E2,SLC,E2,SL4,E2,SLC,E2,SL4
+  .db STV,8,SAR,3,STP,7,SDU,2,SL4,E2,SLC,E2,SL4,E2,SLC,E2,SL4
   .db E2,SLC,E2,STV,7,SAR,2,SL4,E3,CS3,B2,A2
   .db RET
 
 _song_stage_space_square2_4:
-  .db STV,8,SAR,3,STP,6,SDU,2,SL4,E2,SLC,E2,SL4,E2,SLC,E2,SL4
+  .db STV,8,SAR,3,STP,7,SDU,2,SL4,E2,SLC,E2,SL4,E2,SLC,E2,SL4
   .db E2,SLL,28,E2
   .db RET
 
 _song_stage_space_triangle_0:
-  .db STV,13,SAR,3,STP,6,SDU,2,SLL,64,A0
+  .db STV,14,SAR,3,STP,7,SDU,2,SLL,64,A0
   .db RET
 
 _song_stage_space_triangle_1:
-  .db STV,8,SAR,3,STP,6,SDU,2,SL4,E2,FS2,E2,CS2,E2,FS2,SL2,E2,CS2
+  .db STV,8,SAR,3,STP,7,SDU,2,SL4,E2,FS2,E2,CS2,E2,FS2,SL2,E2,CS2
   .db SL4,E2,E2,FS2,E2,CS2,E2,FS2,GS2,A2
   .db RET
 
 _song_stage_space_triangle_2:
-  .db STV,8,SAR,3,STP,6,SDU,2,SL4,E2,SLC,E2,SL4,E2,SLC,E2,SL4
+  .db STV,8,SAR,3,STP,7,SDU,2,SL4,E2,SLC,E2,SL4,E2,SLC,E2,SL4
   .db E2,SLC,E2,SL4,E2,FS2,GS2,A2
   .db RET
 
 _song_stage_space_triangle_3:
-  .db STV,8,SAR,3,STP,6,SDU,2,SL4,E2,SLC,E2,SL4,E2,SLC,E2,SL4
+  .db STV,8,SAR,3,STP,7,SDU,2,SL4,E2,SLC,E2,SL4,E2,SLC,E2,SL4
   .db E2,SLC,E2,SL4,E3,CS3,B2,A2
   .db RET
 
 _song_stage_space_triangle_4:
-  .db STV,8,SAR,3,STP,6,SDU,2,SL4,E2,SLC,E2,SL4,E2,SLC,E2,SL4
+  .db STV,8,SAR,3,STP,7,SDU,2,SL4,E2,SLC,E2,SL4,E2,SLC,E2,SL4
   .db E2,SLL,28,E2
   .db RET
 
 _song_stage_space_noise_0:
-  .db STV,9,SAR,3,STP,6,SDU,2,SL2,11,11,STV,11,7,7,STV,9,SL8,11
+  .db STV,9,SAR,3,STP,7,SDU,2,SL2,11,11,STV,11,7,7,STV,9,SL8,11
   .db SL2,11,11,STV,11,7,7,STV,9,SL8,11,SL2,11,11,STV,11,7,7,STV,9
   .db SL8,11,SL2,11,11,STV,11,7,7,STV,9,11,11,STV,11,7,7
   .db RET
 
 _song_stage_space_noise_1:
-  .db STV,11,SAR,3,STP,6,SDU,2,SL2,7,SL6,7,STV,10,STP,4,SL8,13
-  .db STV,11,STP,6,SL2,7,SL6,7,STV,10,STP,4,SL8,13,STV,11,STP,6
-  .db SL2,7,SL6,7,STV,10,STP,4,SL8,13,STV,11,STP,6,SL2,7,SL6,7,SL2
+  .db STV,11,SAR,3,STP,7,SDU,2,SL2,7,SL6,7,STV,10,STP,4,SL8,13
+  .db STV,11,STP,7,SL2,7,SL6,7,STV,10,STP,4,SL8,13,STV,11,STP,7
+  .db SL2,7,SL6,7,STV,10,STP,4,SL8,13,STV,11,STP,7,SL2,7,SL6,7,SL2
   .db 7,SL6,7
   .db RET
 
 _song_stage_space_noise_2:
-  .db STV,11,SAR,3,STP,6,SDU,2,SL2,7,SL6,7,STV,10,STP,4,SL8,13
-  .db STV,11,STP,6,SL2,7,SL6,7,STV,10,STP,4,SL8,13,STV,11,STP,6
-  .db SL2,7,SL6,7,STV,10,STP,4,SL8,13,STV,11,STP,6,SL2,7,SAR,1
+  .db STV,11,SAR,3,STP,7,SDU,2,SL2,7,SL6,7,STV,10,STP,4,SL8,13
+  .db STV,11,STP,7,SL2,7,SL6,7,STV,10,STP,4,SL8,13,STV,11,STP,7
+  .db SL2,7,SL6,7,STV,10,STP,4,SL8,13,STV,11,STP,7,SL2,7,SAR,1
   .db 11,SAR,3,7,SAR,1,11,SAR,3,7,SAR,1,11,SAR,3,7,SAR,1,11
   .db RET
 
@@ -436,45 +444,45 @@ _song_stage_caves_noise_loop:
   .dw _song_stage_caves_noise_loop
 
 _song_stage_caves_square2_0:
-  .db STV,8,SAR,3,STP,6,SDU,2,SL6,G1,SL2,B1,SL4,C2,B1,SL6,G1,SL2
+  .db STV,8,SAR,3,STP,7,SDU,2,SL6,G1,SL2,B1,SL4,C2,B1,SL6,G1,SL2
   .db B1,SL4,C2,B1,SL6,G1,SL2,B1,SL4,C2,B1,G1,A1,B1,C2
   .db RET
 
 _song_stage_caves_square2_1:
-  .db STV,8,SAR,3,STP,6,SDU,2,SL6,G1,SL2,B1,SL4,C2,B1,SL6,G1,SL2
+  .db STV,8,SAR,3,STP,7,SDU,2,SL6,G1,SL2,B1,SL4,C2,B1,SL6,G1,SL2
   .db B1,SL4,C2,B1,SL6,G1,SL2,B1,SL4,C2,B1,SL2,G1,G2,A1,A2,B1,B2
   .db C2,C3
   .db RET
 
 _song_stage_caves_square2_2:
-  .db STV,8,SAR,3,STP,6,SDU,2,SL6,G1,SL2,B1,SL4,C2,B1,SL6,G1,SL2
+  .db STV,8,SAR,3,STP,7,SDU,2,SL6,G1,SL2,B1,SL4,C2,B1,SL6,G1,SL2
   .db B1,SL4,C2,B1,SL6,G1,SL2,B1,SL4,C2,B1,G3,E3,D3,C3
   .db RET
 
 _song_stage_caves_triangle_0:
-  .db STV,13,SAR,3,STP,6,SDU,2,SLL,64,A0
+  .db STV,14,SAR,3,STP,7,SDU,2,SLL,64,A0
   .db RET
 
 _song_stage_caves_triangle_1:
-  .db STV,8,SAR,3,STP,6,SDU,2,SL6,G1,SL2,B1,SL4,C2,B1,SL6,G1,SL2
+  .db STV,8,SAR,3,STP,7,SDU,2,SL6,G1,SL2,B1,SL4,C2,B1,SL6,G1,SL2
   .db B1,SL4,C2,B1,SL6,G1,SL2,B1,SL4,C2,B1,SL2,G1,G2,A1,A2,B1,B2
   .db C2,C3
   .db RET
 
 _song_stage_caves_triangle_2:
-  .db STV,8,SAR,3,STP,6,SDU,2,SL6,G1,SL2,B1,SL4,C2,B1,SL6,G1,SL2
+  .db STV,8,SAR,3,STP,7,SDU,2,SL6,G1,SL2,B1,SL4,C2,B1,SL6,G1,SL2
   .db B1,SL4,C2,B1,SL6,G1,SL2,B1,SL4,C2,B1,G3,E3,D3,C3
   .db RET
 
 _song_stage_caves_noise_0:
-  .db STV,11,SAR,3,STP,6,SDU,2,SL4,1,STV,9,14,STV,11,SAR,1,7,STV,9
+  .db STV,11,SAR,3,STP,7,SDU,2,SL4,1,STV,9,14,STV,11,SAR,1,7,STV,9
   .db SAR,3,14,STV,11,1,1,SAR,1,7,STV,9,SAR,3,14,STV,11,1,STV,9
   .db 14,STV,11,SAR,1,7,STV,9,SAR,3,14,STV,11,1,1,SAR,1,7,STV,9
   .db SAR,3,14
   .db RET
 
 _song_stage_caves_noise_1:
-  .db STV,11,SAR,3,STP,6,SDU,2,SL2,1,STV,9,14,14,14,STV,11
+  .db STV,11,SAR,3,STP,7,SDU,2,SL2,1,STV,9,14,14,14,STV,11
   .db SAR,1,7,STV,9,SAR,3,14,14,14,STV,11,1,STV,9,14,STV,11
   .db 1,STV,9,14,STV,11,SAR,1,7,STV,9,SAR,3,14,14,14,STV,11
   .db 1,STV,9,14,14,14,STV,11,SAR,1,7,STV,9,SAR,3,14,14,14,STV,11
@@ -483,7 +491,7 @@ _song_stage_caves_noise_1:
   .db RET
 
 _song_stage_caves_noise_2:
-  .db STV,11,SAR,3,STP,6,SDU,2,SL2,1,STV,9,14,14,14,STV,11
+  .db STV,11,SAR,3,STP,7,SDU,2,SL2,1,STV,9,14,14,14,STV,11
   .db SAR,1,7,STV,9,SAR,3,14,14,14,STV,11,1,STV,9,14,STV,11
   .db 1,STV,9,14,STV,11,SAR,1,7,STV,9,SAR,3,14,14,14,STV,11
   .db 1,STV,9,14,14,14,STV,11,SAR,1,7,STV,9,SAR,3,14,14,14,STV,11
@@ -502,15 +510,70 @@ _song_stage_skulls:
   .dw 0
 
 _song_boss:
+  .db 160
+  .db 5
+  .db 176
+  .db 4
+  .dw 0
+  .dw _song_boss_square2
+  .dw _song_boss_triangle
+  .dw _song_boss_noise
+  .dw 0
+
+_song_boss_square2:
+_song_boss_square2_loop:
+  .db CAL,low(_song_boss_square2_0),high(_song_boss_square2_0)
+  .db GOT
+  .dw _song_boss_square2_loop
+
+_song_boss_triangle:
+_song_boss_triangle_loop:
+  .db CAL,low(_song_boss_triangle_0),high(_song_boss_triangle_0)
+  .db GOT
+  .dw _song_boss_triangle_loop
+
+_song_boss_noise:
+_song_boss_noise_loop:
+  .db CAL,low(_song_boss_noise_0),high(_song_boss_noise_0)
+  .db GOT
+  .dw _song_boss_noise_loop
+
+_song_boss_square2_0:
+  .db STV,8,SAR,3,STP,7,SDU,2,SL4,E1,E1,E1,E1,E1,E1,E1,SL2,E1,G1
+  .db SL4,A1,A1,A1,A1,A1,A1,A1,G1
+  .db RET
+
+_song_boss_triangle_0:
+  .db STV,7,SAR,3,STP,6,SDU,2,SL8,C4,C4,SL4,C4,C4,SL2,C4,C4,C4
+  .db C4,SL8,C4,C4,SL4,C4,C4,C4,C4
+  .db RET
+
+_song_boss_noise_0:
+  .db STV,9,SAR,3,STP,7,SDU,2,SL2,14,14,14,14,14,14,14,14,14,14
+  .db 14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14
+  .db 14,14,14
+  .db RET
+
+_song_boss_scroll:
   .db 0
   .db 6
   .db 0
   .db 5
   .dw 0
+  .dw _song_boss_scroll_square2
   .dw 0
   .dw 0
   .dw 0
-  .dw 0
+
+_song_boss_scroll_square2:
+_song_boss_scroll_square2_loop:
+  .db CAL,low(_song_boss_scroll_square2_0),high(_song_boss_scroll_square2_0)
+  .db GOT
+  .dw _song_boss_scroll_square2_loop
+
+_song_boss_scroll_square2_0:
+  .db STV,13,SAR,3,STP,5,SDU,2,SL8,E1
+  .db RET
 
 _song_congrats:
   .db 0
@@ -552,7 +615,7 @@ _sfx_option_changed_square1:
   .db CAL,low(_sfx_option_changed_square1_0),high(_sfx_option_changed_square1_0)
   .db TRM
 _sfx_option_changed_square1_0:
-  .db SLL,4,STV,1,SAR,3,STP,6,SDU,2,B3
+  .db SLL,4,STV,1,SAR,3,STP,7,SDU,2,B3
   .db RET
 
 _sfx_pause:
@@ -568,7 +631,7 @@ _sfx_pause_square1:
   .db CAL,low(_sfx_pause_square1_0),high(_sfx_pause_square1_0)
   .db TRM
 _sfx_pause_square1_0:
-  .db STV,0,SAR,3,STP,0,SDU,2,SLL,6,D4,C4,SLL,1,STV,2,STP,6
+  .db STV,0,SAR,3,STP,0,SDU,2,SLL,6,D4,C4,SLL,1,STV,2,STP,7
   .db C4
   .db RET
 
@@ -585,7 +648,7 @@ _sfx_keycard_square1:
   .db CAL,low(_sfx_keycard_square1_0),high(_sfx_keycard_square1_0)
   .db TRM
 _sfx_keycard_square1_0:
-  .db STV,1,SAR,3,STP,6,SDU,2,SLL,6,F4,FS4,SLL,4,G4
+  .db STV,1,SAR,3,STP,7,SDU,2,SLL,6,F4,FS4,SLL,4,G4
   .db RET
 
 _sfx_blinker:
@@ -601,7 +664,7 @@ _sfx_blinker_square1:
   .db CAL,low(_sfx_blinker_square1_0),high(_sfx_blinker_square1_0)
   .db TRM
 _sfx_blinker_square1_0:
-  .db SLL,9,STV,3,SAR,0,STP,6,SDU,2,G1
+  .db SLL,9,STV,3,SAR,0,STP,7,SDU,2,G1
   .db RET
 
 _sfx_shot_player:
@@ -697,7 +760,7 @@ _sfx_expl_player_noise:
   .db CAL,low(_sfx_expl_player_noise_0),high(_sfx_expl_player_noise_0)
   .db TRM
 _sfx_expl_player_noise_0:
-  .db SLL,24,STV,5,SAR,3,STP,6,SDU,2,7
+  .db SLL,24,STV,5,SAR,3,STP,7,SDU,2,7
   .db RET
 
 _sfx_expl_blast:
@@ -729,6 +792,6 @@ _sfx_expl_org_noise:
   .db CAL,low(_sfx_expl_org_noise_0),high(_sfx_expl_org_noise_0)
   .db TRM
 _sfx_expl_org_noise_0:
-  .db SLL,24,STV,6,SAR,3,STP,6,SDU,0,6
+  .db SLL,24,STV,6,SAR,3,STP,7,SDU,0,6
   .db RET
 

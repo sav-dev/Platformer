@@ -716,5 +716,5 @@
     <X>4</X>
     <Y>13</Y>
   </ExitPosition>
-  <Song>song_index_song</Song> <!-- todo 0007: update -->
+  <Song>song_index_song_boss</Song>
 </Level>

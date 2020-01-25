@@ -1811,7 +1811,9 @@ MovePlayerHorizontallyNormalAndSetBoxes:
           ;    - not rendering bullets since we've removed all
           ;    - not rendering doors - there shouldn't be any - POI possible issue make sure that's the case
           ;    - not rendering enemies - they will just appear          
-          .scrollingLoop:          
+          .scrollingLoop:                      
+            LDX #song_index_song_boss_scroll ; play scrolling song
+            JSR PlaySong
             JSR ClearSprites
             JSR IncrementScroll
             DEC <playerX
@@ -1827,7 +1829,9 @@ MovePlayerHorizontallyNormalAndSetBoxes:
             LDA <scroll
             CMP <maxScroll
             BNE .scrollingLoop
-                      
+            LDX <songToPlay ; scrolling done, restore the old song
+            JSR PlaySong
+          
           JMP SetPlayerBoxesHorizontal ; set boxes after moving the player
       
      
