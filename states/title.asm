@@ -301,7 +301,7 @@ LoadTitle:
     JSR FadeIn ; this enables PPU
 
   .initializeSound:
-    LDX #song_index_song_stage_base
+    LDX #song_index_song_title
     JSR PlaySong
 
   .initVars:
