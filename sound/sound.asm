@@ -1,12 +1,11 @@
 song_index_song_title = 0
-song_index_song_stage_select = 1
-song_index_song_story = 2
-song_index_song_stage_outside = 3
-song_index_song_stage_base = 4
-song_index_song_stage_space = 5
-song_index_song_stage_caves = 6
-song_index_song_stage_skulls = 7
-song_index_song_congrats = 8
+song_index_song_story = 1
+song_index_song_stage_outside = 2
+song_index_song_stage_base = 3
+song_index_song_stage_space = 4
+song_index_song_stage_caves = 5
+song_index_song_stage_skulls = 6
+song_index_song_congrats = 7
 
 sfx_index_sfx_option_selected = 0
 sfx_index_sfx_option_changed = 1
@@ -24,7 +23,6 @@ sfx_index_sfx_expl_org = 12
 
 song_list:
   .dw _song_title
-  .dw _song_stage_select
   .dw _song_story
   .dw _song_stage_outside
   .dw _song_stage_base
@@ -166,39 +164,24 @@ duty3:
   .db 0,DUTY_ENV_STOP
 
 _song_title:
+  .db 0
+  .db 9
   .db 128
-  .db 4
-  .db 192
-  .db 3
-  .dw _song_title_square1
+  .db 7
+  .dw 0
   .dw _song_title_square2
   .dw _song_title_triangle
   .dw _song_title_noise
   .dw 0
 
-_song_title_square1:
-_song_title_square1_loop:
-  .db CAL,low(_song_title_square1_0),high(_song_title_square1_0)
-  .db CAL,low(_song_title_square1_1),high(_song_title_square1_1)
-  .db CAL,low(_song_title_square1_2),high(_song_title_square1_2)
-  .db CAL,low(_song_title_square1_3),high(_song_title_square1_3)
-  .db GOT
-  .dw _song_title_square1_loop
-
 _song_title_square2:
 _song_title_square2_loop:
   .db CAL,low(_song_title_square2_0),high(_song_title_square2_0)
-  .db CAL,low(_song_title_square2_1),high(_song_title_square2_1)
-  .db CAL,low(_song_title_square2_2),high(_song_title_square2_2)
-  .db CAL,low(_song_title_square2_3),high(_song_title_square2_3)
   .db GOT
   .dw _song_title_square2_loop
 
 _song_title_triangle:
 _song_title_triangle_loop:
-  .db CAL,low(_song_title_triangle_0),high(_song_title_triangle_0)
-  .db CAL,low(_song_title_triangle_0),high(_song_title_triangle_0)
-  .db CAL,low(_song_title_triangle_0),high(_song_title_triangle_0)
   .db CAL,low(_song_title_triangle_0),high(_song_title_triangle_0)
   .db GOT
   .dw _song_title_triangle_loop
@@ -206,99 +189,21 @@ _song_title_triangle_loop:
 _song_title_noise:
 _song_title_noise_loop:
   .db CAL,low(_song_title_noise_0),high(_song_title_noise_0)
-  .db CAL,low(_song_title_noise_0),high(_song_title_noise_0)
-  .db CAL,low(_song_title_noise_0),high(_song_title_noise_0)
-  .db CAL,low(_song_title_noise_1),high(_song_title_noise_1)
   .db GOT
   .dw _song_title_noise_loop
 
-_song_title_square1_0:
-  .db STV,14,SAR,3,STP,7,SDU,3,SL0,A1,SL8,A1,SL4,D2,E2
-  .db RET
-
-_song_title_square1_1:
-  .db STV,14,SAR,3,STP,7,SDU,3,SL0,G1,SL8,G1,SL4,B1,D2
-  .db RET
-
-_song_title_square1_2:
-  .db STV,14,SAR,3,STP,7,SDU,3,SL0,F1,SL8,F1,SL4,A1,C2
-  .db RET
-
-_song_title_square1_3:
-  .db STV,14,SAR,3,STP,7,SDU,3,SL0,B0,SL8,B0,AS0
-  .db RET
-
 _song_title_square2_0:
-  .db STV,13,SAR,3,STP,7,SDU,2,SL4,A1,C2,A1,E2,A2,E2,CS2,A1
-  .db RET
-
-_song_title_square2_1:
-  .db STV,13,SAR,3,STP,7,SDU,2,SL4,G1,B1,C2,G2,G2,C3,B2,G2
-  .db RET
-
-_song_title_square2_2:
-  .db STV,13,SAR,3,STP,7,SDU,2,SL4,F2,A2,C3,A2,F3,C3,A2,F2
-  .db RET
-
-_song_title_square2_3:
-  .db STV,13,SAR,3,STP,7,SDU,2,SL4,B2,F2,D2,F2,B1,F2,D2,B1
-  .db RET
-
-_song_title_triangle_0:
-  .db STV,7,SAR,3,STP,6,SDU,3,SLL,32,A5
-  .db RET
-
-_song_title_noise_0:
-  .db STV,11,SAR,3,STP,8,SDU,3,SL8,5,STV,9,13,STV,11,SAR,1,8,STV,9
-  .db SAR,3,SL4,13,13
-  .db RET
-
-_song_title_noise_1:
-  .db STV,11,SAR,3,STP,8,SDU,3,SL8,5,STV,9,13,STV,11,SAR,1,8,STV,10
-  .db SAR,3,STP,4,13
-  .db RET
-
-_song_stage_select:
-  .db 0
-  .db 9
-  .db 128
-  .db 7
-  .dw 0
-  .dw _song_stage_select_square2
-  .dw _song_stage_select_triangle
-  .dw _song_stage_select_noise
-  .dw 0
-
-_song_stage_select_square2:
-_song_stage_select_square2_loop:
-  .db CAL,low(_song_stage_select_square2_0),high(_song_stage_select_square2_0)
-  .db GOT
-  .dw _song_stage_select_square2_loop
-
-_song_stage_select_triangle:
-_song_stage_select_triangle_loop:
-  .db CAL,low(_song_stage_select_triangle_0),high(_song_stage_select_triangle_0)
-  .db GOT
-  .dw _song_stage_select_triangle_loop
-
-_song_stage_select_noise:
-_song_stage_select_noise_loop:
-  .db CAL,low(_song_stage_select_noise_0),high(_song_stage_select_noise_0)
-  .db GOT
-  .dw _song_stage_select_noise_loop
-
-_song_stage_select_square2_0:
   .db STV,14,SAR,3,STP,7,SDU,3,SL4,CS3,F3,CS3,SL2,AS2,CS3,SL4
   .db AS2,DS3,AS2,SL2,GS2,AS2,SL4,GS2,C3,GS2,SL2,F2,GS2,SL4,F2
   .db GS2,AS2,C3
   .db RET
 
-_song_stage_select_triangle_0:
+_song_title_triangle_0:
   .db STV,8,SAR,3,STP,8,SDU,3,SLC,CS3,SL2,CS3,CS3,SLC,AS2,SL2
   .db AS2,AS2,SLC,GS2,SL2,GS2,GS2,SLC,F2,SL4,F2
   .db RET
 
-_song_stage_select_noise_0:
+_song_title_noise_0:
   .db STV,9,SAR,3,STP,8,SDU,3,SL8,11,SL4,11,SL2,11,11,SL8,11,SL4
   .db 11,SL2,11,11,SL8,11,SL4,11,SL2,11,11,SL8,11,SL2,11,11,11
   .db 11
@@ -327,15 +232,97 @@ _song_story_square2_0:
   .db RET
 
 _song_stage_outside:
-  .db 0
-  .db 6
-  .db 0
-  .db 5
+  .db 128
+  .db 4
+  .db 192
+  .db 3
+  .dw _song_stage_outside_square1
+  .dw _song_stage_outside_square2
+  .dw _song_stage_outside_triangle
+  .dw _song_stage_outside_noise
   .dw 0
-  .dw 0
-  .dw 0
-  .dw 0
-  .dw 0
+
+_song_stage_outside_square1:
+_song_stage_outside_square1_loop:
+  .db CAL,low(_song_stage_outside_square1_0),high(_song_stage_outside_square1_0)
+  .db CAL,low(_song_stage_outside_square1_1),high(_song_stage_outside_square1_1)
+  .db CAL,low(_song_stage_outside_square1_2),high(_song_stage_outside_square1_2)
+  .db CAL,low(_song_stage_outside_square1_3),high(_song_stage_outside_square1_3)
+  .db GOT
+  .dw _song_stage_outside_square1_loop
+
+_song_stage_outside_square2:
+_song_stage_outside_square2_loop:
+  .db CAL,low(_song_stage_outside_square2_0),high(_song_stage_outside_square2_0)
+  .db CAL,low(_song_stage_outside_square2_1),high(_song_stage_outside_square2_1)
+  .db CAL,low(_song_stage_outside_square2_2),high(_song_stage_outside_square2_2)
+  .db CAL,low(_song_stage_outside_square2_3),high(_song_stage_outside_square2_3)
+  .db GOT
+  .dw _song_stage_outside_square2_loop
+
+_song_stage_outside_triangle:
+_song_stage_outside_triangle_loop:
+  .db CAL,low(_song_stage_outside_triangle_0),high(_song_stage_outside_triangle_0)
+  .db CAL,low(_song_stage_outside_triangle_0),high(_song_stage_outside_triangle_0)
+  .db CAL,low(_song_stage_outside_triangle_0),high(_song_stage_outside_triangle_0)
+  .db CAL,low(_song_stage_outside_triangle_0),high(_song_stage_outside_triangle_0)
+  .db GOT
+  .dw _song_stage_outside_triangle_loop
+
+_song_stage_outside_noise:
+_song_stage_outside_noise_loop:
+  .db CAL,low(_song_stage_outside_noise_0),high(_song_stage_outside_noise_0)
+  .db CAL,low(_song_stage_outside_noise_0),high(_song_stage_outside_noise_0)
+  .db CAL,low(_song_stage_outside_noise_0),high(_song_stage_outside_noise_0)
+  .db CAL,low(_song_stage_outside_noise_1),high(_song_stage_outside_noise_1)
+  .db GOT
+  .dw _song_stage_outside_noise_loop
+
+_song_stage_outside_square1_0:
+  .db STV,14,SAR,3,STP,7,SDU,3,SL0,A1,SL8,A1,SL4,D2,E2
+  .db RET
+
+_song_stage_outside_square1_1:
+  .db STV,14,SAR,3,STP,7,SDU,3,SL0,G1,SL8,G1,SL4,B1,D2
+  .db RET
+
+_song_stage_outside_square1_2:
+  .db STV,14,SAR,3,STP,7,SDU,3,SL0,F1,SL8,F1,SL4,A1,C2
+  .db RET
+
+_song_stage_outside_square1_3:
+  .db STV,14,SAR,3,STP,7,SDU,3,SL0,B0,SL8,B0,AS0
+  .db RET
+
+_song_stage_outside_square2_0:
+  .db STV,13,SAR,3,STP,7,SDU,2,SL4,A1,C2,A1,E2,A2,E2,CS2,A1
+  .db RET
+
+_song_stage_outside_square2_1:
+  .db STV,13,SAR,3,STP,7,SDU,2,SL4,G1,B1,C2,G2,G2,C3,B2,G2
+  .db RET
+
+_song_stage_outside_square2_2:
+  .db STV,13,SAR,3,STP,7,SDU,2,SL4,F2,A2,C3,A2,F3,C3,A2,F2
+  .db RET
+
+_song_stage_outside_square2_3:
+  .db STV,13,SAR,3,STP,7,SDU,2,SL4,B2,F2,D2,F2,B1,F2,D2,B1
+  .db RET
+
+_song_stage_outside_triangle_0:
+  .db STV,7,SAR,3,STP,6,SDU,3,SLL,32,A5
+  .db RET
+
+_song_stage_outside_noise_0:
+  .db STV,11,SAR,3,STP,8,SDU,3,SL8,5,STV,9,13,STV,11,SAR,1,8,STV,9
+  .db SAR,3,SL4,13,13
+  .db RET
+
+_song_stage_outside_noise_1:
+  .db STV,11,SAR,3,STP,8,SDU,3,SL8,5,STV,9,13,STV,11,SAR,1,8,STV,10
+  .db SAR,3,STP,4,13
+  .db RET
 
 _song_stage_base:
   .db 128
