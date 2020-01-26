@@ -202,10 +202,10 @@ _song_stage_outside:
   .dw 0
 
 _song_stage_base:
-  .db 150
-  .db 10
-  .db 210
-  .db 8
+  .db 128
+  .db 7
+  .db 64
+  .db 6
   .dw _song_stage_base_square1
   .dw _song_stage_base_square2
   .dw 0
@@ -217,6 +217,9 @@ _song_stage_base_square1:
 _song_stage_base_square1_loop:
   .db CAL,low(_song_stage_base_square1_1),high(_song_stage_base_square1_1)
   .db CAL,low(_song_stage_base_square1_2),high(_song_stage_base_square1_2)
+  .db CAL,low(_song_stage_base_square1_1),high(_song_stage_base_square1_1)
+  .db CAL,low(_song_stage_base_square1_2),high(_song_stage_base_square1_2)
+  .db CAL,low(_song_stage_base_square1_3),high(_song_stage_base_square1_3)
   .db GOT
   .dw _song_stage_base_square1_loop
 
@@ -225,6 +228,9 @@ _song_stage_base_square2:
 _song_stage_base_square2_loop:
   .db CAL,low(_song_stage_base_square2_0),high(_song_stage_base_square2_0)
   .db CAL,low(_song_stage_base_square2_1),high(_song_stage_base_square2_1)
+  .db CAL,low(_song_stage_base_square2_0),high(_song_stage_base_square2_0)
+  .db CAL,low(_song_stage_base_square2_1),high(_song_stage_base_square2_1)
+  .db CAL,low(_song_stage_base_square2_2),high(_song_stage_base_square2_2)
   .db GOT
   .dw _song_stage_base_square2_loop
 
@@ -232,7 +238,10 @@ _song_stage_base_noise:
   .db CAL,low(_song_stage_base_noise_0),high(_song_stage_base_noise_0)
 _song_stage_base_noise_loop:
   .db CAL,low(_song_stage_base_noise_1),high(_song_stage_base_noise_1)
-  .db CAL,low(_song_stage_base_noise_2),high(_song_stage_base_noise_2)
+  .db CAL,low(_song_stage_base_noise_1),high(_song_stage_base_noise_1)
+  .db CAL,low(_song_stage_base_noise_1),high(_song_stage_base_noise_1)
+  .db CAL,low(_song_stage_base_noise_1),high(_song_stage_base_noise_1)
+  .db CAL,low(_song_stage_base_noise_3),high(_song_stage_base_noise_3)
   .db GOT
   .dw _song_stage_base_noise_loop
 
@@ -250,6 +259,11 @@ _song_stage_base_square1_2:
   .db A1,A1,A1,G1,G1,G1,G1,A1,A1,A1,SL2,A1
   .db RET
 
+_song_stage_base_square1_3:
+  .db STV,14,SAR,3,STP,7,SDU,3,SL2,A0,STV,9,SL4,G1,G1,G1,G1,C2
+  .db C2,C2,C2,D2,D2,D2,SL2,D2,G2,SL4,G2,G2,SL2,G2,G2,G2
+  .db RET
+
 _song_stage_base_square2_0:
   .db STV,8,SAR,3,STP,7,SDU,3,SL4,G5,E5,D5,SL2,B4,D5,SL4,C5,A4
   .db C5,SL2,D5,E5,SL4,G5,E5,D5,SL2,B4,D5,SL4,C5,A4,C5,SL2,D5,E5
@@ -259,6 +273,12 @@ _song_stage_base_square2_1:
   .db STV,8,SAR,3,STP,7,SDU,3,SL4,G5,A5,SL2,B5,G5,SL4,B5,A5,C6
   .db SL2,A5,F5,SL4,A5,G5,A5,SL2,B5,G5,SL4,B5,A5,C6,SL2,A5,F5,SL4
   .db A5
+  .db RET
+
+_song_stage_base_square2_2:
+  .db STV,8,SAR,3,STP,7,SDU,3,SL4,G5,E5,D5,SL2,G5,A5,SL4,C6,A5
+  .db G5,SL2,A5,C6,SL4,D6,B5,A5,SL2,B5,D6,G6,SL4,E6,D6,SL2,E6,D6
+  .db B5
   .db RET
 
 _song_stage_base_noise_0:
@@ -272,11 +292,11 @@ _song_stage_base_noise_1:
   .db SAR,1,9,SAR,3,SL2,7,7
   .db RET
 
-_song_stage_base_noise_2:
+_song_stage_base_noise_3:
   .db STV,11,SAR,3,STP,7,SDU,3,SL4,7,STV,9,13,STV,11,SAR,1,9,SAR,3
   .db SL2,7,7,SL4,7,STV,9,13,STV,11,SAR,1,9,SAR,3,SL2,7,7,SL4
-  .db 7,STV,9,13,STV,11,SAR,1,9,SAR,3,SL2,7,7,SL4,7,STV,9,13,STV,11
-  .db SAR,1,9,SAR,3,SL2,7,7
+  .db 7,STV,9,13,STV,11,SAR,1,9,SAR,3,SL2,7,7,7,SL4,7,7,SL2,7,7
+  .db 7
   .db RET
 
 _song_stage_space:
