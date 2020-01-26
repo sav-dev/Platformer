@@ -374,7 +374,7 @@ _song_stage_outside_square2_6:
   .db RET
 
 _song_stage_outside_square2_7:
-  .db STV,13,SAR,4,STP,7,SDU,2,SL4,B3,F3,D3,F3,B2,F3,D3,B2
+  .db STV,13,SAR,4,STP,7,SDU,2,SL4,B2,F3,D3,F3,B3,F3,D3,B2
   .db RET
 
 _song_stage_outside_triangle_0:
