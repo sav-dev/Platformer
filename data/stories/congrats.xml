@@ -1,0 +1,13 @@
+<Story>
+  <Strings>
+    <StoryString> <X>1</X> <Y>2</Y> <StringId>80</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>4</Y> <StringId>81</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>5</Y> <StringId>82</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>6</Y> <StringId>83</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>7</Y> <StringId>84</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>9</Y> <StringId>85</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>10</Y> <StringId>86</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>11</Y> <StringId>87</StringId> </StoryString>
+  </Strings>
+  <Song>song_index_song_congrats</Song>
+</Story>

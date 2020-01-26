@@ -1,0 +1,11 @@
+<Story>
+  <Strings>
+    <StoryString> <X>1</X> <Y>2</Y> <StringId>60</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>4</Y> <StringId>61</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>5</Y> <StringId>62</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>6</Y> <StringId>63</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>7</Y> <StringId>64</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>8</Y> <StringId>65</StringId> </StoryString>    
+  </Strings>
+  <Song>song_index_song_story</Song>
+</Story>
