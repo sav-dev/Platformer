@@ -97,17 +97,17 @@ duty:
 volume0:
   .db 15,13,11,10,9,8,7,6,5,4,3,3,2,1,0,ENV_STOP
 volume1:
-  .db 15,10,5,0,ENV_STOP
+  .db 15,12,9,6,3,0,ENV_STOP
 volume2:
   .db 0,ENV_STOP
 volume3:
-  .db 9,9,9,9,9,9,9,9,0,ENV_STOP
+  .db 13,13,13,12,12,12,11,11,0,ENV_STOP
 volume4:
-  .db 4,4,4,4,4,4,4,4,4,4,4,0,ENV_STOP
+  .db 9,9,9,9,9,9,9,9,9,9,9,0,ENV_STOP
 volume5:
   .db 15,10,7,7,10,12,13,12,10,8,5,3,3,3,3,4,5,6,5,3,2,1,1,0,ENV_STOP
 volume6:
-  .db 10,8,6,3,2,3,4,5,5,5,5,5,4,4,3,2,2,2,2,1,1,1,1,0,ENV_STOP
+  .db 13,11,8,6,5,6,7,7,7,7,7,7,6,5,3,2,2,2,2,1,1,1,1,0,ENV_STOP
 volume7:
   .db 9,7,4,3,2,2,3,4,4,2,1,1,1,0,ENV_STOP
 volume8:
@@ -390,7 +390,7 @@ _song_stage_outside_triangle_0:
   .db RET
 
 _song_stage_outside_triangle_1:
-  .db STV,7,SAR,4,STP,6,SDU,3,SLL,24,A5,SL4,A1,A1
+  .db STV,7,SAR,4,STP,6,SDU,3,SLL,24,A5,SL4,A5,A5
   .db RET
 
 _song_stage_outside_triangle_2:
@@ -894,7 +894,7 @@ _sfx_option_changed_square1:
   .db CAL,low(_sfx_option_changed_square1_0),high(_sfx_option_changed_square1_0)
   .db TRM
 _sfx_option_changed_square1_0:
-  .db SLL,4,STV,1,SAR,4,STP,8,SDU,3,B3
+  .db SLL,6,STV,1,SAR,4,STP,8,SDU,3,B3
   .db RET
 
 _sfx_pause:
@@ -927,7 +927,7 @@ _sfx_keycard_square1:
   .db CAL,low(_sfx_keycard_square1_0),high(_sfx_keycard_square1_0)
   .db TRM
 _sfx_keycard_square1_0:
-  .db STV,1,SAR,4,STP,8,SDU,3,SLL,6,F4,FS4,SLL,4,G4
+  .db STV,1,SAR,4,STP,8,SDU,3,SLL,6,F4,FS4,SLL,6,G4
   .db RET
 
 _sfx_blinker:
@@ -1007,7 +1007,7 @@ _sfx_shot_gunrob_triangle:
   .db CAL,low(_sfx_shot_gunrob_triangle_0),high(_sfx_shot_gunrob_triangle_0)
   .db TRM
 _sfx_shot_gunrob_triangle_0:
-  .db SLL,12,STV,4,SAR,4,STP,2,SDU,3,C4
+  .db SLL,12,STV,4,SAR,4,STP,2,SDU,3,C5
   .db RET
 
 _sfx_shot_boss:
