@@ -595,13 +595,25 @@ Bank00Start:
   .include "lib\cursorController.asm"
   .include "data\logoAndText.asm"
               
-  story0:
-  .incbin "data\stories\testStory.bin"
+  storyStage1:
+  .incbin "data\stories\stage1.bin"
   
-  story1:
-  .incbin "data\stories\testStory2.bin"
+  storyStage2:
+  .incbin "data\stories\stage2.bin"
+ 
+  storyStage3:
+  .incbin "data\stories\stage3.bin"
   
-  credits:
+  storyStage4:
+  .incbin "data\stories\stage4.bin"
+ 
+  storyStage5:
+  .incbin "data\stories\stage5.bin"
+  
+  storyCongrats:
+  .incbin "data\stories\congrats.bin"
+  
+  storyCredits:
   .incbin "data\stories\credits.bin"
               
 Bank00End:
