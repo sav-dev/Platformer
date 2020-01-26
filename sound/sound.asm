@@ -346,7 +346,7 @@ _song_stage_outside_square1_3:
   .db RET
 
 _song_stage_outside_square1_4:
-  .db STV,14,SAR,4,STP,7,SDU,3,SL0,B0,SL8,B0,AS0
+  .db STV,14,SAR,4,STP,7,SDU,3,SL0,B0,SL4,F2,D2,B1,F1
   .db RET
 
 _song_stage_outside_square2_0:
@@ -382,7 +382,7 @@ _song_stage_outside_square2_7:
   .db RET
 
 _song_stage_outside_square2_8:
-  .db STV,13,SAR,4,STP,7,SDU,2,SL4,B2,F3,D3,F3,B3,F3,D3,B2
+  .db STV,13,SAR,4,STP,7,SDU,2,SL4,B2,F3,D3,B2,F2,D2,B1,F1
   .db RET
 
 _song_stage_outside_triangle_0:
@@ -394,7 +394,7 @@ _song_stage_outside_triangle_1:
   .db RET
 
 _song_stage_outside_triangle_2:
-  .db STV,7,SAR,4,STP,6,SDU,3,SLL,24,A5,SL4,A1,A1
+  .db STV,7,SAR,4,STP,6,SDU,3,SLL,32,A5
   .db RET
 
 _song_stage_outside_noise_0:
@@ -408,8 +408,7 @@ _song_stage_outside_noise_1:
   .db RET
 
 _song_stage_outside_noise_2:
-  .db STV,11,SAR,4,STP,8,SDU,3,SL8,5,STV,9,13,STV,11,SAR,1,8,SAR,4
-  .db SL4,5,5
+  .db STV,11,SAR,4,STP,8,SDU,3,SL8,5,STV,9,SLL,24,13
   .db RET
 
 _song_stage_base:
