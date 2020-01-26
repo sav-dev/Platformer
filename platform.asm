@@ -118,11 +118,22 @@ initSprPalette:
   JSR WaitForFrame
   
 initGame:
-  LDA #GAMESTATE_TITLE
-  STA <gameState
-  LDY #FIRST_BANK
-  JSR SelectBank
-  JSR LoadTitle  
+
+  checkTestHook:
+    LDA $FFF9
+    BEQ testHookNotPresent
+    
+    testHookPresent:
+      INC <testHookSet
+      JSR ProgressGame
+      JMP GameLoop
+    
+  testHookNotPresent:
+    LDA #GAMESTATE_TITLE
+    STA <gameState
+    LDY #FIRST_BANK
+    JSR SelectBank
+    JSR LoadTitle      
   
 ;****************************************************************
 ; Game loop                                                     ;
@@ -785,6 +796,17 @@ Bank13:
 
 Bank13Start:  
 Bank13End:
+
+;****************************************************************
+; Test hook                                                     ;
+;****************************************************************
+  
+  ; if this byte is non-0, it means we want to load the test hook level immediately
+  ; see consts (the level should be at $A000 in bank 6).
+  ; this is used for testing levels in the level editor.
+  .bank 15
+  .org $FFF9
+  .byte 0
   
 ;****************************************************************
 ; Vectors                                                       ;

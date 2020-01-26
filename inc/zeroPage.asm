@@ -251,6 +251,8 @@ tilesetOffset       .rs 1 ; tileset offset in the lookup table from the lvl data
 levelBeaten         .rs 1 ; whether the level was beaten. only inced once and checked at the end of the level
 isPaused            .rs 1 ; whether the game is paused
 
+testHookSet         .rs 1 ; whether the level test hook was set
+
 ;****************************************************************
 ; sound                                                         ;
 ;****************************************************************

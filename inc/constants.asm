@@ -438,3 +438,11 @@ PROGRESS_STORY = $01
 
 MAX_STRING_LENGTH = $1E
 MAX_STRING_BUFFER_SIZE = MAX_STRING_LENGTH + $04
+
+;****************************************************************
+; Level editor test hook                                        ;
+;****************************************************************
+
+TEST_HOOK_BANK = $06
+TEST_HOOK_ADDR_L = $00
+TEST_HOOK_ADDR_H = $A0

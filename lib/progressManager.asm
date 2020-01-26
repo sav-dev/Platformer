@@ -19,6 +19,20 @@ ProgressManagerStart:
 
 ProgressGame:
 
+  ; check the test hook value. if non-0, always just load the test hook level.
+  .checkTestHook:
+    LDA <testHookSet
+    BEQ .setLevelPointer
+    
+    .processTestHook:
+      LDY #TEST_HOOK_BANK
+      JSR SelectBank
+      LDA #TEST_HOOK_ADDR_L
+      STA <levelPointer
+      LDA #TEST_HOOK_ADDR_H
+      STA <levelPointer + $01
+      JMP .loadSongToPlay
+
   ; this sets X = 3 * currentLevel  
   .setLevelPointer:
     LDA #$00
@@ -30,7 +44,7 @@ ProgressGame:
       DEX
       BNE .incrementLoop
       TAX
-    
+        
   ; switch bank, load the level pointer
   .loadLevelData:
     LDY levels, x ; load bank, keep it in Y for now
@@ -40,7 +54,7 @@ ProgressGame:
     STA <levelPointer
     INX
     LDA levels, x ; pointer high
-    STA <levelPointer + $01    
+    STA <levelPointer + $01   
     
   ; the 1st byte is always song to play. load that now
   .loadSongToPlay:
