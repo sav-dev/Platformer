@@ -1767,16 +1767,16 @@ MovePlayerHorizontallyNormalAndSetBoxes:
       ; let's check if we should scroll the screen.
       ; we should do that if scroll + $80 >= maxScroll
       ;
-      ; POI - possible optimization - this is only needed if we were moving right    
-      ; POI - we can also assume boss levels will always be exactly 2 screens longer
+      ; POITAG - possible optimization - this is only needed if we were moving right    
+      ; POITAG - we can also assume boss levels will always be exactly 2 screens longer
       ; but both are probably not worth it as this will be checked very rarely
       .checkIfShouldScroll:        
     
         LDA <scroll + $01
-        STA <c; POI - possible issue - random psuedo-reg use
+        STA <c; POITAG - possible issue - random psuedo-reg use
         LDA <scroll
         CLC
-        ADC #$70 ; POI - possible issue - I think this puts player right on the edge of the screen
+        ADC #$70 ; POITAG - possible issue - I think this puts player right on the edge of the screen
         STA <b
         LDA <c
         ADC #$00
@@ -1809,7 +1809,7 @@ MovePlayerHorizontallyNormalAndSetBoxes:
           ;  - render player and elevator
           ;  - note:
           ;    - not rendering bullets since we've removed all
-          ;    - not rendering doors - there shouldn't be any - POI possible issue make sure that's the case
+          ;    - not rendering doors - there shouldn't be any - POITAG possible issue make sure that's the case
           ;    - not rendering enemies - they will just appear          
           .scrollingLoop:                      
             JSR ClearSprites
@@ -1817,7 +1817,7 @@ MovePlayerHorizontallyNormalAndSetBoxes:
             DEC <playerX
             JSR RenderPlayer
             JSR RenderElevators
-            INC <needDma; POI - possible issue - the local versions will be incremented too, make sure they don't overflow
+            INC <needDma; POITAG - possible issue - the local versions will be incremented too, make sure they don't overflow
             INC <needPpuReg
             INC <needDraw
             JSR WaitForFrame
