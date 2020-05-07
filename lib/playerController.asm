@@ -404,6 +404,7 @@ UpdatePlayerNormal:
     STA <playerAnimation
     LDA #$00
     STA <playerOnElevator
+    PlaySfxHighPri #sfx_index_sfx_jump
   
   ; Once we get here, vertical movement has been updated. 
   ; Player has been moved vertically, vertical boxes have been updated, animation is set.

@@ -559,7 +559,6 @@ SetVramAddressingTo32:
   .include "lib\collisionManager.asm"
   .include "lib\explosionsController.asm"
   .include "lib\paletteManager.asm"     
-  .include "lib\chrManager.asm"
   
   .include "states\game.asm"
   
@@ -585,6 +584,7 @@ Bank15Start:
   .include "lib\levelManager.asm"
   .include "lib\progressManager.asm"
   .include "lib\bankManager.asm"
+  .include "lib\chrManager.asm"
   
 Bank15End:
 

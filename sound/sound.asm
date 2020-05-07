@@ -20,6 +20,7 @@ sfx_index_sfx_shot_boss = 9
 sfx_index_sfx_expl_player = 10
 sfx_index_sfx_expl_blast = 11
 sfx_index_sfx_expl_org = 12
+sfx_index_sfx_jump = 13
 
 song_list:
   .dw _song_title
@@ -45,6 +46,7 @@ sfx_list:
   .dw _sfx_expl_player
   .dw _sfx_expl_blast
   .dw _sfx_expl_org
+  .dw _sfx_jump
 
 envelopes_list:
   .dw volume
@@ -69,6 +71,7 @@ volume:
   .dw volume13
   .dw volume14
   .dw volume15
+  .dw volume16
 
 arpeggio:
   .dw arpeggio0
@@ -125,6 +128,8 @@ volume13:
 volume14:
   .db 4,4,4,4,4,4,4,3,3,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,0,ENV_STOP
 volume15:
+  .db 12,10,9,8,7,6,5,4,3,3,2,1,0,ENV_STOP
+volume16:
   .db 0,ENV_STOP
 
 arpeggio0:
@@ -456,21 +461,21 @@ _song_stage_base_noise_loop:
   .dw _song_stage_base_noise_loop
 
 _song_stage_base_square1_0:
-  .db STV,15,SAR,4,STP,8,SDU,3,SLL,64,A0
+  .db STV,16,SAR,4,STP,8,SDU,3,SLL,64,A0
   .db RET
 
 _song_stage_base_square1_1:
-  .db STV,15,SAR,4,STP,8,SDU,3,SL2,A0,STV,9,SL4,G1,G1,G1,G1,C2
+  .db STV,16,SAR,4,STP,8,SDU,3,SL2,A0,STV,9,SL4,G1,G1,G1,G1,C2
   .db C2,C2,C2,G1,G1,G1,G1,C2,C2,C2,SL2,C2
   .db RET
 
 _song_stage_base_square1_2:
-  .db STV,15,SAR,4,STP,8,SDU,3,SL2,A0,STV,9,SL4,G1,G1,G1,G1,A1
+  .db STV,16,SAR,4,STP,8,SDU,3,SL2,A0,STV,9,SL4,G1,G1,G1,G1,A1
   .db A1,A1,A1,G1,G1,G1,G1,A1,A1,A1,SL2,A1
   .db RET
 
 _song_stage_base_square1_3:
-  .db STV,15,SAR,4,STP,8,SDU,3,SL2,A0,STV,9,SL4,G1,G1,G1,G1,C2
+  .db STV,16,SAR,4,STP,8,SDU,3,SL2,A0,STV,9,SL4,G1,G1,G1,G1,C2
   .db C2,C2,C2,D2,D2,D2,SL2,D2,G2,SL4,G2,G2,SL2,G2,G2,G2
   .db RET
 
@@ -492,7 +497,7 @@ _song_stage_base_square2_2:
   .db RET
 
 _song_stage_base_noise_0:
-  .db STV,15,SAR,4,STP,8,SDU,3,SLL,64,A0
+  .db STV,16,SAR,4,STP,8,SDU,3,SLL,64,A0
   .db RET
 
 _song_stage_base_noise_1:
@@ -585,7 +590,7 @@ _song_stage_space_square2_4:
   .db RET
 
 _song_stage_space_triangle_0:
-  .db STV,15,SAR,4,STP,8,SDU,3,SLL,64,A0
+  .db STV,16,SAR,4,STP,8,SDU,3,SLL,64,A0
   .db RET
 
 _song_stage_space_triangle_1:
@@ -689,7 +694,7 @@ _song_stage_caves_square2_2:
   .db RET
 
 _song_stage_caves_triangle_0:
-  .db STV,15,SAR,4,STP,8,SDU,3,SLL,64,A0
+  .db STV,16,SAR,4,STP,8,SDU,3,SLL,64,A0
   .db RET
 
 _song_stage_caves_triangle_1:
@@ -776,7 +781,7 @@ _song_stage_skulls_square2_1:
   .db RET
 
 _song_stage_skulls_triangle_0:
-  .db STV,15,SAR,4,STP,8,SDU,3,SLL,64,A0
+  .db STV,16,SAR,4,STP,8,SDU,3,SLL,64,A0
   .db RET
 
 _song_stage_skulls_triangle_1:
@@ -844,7 +849,7 @@ _song_congrats_square1_0:
   .db RET
 
 _song_congrats_square1_1:
-  .db STV,15,SAR,4,STP,8,SDU,3,SLL,48,A0
+  .db STV,16,SAR,4,STP,8,SDU,3,SLL,48,A0
   .db RET
 
 _song_congrats_square2_0:
@@ -853,16 +858,16 @@ _song_congrats_square2_0:
   .db RET
 
 _song_congrats_square2_1:
-  .db STV,15,SAR,4,STP,8,SDU,3,SLL,48,A0
+  .db STV,16,SAR,4,STP,8,SDU,3,SLL,48,A0
   .db RET
 
 _song_congrats_noise_0:
-  .db STV,15,SAR,4,STP,8,SDU,3,SL4,A0,STV,10,STP,4,SLC,15,15,15
+  .db STV,16,SAR,4,STP,8,SDU,3,SL4,A0,STV,10,STP,4,SLC,15,15,15
   .db SL8,15
   .db RET
 
 _song_congrats_noise_1:
-  .db STV,15,SAR,4,STP,8,SDU,3,SLL,48,A0
+  .db STV,16,SAR,4,STP,8,SDU,3,SLL,48,A0
   .db RET
 
 _sfx_option_selected:
@@ -1072,5 +1077,21 @@ _sfx_expl_org_noise:
   .db TRM
 _sfx_expl_org_noise_0:
   .db SLL,24,STV,6,SAR,4,STP,8,SDU,0,6
+  .db RET
+
+_sfx_jump:
+  .db 0, 1
+  .db 0, 1
+  .dw _sfx_jump_square1
+  .dw 0
+  .dw 0
+  .dw 0
+  .dw 0
+
+_sfx_jump_square1:
+  .db CAL,low(_sfx_jump_square1_0),high(_sfx_jump_square1_0)
+  .db TRM
+_sfx_jump_square1_0:
+  .db SLL,15,STV,15,SAR,4,STP,0,SDU,2,C3
   .db RET
 
