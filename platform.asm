@@ -2,7 +2,7 @@
 ; iNES headers                                                  ;
 ;****************************************************************
 
-  .inesprg 8  ; 8x 16KB = 128 PRG code
+  .inesprg 8  ; 8x 16KB = 128KB PRG code
   .ineschr 0  ; no CHR ROM
   .inesmap 2  ; mapper 2 = UNROM
   .inesmir 1  ; vertical mirroring for horizontal scrolling
