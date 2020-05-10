@@ -33,6 +33,8 @@ STAGE_SELECT_INDEX = $01
 CREDITS_INDEX = $02
 MAX_INDEX = $03
 
+BANK_0_ATTS = $FF ; last palette for everything
+
 ;****************************************************************
 ; Name:                                                         ;
 ;   TitleFrame                                                  ;
@@ -357,7 +359,7 @@ CommonBank0Init:
     INC <needDraw
     
   .setAllAtts:
-    LDA #$00 ; 2nd palette = text
+    LDA #BANK_0_ATTS
     STA <renderAtts
     LDA #$08 ; 8 atts rows = entire screen
     STA <genericHeight
