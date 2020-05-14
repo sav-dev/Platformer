@@ -617,7 +617,7 @@ CheckVictoryConditions:
       STA <playerCounter
       LDA #PLAYER_NOT_VISIBLE
       STA <playerState
-      JSR PauseSong
+      JSR PauseSong ; todo 0000 - only stop music if flag set
       INC <levelBeaten
     
     .exitRoutine:
@@ -708,7 +708,7 @@ CheckVictoryConditions:
         STA <playerCounter
         LDA #PLAYER_NOT_VISIBLE
         STA <playerState
-        JSR PauseSong
+        JSR PauseSong ; todo 0000 - only stop music if flag set
         INC <levelBeaten
         
       .playerNotAtExit:
