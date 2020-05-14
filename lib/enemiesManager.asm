@@ -110,12 +110,14 @@ UpdateActiveEnemy:
 
   ; assume the enemy should be rendered.
   ; also, while we're here, assume collision check is needed and enemy is not flashing
-  ; finally, assume we don't want to animate the enemy if static
+  ; assume we don't want to animate the enemy if static
+  ; also assume enemy does not become visible in this frame (blinking)
   LDA #$01
   STA <enemyOnScreen
   STA <enemyCollisions
   STA <enemyNotFlashing
   STA <enemyDontAnimStatic
+  STA <enemyNotBecomesVisible
   
   ; at this point, X points to the state.
   ; check if enemy is flashing - compare state to 3 (ENEMY_STATE_ACTIVE + 1),
@@ -678,9 +680,7 @@ UpdateActiveEnemy:
       
       ; play the sound when enemy becomes visible
       .enemyBecomesVisible:
-        STY <yPointerCache ; playing sounds messes up Y
-        PlaySfxLowPri #sfx_index_sfx_blinker
-        LDY <yPointerCache
+        DEC <enemyNotBecomesVisible
         JMP .blinkingCurrentlyVisible
   
   ; X is pointing to remaining life.
@@ -1219,10 +1219,16 @@ UpdateActiveEnemy:
       STA <genericFrame
   
   ; render the enemy (only if not flashing)
+  ; also play the sound if enemy just became visible (after blinking)
   EnemyRender:
     LDA <enemyNotFlashing
     BEQ UpdateActiveEnemyDone
     JSR RenderEnemy
+    LDA <enemyNotBecomesVisible
+    BNE UpdateActiveEnemyDone
+    STY <yPointerCache ; playing sounds messes up Y
+    PlaySfxLowPri #sfx_index_sfx_blinker
+    LDY <yPointerCache
    
   UpdateActiveEnemyDone:
     RTS

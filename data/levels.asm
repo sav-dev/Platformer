@@ -9,7 +9,7 @@ LevelsStart:
 ; Constants                                                     ;                           
 ;****************************************************************
 
-NUMBER_OF_LEVELS = $09
+NUMBER_OF_LEVELS = $0D
 LEVEL_DEF_SIZE   = $03
 
 ;****************************************************************
@@ -25,6 +25,10 @@ levels:
   ; stage 1
   .byte $00, LOW(storyStage1), HIGH(storyStage1)
   .byte $02, LOW(level00), HIGH(level00)
+  .byte $02, LOW(level01), HIGH(level01)
+  .byte $02, LOW(level02), HIGH(level02)
+  .byte $02, LOW(level04), HIGH(level04)
+  .byte $02, LOW(level05), HIGH(level05)
   
   ; stage 2
   .byte $00, LOW(storyStage2), HIGH(storyStage2)

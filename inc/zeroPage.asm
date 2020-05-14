@@ -176,6 +176,8 @@ enemyDontAnimStatic     .rs 1  ; if set to 0 we won't animate the enemy if stati
 enemyHit                .rs 1  ; whether the enemy was hit
 removeEnemy             .rs 1  ; whether enemy should be exploded / removed from the game
 
+enemyNotBecomesVisible  .rs 1  ; 0 indicates enemy becomes visible and sound should be played if on screen
+
 ;****************************************************************
 ; Elevators                                                     ;
 ;****************************************************************
