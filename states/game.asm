@@ -390,9 +390,12 @@ LoadGame:
 
   .initializeSound:
     LDX <songToPlay ; this was set by the progress manager
+    CPX <currentSong
+    BEQ .waitForFrame ; only play the song if it is different from currently played song. POI - this may cause issues?
     JSR PlaySong
   
-  JMP WaitForFrame 
+  .waitForFrame:
+    JMP WaitForFrame 
 
 ;****************************************************************
 ; ExplosionPositions                                            ;

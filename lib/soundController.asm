@@ -49,6 +49,7 @@ PlaySong:
   LDY #SOUND_BANK
   JSR SwitchBank
   STX <sound_param_byte_0
+  STX <currentSong
   JSR play_song
   JMP RestoreBank
   RTS

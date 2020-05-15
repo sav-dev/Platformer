@@ -61,6 +61,20 @@ ProgressGame:
     LDY #$00
     LDA [levelPointer], y
     STA <songToPlay
+    LDA <songToPlay
+    AND #%10000000
+    BEQ .dontStopSong
+    .stopSong:
+      LDA #$01
+      STA <stopSongAtEndOfLvl
+      JMP .updateSong
+    .dontStopSong:
+      LDA #$00
+      STA <stopSongAtEndOfLvl
+    .updateSong:
+      LDA <songToPlay
+      AND #%01111111
+      STA <songToPlay
     
   ; the 2nd byte is the progress type. load that now and cache in X
   .progressType:
