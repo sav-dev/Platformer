@@ -32,6 +32,8 @@ InitializeSound:
   ;STA <sound_param_word_3
   ;LDA #HIGH(dpcm_list)
   ;STA <sound_param_word_3 + $01
+  LDA #$00
+  STA <songPlaying
   JMP sound_initialize
   
 ;****************************************************************
@@ -50,6 +52,8 @@ PlaySong:
   JSR SwitchBank
   STX <sound_param_byte_0
   STX <currentSong
+  LDA #$01
+  STA <songPlaying
   JSR play_song
   JMP RestoreBank
   RTS
@@ -70,6 +74,8 @@ PauseSong:
   JSR pause_song
   PLA
   TAX
+  LDA #$00
+  STA <songPlaying
   JMP RestoreBank
   RTS
   
@@ -85,6 +91,8 @@ ResumeSong:
   LDY #SOUND_BANK
   JSR SwitchBank
   JSR resume_song
+  LDA #$01
+  STA <songPlaying
   JMP RestoreBank
   RTS
   

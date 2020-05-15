@@ -388,11 +388,18 @@ LoadGame:
   .enablePPU:                                    
     JSR EnablePPU
 
+   ; only play the song if it is different from currently played song (or no song is playing)-
   .initializeSound:
     LDX <songToPlay ; this was set by the progress manager
     CPX <currentSong
-    BEQ .waitForFrame ; only play the song if it is different from currently played song. POI - this may cause issues?
-    JSR PlaySong
+    BNE .playSong
+    
+    LDA <songPlaying
+    BEQ .playSong
+    JMP .waitForFrame
+    
+    .playSong:
+      JSR PlaySong
   
   .waitForFrame:
     JMP WaitForFrame 
