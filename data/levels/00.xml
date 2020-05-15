@@ -1189,4 +1189,5 @@
     <Y>173</Y>
   </ExitPosition>
   <Song>song_index_song_stage_outside</Song>
+  <StopSong>false</StopSong>
 </Level>

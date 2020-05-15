@@ -261,6 +261,7 @@ testHookSet         .rs 1 ; whether the level test hook was set
 
 sfxToPlay           .rs 1 ; which SFX to play
 songToPlay          .rs 1 ; which song to play
+stopSongAtEndOfLvl  .rs 1 ; whether to stop the song at the end of the lvl
 
   .include "ggsound\ggsound_zp.inc" ; uses between 61 or 72 bytes based on what's enabled 
   ; sound .rs 72
