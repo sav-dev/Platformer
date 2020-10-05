@@ -699,11 +699,15 @@ Bank04Start:
   .incbin "data\levels\level_01.bin"
   level02:
   .incbin "data\levels\level_02.bin"
+  level03:
+  .incbin "data\levels\level_03.bin"
   level04:
   .incbin "data\levels\level_04.bin"
   level05:
   .incbin "data\levels\level_05.bin"
-
+  level06:
+  .incbin "data\levels\level_06.bin"
+  
 Bank04End:
   
 Bank05:

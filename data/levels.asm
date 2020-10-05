@@ -27,8 +27,10 @@ levels:
   .byte $02, LOW(level00), HIGH(level00)
   .byte $02, LOW(level01), HIGH(level01)
   .byte $02, LOW(level02), HIGH(level02)
+  .byte $02, LOW(level03), HIGH(level03)
   .byte $02, LOW(level04), HIGH(level04)
   .byte $02, LOW(level05), HIGH(level05)
+  .byte $02, LOW(level06), HIGH(level06)
   
   ; stage 2
   .byte $00, LOW(storyStage2), HIGH(storyStage2)
