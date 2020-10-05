@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <LevelType>Normal</LevelType>
-  <BgPalette>0</BgPalette>
+  <BgPalette>1</BgPalette>
   <TilesetId>0</TilesetId>
   <Tiles>
     <ArrayOfString>
