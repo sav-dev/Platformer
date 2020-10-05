@@ -1,0 +1,57 @@
+ * Bank 0 *
+
+Non-game stages
+Stories
+
+00: 5.5k free
+01: 5.5k free
+
+ * Bank 1 *
+
+CHRs
+ 
+02: full
+03: full
+
+ * Bank 2 *
+
+Levels
+ 
+04: full
+05: 0
+
+ * Bank 3 *
+
+Levels
+ 
+06: 0
+07: 0
+
+ * Bank 4 *
+
+Levels
+ 
+08: 0
+09: 0
+
+ * Bank 5 *
+
+Levels
+ 
+10: 0
+11: 0
+
+ * Bank 6 *
+
+Sound
+Levels
+ 
+12: 4k free
+13: 0
+
+ * Bank 7 *
+ 
+Game logic
+ 
+14: full
+15: full
