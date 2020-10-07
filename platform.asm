@@ -721,6 +721,9 @@ Bank05Start:
   level_1_08:
   .incbin "data\levels\level_1_08.bin"
   
+  level_1_11:
+  .incbin "data\levels\level_1_11.bin"
+  
 Bank05End:
 
 ;****************************************************************
