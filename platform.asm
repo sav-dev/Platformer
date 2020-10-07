@@ -693,18 +693,18 @@ Bank04:
 
 Bank04Start:
 
-  level00:
-  .incbin "data\levels\level_00.bin"
-  level01:
-  .incbin "data\levels\level_01.bin"
-  level03:
-  .incbin "data\levels\level_03.bin"
-  level04:
-  .incbin "data\levels\level_04.bin"
-  level05:
-  .incbin "data\levels\level_05.bin"
-  level06:
-  .incbin "data\levels\level_06.bin"
+  level_1_01:
+  .incbin "data\levels\level_1_01.bin"
+  level_1_02:
+  .incbin "data\levels\level_1_02.bin"
+  level_1_04:
+  .incbin "data\levels\level_1_04.bin"
+  level_1_05:
+  .incbin "data\levels\level_1_05.bin"
+  level_1_06:
+  .incbin "data\levels\level_1_06.bin"
+  level_1_07:
+  .incbin "data\levels\level_1_07.bin"
   
 Bank04End:
 
@@ -715,9 +715,12 @@ Bank05:
 
 Bank05Start:  
 
-  level02:
-  .incbin "data\levels\level_02.bin"
+  level_1_03:
+  .incbin "data\levels\level_1_03.bin"
 
+  level_1_08:
+  .incbin "data\levels\level_1_08.bin"
+  
 Bank05End:
 
 ;****************************************************************
