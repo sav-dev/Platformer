@@ -175,46 +175,46 @@
       <string>1-0-0-9</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-5</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-6</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-2-9</string>
-      <string>2-0-1-8</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>2-0-1-6</string>
-      <string>1-0-1-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-      <string>2-0-1-8</string>
-      <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-4</string>
-      <string>1-1-5-3</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
       <string>2-0-0-7</string>
       <string>2-0-0-8</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>2-0-1-6</string>
+      <string>1-0-2-9</string>
+      <string>2-0-1-8</string>
+      <string>1-1-5-3</string>
+      <string>1-1-5-4</string>
+      <string>1-1-5-4</string>
+      <string>1-1-5-4</string>
+      <string>1-1-5-4</string>
+      <string>2-0-1-6</string>
+      <string>1-0-1-9</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>1-0-2-9</string>
+      <string>2-0-1-8</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-0-1-6</string>
+      <string>1-0-0-9</string>
+      <string>2-0-1-8</string>
+      <string>1-1-5-3</string>
+      <string>1-1-5-4</string>
+      <string>1-1-5-4</string>
+      <string>1-1-5-4</string>
+      <string>1-1-5-3</string>
+      <string>2-0-1-6</string>
+      <string>1-0-0-9</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>1-0-0-9</string>
+      <string>2-0-1-8</string>
+      <string>1-1-5-3</string>
+      <string>1-1-5-4</string>
+      <string>1-1-5-4</string>
+      <string>2-0-1-6</string>
       <string>1-0-1-9</string>
       <string>2-0-1-8</string>
       <string>1-1-5-3</string>
@@ -228,9 +228,9 @@
     <ArrayOfString>
       <string>1-0-0-9</string>
       <string>2-0-1-8</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
+      <string>1-1-5-3</string>
+      <string>1-1-5-3</string>
+      <string>1-1-5-3</string>
       <string>2-0-1-6</string>
       <string>1-0-0-9</string>
       <string>2-0-1-8</string>
@@ -245,9 +245,9 @@
     <ArrayOfString>
       <string>1-0-0-9</string>
       <string>2-0-1-8</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
+      <string>1-1-5-3</string>
+      <string>1-1-5-4</string>
+      <string>1-1-5-3</string>
       <string>2-0-1-6</string>
       <string>1-0-0-9</string>
       <string>2-0-1-8</string>
@@ -262,16 +262,16 @@
     <ArrayOfString>
       <string>1-0-1-9</string>
       <string>2-0-1-8</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
+      <string>1-1-5-3</string>
+      <string>1-1-5-3</string>
+      <string>1-1-5-4</string>
       <string>2-0-1-6</string>
       <string>1-0-0-9</string>
       <string>2-0-1-8</string>
       <string>1-1-5-3</string>
       <string>1-1-5-4</string>
       <string>1-1-5-3</string>
-      <string>1-1-5-4</string>
+      <string>1-1-5-3</string>
       <string>1-1-5-4</string>
       <string>2-0-1-6</string>
       <string>1-0-0-9</string>
@@ -726,7 +726,7 @@
   <Elevators>
     <Elevator>
       <X>296</X>
-      <Y>208</Y>
+      <Y>112</Y>
       <Size>4</Size>
       <MovementType>Vertical</MovementType>
       <Speed>1</Speed>
@@ -747,7 +747,7 @@
   </Elevators>
   <DoorAndKeycard>
     <DoorExists>true</DoorExists>
-    <DoorX>208</DoorX>
+    <DoorX>176</DoorX>
     <DoorY>32</DoorY>
     <KeycardX>440</KeycardX>
     <KeycardY>188</KeycardY>
