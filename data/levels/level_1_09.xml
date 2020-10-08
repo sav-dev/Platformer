@@ -194,7 +194,7 @@
     <ArrayOfString>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>0-1-0-5</string>
+      <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>2-0-1-6</string>
       <string>1-0-0-9</string>
@@ -307,7 +307,7 @@
       <string>0-1-0-5</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
+      <string>2-0-5-7</string>
       <string>0-1-0-2</string>
     </ArrayOfString>
     <ArrayOfString>
@@ -508,23 +508,6 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>0-1-1-5</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
@@ -534,23 +517,6 @@
     <ArrayOfString>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-6</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>2-0-0-6</string>
@@ -635,76 +601,205 @@
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-      <string>1-0-0-9</string>
-      <string>1-0-1-9</string>
-      <string>1-0-1-9</string>
-      <string>1-0-0-9</string>
-      <string>1-0-0-9</string>
-      <string>1-0-0-9</string>
-      <string>1-0-0-9</string>
-      <string>1-0-0-9</string>
-      <string>1-0-1-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-1-5</string>
+      <string>0-1-1-6</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-      <string>1-0-0-9</string>
-      <string>1-0-2-9</string>
-      <string>1-0-0-9</string>
-      <string>1-0-2-9</string>
       <string>1-0-0-9</string>
       <string>1-0-1-9</string>
       <string>1-0-1-9</string>
       <string>1-0-2-9</string>
       <string>1-0-0-9</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-1-0-2</string>
-      <string>0-1-0-2</string>
-      <string>0-1-0-5</string>
-      <string>0-1-0-2</string>
-      <string>2-0-1-6</string>
-      <string>1-0-0-9</string>
-      <string>1-0-0-9</string>
+      <string>1-0-2-9</string>
       <string>1-0-0-9</string>
       <string>1-0-0-9</string>
       <string>1-0-0-9</string>
       <string>1-0-1-9</string>
-      <string>1-0-0-9</string>
-      <string>1-0-0-9</string>
-      <string>1-0-0-9</string>
-      <string>1-0-0-9</string>
     </ArrayOfString>
   </Tiles>
-  <Enemies />
+  <Enemies>
+    <Enemy>
+      <Name>Eye</Name>
+      <X>264</X>
+      <Y>64</Y>
+      <MovementType>Horizontal</MovementType>
+      <Direction>Right</Direction>
+      <SpecialMovement>Sinus8</SpecialMovement>
+      <Speed>2</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>264</MinPosition>
+      <MaxPosition>456</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Eye</Name>
+      <X>264</X>
+      <Y>96</Y>
+      <MovementType>Horizontal</MovementType>
+      <Direction>Right</Direction>
+      <SpecialMovement>Sinus8</SpecialMovement>
+      <Speed>2</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>264</MinPosition>
+      <MaxPosition>456</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Eye</Name>
+      <X>264</X>
+      <Y>128</Y>
+      <MovementType>Horizontal</MovementType>
+      <Direction>Right</Direction>
+      <SpecialMovement>Sinus8</SpecialMovement>
+      <Speed>2</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>264</MinPosition>
+      <MaxPosition>456</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Eye</Name>
+      <X>264</X>
+      <Y>160</Y>
+      <MovementType>Horizontal</MovementType>
+      <Direction>Right</Direction>
+      <SpecialMovement>Sinus8</SpecialMovement>
+      <Speed>2</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>264</MinPosition>
+      <MaxPosition>456</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Eye</Name>
+      <X>264</X>
+      <Y>192</Y>
+      <MovementType>Horizontal</MovementType>
+      <Direction>Right</Direction>
+      <SpecialMovement>Sinus8</SpecialMovement>
+      <Speed>2</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>264</MinPosition>
+      <MaxPosition>456</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Eye</Name>
+      <X>456</X>
+      <Y>80</Y>
+      <MovementType>Horizontal</MovementType>
+      <Direction>Left</Direction>
+      <SpecialMovement>Sinus8</SpecialMovement>
+      <Speed>2</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>264</MinPosition>
+      <MaxPosition>456</MaxPosition>
+      <InitialFlip>true</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Eye</Name>
+      <X>456</X>
+      <Y>112</Y>
+      <MovementType>Horizontal</MovementType>
+      <Direction>Left</Direction>
+      <SpecialMovement>Sinus8</SpecialMovement>
+      <Speed>2</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>264</MinPosition>
+      <MaxPosition>456</MaxPosition>
+      <InitialFlip>true</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Eye</Name>
+      <X>456</X>
+      <Y>144</Y>
+      <MovementType>Horizontal</MovementType>
+      <Direction>Left</Direction>
+      <SpecialMovement>Sinus8</SpecialMovement>
+      <Speed>2</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>264</MinPosition>
+      <MaxPosition>456</MaxPosition>
+      <InitialFlip>true</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Eye</Name>
+      <X>456</X>
+      <Y>176</Y>
+      <MovementType>Horizontal</MovementType>
+      <Direction>Left</Direction>
+      <SpecialMovement>Sinus8</SpecialMovement>
+      <Speed>2</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>264</MinPosition>
+      <MaxPosition>456</MaxPosition>
+      <InitialFlip>true</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+  </Enemies>
   <Elevators>
     <Elevator>
-      <X>274</X>
+      <X>320</X>
       <Y>208</Y>
       <Size>3</Size>
       <MovementType>Horizontal</MovementType>
       <Speed>0.25</Speed>
-      <MinPosition>274</MinPosition>
-      <MaxPosition>418</MaxPosition>
+      <MinPosition>320</MinPosition>
+      <MaxPosition>384</MaxPosition>
       <Direction>Right</Direction>
     </Elevator>
     <Elevator>
-      <X>470</X>
+      <X>438</X>
       <Y>64</Y>
       <Size>3</Size>
       <MovementType>Vertical</MovementType>
-      <Speed>0.25</Speed>
+      <Speed>0.5</Speed>
       <MinPosition>64</MinPosition>
-      <MaxPosition>208</MaxPosition>
+      <MaxPosition>192</MaxPosition>
       <Direction>Down</Direction>
     </Elevator>
   </Elevators>
@@ -714,9 +809,9 @@
   </PlayerStartingPosition>
   <ScrollSpeed>1</ScrollSpeed>
   <ExitPosition>
-    <X>564</X>
+    <X>532</X>
     <Y>29</Y>
   </ExitPosition>
-  <Song>song_index_song_title</Song>
+  <Song>song_index_song_stage_outside</Song>
   <StopSong>false</StopSong>
 </Level>
