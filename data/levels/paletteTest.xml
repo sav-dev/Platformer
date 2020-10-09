@@ -277,6 +277,74 @@
       <string>0-0-4-3</string>
     </ArrayOfString>
     <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-0-3-4</string>
+      <string>2-0-3-5</string>
+      <string>2-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-0-3-4</string>
+      <string>2-0-3-5</string>
+      <string>2-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>3-1-0-7</string>
+      <string>3-1-0-7</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>3-1-0-7</string>
+      <string>3-1-0-7</string>
+    </ArrayOfString>
+    <ArrayOfString>
       <string>1-1-4-0</string>
       <string>1-1-4-1</string>
       <string>1-1-4-1</string>
@@ -486,6 +554,24 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
+      <string>2-0-5-2</string>
+      <string>1-1-2-0</string>
+      <string>1-1-2-1</string>
+      <string>1-1-2-1</string>
+      <string>1-1-2-1</string>
+      <string>1-1-2-1</string>
+      <string>1-1-2-1</string>
+      <string>2-0-3-4</string>
+      <string>2-0-3-5</string>
+      <string>2-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-0-5-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
@@ -493,6 +579,56 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
+      <string>3-1-0-7</string>
+      <string>3-1-0-7</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-0-5-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>3-1-0-7</string>
+      <string>3-1-0-7</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-0-5-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-0-3-4</string>
+      <string>2-0-3-5</string>
+      <string>2-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-0-5-2</string>
+      <string>1-1-2-0</string>
+      <string>1-1-2-1</string>
+      <string>1-1-2-1</string>
+      <string>1-1-2-1</string>
+      <string>1-1-2-1</string>
+      <string>1-1-2-1</string>
       <string>2-0-3-4</string>
       <string>2-0-3-5</string>
       <string>2-0-4-3</string>
@@ -535,7 +671,24 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
+      <string>2-0-5-2</string>
+      <string>1-1-2-0</string>
+      <string>1-1-2-1</string>
+      <string>1-1-2-1</string>
+      <string>1-1-2-1</string>
+      <string>1-1-2-1</string>
+      <string>1-1-2-1</string>
+      <string>1-1-2-1</string>
+      <string>1-1-2-1</string>
+      <string>2-0-3-4</string>
+      <string>2-0-3-5</string>
+      <string>2-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
       <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-0-5-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
@@ -552,6 +705,7 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
+      <string>2-0-5-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
@@ -561,8 +715,41 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>2-0-3-4</string>
-      <string>2-0-3-5</string>
+      <string>2-2-2-1</string>
+      <string>2-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-0-5-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-0-5-2</string>
+      <string>1-1-2-0</string>
+      <string>1-1-2-1</string>
+      <string>1-1-2-1</string>
+      <string>2-0-5-2</string>
+      <string>0-1-0-2</string>
+      <string>2-2-2-1</string>
+      <string>2-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-0-5-2</string>
+      <string>1-1-2-0</string>
+      <string>1-1-2-1</string>
+      <string>1-1-2-1</string>
+      <string>2-0-5-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-0-5-2</string>
+      <string>0-1-0-2</string>
+      <string>2-2-2-1</string>
       <string>2-0-4-3</string>
     </ArrayOfString>
     <ArrayOfString>
@@ -579,8 +766,8 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>3-1-0-7</string>
-      <string>3-1-0-7</string>
+      <string>2-2-2-1</string>
+      <string>2-0-4-3</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -596,8 +783,8 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>3-1-0-7</string>
-      <string>3-1-0-7</string>
+      <string>2-2-2-1</string>
+      <string>2-0-4-3</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-1-0-2</string>
@@ -605,15 +792,32 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
+      <string>2-0-5-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-0-5-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>2-2-2-1</string>
+      <string>2-0-4-3</string>
+    </ArrayOfString>
+    <ArrayOfString>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
+      <string>2-0-5-2</string>
+      <string>1-1-2-0</string>
+      <string>1-1-2-1</string>
+      <string>1-1-2-1</string>
+      <string>2-0-5-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>2-0-3-4</string>
-      <string>2-0-3-5</string>
+      <string>0-1-0-2</string>
+      <string>2-2-2-1</string>
       <string>2-0-4-3</string>
     </ArrayOfString>
   </Tiles>
@@ -638,7 +842,7 @@
     </Enemy>
     <Enemy>
       <Name>Lava</Name>
-      <X>464</X>
+      <X>288</X>
       <Y>200</Y>
       <MovementType>None</MovementType>
       <Direction>None</Direction>
@@ -648,6 +852,60 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Pink Blob</Name>
+      <X>464</X>
+      <Y>176</Y>
+      <MovementType>Horizontal</MovementType>
+      <Direction>Right</Direction>
+      <SpecialMovement>JumpSmall</SpecialMovement>
+      <Speed>1</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>336</MinPosition>
+      <MaxPosition>496</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Green Blob</Name>
+      <X>480</X>
+      <Y>176</Y>
+      <MovementType>Horizontal</MovementType>
+      <Direction>Right</Direction>
+      <SpecialMovement>JumpSmallPause</SpecialMovement>
+      <Speed>1</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>336</MinPosition>
+      <MaxPosition>496</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Green Blob</Name>
+      <X>496</X>
+      <Y>176</Y>
+      <MovementType>Horizontal</MovementType>
+      <Direction>Left</Direction>
+      <SpecialMovement>JumpBig</SpecialMovement>
+      <Speed>1</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>336</MinPosition>
+      <MaxPosition>496</MaxPosition>
+      <InitialFlip>true</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
@@ -668,6 +926,42 @@
       <InitialFlip>false</InitialFlip>
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Lava</Name>
+      <X>592</X>
+      <Y>200</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>0</ShootingFrequency>
+      <ShootingInitialFrequency>0</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>Gunner Robot</Name>
+      <X>656</X>
+      <Y>16</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>false</InitialFlip>
+      <ShootingFrequency>32</ShootingFrequency>
+      <ShootingInitialFrequency>32</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>

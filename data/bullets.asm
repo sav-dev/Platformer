@@ -129,15 +129,15 @@ Gunner_Robot:
 .boxOffset:
   .byte $00, $00
 .atts:
-  .byte $00
+  .byte $03
 .speedFlip:
   .byte $FA, $00
 .boxOffsetFlip:
   .byte $00, $00
 .attsFlip:
-  .byte $40
+  .byte $43
 .spriteId:
-  .byte $E9
+  .byte $E8
 .boxSize:
   .byte $07, $02
 .sound:
