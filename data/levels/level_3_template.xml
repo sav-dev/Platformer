@@ -1640,14 +1640,14 @@
   <Enemies />
   <Elevators />
   <PlayerStartingPosition>
-    <X>30</X>
-    <Y>96</Y>
+    <X>20</X>
+    <Y>100</Y>
   </PlayerStartingPosition>
-  <ScrollSpeed>0.25</ScrollSpeed>
+  <ScrollSpeed>0.5</ScrollSpeed>
   <ExitPosition>
     <X>4</X>
     <Y>13</Y>
   </ExitPosition>
-  <Song>song_index_song_title</Song>
+  <Song>song_index_song_stage_space</Song>
   <StopSong>false</StopSong>
 </Level>
