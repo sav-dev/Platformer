@@ -985,7 +985,7 @@
       <Direction>Down</Direction>
     </Elevator>
     <Elevator>
-      <X>368</X>
+      <X>416</X>
       <Y>136</Y>
       <Size>4</Size>
       <MovementType>Horizontal</MovementType>

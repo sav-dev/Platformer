@@ -741,6 +741,9 @@ Bank06:
 
 Bank06Start:  
   
+  level_3_01:
+  .incbin "data\levels\level_3_01.bin"
+  
   levelBoss:
   .incbin "data\levels\boss.bin"
 
