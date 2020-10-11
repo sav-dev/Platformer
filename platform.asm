@@ -752,13 +752,16 @@ Bank07:
   
   .bank 7
   .org $A000
+  
+Bank07Start:
 
+  level_3_01:
+  .incbin "data\levels\level_3_01.bin"
   level_3_05:
   .incbin "data\levels\level_3_05.bin"
   level_3_06:
   .incbin "data\levels\level_3_06.bin"
   
-Bank07Start:  
 Bank07End:
 
 ;****************************************************************
