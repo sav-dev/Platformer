@@ -1055,7 +1055,7 @@
       <string>0-1-0-2</string>
       <string>1-1-2-3</string>
       <string>0-1-0-2</string>
-      <string>0-0-4-3</string>
+      <string>0-1-0-2</string>
       <string>0-1-0-2</string>
     </ArrayOfString>
     <ArrayOfString>
@@ -1486,8 +1486,8 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>66</ShootingFrequency>
-      <ShootingInitialFrequency>66</ShootingInitialFrequency>
+      <ShootingFrequency>90</ShootingFrequency>
+      <ShootingInitialFrequency>90</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
