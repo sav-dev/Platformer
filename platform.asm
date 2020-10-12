@@ -777,6 +777,11 @@ Bank08:
 
 Bank08Start:  
 
+  level_3_07:
+  .incbin "data\levels\level_3_07.bin"
+  level_3_05:
+  .incbin "data\levels\level_3_05.bin"
+
   levelBoss:
   .incbin "data\levels\boss.bin"
 
