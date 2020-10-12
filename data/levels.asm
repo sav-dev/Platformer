@@ -51,9 +51,9 @@ NUMBER_OF_LEVELS_STAGE_3 = $09
   .byte $03, LOW(level_3_02), HIGH(level_3_02)
   .byte $03, LOW(level_3_03), HIGH(level_3_03)
   .byte $03, LOW(level_3_04), HIGH(level_3_04)
-  .byte $03, LOW(level_3_05), HIGH(level_3_05)
+  .byte $04, LOW(level_3_05), HIGH(level_3_05)
   .byte $03, LOW(level_3_06), HIGH(level_3_06)
-  .byte $03, LOW(level_3_07), HIGH(level_3_07)
+  .byte $04, LOW(level_3_07), HIGH(level_3_07)
   .byte $03, LOW(level_3_08), HIGH(level_3_08)
   
   ; stage 4
