@@ -71,6 +71,7 @@ GAMESTATE_EXPL         = $01 ; state where a boss has been beaten and everything
 GAMESTATE_TITLE        = $02 ; title screen
 GAMESTATE_STAGE_SELECT = $03 ; stage select
 GAMESTATE_STORY        = $04 ; story screen
+GAMESTATE_PASSWORD     = $05 ; password screen
 
 STATE_CHANGE_TIMEOUT   = $22 ; how long the black screen stays on between game states
 

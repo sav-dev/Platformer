@@ -162,6 +162,8 @@ GameLoop:
     BEQ .gameStateStageSelect
     CMP #GAMESTATE_STORY
     BEQ .gameStateStory
+    CMP #GAMESTATE_PASSWORD
+    BEQ .gameStatePassword
   
   .gameStateGame:
     JSR GameFrame
@@ -177,6 +179,10 @@ GameLoop:
     
   .gameStateStageSelect:
     JSR StageSelectFrame
+    JMP GameLoopDone
+  
+  .gameStatePassword:
+    JSR PasswordFrame
     JMP GameLoopDone
   
   .gameStateStory:
@@ -602,6 +608,7 @@ Bank00Start:
   .include "states\title.asm"
   .include "states\story.asm"
   .include "states\stageSelect.asm"
+  .include "states\password.asm"
   .include "lib\stringManager.asm"
   .include "lib\cursorController.asm"
   .include "data\logoAndText.asm"

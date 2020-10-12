@@ -39,7 +39,7 @@ STR_1 = 2
   .byte LOW(string1), HIGH(string1)
 
 ; 2
-; "Stage select"
+; "Password"
 STR_2 = 4
   .byte LOW(string2), HIGH(string2)
 
@@ -449,7 +449,7 @@ string0:
 string1:
   .byte $0A, $1D, $1E, $0B, $1C, $1E, $00, $11, $0B, $17, $0F
 string2:
-  .byte $0C, $1D, $1E, $0B, $11, $0F, $00, $1D, $0F, $16, $0F, $0D, $1E
+  .byte $08, $1A, $0B, $1D, $1D, $21, $19, $1C, $0E
 string3:
   .byte $07, $0D, $1C, $0F, $0E, $13, $1E, $1D
 string4:

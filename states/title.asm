@@ -20,7 +20,7 @@ PRESS_START_Y = $12
 
 MENU_ITEMS_X = $0C
 START_GAME_Y = $10
-STAGE_SELECT_Y = $12
+PASSWORD_Y = $12
 CREDITS_Y = $14
 
 CURSOR_X = MENU_ITEMS_X - $02
@@ -29,7 +29,7 @@ CURSOR_Y_INCR = $02
 CURSOR_Y_MAX = CREDITS_Y
 
 START_GAME_INDEX = $00
-STAGE_SELECT_INDEX = $01
+PASSWORD_INDEX = $01
 CREDITS_INDEX = $02
 MAX_INDEX = $03
 
@@ -103,7 +103,7 @@ TitleFrame:
         JSR DrawString
         LDA #MENU_ITEMS_X
         STA <genericX
-        LDA #STAGE_SELECT_Y
+        LDA #PASSWORD_Y
         STA <genericY
         LDA #STR_2
         STA <genericPointer
@@ -141,7 +141,13 @@ TitleFrame:
       LDA <controllerPressed
       AND #CONTROLLER_UP
       BNE .changeSelectionUp
+      LDA <controllerPressed
+      AND #CONTROLLER_B
+      BNE .jumpToBPressed
       JMP .setNmiFlags
+      
+      .jumpToBPressed:
+        JMP .bPressed
       
       .optionSelected:
         JSR SfxOptionSelected
@@ -154,8 +160,8 @@ TitleFrame:
         
         LDA <playerCounter
         BEQ .startGame ; START_GAME_INDEX = 0
-        CMP #STAGE_SELECT_INDEX
-        BEQ .stageSelect
+        CMP #PASSWORD_INDEX
+        BEQ .password
         
         .credits:
           LDA #NUMBER_OF_LEVELS
@@ -164,10 +170,10 @@ TitleFrame:
           INC <progressGame
           JMP .setNmiFlags
         
-        .stageSelect:
-          LDA #GAMESTATE_STAGE_SELECT
+        .password:
+          LDA #GAMESTATE_PASSWORD
           STA <gameState
-          JSR LoadStageSelect ; no need to bank switch as we are already in 0
+          JSR LoadPassword ; no need to bank switch as we are already in 0
           JMP .setNmiFlags
         
         .startGame:
@@ -229,6 +235,17 @@ TitleFrame:
           STA <genericY
           JSR MoveCursor ; this increments needDrawLocal           
           JMP .setNmiFlags
+          
+      .bPressed:
+        LDA <controllerDown
+        AND #CONTROLLER_SEL
+        BEQ .setNmiFlags
+        
+        .stageSelect:
+          LDA #GAMESTATE_STAGE_SELECT
+          STA <gameState
+          JSR LoadStageSelect ; no need to bank switch as we are already in 0
+          ;JMP .setNmiFlags
           
   .setNmiFlags:
     LDA <needDrawLocal

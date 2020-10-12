@@ -21,6 +21,7 @@ StateGame
 StateTitle
 StateStory
 StateStageSelect
+StatePassword
 Bullets
 Enemies
 LogoAndTextData
