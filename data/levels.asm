@@ -57,7 +57,7 @@ NUMBER_OF_LEVELS_STAGE_3 = $09
   .byte $03, LOW(level_3_08), HIGH(level_3_08)
   
   ; stage 4
-NUMBER_OF_LEVELS_STAGE_4 = $01
+NUMBER_OF_LEVELS_STAGE_4 = $02
   .byte $00, LOW(storyStage4), HIGH(storyStage4)
   .byte $05, LOW(paletteTest), HIGH(paletteTest) ; todo: change
 

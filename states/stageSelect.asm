@@ -27,6 +27,26 @@ LEVEL_DIGIT_CURSOR_X = LEVEL_DIGIT_X - $01
 LEVEL_DIGIT_CURSOR_Y = LEVEL_DIGIT_Y
 
 ;****************************************************************
+; Arrays                                                        ;
+;****************************************************************
+
+; -1 everywhere because we skip the stories
+LevelCounts:
+  .byte NUMBER_OF_LEVELS_STAGE_1 - $01
+  .byte NUMBER_OF_LEVELS_STAGE_2 - $01
+  .byte NUMBER_OF_LEVELS_STAGE_3 - $01
+  .byte NUMBER_OF_LEVELS_STAGE_4 - $01
+  .byte NUMBER_OF_LEVELS_STAGE_5 - $01
+
+; starts with 1 because we skip the stories
+LevelSums:
+  .byte $01
+  .byte $01 + NUMBER_OF_LEVELS_STAGE_1
+  .byte $01 + NUMBER_OF_LEVELS_STAGE_1 + NUMBER_OF_LEVELS_STAGE_2
+  .byte $01 + NUMBER_OF_LEVELS_STAGE_1 + NUMBER_OF_LEVELS_STAGE_2 + NUMBER_OF_LEVELS_STAGE_3
+  .byte $01 + NUMBER_OF_LEVELS_STAGE_1 + NUMBER_OF_LEVELS_STAGE_2 + NUMBER_OF_LEVELS_STAGE_3 + NUMBER_OF_LEVELS_STAGE_4
+  
+;****************************************************************
 ; Name:                                                         ;
 ;   StageSelectFrame                                            ;
 ;                                                               ;
@@ -69,46 +89,6 @@ StageSelectFrame:
     INC <needDrawLocal
     JMP .setNmiFlags
   
-  .changeDigitRight:
-    JSR SfxOptionChanged
-    LDA <playerCounter
-    BNE .changeLevelDigitRight
-    
-    .changeStageDigitRight:
-      LDA #$00
-      STA <currentLevel ; always reset the level since we don't know how many there are in the new stage
-      INC <levelPointer
-      LDA <levelPointer
-      CMP #STAGE_COUNT
-      BNE .drawDigits
-      LDA #$00
-      STA <levelPointer
-      JMP .drawDigits
-    
-    .changeLevelDigitRight:
-      INC <currentLevel ; todo check for overflow
-      JMP .drawDigits
-    
-  .changeDigitLeft:
-    JSR SfxOptionChanged
-    LDA <playerCounter
-    BNE .changeLevelDigitLeft
-    
-    .changeStageDigitLeft:
-      LDA #$00
-      STA <currentLevel ; always reset the level since we don't know how many there are in the new stage
-      DEC <levelPointer
-      LDA <levelPointer
-      CMP #$FF
-      BNE .drawDigits
-      LDA #STAGE_COUNT - $01
-      STA <levelPointer
-      JMP .drawDigits
-    
-    .changeLevelDigitLeft:
-      DEC <currentLevel ; todo check for overflow
-      JMP .drawDigits
-  
   .moveCursor:
     JSR SfxOptionChanged
     LDA <playerCounter
@@ -131,9 +111,69 @@ StageSelectFrame:
       STA <genericY
       JSR MoveCursor
       JMP .setNmiFlags
+  
+  .changeDigitRight:
+    JSR SfxOptionChanged
+    LDA <playerCounter
+    BNE .changeLevelDigitRight
+    
+    .changeStageDigitRight:
+      LDA #$00
+      STA <currentLevel ; always reset the level since we don't know how many there are in the new stage
+      INC <levelPointer
+      LDA <levelPointer
+      CMP #STAGE_COUNT
+      BNE .drawDigits
+      LDA #$00
+      STA <levelPointer
+      JMP .drawDigits
+    
+    .changeLevelDigitRight:
+      INC <currentLevel
+      LDX <levelPointer
+      LDA LevelCounts, x
+      CMP <currentLevel
+      BNE .drawDigits
+      LDA #$00
+      STA <currentLevel
+      JMP .drawDigits      
+    
+  .changeDigitLeft:
+    JSR SfxOptionChanged
+    LDA <playerCounter
+    BNE .changeLevelDigitLeft
+    
+    .changeStageDigitLeft:
+      LDA #$00
+      STA <currentLevel ; always reset the level since we don't know how many there are in the new stage
+      DEC <levelPointer
+      LDA <levelPointer
+      CMP #$FF
+      BNE .drawDigits
+      LDA #STAGE_COUNT - $01
+      STA <levelPointer
+      JMP .drawDigits
+    
+    .changeLevelDigitLeft:
+      DEC <currentLevel
+      LDA <currentLevel
+      CMP #$FF
+      BNE .drawDigits
+      LDX <levelPointer
+      LDA LevelCounts, x
+      SEC
+      SBC #$01
+      STA <currentLevel
+      JMP .drawDigits    
     
   .loadLevel:
-    ; todo go to the selected level
+    JSR SfxOptionSelected
+    LDX <levelPointer
+    LDA LevelSums, x
+    CLC
+    ADC <currentLevel
+    STA <currentLevel
+    INC <progressGame
     
   .setNmiFlags:
     LDA <needDrawLocal
