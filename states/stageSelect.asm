@@ -9,7 +9,7 @@ StateStageSelectStart:
 ;****************************************************************
 
 STAGE_X = $0C
-STAGE_Y = $0D
+STAGE_Y = $0E
 
 STAGE_DIGIT_X = STAGE_X + $05 + $03
 STAGE_DIGIT_Y = STAGE_Y
@@ -25,6 +25,11 @@ LEVEL_DIGIT_Y = LEVEL_Y
 
 LEVEL_DIGIT_CURSOR_X = LEVEL_DIGIT_X - $01
 LEVEL_DIGIT_CURSOR_Y = LEVEL_DIGIT_Y
+
+TITLE_Y = $0B
+TITLE_X_1 = $0A
+TITLE_X_2 = TITLE_X_1 + $05 + $01
+
 
 ;****************************************************************
 ; Arrays                                                        ;
@@ -219,20 +224,33 @@ LoadStageSelect:
   .commonLogic:
     JSR CommonBank0Init    
   
-  .drawStrings:
-    ; todo draw a 'title' string
+  .drawStrings:    
+    LDA #TITLE_X_1
+    STA <genericX
+    LDA #TITLE_Y
+    STA <genericY
+    LDA #STR_17 ; stage
+    STA <genericPointer
+    JSR DrawString
+    LDA #TITLE_X_2
+    STA <genericX
+    LDA #TITLE_Y
+    STA <genericY
+    LDA #STR_19 ; select
+    STA <genericPointer
+    JSR DrawString
     LDA #STAGE_X
     STA <genericX
     LDA #STAGE_Y
     STA <genericY
-    LDA #STR_17
+    LDA #STR_17 ; stage
     STA <genericPointer
     JSR DrawString
     LDA #LEVEL_X
     STA <genericX
     LDA #LEVEL_Y
     STA <genericY
-    LDA #STR_18
+    LDA #STR_18 ; level
     STA <genericPointer
     JSR DrawString
       

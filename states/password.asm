@@ -12,7 +12,7 @@ DIGIT_COUNT = $04
 
 DIGIT_SPACING = $03
 
-DIGITS_Y = $0E
+DIGITS_Y = $0F
 
 DIGIT_1_X = $0B
 DIGIT_2_X = DIGIT_1_X + DIGIT_SPACING
@@ -20,6 +20,9 @@ DIGIT_3_X = DIGIT_2_X + DIGIT_SPACING
 DIGIT_4_X = DIGIT_3_X + DIGIT_SPACING
 
 MAX_DIGIT = $09
+
+PASSWORD_TITLE_X = $0C
+PASSWORD_TITLE_Y = $0C
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -142,7 +145,6 @@ PasswordFrame:
     STA levelTypeData1, x   
     JMP .drawDigits
 
-    
   .checkPassword:
     ; todo: check the password, go to level if good, play a buzzer sound if bad
    
@@ -168,8 +170,14 @@ LoadPassword:
     JSR CommonBank0Init    
     
   .drawStrings:
-    ; todo draw a 'title' string
-    
+    LDA #PASSWORD_TITLE_X
+    STA <genericX
+    LDA #PASSWORD_TITLE_Y
+    STA <genericY
+    LDA #STR_2 ; password
+    STA <genericPointer
+    JSR DrawString
+
   .initVars:
     LDA #$00
     STA <levelTypeData1

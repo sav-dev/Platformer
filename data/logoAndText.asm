@@ -124,8 +124,9 @@ STR_18 = 36
   .byte LOW(string18), HIGH(string18)
 
 ; 19
-; placeholder
-  .byte $00, $00
+; "Select"
+STR_19 = 38
+  .byte LOW(string19), HIGH(string19)
 
 ; 20
 ; placeholder
@@ -473,6 +474,8 @@ string17:
   .byte $05, $1D, $1E, $0B, $11, $0F
 string18:
   .byte $05, $16, $0F, $20, $0F, $16
+string19:
+  .byte $06, $1D, $0F, $16, $0F, $0D, $1E
 string30:
   .byte $1B, $16, $19, $1C, $0F, $17, $00, $13, $1A, $1D, $1F, $17, $00, $0E, $19, $16, $19, $1C, $00, $1D, $13, $1E, $00, $0B, $17, $0F, $1E, $2A
 string31:

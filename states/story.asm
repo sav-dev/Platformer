@@ -95,7 +95,7 @@ ShowPressStartStringStory:
   STA <genericX
   LDA #PRESS_START_Y_STORY
   STA <genericY
-  LDA #STR_0
+  LDA #STR_0 ; press start
   STA <genericPointer
   JMP DrawString
   
@@ -112,7 +112,7 @@ HidePressStartStringStory:
   STA <genericX
   LDA #PRESS_START_Y_STORY
   STA <genericY
-  LDA #STR_0
+  LDA #STR_0 ; press start
   STA <genericPointer
   JMP ClearString
     

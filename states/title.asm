@@ -99,21 +99,21 @@ TitleFrame:
         STA <genericX
         LDA #START_GAME_OPTION_Y
         STA <genericY
-        LDA #STR_1
+        LDA #STR_1 ; start game
         STA <genericPointer
         JSR DrawString
         LDA #MENU_ITEMS_X
         STA <genericX
         LDA #PASSWORD_OPTION_Y
         STA <genericY
-        LDA #STR_2
+        LDA #STR_2 ; password
         STA <genericPointer
         JSR DrawString
         LDA #MENU_ITEMS_X
         STA <genericX
         LDA #CREDITS_OPTION_Y
         STA <genericY
-        LDA #STR_3
+        LDA #STR_3 ; credits
         STA <genericPointer
         JSR DrawString
         
@@ -274,7 +274,7 @@ ShowPressStartStringTitle:
   STA <genericX
   LDA #PRESS_START_Y
   STA <genericY
-  LDA #STR_0
+  LDA #STR_0 ; press start
   STA <genericPointer
   JMP DrawString       
   
@@ -291,7 +291,7 @@ HidePressStartStringTitle:
   STA <genericX
   LDA #PRESS_START_Y
   STA <genericY
-  LDA #STR_0
+  LDA #STR_0 ; press start
   STA <genericPointer
   JMP ClearString
           
@@ -316,7 +316,7 @@ LoadTitle:
     STA <genericX
     LDA #SAV_2020_Y
     STA <genericY
-    LDA #STR_4
+    LDA #STR_4 ; sav 2020
     STA <genericPointer
     JSR DrawString
     JSR ShowPressStartStringTitle
