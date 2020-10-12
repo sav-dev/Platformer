@@ -43,7 +43,7 @@ StageSelectFrame:
   .processFrame:
     LDA <controllerPressed
     AND #CONTROLLER_START
-    BNE .loadLevel
+    BNE .jumpToLoadLevel
     LDA <controllerPressed
     AND #CONTROLLER_SEL
     BNE .moveCursor
@@ -61,23 +61,53 @@ StageSelectFrame:
     BNE .changeDigitRight
     JMP .setNmiFlags
     
+  .jumpToLoadLevel:
+    JMP .loadLevel
+    
+  .drawDigits:
+    JSR DrawDigits
+    INC <needDrawLocal
+    JMP .setNmiFlags
+  
   .changeDigitRight:
     JSR SfxOptionChanged
-    ; todo
-    INC <LOW(levelPointer)
-    INC <HIGH(levelPointer)
-    JSR DrawDigits
-    INC <needDrawLocal
-    JMP .setNmiFlags
-
+    LDA <playerCounter
+    BNE .changeLevelDigitRight
+    
+    .changeStageDigitRight:
+      LDA #$00
+      STA <currentLevel ; always reset the level since we don't know how many there are in the new stage
+      INC <levelPointer
+      LDA <levelPointer
+      CMP #STAGE_COUNT
+      BNE .drawDigits
+      LDA #$00
+      STA <levelPointer
+      JMP .drawDigits
+    
+    .changeLevelDigitRight:
+      INC <currentLevel ; todo check for overflow
+      JMP .drawDigits
+    
   .changeDigitLeft:
     JSR SfxOptionChanged
-    ; todo
-    DEC <LOW(levelPointer)
-    DEC <HIGH(levelPointer)
-    JSR DrawDigits
-    INC <needDrawLocal
-    JMP .setNmiFlags
+    LDA <playerCounter
+    BNE .changeLevelDigitLeft
+    
+    .changeStageDigitLeft:
+      LDA #$00
+      STA <currentLevel ; always reset the level since we don't know how many there are in the new stage
+      DEC <levelPointer
+      LDA <levelPointer
+      CMP #$FF
+      BNE .drawDigits
+      LDA #STAGE_COUNT - $01
+      STA <levelPointer
+      JMP .drawDigits
+    
+    .changeLevelDigitLeft:
+      DEC <currentLevel ; todo check for overflow
+      JMP .drawDigits
   
   .moveCursor:
     JSR SfxOptionChanged
@@ -103,8 +133,7 @@ StageSelectFrame:
       JMP .setNmiFlags
     
   .loadLevel:
-    ; todo
-    ;JMP .setNmiFlags
+    ; todo go to the selected level
     
   .setNmiFlags:
     LDA <needDrawLocal
@@ -147,9 +176,9 @@ LoadStageSelect:
       
   .setVars:
     LDA #$00
-    STA <LOW(levelPointer)  ; selected stage
-    STA <HIGH(levelPointer) ; selected level
-    STA <playerCounter      ; 0 = stage, 1 = level    
+    STA <levelPointer  ; selected stage
+    STA <currentLevel  ; selected level
+    STA <playerCounter ; 0 = stage, 1 = level    
    
   .drawDigits:
     JSR DrawDigits
@@ -185,16 +214,16 @@ DrawDigits:
     STA <genericX
     LDA #STAGE_DIGIT_Y
     STA <genericY
-    LDA <LOW(levelPointer)
-    STA <LOW(genericPointer)   
+    LDA <levelPointer
+    STA <genericPointer
     JSR DrawDigit
     
     LDA #LEVEL_DIGIT_X
     STA <genericX
     LDA #LEVEL_DIGIT_Y
     STA <genericY
-    LDA <HIGH(levelPointer)
-    STA <LOW(genericPointer)
+    LDA <currentLevel
+    STA <genericPointer
     JMP DrawDigit
     
 ;****************************************************************
