@@ -8,7 +8,7 @@ StatePasswordStart:
 ; Constants                                                     ;
 ;****************************************************************
 
-; todo 0005: password
+; todo: password
 
 ;****************************************************************
 ; Name:                                                         ;
@@ -25,12 +25,12 @@ PasswordFrame:
     STA <needDrawLocal
         
   .processFrame:
-    ; todo 0005: password
+    ; todo: password
     
   .setNmiFlags:
     LDA <needDrawLocal
     BEQ .frameDone
-    INC <needDraw ; we only do draw in this state - no sprites or scrolling. todo 0005: is that the case?
+    INC <needDraw ; we only do draw in this state - no sprites or scrolling
   
   .frameDone:
     RTS
@@ -48,7 +48,7 @@ LoadPassword:
   .commonLogic:
     JSR CommonBank0Init    
   
-  ; todo 0005: password
+  ; todo: password
     
   .fadeIn:
     JSR FadeIn ; this enables PPU    

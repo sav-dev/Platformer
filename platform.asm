@@ -789,9 +789,6 @@ Bank08Start:
   level_3_05:
   .incbin "data\levels\level_3_05.bin"
 
-  levelBoss:
-  .incbin "data\levels\boss.bin"
-
 Bank08End:
   
 Bank09:
@@ -812,6 +809,13 @@ Bank10:
   .org $8000
 
 Bank10Start:  
+
+  paletteTest:
+  .incbin "data\levels\paletteTest.bin"
+  levelBoss:
+  .incbin "data\levels\boss.bin"
+
+
 Bank10End:
   
 Bank11:

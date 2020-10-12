@@ -119,54 +119,45 @@ STR_17 = 34
   .byte LOW(string17), HIGH(string17)
 
 ; 18
-; "Part"
+; "Level"
 STR_18 = 36
   .byte LOW(string18), HIGH(string18)
 
 ; 19
-; "1"
-STR_19 = 38
-  .byte LOW(string19), HIGH(string19)
+; placeholder
+  .byte $00, $00
 
 ; 20
-; "2"
-STR_20 = 40
-  .byte LOW(string20), HIGH(string20)
+; placeholder
+  .byte $00, $00
 
 ; 21
-; "3"
-STR_21 = 42
-  .byte LOW(string21), HIGH(string21)
+; placeholder
+  .byte $00, $00
 
 ; 22
-; "4"
-STR_22 = 44
-  .byte LOW(string22), HIGH(string22)
+; placeholder
+  .byte $00, $00
 
 ; 23
-; "5"
-STR_23 = 46
-  .byte LOW(string23), HIGH(string23)
+; placeholder
+  .byte $00, $00
 
 ; 24
-; "6"
-STR_24 = 48
-  .byte LOW(string24), HIGH(string24)
+; placeholder
+  .byte $00, $00
 
 ; 25
-; "7"
-STR_25 = 50
-  .byte LOW(string25), HIGH(string25)
+; placeholder
+  .byte $00, $00
 
 ; 26
-; "8"
-STR_26 = 52
-  .byte LOW(string26), HIGH(string26)
+; placeholder
+  .byte $00, $00
 
 ; 27
-; "9"
-STR_27 = 54
-  .byte LOW(string27), HIGH(string27)
+; placeholder
+  .byte $00, $00
 
 ; 28
 ; placeholder
@@ -481,25 +472,7 @@ string16:
 string17:
   .byte $05, $1D, $1E, $0B, $11, $0F
 string18:
-  .byte $04, $1A, $0B, $1C, $1E
-string19:
-  .byte $01, $02
-string20:
-  .byte $01, $03
-string21:
-  .byte $01, $04
-string22:
-  .byte $01, $05
-string23:
-  .byte $01, $06
-string24:
-  .byte $01, $07
-string25:
-  .byte $01, $08
-string26:
-  .byte $01, $09
-string27:
-  .byte $01, $0A
+  .byte $05, $16, $0F, $20, $0F, $16
 string30:
   .byte $1B, $16, $19, $1C, $0F, $17, $00, $13, $1A, $1D, $1F, $17, $00, $0E, $19, $16, $19, $1C, $00, $1D, $13, $1E, $00, $0B, $17, $0F, $1E, $2A
 string31:

@@ -7,6 +7,52 @@ StringManagerStart:
 
 ;****************************************************************
 ; Name:                                                         ;
+;   DrawDigit                                                   ;
+;                                                               ;
+; Description:                                                  ;
+;   Draws a digit                                               ;
+;                                                               ;
+; Input variables:                                              ;
+;   genericX/Y = position                                       ;
+;   genericPointer (low) = digit to draw                        ;
+;****************************************************************
+
+DIGIT_1 = $02 ; 1 is sprite #2
+
+DrawDigit:
+  
+  .loadBufferOffset:
+    LDX <bufferOffset
+  
+  .setLength:
+    LDA #$01
+    STA drawBuffer, x
+    INX
+  
+  .setAddress:
+    JSR CalculatePpuAddress
+    LDA <d
+    STA drawBuffer, x
+    INX
+    LDA <c
+    STA drawBuffer, x
+    INX  
+    INX
+  
+  .setData:
+    LDA <LOW(genericPointer)
+    CLC
+    ADC #DIGIT_1
+    STA drawBuffer, x
+    INX
+  
+  .updateBufferOffset:
+    STX <bufferOffset
+  
+  RTS
+
+;****************************************************************
+; Name:                                                         ;
 ;   DrawString                                                  ;
 ;                                                               ;
 ; Description:                                                  ;

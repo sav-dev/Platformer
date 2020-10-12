@@ -80,43 +80,7 @@
     </StringConfig>
     <StringConfig>
       <Id>18</Id>
-      <Value>Part</Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>19</Id>
-      <Value>1</Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>20</Id>
-      <Value>2</Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>21</Id>
-      <Value>3</Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>22</Id>
-      <Value>4</Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>23</Id>
-      <Value>5</Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>24</Id>
-      <Value>6</Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>25</Id>
-      <Value>7</Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>26</Id>
-      <Value>8</Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>27</Id>
-      <Value>9</Value>
+      <Value>Level</Value>
     </StringConfig>
     
     <!-- stage 1 story screen -->
@@ -234,38 +198,38 @@
     </StringConfig>
     
     <!-- congrats screen -->
-      <StringConfig>
-        <Id>80</Id>
-        <Value>Etiam tempor! </Value>
-      </StringConfig>
-      <StringConfig>
-        <Id>81</Id>
-        <Value>Ut ullamcorper, ligula eu</Value>
-      </StringConfig>
-      <StringConfig>
-        <Id>82</Id>
-        <Value>tempor congue, eros est</Value>
-      </StringConfig>
-      <StringConfig>
-        <Id>83</Id>
-        <Value>euismod turpis, id tincidunt</Value>
-      </StringConfig>
-      <StringConfig>
-        <Id>84</Id>
-        <Value>sapien risus a quam. </Value>
-      </StringConfig>
-      <StringConfig>
-        <Id>85</Id>
-        <Value>Maecenas fermentum consequat. </Value>
-      </StringConfig>
-      <StringConfig>
-        <Id>86</Id>
-        <Value>Donec fermentum, pellentesque</Value>
-      </StringConfig>
-      <StringConfig>
-        <Id>87</Id>
-        <Value>malesuada nulla a mi.</Value>
-      </StringConfig>
+    <StringConfig>
+      <Id>80</Id>
+      <Value>Etiam tempor! </Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>81</Id>
+      <Value>Ut ullamcorper, ligula eu</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>82</Id>
+      <Value>tempor congue, eros est</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>83</Id>
+      <Value>euismod turpis, id tincidunt</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>84</Id>
+      <Value>sapien risus a quam. </Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>85</Id>
+      <Value>Maecenas fermentum consequat. </Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>86</Id>
+      <Value>Donec fermentum, pellentesque</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>87</Id>
+      <Value>malesuada nulla a mi.</Value>
+    </StringConfig>
     
   </Strings>
 </StringsConfig>

@@ -21,6 +21,8 @@ LEVEL_DEF_SIZE = $03
 
 levels:
 
+STAGE_COUNT = $05
+
   ; stage 1
 NUMBER_OF_LEVELS_STAGE_1 = $0D
   .byte $00, LOW(storyStage1), HIGH(storyStage1)
@@ -38,8 +40,9 @@ NUMBER_OF_LEVELS_STAGE_1 = $0D
   .byte $02, LOW(level_1_12), HIGH(level_1_12)
   
   ; stage 2
-NUMBER_OF_LEVELS_STAGE_2 = $01
+NUMBER_OF_LEVELS_STAGE_2 = $02
   .byte $00, LOW(storyStage2), HIGH(storyStage2)
+  .byte $00, LOW(storyStage2), HIGH(storyStage2) ; todo: change
   
   ; stage 3
 NUMBER_OF_LEVELS_STAGE_3 = $09
@@ -56,11 +59,12 @@ NUMBER_OF_LEVELS_STAGE_3 = $09
   ; stage 4
 NUMBER_OF_LEVELS_STAGE_4 = $01
   .byte $00, LOW(storyStage4), HIGH(storyStage4)
+  .byte $05, LOW(paletteTest), HIGH(paletteTest) ; todo: change
 
   ; stage 5
 NUMBER_OF_LEVELS_STAGE_5 = $02
   .byte $00, LOW(storyStage5), HIGH(storyStage5)
-  .byte $04, LOW(levelBoss), HIGH(levelBoss)
+  .byte $05, LOW(levelBoss), HIGH(levelBoss) ; todo: change
   
   ; congrats
 NUMBER_OF_LEVELS_CONGRATS = $01
