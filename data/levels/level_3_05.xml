@@ -1643,7 +1643,7 @@
     <X>20</X>
     <Y>100</Y>
   </PlayerStartingPosition>
-  <ScrollSpeed>0.5</ScrollSpeed>
+  <ScrollSpeed>2</ScrollSpeed>
   <ExitPosition>
     <X>4</X>
     <Y>13</Y>
