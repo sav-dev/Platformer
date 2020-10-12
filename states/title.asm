@@ -19,14 +19,14 @@ PRESS_START_X = $0A
 PRESS_START_Y = $12
 
 MENU_ITEMS_X = $0C
-START_GAME_Y = $10
-PASSWORD_Y = $12
-CREDITS_Y = $14
+START_GAME_OPTION_Y = $10
+PASSWORD_OPTION_Y = $12
+CREDITS_OPTION_Y = $14
 
 CURSOR_X = MENU_ITEMS_X - $02
-CURSOR_Y_INIT = START_GAME_Y
+CURSOR_Y_INIT = START_GAME_OPTION_Y
 CURSOR_Y_INCR = $02
-CURSOR_Y_MAX = CREDITS_Y
+CURSOR_Y_MAX = CREDITS_OPTION_Y
 
 START_GAME_INDEX = $00
 PASSWORD_INDEX = $01
@@ -97,21 +97,21 @@ TitleFrame:
       .renderMenu:
         LDA #MENU_ITEMS_X
         STA <genericX
-        LDA #START_GAME_Y
+        LDA #START_GAME_OPTION_Y
         STA <genericY
         LDA #STR_1
         STA <genericPointer
         JSR DrawString
         LDA #MENU_ITEMS_X
         STA <genericX
-        LDA #PASSWORD_Y
+        LDA #PASSWORD_OPTION_Y
         STA <genericY
         LDA #STR_2
         STA <genericPointer
         JSR DrawString
         LDA #MENU_ITEMS_X
         STA <genericX
-        LDA #CREDITS_Y
+        LDA #CREDITS_OPTION_Y
         STA <genericY
         LDA #STR_3
         STA <genericPointer

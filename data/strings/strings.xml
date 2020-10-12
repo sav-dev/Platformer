@@ -82,6 +82,10 @@
       <Id>18</Id>
       <Value>Level</Value>
     </StringConfig>
+    <StringConfig>
+      <Id>19</Id>
+      <Value>Select</Value>
+    </StringConfig>
     
     <!-- stage 1 story screen -->
     <StringConfig>

@@ -221,6 +221,7 @@ levelType           .rs 1
 levelTypeData1      .rs 1 ; normal: exit screen ; jetpack: scroll speed   ; boss: whether screen scrolled
 levelTypeData2      .rs 1 ; normal: exit X      ; jetpack: N/U            ; boss: victory condition
 levelTypeData3      .rs 1 ; normal: exit Y      ; jetpack: N/U            ; N/U
+levelTypeData4      .rs 1 ; N/U for anything other than the password screen
 levelHelperVar      .rs 1 ; a helper var
 levelHelperVar2     .rs 1 ; a 2nd helper var
 

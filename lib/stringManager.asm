@@ -17,7 +17,7 @@ StringManagerStart:
 ;   genericPointer (low) = digit to draw                        ;
 ;****************************************************************
 
-DIGIT_1 = $02 ; 1 is sprite #2
+DIGIT_0 = $01; 0 is sprite #1
 
 DrawDigit:
   
@@ -42,7 +42,7 @@ DrawDigit:
   .setData:
     LDA <LOW(genericPointer)
     CLC
-    ADC #DIGIT_1
+    ADC #DIGIT_0
     STA drawBuffer, x
     INX
   

@@ -9,7 +9,7 @@ StateStageSelectStart:
 ;****************************************************************
 
 STAGE_X = $0C
-STAGE_Y = $0C
+STAGE_Y = $0D
 
 STAGE_DIGIT_X = STAGE_X + $05 + $03
 STAGE_DIGIT_Y = STAGE_Y
@@ -65,6 +65,12 @@ StageSelectFrame:
     AND #CONTROLLER_START
     BNE .jumpToLoadLevel
     LDA <controllerPressed
+    AND #CONTROLLER_A
+    BNE .jumpToLoadLevel
+    LDA <controllerPressed
+    AND #CONTROLLER_B
+    BNE .backToMenu
+    LDA <controllerPressed
     AND #CONTROLLER_SEL
     BNE .moveCursor
     LDA <controllerPressed
@@ -74,18 +80,30 @@ StageSelectFrame:
     AND #CONTROLLER_UP
     BNE .moveCursor
     LDA <controllerPressed
-    AND #CONTROLLER_LEFT
-    BNE .changeDigitLeft
-    LDA <controllerPressed
     AND #CONTROLLER_RIGHT
     BNE .changeDigitRight
+    LDA <controllerPressed
+    AND #CONTROLLER_LEFT
+    BNE .changeDigitLeft
+    JMP .setNmiFlags
+    
+  .backToMenu:
+    JSR SfxOptionSelected
+    JSR PauseSong      
+    JSR WaitForFrame
+    JSR FadeOut
+    LDX #STATE_CHANGE_TIMEOUT
+    JSR SleepForXFrames
+    LDA #GAMESTATE_TITLE
+    STA <gameState
+    JSR LoadTitle ; no need to bank switch as we are already in 0
     JMP .setNmiFlags
     
   .jumpToLoadLevel:
     JMP .loadLevel
     
   .drawDigits:
-    JSR DrawDigits
+    JSR DrawDigitsStageSelect
     INC <needDrawLocal
     JMP .setNmiFlags
   
@@ -202,7 +220,7 @@ LoadStageSelect:
     JSR CommonBank0Init    
   
   .drawStrings:
-    LDA #STR_17
+    ; todo draw a 'title' string
     LDA #STAGE_X
     STA <genericX
     LDA #STAGE_Y
@@ -210,7 +228,6 @@ LoadStageSelect:
     LDA #STR_17
     STA <genericPointer
     JSR DrawString
-    LDA #STR_18
     LDA #LEVEL_X
     STA <genericX
     LDA #LEVEL_Y
@@ -226,7 +243,7 @@ LoadStageSelect:
     STA <playerCounter ; 0 = stage, 1 = level    
    
   .drawDigits:
-    JSR DrawDigits
+    JSR DrawDigitsStageSelect
    
   .drawCursor:
     LDA #STAGE_DIGIT_CURSOR_X
@@ -246,30 +263,31 @@ LoadStageSelect:
 
 ;****************************************************************
 ; Name:                                                         ;
-;   DrawDigits                                                  ;
+;   DrawDigitsStageSelect                                       ;
 ;                                                               ;
 ; Description:                                                  ;
 ;   Draws the digits                                            ;
 ;****************************************************************
   
-DrawDigits:
+DrawDigitsStageSelect:
 
-  .drawDigits:
-    LDA #STAGE_DIGIT_X
-    STA <genericX
-    LDA #STAGE_DIGIT_Y
-    STA <genericY
-    LDA <levelPointer
-    STA <genericPointer
-    JSR DrawDigit
-    
-    LDA #LEVEL_DIGIT_X
-    STA <genericX
-    LDA #LEVEL_DIGIT_Y
-    STA <genericY
-    LDA <currentLevel
-    STA <genericPointer
-    JMP DrawDigit
+  LDA #STAGE_DIGIT_X
+  STA <genericX
+  LDA #STAGE_DIGIT_Y
+  STA <genericY
+  LDA <levelPointer
+  STA <genericPointer
+  INC <genericPointer ; not 0 based
+  JSR DrawDigit
+  
+  LDA #LEVEL_DIGIT_X
+  STA <genericX
+  LDA #LEVEL_DIGIT_Y
+  STA <genericY
+  LDA <currentLevel
+  STA <genericPointer
+  INC <genericPointer ; not 0 based
+  JMP DrawDigit
     
 ;****************************************************************
 ; EOF                                                           ;
