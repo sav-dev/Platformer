@@ -32,6 +32,7 @@ START_GAME_INDEX = $00
 PASSWORD_INDEX = $01
 CREDITS_INDEX = $02
 MAX_INDEX = $03
+STAGE_SELECT_INDEX = $0F ; special value
 
 BANK_0_ATTS = $FF ; last palette for everything
 
@@ -162,6 +163,8 @@ TitleFrame:
         BEQ .startGame ; START_GAME_INDEX = 0
         CMP #PASSWORD_INDEX
         BEQ .password
+        CMP #STAGE_SELECT_INDEX
+        BEQ .stageSelect
         
         .credits:
           LDA #NUMBER_OF_LEVELS
@@ -174,6 +177,12 @@ TitleFrame:
           LDA #GAMESTATE_PASSWORD
           STA <gameState
           JSR LoadPassword ; no need to bank switch as we are already in 0
+          JMP .setNmiFlags
+        
+        .stageSelect:
+          LDA #GAMESTATE_STAGE_SELECT
+          STA <gameState
+          JSR LoadStageSelect ; no need to bank switch as we are already in 0
           JMP .setNmiFlags
         
         .startGame:
@@ -240,12 +249,9 @@ TitleFrame:
         LDA <controllerDown
         AND #CONTROLLER_SEL
         BEQ .setNmiFlags
-        
-        .stageSelect:
-          LDA #GAMESTATE_STAGE_SELECT
-          STA <gameState
-          JSR LoadStageSelect ; no need to bank switch as we are already in 0
-          ;JMP .setNmiFlags
+        LDA #STAGE_SELECT_INDEX
+        STA <playerCounter
+        JMP .optionSelected
           
   .setNmiFlags:
     LDA <needDrawLocal
