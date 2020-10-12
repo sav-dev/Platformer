@@ -168,6 +168,11 @@ StageSelectFrame:
     
   .loadLevel:
     JSR SfxOptionSelected
+    JSR PauseSong      
+    JSR WaitForFrame
+    JSR FadeOut
+    LDX #STATE_CHANGE_TIMEOUT
+    JSR SleepForXFrames
     LDX <levelPointer
     LDA LevelSums, x
     CLC
