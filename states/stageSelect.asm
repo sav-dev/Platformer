@@ -41,7 +41,70 @@ StageSelectFrame:
     STA <needDrawLocal
         
   .processFrame:
+    LDA <controllerPressed
+    AND #CONTROLLER_START
+    BNE .loadLevel
+    LDA <controllerPressed
+    AND #CONTROLLER_SEL
+    BNE .moveCursor
+    LDA <controllerPressed
+    AND #CONTROLLER_DOWN
+    BNE .moveCursor
+    LDA <controllerPressed
+    AND #CONTROLLER_UP
+    BNE .moveCursor
+    LDA <controllerPressed
+    AND #CONTROLLER_LEFT
+    BNE .changeDigitLeft
+    LDA <controllerPressed
+    AND #CONTROLLER_RIGHT
+    BNE .changeDigitRight
+    JMP .setNmiFlags
+    
+  .changeDigitRight:
+    JSR SfxOptionChanged
     ; todo
+    INC <LOW(levelPointer)
+    INC <HIGH(levelPointer)
+    JSR DrawDigits
+    INC <needDrawLocal
+    JMP .setNmiFlags
+
+  .changeDigitLeft:
+    JSR SfxOptionChanged
+    ; todo
+    DEC <LOW(levelPointer)
+    DEC <HIGH(levelPointer)
+    JSR DrawDigits
+    INC <needDrawLocal
+    JMP .setNmiFlags
+  
+  .moveCursor:
+    JSR SfxOptionChanged
+    LDA <playerCounter
+    EOR #$01
+    STA <playerCounter
+    BNE .levelDigitSelected
+    
+    .stageDigitSelected:
+      LDA #STAGE_DIGIT_CURSOR_X
+      STA <genericX
+      LDA #STAGE_DIGIT_CURSOR_Y
+      STA <genericY
+      JSR MoveCursor
+      JMP .setNmiFlags
+    
+    .levelDigitSelected:
+      LDA #LEVEL_DIGIT_CURSOR_X
+      STA <genericX
+      LDA #LEVEL_DIGIT_CURSOR_Y
+      STA <genericY
+      JSR MoveCursor
+      JMP .setNmiFlags
+    
+  .loadLevel:
+    ; todo
+    ;JMP .setNmiFlags
     
   .setNmiFlags:
     LDA <needDrawLocal
@@ -88,8 +151,15 @@ LoadStageSelect:
     STA <HIGH(levelPointer) ; selected level
     STA <playerCounter      ; 0 = stage, 1 = level    
    
-  .drawDigitsAndCursor:
-    JSR DrawDigitsAndCursor
+  .drawDigits:
+    JSR DrawDigits
+   
+  .drawCursor:
+    LDA #STAGE_DIGIT_CURSOR_X
+    STA <genericX
+    LDA #STAGE_DIGIT_CURSOR_Y
+    STA <genericY
+    JSR SetCursor    
    
   .fadeIn:
     JSR FadeIn ; this enables PPU    
@@ -102,13 +172,13 @@ LoadStageSelect:
 
 ;****************************************************************
 ; Name:                                                         ;
-;   DrawDigitsAndCursor                                         ;
+;   DrawDigits                                                  ;
 ;                                                               ;
 ; Description:                                                  ;
-;   Draws the digits and the cursor                             ;
+;   Draws the digits                                            ;
 ;****************************************************************
   
-DrawDigitsAndCursor:
+DrawDigits:
 
   .drawDigits:
     LDA #STAGE_DIGIT_X
@@ -116,33 +186,16 @@ DrawDigitsAndCursor:
     LDA #STAGE_DIGIT_Y
     STA <genericY
     LDA <LOW(levelPointer)
-    STA <genericPointer
+    STA <LOW(genericPointer)   
     JSR DrawDigit
+    
     LDA #LEVEL_DIGIT_X
     STA <genericX
     LDA #LEVEL_DIGIT_Y
     STA <genericY
     LDA <HIGH(levelPointer)
     STA <LOW(genericPointer)
-    JSR DrawDigit
-    
-  .drawCursor:
-    LDA <playerCounter
-    BNE .levelDigitSelected
-    
-    .stageDigitSelected:
-      LDA #STAGE_DIGIT_CURSOR_X
-      STA <genericX
-      LDA #STAGE_DIGIT_CURSOR_Y
-      STA <genericY
-      JMP SetCursor
-    
-    .levelDigitSelected:
-      LDA #LEVEL_DIGIT_CURSOR_X
-      STA <genericX
-      LDA #LEVEL_DIGIT_CURSOR_Y
-      STA <genericY
-      JMP SetCursor
+    JMP DrawDigit
     
 ;****************************************************************
 ; EOF                                                           ;
