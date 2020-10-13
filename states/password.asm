@@ -201,7 +201,7 @@ PasswordFrame:
       BNE .checkOnePassword
       
       ; no match
-      ; todo: play the buzzer sound
+      JSR SfxBuzzer
       JMP .setNmiFlags
    
     ; if we get here the password matched. Y = (level * 4) + 4

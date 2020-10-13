@@ -139,30 +139,6 @@ SfxLowPri:
   JMP RestoreBank
   
 ;****************************************************************
-; Name:                                                         ;
-;   SfxOptionSelected                                           ;
-;                                                               ;
-; Description:                                                  ;
-;   Play the 'option selected' sfx                              ;
-;****************************************************************
-  
-SfxOptionSelected:
-  PlaySfxHighPri #sfx_index_sfx_option_selected
-  RTS
-
-;****************************************************************
-; Name:                                                         ;
-;   SfxOptionChanged                                            ;
-;                                                               ;
-; Description:                                                  ;
-;   Play the 'option changed' sfx                               ;
-;****************************************************************
-  
-SfxOptionChanged:
-  PlaySfxLowPri #sfx_index_sfx_option_changed
-  RTS
-  
-;****************************************************************
 ; EOF                                                           ;
 ;****************************************************************
 
