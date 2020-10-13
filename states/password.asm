@@ -24,6 +24,30 @@ MAX_DIGIT = $09
 PASSWORD_TITLE_X = $0C
 PASSWORD_TITLE_Y = $0C
 
+; passwords: must match strings.xml
+; stage 1: 1 8 4 3
+; stage 2: 8 6 2 4
+; stage 3: 0 3 5 6
+; stage 4: 8 2 4 4
+; stage 5: 9 0 1 4
+Stage1Password:
+  .byte $01, $08, $04, $03
+Stage2Password:
+  .byte $08, $06, $02, $04
+Stage3Password:
+  .byte $00, $03, $05, $06
+Stage4Password:
+  .byte $08, $02, $04, $04
+Stage5Password:
+  .byte $09, $00, $01, $04
+  
+LevelPointers:
+  .byte $00
+  .byte $00 + NUMBER_OF_LEVELS_STAGE_1
+  .byte $00 + NUMBER_OF_LEVELS_STAGE_1 + NUMBER_OF_LEVELS_STAGE_2
+  .byte $00 + NUMBER_OF_LEVELS_STAGE_1 + NUMBER_OF_LEVELS_STAGE_2 + NUMBER_OF_LEVELS_STAGE_3
+  .byte $00 + NUMBER_OF_LEVELS_STAGE_1 + NUMBER_OF_LEVELS_STAGE_2 + NUMBER_OF_LEVELS_STAGE_3 + NUMBER_OF_LEVELS_STAGE_4
+  
 ;****************************************************************
 ; Name:                                                         ;
 ;   PasswordFrame                                               ;
@@ -126,27 +150,77 @@ PasswordFrame:
   .increaseDigit:
     JSR SfxOptionChanged
     LDX <playerCounter
-    INC levelTypeData1, x
-    LDA levelTypeData1, x
+    INC <levelTypeData1, x
+    LDA <levelTypeData1, x
     CMP #MAX_DIGIT + $01
     BNE .drawDigits
     LDA #$00
-    STA levelTypeData1, x   
+    STA <levelTypeData1, x   
     JMP .drawDigits    
   
   .decreaseDigit:
     JSR SfxOptionChanged
     LDX <playerCounter
-    DEC levelTypeData1, x
-    LDA levelTypeData1, x
+    DEC <levelTypeData1, x
+    LDA <levelTypeData1, x
     CMP #$FF
     BNE .drawDigits
     LDA #MAX_DIGIT
-    STA levelTypeData1, x   
+    STA <levelTypeData1, x   
     JMP .drawDigits
 
   .checkPassword:
-    ; todo: check the password, go to level if good, play a buzzer sound if bad
+    LDY #$00
+    LDA #LOW(Stage1Password)
+    STA <genericPointer
+    LDA #HIGH(Stage1Password)
+    STA <(genericPointer + $01)
+    
+    .checkOnePassword:
+      LDA #$00
+      STA <b ; if > 0 means password didn't match anything
+      LDX #$00
+      .checkPasswordLoop:
+        LDA <levelTypeData1, x
+        CMP [genericPointer], y
+        BEQ .mayMatch
+        
+        .noMatch:
+          INC <b
+        
+        .mayMatch:
+          INY
+          INX
+          CPX #$04 ; password length
+          BNE .checkPasswordLoop
+        
+      LDA <b
+      CMP #$00 ; if A == 0 it means there was a match
+      BEQ .passwordMatched
+      CPY #$14 ; = 20 = what Y will be after checking the last password
+      BNE .checkOnePassword
+      
+      ; no match
+      ; todo: play the buzzer sound
+      JMP .setNmiFlags
+   
+    ; if we get here the password matched. Y = (level * 4) + 4
+    .passwordMatched:
+      TYA      ; A = (level * 4) + 4
+      SEC
+      SBC #$04 ; A = (level * 4)
+      LSR A
+      LSR A    ; A = level
+      TAX
+      LDA LevelPointers, x
+      STA <currentLevel
+      JSR SfxOptionSelected
+      JSR PauseSong      
+      JSR WaitForFrame
+      JSR FadeOut
+      LDX #STATE_CHANGE_TIMEOUT
+      JSR SleepForXFrames
+      INC <progressGame
    
   .setNmiFlags:
     LDA <needDrawLocal
