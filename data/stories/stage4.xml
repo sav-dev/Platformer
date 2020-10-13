@@ -6,6 +6,8 @@
     <StoryString> <X>1</X> <Y>6</Y> <StringId>63</StringId> </StoryString>
     <StoryString> <X>1</X> <Y>7</Y> <StringId>64</StringId> </StoryString>
     <StoryString> <X>1</X> <Y>8</Y> <StringId>65</StringId> </StoryString>    
+    <StoryString> <X>7</X> <Y>20</Y> <StringId>2</StringId> </StoryString>
+    <StoryString> <X>15</X> <Y>20</Y> <StringId>23</StringId> </StoryString>
   </Strings>
   <Song>song_index_song_story</Song>
 </Story>

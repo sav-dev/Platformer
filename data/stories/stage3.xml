@@ -4,6 +4,8 @@
     <StoryString> <X>1</X> <Y>3</Y> <StringId>51</StringId> </StoryString>
     <StoryString> <X>1</X> <Y>4</Y> <StringId>52</StringId> </StoryString>
     <StoryString> <X>1</X> <Y>5</Y> <StringId>53</StringId> </StoryString>
+    <StoryString> <X>7</X> <Y>20</Y> <StringId>2</StringId> </StoryString>
+    <StoryString> <X>15</X> <Y>20</Y> <StringId>22</StringId> </StoryString>
   </Strings>
   <Song>song_index_song_story</Song>
 </Story>

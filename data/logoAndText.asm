@@ -129,24 +129,29 @@ STR_19 = 38
   .byte LOW(string19), HIGH(string19)
 
 ; 20
-; placeholder
-  .byte $00, $00
+; ": 1 8 4 3"
+STR_20 = 40
+  .byte LOW(string20), HIGH(string20)
 
 ; 21
-; placeholder
-  .byte $00, $00
+; ": 8 6 2 4"
+STR_21 = 42
+  .byte LOW(string21), HIGH(string21)
 
 ; 22
-; placeholder
-  .byte $00, $00
+; ": 0 3 5 6"
+STR_22 = 44
+  .byte LOW(string22), HIGH(string22)
 
 ; 23
-; placeholder
-  .byte $00, $00
+; ": 8 2 4 4"
+STR_23 = 46
+  .byte LOW(string23), HIGH(string23)
 
 ; 24
-; placeholder
-  .byte $00, $00
+; ": 9 0 1 4"
+STR_24 = 48
+  .byte LOW(string24), HIGH(string24)
 
 ; 25
 ; placeholder
@@ -476,6 +481,16 @@ string18:
   .byte $05, $16, $0F, $20, $0F, $16
 string19:
   .byte $06, $1D, $0F, $16, $0F, $0D, $1E
+string20:
+  .byte $09, $29, $00, $02, $00, $09, $00, $05, $00, $04
+string21:
+  .byte $09, $29, $00, $09, $00, $07, $00, $03, $00, $05
+string22:
+  .byte $09, $29, $00, $01, $00, $04, $00, $06, $00, $07
+string23:
+  .byte $09, $29, $00, $09, $00, $03, $00, $05, $00, $05
+string24:
+  .byte $09, $29, $00, $0A, $00, $01, $00, $02, $00, $05
 string30:
   .byte $1B, $16, $19, $1C, $0F, $17, $00, $13, $1A, $1D, $1F, $17, $00, $0E, $19, $16, $19, $1C, $00, $1D, $13, $1E, $00, $0B, $17, $0F, $1E, $2A
 string31:

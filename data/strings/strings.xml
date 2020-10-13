@@ -87,6 +87,28 @@
       <Value>Select</Value>
     </StringConfig>
     
+    <!-- Passwords -->
+    <StringConfig>
+      <Id>20</Id>
+      <Value>: 1 8 4 3</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>21</Id>
+      <Value>: 8 6 2 4</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>22</Id>
+      <Value>: 0 3 5 6</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>23</Id>
+      <Value>: 8 2 4 4</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>24</Id>
+      <Value>: 9 0 1 4</Value>
+    </StringConfig>
+    
     <!-- stage 1 story screen -->
     <StringConfig>
       <Id>30</Id>
