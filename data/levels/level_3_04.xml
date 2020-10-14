@@ -1233,13 +1233,13 @@
     <Enemy>
       <Name>Sphere</Name>
       <X>240</X>
-      <Y>128</Y>
+      <Y>144</Y>
       <MovementType>Vertical</MovementType>
       <Direction>Down</Direction>
       <SpecialMovement>None</SpecialMovement>
       <Speed>1</Speed>
       <ShouldFlip>false</ShouldFlip>
-      <MinPosition>128</MinPosition>
+      <MinPosition>112</MinPosition>
       <MaxPosition>160</MaxPosition>
       <InitialFlip>true</InitialFlip>
       <ShootingFrequency>56</ShootingFrequency>
@@ -1258,7 +1258,7 @@
       <Speed>1</Speed>
       <ShouldFlip>false</ShouldFlip>
       <MinPosition>112</MinPosition>
-      <MaxPosition>144</MaxPosition>
+      <MaxPosition>160</MaxPosition>
       <InitialFlip>true</InitialFlip>
       <ShootingFrequency>56</ShootingFrequency>
       <ShootingInitialFrequency>64</ShootingInitialFrequency>
@@ -1314,7 +1314,7 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>40</ShootingFrequency>
+      <ShootingFrequency>50</ShootingFrequency>
       <ShootingInitialFrequency>50</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
@@ -1332,7 +1332,7 @@
       <MinPosition>0</MinPosition>
       <MaxPosition>0</MaxPosition>
       <InitialFlip>false</InitialFlip>
-      <ShootingFrequency>40</ShootingFrequency>
+      <ShootingFrequency>50</ShootingFrequency>
       <ShootingInitialFrequency>50</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
