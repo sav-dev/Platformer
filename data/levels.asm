@@ -42,7 +42,7 @@ NUMBER_OF_LEVELS_STAGE_1 = $0D
   ; stage 2
 NUMBER_OF_LEVELS_STAGE_2 = $02
   .byte $00, LOW(storyStage2), HIGH(storyStage2)
-  .byte $00, LOW(storyStage2), HIGH(storyStage2) ; todo: change
+  .byte $04, LOW(level_2_01), HIGH(level_2_01)
   
   ; stage 3
 NUMBER_OF_LEVELS_STAGE_3 = $09
@@ -59,12 +59,12 @@ NUMBER_OF_LEVELS_STAGE_3 = $09
   ; stage 4
 NUMBER_OF_LEVELS_STAGE_4 = $02
   .byte $00, LOW(storyStage4), HIGH(storyStage4)
-  .byte $05, LOW(paletteTest), HIGH(paletteTest) ; todo: change
+  .byte $05, LOW(level_4_01), HIGH(level_4_01)
 
   ; stage 5
 NUMBER_OF_LEVELS_STAGE_5 = $02
   .byte $00, LOW(storyStage5), HIGH(storyStage5)
-  .byte $05, LOW(levelBoss), HIGH(levelBoss) ; todo: change
+  .byte $05, LOW(level_5_05), HIGH(level_5_05)
   
   ; congrats
 NUMBER_OF_LEVELS_CONGRATS = $01

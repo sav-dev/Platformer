@@ -788,7 +788,9 @@ Bank08Start:
   .incbin "data\levels\level_3_07.bin"
   level_3_05:
   .incbin "data\levels\level_3_05.bin"
-
+  level_2_01:
+  .incbin "data\levels\level_2_01.bin"
+  
 Bank08End:
   
 Bank09:
@@ -810,10 +812,10 @@ Bank10:
 
 Bank10Start:  
 
-  paletteTest:
-  .incbin "data\levels\paletteTest.bin"
-  levelBoss:
-  .incbin "data\levels\boss.bin"
+  level_4_01:
+  .incbin "data\levels\level_4_01.bin"
+  level_5_05:
+  .incbin "data\levels\level_5_05.bin"
 
 
 Bank10End:
