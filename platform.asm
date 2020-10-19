@@ -749,7 +749,7 @@ Bank06:
 Bank06Start:  
   
   level_3_01:
-  .incbin "data\levels\level_3_01.bin"
+  .incbin "data\levels\level_3_02.bin"
   level_3_08:
   .incbin "data\levels\level_3_08.bin"  
   
@@ -763,7 +763,7 @@ Bank07:
 Bank07Start:
 
   level_3_02:
-  .incbin "data\levels\level_3_02.bin"
+  .incbin "data\levels\level_3_01.bin"
   level_3_03:
   .incbin "data\levels\level_3_03.bin"
   level_3_04:
