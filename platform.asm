@@ -784,12 +784,16 @@ Bank08:
 
 Bank08Start:  
 
-  level_3_07:
-  .incbin "data\levels\level_3_07.bin"
   level_3_05:
   .incbin "data\levels\level_3_05.bin"
+  level_3_07:
+  .incbin "data\levels\level_3_07.bin"
   level_2_01:
   .incbin "data\levels\level_2_01.bin"
+  level_2_02:
+  .incbin "data\levels\level_2_02.bin"
+  level_2_03:
+  .incbin "data\levels\level_2_03.bin"
   
 Bank08End:
   
