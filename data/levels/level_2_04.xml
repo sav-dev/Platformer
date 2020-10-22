@@ -769,8 +769,8 @@
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
       <BlinkingType>ConstInitVisible</BlinkingType>
-      <BlinkingFrequency>40</BlinkingFrequency>
-      <BlinkingInitialFrequency>40</BlinkingInitialFrequency>
+      <BlinkingFrequency>10</BlinkingFrequency>
+      <BlinkingInitialFrequency>10</BlinkingInitialFrequency>
     </Enemy>
     <Enemy>
       <Name>Barrier H 6</Name>
@@ -787,8 +787,8 @@
       <ShootingFrequency>0</ShootingFrequency>
       <ShootingInitialFrequency>0</ShootingInitialFrequency>
       <BlinkingType>ConstInitVisible</BlinkingType>
-      <BlinkingFrequency>40</BlinkingFrequency>
-      <BlinkingInitialFrequency>40</BlinkingInitialFrequency>
+      <BlinkingFrequency>10</BlinkingFrequency>
+      <BlinkingInitialFrequency>10</BlinkingInitialFrequency>
     </Enemy>
   </Enemies>
   <Elevators>
@@ -827,7 +827,7 @@
       <Y>200</Y>
       <Size>2</Size>
       <MovementType>Vertical</MovementType>
-      <Speed>1</Speed>
+      <Speed>4</Speed>
       <MinPosition>24</MinPosition>
       <MaxPosition>224</MaxPosition>
       <Direction>Up</Direction>

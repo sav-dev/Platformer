@@ -40,7 +40,7 @@ NUMBER_OF_LEVELS_STAGE_1 = $0D
   .byte $02, LOW(level_1_12), HIGH(level_1_12)
   
   ; stage 2
-NUMBER_OF_LEVELS_STAGE_2 = $04
+NUMBER_OF_LEVELS_STAGE_2 = $05
   .byte $00, LOW(storyStage2), HIGH(storyStage2)
   .byte $04, LOW(level_2_01), HIGH(level_2_01)
   .byte $04, LOW(level_2_02), HIGH(level_2_02)
