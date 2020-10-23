@@ -816,6 +816,8 @@ Bank09Start:
   .incbin "data\levels\level_2_08.bin"
   level_2_09:
   .incbin "data\levels\level_2_09.bin"
+  level_2_10:
+  .incbin "data\levels\level_2_10.bin"
   
 Bank09End:
 
