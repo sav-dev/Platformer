@@ -629,7 +629,7 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>2-2-0-1</string>
-      <string>0-0-1-8</string>
+      <string>0-0-2-8</string>
       <string>0-0-1-9</string>
       <string>0-0-1-10</string>
     </ArrayOfString>
@@ -645,10 +645,10 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>2-2-0-1</string>
-      <string>0-0-2-8</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
+      <string>0-0-1-8</string>
       <string>0-0-1-9</string>
-      <string>0-0-1-10</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>0-0-1-10</string>
@@ -1086,7 +1086,7 @@
     </Enemy>
     <Enemy>
       <Name>Acid</Name>
-      <X>607</X>
+      <X>603</X>
       <Y>192</Y>
       <MovementType>None</MovementType>
       <Direction>None</Direction>
