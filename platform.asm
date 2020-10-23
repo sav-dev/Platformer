@@ -579,7 +579,6 @@ Bank15Start:
  
   .include "data\enemies.asm" ; this has to be in this place
   .include "data\bullets.asm"
-  .include "data\levels.asm"
   
   .include "lib\soundController.asm"
   .include "lib\ggsoundInclude.asm" ; this can be moved to the sound bank if needed
@@ -612,6 +611,7 @@ Bank00Start:
   .include "lib\stringManager.asm"
   .include "lib\cursorController.asm"
   .include "data\logoAndText.asm"
+  .include "data\levels.asm"
               
   storyStage1:
   .incbin "data\stories\stage1.bin"
@@ -814,6 +814,8 @@ Bank09Start:
   .incbin "data\levels\level_2_07.bin"
   level_2_08:
   .incbin "data\levels\level_2_08.bin"
+  level_2_09:
+  .incbin "data\levels\level_2_09.bin"
   
 Bank09End:
 
