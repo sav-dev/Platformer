@@ -757,7 +757,7 @@ Bank06Start:
   level_3_01:
     .incbin "data\levels\level_3_02.bin"
   level_3_08:
-    .incbin "data\levels\level_3_08.bin"  
+    .incbin "data\levels\level_3_09.bin"  
   
 Bank06End:
   
@@ -793,7 +793,7 @@ Bank08Start:
   level_3_05:
     .incbin "data\levels\level_3_05.bin"
   level_3_07:
-    .incbin "data\levels\level_3_07.bin"
+    .incbin "data\levels\level_3_08.bin"
   level_2_01:
     .incbin "data\levels\level_2_01.bin"
   level_2_02:
@@ -857,6 +857,10 @@ Bank11:
   .org $A000
 
 Bank11Start:
+
+  level_3_07:
+    .incbin "data\levels\level_3_07.bin"
+
 Bank11End:
 
 ;****************************************************************
