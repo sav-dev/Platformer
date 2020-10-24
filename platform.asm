@@ -614,25 +614,25 @@ Bank00Start:
   .include "data\levels.asm"
               
   storyStage1:
-  .incbin "data\stories\stage1.bin"
+    .incbin "data\stories\stage1.bin"
   
   storyStage2:
-  .incbin "data\stories\stage2.bin"
+    .incbin "data\stories\stage2.bin"
  
   storyStage3:
-  .incbin "data\stories\stage3.bin"
+    .incbin "data\stories\stage3.bin"
   
   storyStage4:
-  .incbin "data\stories\stage4.bin"
+    .incbin "data\stories\stage4.bin"
  
   storyStage5:
-  .incbin "data\stories\stage5.bin"
+    .incbin "data\stories\stage5.bin"
   
   storyCongrats:
-  .incbin "data\stories\congrats.bin"
+    .incbin "data\stories\congrats.bin"
   
   storyCredits:
-  .incbin "data\stories\credits.bin"
+    .incbin "data\stories\credits.bin"
               
 Bank00End:
 
@@ -646,6 +646,10 @@ Bank01Start:
   titleChr:
     .byte $0A
     .incbin "PlatformerGraphics\Chr\titleProcessed.chr"
+  Sound:
+    .include "sound\sound.asm"
+
+    
 
 Bank01End:
 
@@ -663,12 +667,12 @@ Bank02Start:
   .include "data\tilesets.asm"
   
   bg0chr:
-  .byte $10
-  .incbin "PlatformerGraphics\Chr\bg_0Processed.chr"
+    .byte $10
+    .incbin "PlatformerGraphics\Chr\bg_0Processed.chr"
 
   bg1chr:
-  .byte $0F
-  .incbin "PlatformerGraphics\Chr\bg_1processed.chr"
+    .byte $0F
+    .incbin "PlatformerGraphics\Chr\bg_1processed.chr"
   
 Bank02End:
   
@@ -680,12 +684,12 @@ Bank03:
 Bank03Start:  
 
   bg2chr:
-  .byte $0F
-  .incbin "PlatformerGraphics\Chr\bg_2processed.chr"
+    .byte $0F
+    .incbin "PlatformerGraphics\Chr\bg_2processed.chr"
   
   sprChr:
-  .byte $10
-  .incbin "PlatformerGraphics\Chr\sprProcessed.chr"
+    .byte $10
+    .incbin "PlatformerGraphics\Chr\sprProcessed.chr"
 
 Bank03End:
 
@@ -701,17 +705,17 @@ Bank04:
 Bank04Start:
 
   level_1_01:
-  .incbin "data\levels\level_1_01.bin"
+    .incbin "data\levels\level_1_01.bin"
   level_1_02:
-  .incbin "data\levels\level_1_02.bin"
+    .incbin "data\levels\level_1_02.bin"
   level_1_04:
-  .incbin "data\levels\level_1_04.bin"
+    .incbin "data\levels\level_1_04.bin"
   level_1_05:
-  .incbin "data\levels\level_1_05.bin"
+    .incbin "data\levels\level_1_05.bin"
   level_1_06:
-  .incbin "data\levels\level_1_06.bin"
+    .incbin "data\levels\level_1_06.bin"
   level_1_07:
-  .incbin "data\levels\level_1_07.bin"
+    .incbin "data\levels\level_1_07.bin"
   
 Bank04End:
 
@@ -723,19 +727,19 @@ Bank05:
 Bank05Start:  
 
   level_1_03:
-  .incbin "data\levels\level_1_03.bin"
+    .incbin "data\levels\level_1_03.bin"
   level_1_08:
-  .incbin "data\levels\level_1_08.bin"
+    .incbin "data\levels\level_1_08.bin"
   level_1_09:
-  .incbin "data\levels\level_1_09.bin"  
+    .incbin "data\levels\level_1_09.bin"  
   level_1_11:
-  .incbin "data\levels\level_1_11.bin"  
+    .incbin "data\levels\level_1_11.bin"  
   level_1_12:
-  .incbin "data\levels\level_1_12.bin"
+    .incbin "data\levels\level_1_12.bin"
   level_2_06:
-  .incbin "data\levels\level_2_06.bin"
+    .incbin "data\levels\level_2_06.bin"
   level_5_05:
-  .incbin "data\levels\level_5_05.bin"
+    .incbin "data\levels\level_5_05.bin"
   
 Bank05End:
 
@@ -751,9 +755,9 @@ Bank06:
 Bank06Start:  
   
   level_3_01:
-  .incbin "data\levels\level_3_02.bin"
+    .incbin "data\levels\level_3_02.bin"
   level_3_08:
-  .incbin "data\levels\level_3_08.bin"  
+    .incbin "data\levels\level_3_08.bin"  
   
 Bank06End:
   
@@ -765,13 +769,13 @@ Bank07:
 Bank07Start:
 
   level_3_02:
-  .incbin "data\levels\level_3_01.bin"
+    .incbin "data\levels\level_3_01.bin"
   level_3_03:
-  .incbin "data\levels\level_3_03.bin"
+    .incbin "data\levels\level_3_03.bin"
   level_3_04:
-  .incbin "data\levels\level_3_04.bin"
+    .incbin "data\levels\level_3_04.bin"
   level_3_06:
-  .incbin "data\levels\level_3_06.bin"
+    .incbin "data\levels\level_3_06.bin"
   
 Bank07End:
 
@@ -787,17 +791,17 @@ Bank08:
 Bank08Start:  
 
   level_3_05:
-  .incbin "data\levels\level_3_05.bin"
+    .incbin "data\levels\level_3_05.bin"
   level_3_07:
-  .incbin "data\levels\level_3_07.bin"
+    .incbin "data\levels\level_3_07.bin"
   level_2_01:
-  .incbin "data\levels\level_2_01.bin"
+    .incbin "data\levels\level_2_01.bin"
   level_2_02:
-  .incbin "data\levels\level_2_02.bin"
+    .incbin "data\levels\level_2_02.bin"
   level_2_04:
-  .incbin "data\levels\level_2_04.bin"  
+    .incbin "data\levels\level_2_04.bin"  
   level_2_07:
-  .incbin "data\levels\level_2_07.bin"
+    .incbin "data\levels\level_2_07.bin"
   
 Bank08End:
   
@@ -809,17 +813,17 @@ Bank09:
 Bank09Start:  
 
   level_1_13:
-  .incbin "data\levels\level_1_13.bin"
+    .incbin "data\levels\level_1_13.bin"
   level_2_03:
-  .incbin "data\levels\level_2_03.bin" 
+    .incbin "data\levels\level_2_03.bin" 
   level_2_05:
-  .incbin "data\levels\level_2_05.bin"
+    .incbin "data\levels\level_2_05.bin"
   level_2_08:
-  .incbin "data\levels\level_2_08.bin"
+    .incbin "data\levels\level_2_08.bin"
   level_2_09:
-  .incbin "data\levels\level_2_09.bin"
+    .incbin "data\levels\level_2_09.bin"
   level_2_10:
-  .incbin "data\levels\level_2_10.bin"
+    .incbin "data\levels\level_2_10.bin"
   
 Bank09End:
 
@@ -835,15 +839,15 @@ Bank10:
 Bank10Start:  
 
   level_2_11:
-  .incbin "data\levels\level_2_11.bin"
+    .incbin "data\levels\level_2_11.bin"
   level_4_01:
-  .incbin "data\levels\level_4_01.bin"
+    .incbin "data\levels\level_4_01.bin"
   level_5_01:
-  .incbin "data\levels\level_5_01.bin"
+    .incbin "data\levels\level_5_01.bin"
   level_5_04:
-  .incbin "data\levels\level_5_04.bin"
+    .incbin "data\levels\level_5_04.bin"
   level_1_10:
-  .incbin "data\levels\level_1_10.bin"
+    .incbin "data\levels\level_1_10.bin"
 
 Bank10End:
   
@@ -865,10 +869,6 @@ Bank12:
   .org $8000
 
 Bank12Start:  
-
-  Sound:
-  .include "sound\sound.asm"
-
 Bank12End:
   
 Bank13:
