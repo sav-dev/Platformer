@@ -859,7 +859,7 @@ Bank11:
 Bank11Start:
 
   level_3_07:
-    ;.incbin "data\levels\level_3_07.bin"
+    .incbin "data\levels\level_3_07.bin"
 
 Bank11End:
 
