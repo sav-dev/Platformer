@@ -838,16 +838,14 @@ Bank10:
 
 Bank10Start:  
 
-  level_1_10:
-    .incbin "data\levels\level_1_10.bin"
-  level_1_12:
-    .incbin "data\levels\level_1_12.bin"
+  level_2_05:
+    .incbin "data\levels\level_2_05.bin"
+  level_3_07:
+    .incbin "data\levels\level_3_07.bin"
   level_4_01:
     .incbin "data\levels\level_4_01.bin"
   level_5_01:
     .incbin "data\levels\level_5_01.bin"
-  level_5_04:
-    .incbin "data\levels\level_5_04.bin"
     
 Bank10End:
   
@@ -858,11 +856,13 @@ Bank11:
 
 Bank11Start:
 
-  level_2_05:
-    .incbin "data\levels\level_2_05.bin"
-  level_3_07:
-    .incbin "data\levels\level_3_07.bin"
-
+  level_1_10:
+    .incbin "data\levels\level_1_10.bin"
+  level_1_12:
+    .incbin "data\levels\level_1_12.bin"
+  level_5_04:
+    .incbin "data\levels\level_5_04.bin"
+    
 Bank11End:
 
 ;****************************************************************
