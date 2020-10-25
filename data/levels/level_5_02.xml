@@ -1118,11 +1118,11 @@
       <string>0-0-2-1</string>
       <string>0-0-2-1</string>
       <string>0-1-0-0</string>
+      <string>1-1-0-13</string>
       <string>0-1-0-0</string>
       <string>0-1-0-0</string>
-      <string>0-1-0-0</string>
-      <string>0-1-0-0</string>
-      <string>0-1-0-0</string>
+      <string>0-1-6-14</string>
+      <string>0-1-4-13</string>
       <string>0-0-2-1</string>
       <string>0-0-2-1</string>
     </ArrayOfString>
@@ -1138,8 +1138,8 @@
       <string>0-1-0-0</string>
       <string>0-1-0-0</string>
       <string>0-1-0-0</string>
-      <string>0-1-0-0</string>
-      <string>0-1-0-0</string>
+      <string>0-1-5-13</string>
+      <string>0-1-4-13</string>
       <string>0-0-2-1</string>
       <string>0-0-2-1</string>
     </ArrayOfString>
@@ -1149,6 +1149,23 @@
       <string>0-1-0-0</string>
       <string>0-1-5-14</string>
       <string>0-1-5-15</string>
+      <string>0-0-2-1</string>
+      <string>0-0-2-1</string>
+      <string>0-1-0-0</string>
+      <string>1-1-0-13</string>
+      <string>0-1-0-0</string>
+      <string>0-1-0-0</string>
+      <string>0-1-0-0</string>
+      <string>0-1-0-0</string>
+      <string>0-0-2-1</string>
+      <string>0-0-2-1</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>0-0-2-1</string>
+      <string>0-1-0-0</string>
+      <string>0-1-0-0</string>
+      <string>0-1-0-0</string>
+      <string>0-1-6-14</string>
       <string>0-0-2-1</string>
       <string>0-0-2-1</string>
       <string>0-1-0-0</string>
@@ -1164,33 +1181,16 @@
       <string>0-0-2-1</string>
       <string>0-1-0-0</string>
       <string>0-1-0-0</string>
-      <string>0-1-0-0</string>
-      <string>0-1-6-14</string>
-      <string>0-0-2-1</string>
-      <string>0-0-2-1</string>
-      <string>0-1-0-0</string>
-      <string>0-1-0-0</string>
-      <string>0-1-0-0</string>
-      <string>2-1-1-16</string>
-      <string>2-1-1-17</string>
-      <string>2-1-1-17</string>
-      <string>0-0-2-1</string>
-      <string>0-0-2-1</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>0-0-2-1</string>
-      <string>0-1-0-0</string>
-      <string>0-1-0-0</string>
       <string>0-1-5-14</string>
       <string>0-1-5-15</string>
       <string>0-0-2-1</string>
       <string>0-0-2-1</string>
       <string>0-1-0-0</string>
+      <string>1-1-0-13</string>
       <string>0-1-0-0</string>
-      <string>0-1-0-0</string>
-      <string>0-1-0-0</string>
-      <string>0-1-0-0</string>
-      <string>0-1-0-0</string>
+      <string>2-1-1-16</string>
+      <string>2-1-1-17</string>
+      <string>2-1-1-17</string>
       <string>0-0-2-1</string>
       <string>0-0-2-1</string>
     </ArrayOfString>
@@ -1400,7 +1400,7 @@
   </PlayerStartingPosition>
   <ScrollSpeed>1</ScrollSpeed>
   <ExitPosition>
-    <X>1076</X>
+    <X>1092</X>
     <Y>173</Y>
   </ExitPosition>
   <Song>song_index_song_stage_skulls</Song>
