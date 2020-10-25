@@ -45,9 +45,9 @@ ProgressGame:
       BNE .incrementLoop
       TAX
         
-  ; switch bank to 0 because that's where the level list is
+  ; switch to the level list bank
   .switchBank:
-    LDY #$00
+    LDY #LEVEL_LIST_BANK
     JSR SelectBank
         
   ; switch bank, load the level pointer
