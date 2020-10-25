@@ -734,10 +734,10 @@ Bank05Start:
     .incbin "data\levels\level_1_09.bin"  
   level_1_11:
     .incbin "data\levels\level_1_11.bin"  
-  level_1_12:
-    .incbin "data\levels\level_1_12.bin"
-  level_2_06:
-    .incbin "data\levels\level_2_06.bin"
+  level_2_12:
+    .incbin "data\levels\level_2_12.bin"
+  level_2_07:
+    .incbin "data\levels\level_2_07.bin"
   level_5_05:
     .incbin "data\levels\level_5_05.bin"
   
@@ -790,18 +790,18 @@ Bank08:
 
 Bank08Start:  
 
-  level_3_05:
-    .incbin "data\levels\level_3_05.bin"
-  level_3_08:
-    .incbin "data\levels\level_3_08.bin"
   level_2_01:
     .incbin "data\levels\level_2_01.bin"
   level_2_02:
     .incbin "data\levels\level_2_02.bin"
   level_2_04:
     .incbin "data\levels\level_2_04.bin"  
-  level_2_07:
-    .incbin "data\levels\level_2_07.bin"
+  level_2_08:
+    .incbin "data\levels\level_2_08.bin"
+  level_3_05:
+    .incbin "data\levels\level_3_05.bin"
+  level_3_08:
+    .incbin "data\levels\level_3_08.bin"
   
 Bank08End:
   
@@ -816,14 +816,14 @@ Bank09Start:
     .incbin "data\levels\level_1_13.bin"
   level_2_03:
     .incbin "data\levels\level_2_03.bin" 
-  level_2_05:
-    .incbin "data\levels\level_2_05.bin"
-  level_2_08:
-    .incbin "data\levels\level_2_08.bin"
+  level_2_06:
+    .incbin "data\levels\level_2_06.bin"
   level_2_09:
     .incbin "data\levels\level_2_09.bin"
   level_2_10:
     .incbin "data\levels\level_2_10.bin"
+  level_2_11:
+    .incbin "data\levels\level_2_11.bin"
   
 Bank09End:
 
@@ -838,17 +838,17 @@ Bank10:
 
 Bank10Start:  
 
-  level_2_11:
-    .incbin "data\levels\level_2_11.bin"
+  level_1_10:
+    .incbin "data\levels\level_1_10.bin"
+  level_1_12:
+    .incbin "data\levels\level_1_12.bin"
   level_4_01:
     .incbin "data\levels\level_4_01.bin"
   level_5_01:
     .incbin "data\levels\level_5_01.bin"
   level_5_04:
     .incbin "data\levels\level_5_04.bin"
-  level_1_10:
-    .incbin "data\levels\level_1_10.bin"
-
+    
 Bank10End:
   
 Bank11:
@@ -858,6 +858,8 @@ Bank11:
 
 Bank11Start:
 
+  level_2_05:
+    .incbin "data\levels\level_2_05.bin"
   level_3_07:
     .incbin "data\levels\level_3_07.bin"
 
