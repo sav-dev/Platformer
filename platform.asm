@@ -860,6 +860,8 @@ Bank11Start:
     .incbin "data\levels\level_1_10.bin"
   level_1_12:
     .incbin "data\levels\level_1_12.bin"
+  level_5_02:
+    .incbin "data\levels\level_5_02.bin"
   level_5_04:
     .incbin "data\levels\level_5_04.bin"
     
