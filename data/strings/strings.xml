@@ -309,35 +309,35 @@
     
     <!-- congrats screen -->
     <StringConfig>
-      <Id>80</Id>
+      <Id>72</Id>
       <Value>Etiam tempor! </Value>
     </StringConfig>
     <StringConfig>
-      <Id>81</Id>
+      <Id>73</Id>
       <Value>Ut ullamcorper, ligula eu</Value>
     </StringConfig>
     <StringConfig>
-      <Id>82</Id>
+      <Id>74</Id>
       <Value>tempor congue, eros est</Value>
     </StringConfig>
     <StringConfig>
-      <Id>83</Id>
+      <Id>75</Id>
       <Value>euismod turpis, id tincidunt</Value>
     </StringConfig>
     <StringConfig>
-      <Id>84</Id>
+      <Id>76</Id>
       <Value>sapien risus a quam. </Value>
     </StringConfig>
     <StringConfig>
-      <Id>85</Id>
+      <Id>77</Id>
       <Value>Maecenas fermentum consequat. </Value>
     </StringConfig>
     <StringConfig>
-      <Id>86</Id>
+      <Id>78</Id>
       <Value>Donec fermentum, pellentesque</Value>
     </StringConfig>
     <StringConfig>
-      <Id>87</Id>
+      <Id>79</Id>
       <Value>malesuada nulla a mi.</Value>
     </StringConfig>
     

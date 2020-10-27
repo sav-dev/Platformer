@@ -389,76 +389,44 @@ STR_71 = 142
   .byte LOW(string71), HIGH(string71)
 
 ; 72
-; placeholder
-  .byte $00, $00
+; "Etiam tempor! "
+STR_72 = 144
+  .byte LOW(string72), HIGH(string72)
 
 ; 73
-; placeholder
-  .byte $00, $00
+; "Ut ullamcorper, ligula eu"
+STR_73 = 146
+  .byte LOW(string73), HIGH(string73)
 
 ; 74
-; placeholder
-  .byte $00, $00
+; "tempor congue, eros est"
+STR_74 = 148
+  .byte LOW(string74), HIGH(string74)
 
 ; 75
-; placeholder
-  .byte $00, $00
+; "euismod turpis, id tincidunt"
+STR_75 = 150
+  .byte LOW(string75), HIGH(string75)
 
 ; 76
-; placeholder
-  .byte $00, $00
+; "sapien risus a quam. "
+STR_76 = 152
+  .byte LOW(string76), HIGH(string76)
 
 ; 77
-; placeholder
-  .byte $00, $00
+; "Maecenas fermentum consequat. "
+STR_77 = 154
+  .byte LOW(string77), HIGH(string77)
 
 ; 78
-; placeholder
-  .byte $00, $00
+; "Donec fermentum, pellentesque"
+STR_78 = 156
+  .byte LOW(string78), HIGH(string78)
 
 ; 79
-; placeholder
-  .byte $00, $00
-
-; 80
-; "Etiam tempor! "
-STR_80 = 160
-  .byte LOW(string80), HIGH(string80)
-
-; 81
-; "Ut ullamcorper, ligula eu"
-STR_81 = 162
-  .byte LOW(string81), HIGH(string81)
-
-; 82
-; "tempor congue, eros est"
-STR_82 = 164
-  .byte LOW(string82), HIGH(string82)
-
-; 83
-; "euismod turpis, id tincidunt"
-STR_83 = 166
-  .byte LOW(string83), HIGH(string83)
-
-; 84
-; "sapien risus a quam. "
-STR_84 = 168
-  .byte LOW(string84), HIGH(string84)
-
-; 85
-; "Maecenas fermentum consequat. "
-STR_85 = 170
-  .byte LOW(string85), HIGH(string85)
-
-; 86
-; "Donec fermentum, pellentesque"
-STR_86 = 172
-  .byte LOW(string86), HIGH(string86)
-
-; 87
 ; "malesuada nulla a mi."
-STR_87 = 174
-  .byte LOW(string87), HIGH(string87)
+STR_79 = 158
+  .byte LOW(string79), HIGH(string79)
 
 
 Strings:
@@ -606,21 +574,21 @@ string70:
   .byte $19, $1A, $19, $1C, $1E, $0B, $16, $2A, $00, $0E, $1C, $0F, $0B, $0E, $13, $18, $11, $00, $21, $12, $0B, $1E, $00, $23, $19, $1F
 string71:
   .byte $1D, $17, $13, $11, $12, $1E, $00, $10, $13, $18, $0E, $00, $19, $18, $00, $1E, $12, $0F, $00, $19, $1E, $12, $0F, $1C, $00, $1D, $13, $0E, $0F, $2B
-string80:
+string72:
   .byte $0E, $0F, $1E, $13, $0B, $17, $00, $1E, $0F, $17, $1A, $19, $1C, $25, $00
-string81:
+string73:
   .byte $19, $1F, $1E, $00, $1F, $16, $16, $0B, $17, $0D, $19, $1C, $1A, $0F, $1C, $2A, $00, $16, $13, $11, $1F, $16, $0B, $00, $0F, $1F
-string82:
+string74:
   .byte $17, $1E, $0F, $17, $1A, $19, $1C, $00, $0D, $19, $18, $11, $1F, $0F, $2A, $00, $0F, $1C, $19, $1D, $00, $0F, $1D, $1E
-string83:
+string75:
   .byte $1C, $0F, $1F, $13, $1D, $17, $19, $0E, $00, $1E, $1F, $1C, $1A, $13, $1D, $2A, $00, $13, $0E, $00, $1E, $13, $18, $0D, $13, $0E, $1F, $18, $1E
-string84:
+string76:
   .byte $15, $1D, $0B, $1A, $13, $0F, $18, $00, $1C, $13, $1D, $1F, $1D, $00, $0B, $00, $1B, $1F, $0B, $17, $2B, $00
-string85:
+string77:
   .byte $1E, $17, $0B, $0F, $0D, $0F, $18, $0B, $1D, $00, $10, $0F, $1C, $17, $0F, $18, $1E, $1F, $17, $00, $0D, $19, $18, $1D, $0F, $1B, $1F, $0B, $1E, $2B, $00
-string86:
+string78:
   .byte $1D, $0E, $19, $18, $0F, $0D, $00, $10, $0F, $1C, $17, $0F, $18, $1E, $1F, $17, $2A, $00, $1A, $0F, $16, $16, $0F, $18, $1E, $0F, $1D, $1B, $1F, $0F
-string87:
+string79:
   .byte $15, $17, $0B, $16, $0F, $1D, $1F, $0B, $0E, $0B, $00, $18, $1F, $16, $16, $0B, $00, $0B, $00, $17, $13, $2B
 
 
