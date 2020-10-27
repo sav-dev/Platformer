@@ -275,24 +275,36 @@
    
     <!-- stage 5 story screen -->
     <StringConfig>
+      <Id>64</Id>
+      <Value>At the center of the base,</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>65</Id>
+      <Value>you find a weird portal.</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>66</Id>
+      <Value>Even just staring at it gives</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>67</Id>
+      <Value>you chills.</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>68</Id>
+      <Value>Even though everything tells</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>69</Id>
+      <Value>you not to, you enter the</Value>
+    </StringConfig>
+    <StringConfig>
       <Id>70</Id>
-      <Value>Integer in mauris eu nibh</Value>
+      <Value>portal, dreading what you</Value>
     </StringConfig>
     <StringConfig>
       <Id>71</Id>
-      <Value>euismod gravida. Duis ac</Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>72</Id>
-      <Value>tellus et risus vulputate</Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>73</Id>
-      <Value>vehicula. </Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>74</Id>
-      <Value>Donec lobortis risus a elit.</Value>
+      <Value>might find on the other side.</Value>
     </StringConfig>
     
     <!-- congrats screen -->

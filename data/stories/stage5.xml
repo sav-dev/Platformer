@@ -1,11 +1,14 @@
 <Story>
   <Strings>
-    <StoryString> <X>1</X> <Y>2</Y> <StringId>70</StringId> </StoryString>
-    <StoryString> <X>1</X> <Y>3</Y> <StringId>71</StringId> </StoryString>
-    <StoryString> <X>1</X> <Y>4</Y> <StringId>72</StringId> </StoryString>
-    <StoryString> <X>1</X> <Y>5</Y> <StringId>73</StringId> </StoryString>
-    <StoryString> <X>1</X> <Y>7</Y> <StringId>74</StringId> </StoryString>
-    <StoryString> <X>7</X> <Y>20</Y> <StringId>2</StringId> </StoryString>
+    <StoryString> <X>1</X>  <Y>2</Y>  <StringId>64</StringId> </StoryString>
+    <StoryString> <X>1</X>  <Y>3</Y>  <StringId>65</StringId> </StoryString>
+    <StoryString> <X>1</X>  <Y>4</Y>  <StringId>66</StringId> </StoryString>
+    <StoryString> <X>1</X>  <Y>5</Y>  <StringId>67</StringId> </StoryString>
+    <StoryString> <X>1</X>  <Y>7</Y>  <StringId>68</StringId> </StoryString>
+    <StoryString> <X>1</X>  <Y>8</Y>  <StringId>69</StringId> </StoryString>
+    <StoryString> <X>1</X>  <Y>9</Y>  <StringId>70</StringId> </StoryString>
+    <StoryString> <X>1</X>  <Y>10</Y> <StringId>71</StringId> </StoryString>
+    <StoryString> <X>7</X>  <Y>20</Y> <StringId>2</StringId>  </StoryString>
     <StoryString> <X>15</X> <Y>20</Y> <StringId>24</StringId> </StoryString>
   </Strings>
   <Song>song_index_song_story</Song>

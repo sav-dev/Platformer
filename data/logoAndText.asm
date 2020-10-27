@@ -349,53 +349,56 @@ STR_63 = 126
   .byte LOW(string63), HIGH(string63)
 
 ; 64
-; placeholder
-  .byte $00, $00
+; "At the center of the base,"
+STR_64 = 128
+  .byte LOW(string64), HIGH(string64)
 
 ; 65
-; placeholder
-  .byte $00, $00
+; "you find a weird portal."
+STR_65 = 130
+  .byte LOW(string65), HIGH(string65)
 
 ; 66
-; placeholder
-  .byte $00, $00
+; "Even just staring at it gives"
+STR_66 = 132
+  .byte LOW(string66), HIGH(string66)
 
 ; 67
-; placeholder
-  .byte $00, $00
+; "you chills."
+STR_67 = 134
+  .byte LOW(string67), HIGH(string67)
 
 ; 68
-; placeholder
-  .byte $00, $00
+; "Even though everything tells"
+STR_68 = 136
+  .byte LOW(string68), HIGH(string68)
 
 ; 69
-; placeholder
-  .byte $00, $00
+; "you not to, you enter the"
+STR_69 = 138
+  .byte LOW(string69), HIGH(string69)
 
 ; 70
-; "Integer in mauris eu nibh"
+; "portal, dreading what you"
 STR_70 = 140
   .byte LOW(string70), HIGH(string70)
 
 ; 71
-; "euismod gravida. Duis ac"
+; "might find on the other side."
 STR_71 = 142
   .byte LOW(string71), HIGH(string71)
 
 ; 72
-; "tellus et risus vulputate"
-STR_72 = 144
-  .byte LOW(string72), HIGH(string72)
+; placeholder
+  .byte $00, $00
 
 ; 73
-; "vehicula. "
-STR_73 = 146
-  .byte LOW(string73), HIGH(string73)
+; placeholder
+  .byte $00, $00
 
 ; 74
-; "Donec lobortis risus a elit."
-STR_74 = 148
-  .byte LOW(string74), HIGH(string74)
+; placeholder
+  .byte $00, $00
 
 ; 75
 ; placeholder
@@ -587,16 +590,22 @@ string62:
   .byte $19, $23, $19, $1F, $00, $0F, $18, $1E, $0F, $1C, $00, $13, $1E, $2A, $00, $15, $18, $19, $21, $13, $18, $11, $00, $1E, $12, $0F
 string63:
   .byte $1B, $0B, $18, $1D, $21, $0F, $1C, $1D, $00, $23, $19, $1F, $00, $1D, $0F, $0F, $15, $00, $0B, $1C, $0F, $00, $0D, $16, $19, $1D, $0F, $2B
+string64:
+  .byte $1A, $0B, $1E, $00, $1E, $12, $0F, $00, $0D, $0F, $18, $1E, $0F, $1C, $00, $19, $10, $00, $1E, $12, $0F, $00, $0C, $0B, $1D, $0F, $2A
+string65:
+  .byte $18, $23, $19, $1F, $00, $10, $13, $18, $0E, $00, $0B, $00, $21, $0F, $13, $1C, $0E, $00, $1A, $19, $1C, $1E, $0B, $16, $2B
+string66:
+  .byte $1D, $0F, $20, $0F, $18, $00, $14, $1F, $1D, $1E, $00, $1D, $1E, $0B, $1C, $13, $18, $11, $00, $0B, $1E, $00, $13, $1E, $00, $11, $13, $20, $0F, $1D
+string67:
+  .byte $0B, $23, $19, $1F, $00, $0D, $12, $13, $16, $16, $1D, $2B
+string68:
+  .byte $1C, $0F, $20, $0F, $18, $00, $1E, $12, $19, $1F, $11, $12, $00, $0F, $20, $0F, $1C, $23, $1E, $12, $13, $18, $11, $00, $1E, $0F, $16, $16, $1D
+string69:
+  .byte $19, $23, $19, $1F, $00, $18, $19, $1E, $00, $1E, $19, $2A, $00, $23, $19, $1F, $00, $0F, $18, $1E, $0F, $1C, $00, $1E, $12, $0F
 string70:
-  .byte $19, $13, $18, $1E, $0F, $11, $0F, $1C, $00, $13, $18, $00, $17, $0B, $1F, $1C, $13, $1D, $00, $0F, $1F, $00, $18, $13, $0C, $12
+  .byte $19, $1A, $19, $1C, $1E, $0B, $16, $2A, $00, $0E, $1C, $0F, $0B, $0E, $13, $18, $11, $00, $21, $12, $0B, $1E, $00, $23, $19, $1F
 string71:
-  .byte $18, $0F, $1F, $13, $1D, $17, $19, $0E, $00, $11, $1C, $0B, $20, $13, $0E, $0B, $2B, $00, $0E, $1F, $13, $1D, $00, $0B, $0D
-string72:
-  .byte $19, $1E, $0F, $16, $16, $1F, $1D, $00, $0F, $1E, $00, $1C, $13, $1D, $1F, $1D, $00, $20, $1F, $16, $1A, $1F, $1E, $0B, $1E, $0F
-string73:
-  .byte $0A, $20, $0F, $12, $13, $0D, $1F, $16, $0B, $2B, $00
-string74:
-  .byte $1C, $0E, $19, $18, $0F, $0D, $00, $16, $19, $0C, $19, $1C, $1E, $13, $1D, $00, $1C, $13, $1D, $1F, $1D, $00, $0B, $00, $0F, $16, $13, $1E, $2B
+  .byte $1D, $17, $13, $11, $12, $1E, $00, $10, $13, $18, $0E, $00, $19, $18, $00, $1E, $12, $0F, $00, $19, $1E, $12, $0F, $1C, $00, $1D, $13, $0E, $0F, $2B
 string80:
   .byte $0E, $0F, $1E, $13, $0B, $17, $00, $1E, $0F, $17, $1A, $19, $1C, $25, $00
 string81:
