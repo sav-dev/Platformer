@@ -389,44 +389,34 @@ STR_71 = 142
   .byte LOW(string71), HIGH(string71)
 
 ; 72
-; "Etiam tempor! "
+; "Congratulations!"
 STR_72 = 144
   .byte LOW(string72), HIGH(string72)
 
 ; 73
-; "Ut ullamcorper, ligula eu"
+; "You have defeated the evil"
 STR_73 = 146
   .byte LOW(string73), HIGH(string73)
 
 ; 74
-; "tempor congue, eros est"
+; "skeleton demon, and have "
 STR_74 = 148
   .byte LOW(string74), HIGH(string74)
 
 ; 75
-; "euismod turpis, id tincidunt"
+; "saved the galaxy from"
 STR_75 = 150
   .byte LOW(string75), HIGH(string75)
 
 ; 76
-; "sapien risus a quam. "
+; "an imminent invasion."
 STR_76 = 152
   .byte LOW(string76), HIGH(string76)
 
 ; 77
-; "Maecenas fermentum consequat. "
+; "You are a true hero!"
 STR_77 = 154
   .byte LOW(string77), HIGH(string77)
-
-; 78
-; "Donec fermentum, pellentesque"
-STR_78 = 156
-  .byte LOW(string78), HIGH(string78)
-
-; 79
-; "malesuada nulla a mi."
-STR_79 = 158
-  .byte LOW(string79), HIGH(string79)
 
 
 Strings:
@@ -575,21 +565,17 @@ string70:
 string71:
   .byte $1D, $17, $13, $11, $12, $1E, $00, $10, $13, $18, $0E, $00, $19, $18, $00, $1E, $12, $0F, $00, $19, $1E, $12, $0F, $1C, $00, $1D, $13, $0E, $0F, $2B
 string72:
-  .byte $0E, $0F, $1E, $13, $0B, $17, $00, $1E, $0F, $17, $1A, $19, $1C, $25, $00
+  .byte $10, $0D, $19, $18, $11, $1C, $0B, $1E, $1F, $16, $0B, $1E, $13, $19, $18, $1D, $25
 string73:
-  .byte $19, $1F, $1E, $00, $1F, $16, $16, $0B, $17, $0D, $19, $1C, $1A, $0F, $1C, $2A, $00, $16, $13, $11, $1F, $16, $0B, $00, $0F, $1F
+  .byte $1A, $23, $19, $1F, $00, $12, $0B, $20, $0F, $00, $0E, $0F, $10, $0F, $0B, $1E, $0F, $0E, $00, $1E, $12, $0F, $00, $0F, $20, $13, $16
 string74:
-  .byte $17, $1E, $0F, $17, $1A, $19, $1C, $00, $0D, $19, $18, $11, $1F, $0F, $2A, $00, $0F, $1C, $19, $1D, $00, $0F, $1D, $1E
+  .byte $19, $1D, $15, $0F, $16, $0F, $1E, $19, $18, $00, $0E, $0F, $17, $19, $18, $2A, $00, $0B, $18, $0E, $00, $12, $0B, $20, $0F, $00
 string75:
-  .byte $1C, $0F, $1F, $13, $1D, $17, $19, $0E, $00, $1E, $1F, $1C, $1A, $13, $1D, $2A, $00, $13, $0E, $00, $1E, $13, $18, $0D, $13, $0E, $1F, $18, $1E
+  .byte $15, $1D, $0B, $20, $0F, $0E, $00, $1E, $12, $0F, $00, $11, $0B, $16, $0B, $22, $23, $00, $10, $1C, $19, $17
 string76:
-  .byte $15, $1D, $0B, $1A, $13, $0F, $18, $00, $1C, $13, $1D, $1F, $1D, $00, $0B, $00, $1B, $1F, $0B, $17, $2B, $00
+  .byte $15, $0B, $18, $00, $13, $17, $17, $13, $18, $0F, $18, $1E, $00, $13, $18, $20, $0B, $1D, $13, $19, $18, $2B
 string77:
-  .byte $1E, $17, $0B, $0F, $0D, $0F, $18, $0B, $1D, $00, $10, $0F, $1C, $17, $0F, $18, $1E, $1F, $17, $00, $0D, $19, $18, $1D, $0F, $1B, $1F, $0B, $1E, $2B, $00
-string78:
-  .byte $1D, $0E, $19, $18, $0F, $0D, $00, $10, $0F, $1C, $17, $0F, $18, $1E, $1F, $17, $2A, $00, $1A, $0F, $16, $16, $0F, $18, $1E, $0F, $1D, $1B, $1F, $0F
-string79:
-  .byte $15, $17, $0B, $16, $0F, $1D, $1F, $0B, $0E, $0B, $00, $18, $1F, $16, $16, $0B, $00, $0B, $00, $17, $13, $2B
+  .byte $14, $23, $19, $1F, $00, $0B, $1C, $0F, $00, $0B, $00, $1E, $1C, $1F, $0F, $00, $12, $0F, $1C, $19, $25
 
 
 CURSOR_TILE = $94

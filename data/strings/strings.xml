@@ -310,35 +310,27 @@
     <!-- congrats screen -->
     <StringConfig>
       <Id>72</Id>
-      <Value>Etiam tempor! </Value>
+      <Value>Congratulations!</Value>
     </StringConfig>
     <StringConfig>
       <Id>73</Id>
-      <Value>Ut ullamcorper, ligula eu</Value>
+      <Value>You have defeated the evil</Value>
     </StringConfig>
     <StringConfig>
       <Id>74</Id>
-      <Value>tempor congue, eros est</Value>
+      <Value>skeleton demon, and have </Value>
     </StringConfig>
     <StringConfig>
       <Id>75</Id>
-      <Value>euismod turpis, id tincidunt</Value>
+      <Value>saved the galaxy from</Value>
     </StringConfig>
     <StringConfig>
       <Id>76</Id>
-      <Value>sapien risus a quam. </Value>
+      <Value>an imminent invasion.</Value>
     </StringConfig>
     <StringConfig>
       <Id>77</Id>
-      <Value>Maecenas fermentum consequat. </Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>78</Id>
-      <Value>Donec fermentum, pellentesque</Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>79</Id>
-      <Value>malesuada nulla a mi.</Value>
+      <Value>You are a true hero!</Value>
     </StringConfig>
     
   </Strings>
