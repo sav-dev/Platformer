@@ -154,103 +154,110 @@ STR_24 = 48
   .byte LOW(string24), HIGH(string24)
 
 ; 25
-; placeholder
-  .byte $00, $00
+; "When patrolling remote"
+STR_25 = 50
+  .byte LOW(string25), HIGH(string25)
 
 ; 26
-; placeholder
-  .byte $00, $00
+; "sectors of the galaxy,"
+STR_26 = 52
+  .byte LOW(string26), HIGH(string26)
 
 ; 27
-; placeholder
-  .byte $00, $00
+; "you notice something weird"
+STR_27 = 54
+  .byte LOW(string27), HIGH(string27)
 
 ; 28
-; placeholder
-  .byte $00, $00
+; "about one of the planets"
+STR_28 = 56
+  .byte LOW(string28), HIGH(string28)
 
 ; 29
-; placeholder
-  .byte $00, $00
+; "below. It's supposed"
+STR_29 = 58
+  .byte LOW(string29), HIGH(string29)
 
 ; 30
-; "Lorem ipsum dolor sit amet,"
+; "to be uninhabited, but there"
 STR_30 = 60
   .byte LOW(string30), HIGH(string30)
 
 ; 31
-; "consectetur adipiscing elit,"
+; "are clear life signals."
 STR_31 = 62
   .byte LOW(string31), HIGH(string31)
 
 ; 32
-; "sed do eiusmod tempor incidi"
+; "You decide to land and"
 STR_32 = 64
   .byte LOW(string32), HIGH(string32)
 
 ; 33
-; "ut labore et magna aliqua."
+; "investigate."
 STR_33 = 66
   .byte LOW(string33), HIGH(string33)
 
 ; 34
-; placeholder
-  .byte $00, $00
+; "After making it through the"
+STR_34 = 68
+  .byte LOW(string34), HIGH(string34)
 
 ; 35
-; placeholder
-  .byte $00, $00
+; "enemy encampments, you get"
+STR_35 = 70
+  .byte LOW(string35), HIGH(string35)
 
 ; 36
-; placeholder
-  .byte $00, $00
+; "to a large structure high"
+STR_36 = 72
+  .byte LOW(string36), HIGH(string36)
 
 ; 37
-; placeholder
-  .byte $00, $00
+; "in the mountains. Inside you"
+STR_37 = 74
+  .byte LOW(string37), HIGH(string37)
 
 ; 38
-; placeholder
-  .byte $00, $00
+; "see  a large well leading"
+STR_38 = 76
+  .byte LOW(string38), HIGH(string38)
 
 ; 39
-; placeholder
-  .byte $00, $00
+; "deep  below the surface."
+STR_39 = 78
+  .byte LOW(string39), HIGH(string39)
 
 ; 40
-; "Ut enim ad minim veniam,"
+; "You enter the cave formations,"
 STR_40 = 80
   .byte LOW(string40), HIGH(string40)
 
 ; 41
-; "quis nostrud exercitation,"
+; "hoping to find out what's"
 STR_41 = 82
   .byte LOW(string41), HIGH(string41)
 
 ; 42
-; "ullamco laboris ni ut aliquip."
+; "going on on this planet."
 STR_42 = 84
   .byte LOW(string42), HIGH(string42)
 
 ; 43
-; "Duis aute irure dolor in"
-STR_43 = 86
-  .byte LOW(string43), HIGH(string43)
+; placeholder
+  .byte $00, $00
 
 ; 44
-; "reprehenderit in voluptate"
-STR_44 = 88
-  .byte LOW(string44), HIGH(string44)
+; placeholder
+  .byte $00, $00
 
 ; 45
-; "velit esse cillum dolore eu"
-STR_45 = 90
-  .byte LOW(string45), HIGH(string45)
+; placeholder
+  .byte $00, $00
 
 ; 46
-; "fugiat nulla pariatur."
-STR_46 = 92
-  .byte LOW(string46), HIGH(string46)
+; placeholder
+  .byte $00, $00
 
 ; 47
 ; placeholder
@@ -491,28 +498,42 @@ string23:
   .byte $09, $29, $00, $09, $00, $03, $00, $05, $00, $05
 string24:
   .byte $09, $29, $00, $0A, $00, $01, $00, $02, $00, $05
+string25:
+  .byte $16, $21, $12, $0F, $18, $00, $1A, $0B, $1E, $1C, $19, $16, $16, $13, $18, $11, $00, $1C, $0F, $17, $19, $1E, $0F
+string26:
+  .byte $16, $1D, $0F, $0D, $1E, $19, $1C, $1D, $00, $19, $10, $00, $1E, $12, $0F, $00, $11, $0B, $16, $0B, $22, $23, $2A
+string27:
+  .byte $1A, $23, $19, $1F, $00, $18, $19, $1E, $13, $0D, $0F, $00, $1D, $19, $17, $0F, $1E, $12, $13, $18, $11, $00, $21, $0F, $13, $1C, $0E
+string28:
+  .byte $18, $0B, $0C, $19, $1F, $1E, $00, $19, $18, $0F, $00, $19, $10, $00, $1E, $12, $0F, $00, $1A, $16, $0B, $18, $0F, $1E, $1D
+string29:
+  .byte $14, $0C, $0F, $16, $19, $21, $2B, $00, $13, $1E, $28, $1D, $00, $1D, $1F, $1A, $1A, $19, $1D, $0F, $0E
 string30:
-  .byte $1B, $16, $19, $1C, $0F, $17, $00, $13, $1A, $1D, $1F, $17, $00, $0E, $19, $16, $19, $1C, $00, $1D, $13, $1E, $00, $0B, $17, $0F, $1E, $2A
+  .byte $1C, $1E, $19, $00, $0C, $0F, $00, $1F, $18, $13, $18, $12, $0B, $0C, $13, $1E, $0F, $0E, $2A, $00, $0C, $1F, $1E, $00, $1E, $12, $0F, $1C, $0F
 string31:
-  .byte $1C, $0D, $19, $18, $1D, $0F, $0D, $1E, $0F, $1E, $1F, $1C, $00, $0B, $0E, $13, $1A, $13, $1D, $0D, $13, $18, $11, $00, $0F, $16, $13, $1E, $2A
+  .byte $17, $0B, $1C, $0F, $00, $0D, $16, $0F, $0B, $1C, $00, $16, $13, $10, $0F, $00, $1D, $13, $11, $18, $0B, $16, $1D, $2B
 string32:
-  .byte $1C, $1D, $0F, $0E, $00, $0E, $19, $00, $0F, $13, $1F, $1D, $17, $19, $0E, $00, $1E, $0F, $17, $1A, $19, $1C, $00, $13, $18, $0D, $13, $0E, $13
+  .byte $16, $23, $19, $1F, $00, $0E, $0F, $0D, $13, $0E, $0F, $00, $1E, $19, $00, $16, $0B, $18, $0E, $00, $0B, $18, $0E
 string33:
-  .byte $1A, $1F, $1E, $00, $16, $0B, $0C, $19, $1C, $0F, $00, $0F, $1E, $00, $17, $0B, $11, $18, $0B, $00, $0B, $16, $13, $1B, $1F, $0B, $2B
+  .byte $0C, $13, $18, $20, $0F, $1D, $1E, $13, $11, $0B, $1E, $0F, $2B
+string34:
+  .byte $1B, $0B, $10, $1E, $0F, $1C, $00, $17, $0B, $15, $13, $18, $11, $00, $13, $1E, $00, $1E, $12, $1C, $19, $1F, $11, $12, $00, $1E, $12, $0F
+string35:
+  .byte $1A, $0F, $18, $0F, $17, $23, $00, $0F, $18, $0D, $0B, $17, $1A, $17, $0F, $18, $1E, $1D, $2A, $00, $23, $19, $1F, $00, $11, $0F, $1E
+string36:
+  .byte $19, $1E, $19, $00, $0B, $00, $16, $0B, $1C, $11, $0F, $00, $1D, $1E, $1C, $1F, $0D, $1E, $1F, $1C, $0F, $00, $12, $13, $11, $12
+string37:
+  .byte $1C, $13, $18, $00, $1E, $12, $0F, $00, $17, $19, $1F, $18, $1E, $0B, $13, $18, $1D, $2B, $00, $13, $18, $1D, $13, $0E, $0F, $00, $23, $19, $1F
+string38:
+  .byte $19, $1D, $0F, $0F, $00, $00, $0B, $00, $16, $0B, $1C, $11, $0F, $00, $21, $0F, $16, $16, $00, $16, $0F, $0B, $0E, $13, $18, $11
+string39:
+  .byte $18, $0E, $0F, $0F, $1A, $00, $00, $0C, $0F, $16, $19, $21, $00, $1E, $12, $0F, $00, $1D, $1F, $1C, $10, $0B, $0D, $0F, $2B
 string40:
-  .byte $18, $1F, $1E, $00, $0F, $18, $13, $17, $00, $0B, $0E, $00, $17, $13, $18, $13, $17, $00, $20, $0F, $18, $13, $0B, $17, $2A
+  .byte $1E, $23, $19, $1F, $00, $0F, $18, $1E, $0F, $1C, $00, $1E, $12, $0F, $00, $0D, $0B, $20, $0F, $00, $10, $19, $1C, $17, $0B, $1E, $13, $19, $18, $1D, $2A
 string41:
-  .byte $1A, $1B, $1F, $13, $1D, $00, $18, $19, $1D, $1E, $1C, $1F, $0E, $00, $0F, $22, $0F, $1C, $0D, $13, $1E, $0B, $1E, $13, $19, $18, $2A
+  .byte $19, $12, $19, $1A, $13, $18, $11, $00, $1E, $19, $00, $10, $13, $18, $0E, $00, $19, $1F, $1E, $00, $21, $12, $0B, $1E, $28, $1D
 string42:
-  .byte $1E, $1F, $16, $16, $0B, $17, $0D, $19, $00, $16, $0B, $0C, $19, $1C, $13, $1D, $00, $18, $13, $00, $1F, $1E, $00, $0B, $16, $13, $1B, $1F, $13, $1A, $2B
-string43:
-  .byte $18, $0E, $1F, $13, $1D, $00, $0B, $1F, $1E, $0F, $00, $13, $1C, $1F, $1C, $0F, $00, $0E, $19, $16, $19, $1C, $00, $13, $18
-string44:
-  .byte $1A, $1C, $0F, $1A, $1C, $0F, $12, $0F, $18, $0E, $0F, $1C, $13, $1E, $00, $13, $18, $00, $20, $19, $16, $1F, $1A, $1E, $0B, $1E, $0F
-string45:
-  .byte $1B, $20, $0F, $16, $13, $1E, $00, $0F, $1D, $1D, $0F, $00, $0D, $13, $16, $16, $1F, $17, $00, $0E, $19, $16, $19, $1C, $0F, $00, $0F, $1F
-string46:
-  .byte $16, $10, $1F, $11, $13, $0B, $1E, $00, $18, $1F, $16, $16, $0B, $00, $1A, $0B, $1C, $13, $0B, $1E, $1F, $1C, $2B
+  .byte $18, $11, $19, $13, $18, $11, $00, $19, $18, $00, $19, $18, $00, $1E, $12, $13, $1D, $00, $1A, $16, $0B, $18, $0F, $1E, $2B
 string50:
   .byte $17, $0F, $22, $0D, $0F, $1A, $1E, $0F, $1F, $1C, $00, $1D, $13, $18, $1E, $00, $19, $0D, $0D, $0B, $0F, $0D, $0B, $1E
 string51:

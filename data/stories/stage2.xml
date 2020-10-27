@@ -1,12 +1,14 @@
 <Story>
   <Strings>
-    <StoryString> <X>1</X> <Y>2</Y> <StringId>40</StringId> </StoryString>
-    <StoryString> <X>1</X> <Y>3</Y> <StringId>41</StringId> </StoryString>
-    <StoryString> <X>1</X> <Y>4</Y> <StringId>42</StringId> </StoryString>
-    <StoryString> <X>1</X> <Y>6</Y> <StringId>43</StringId> </StoryString>
-    <StoryString> <X>1</X> <Y>7</Y> <StringId>44</StringId> </StoryString>
-    <StoryString> <X>1</X> <Y>8</Y> <StringId>45</StringId> </StoryString>
-    <StoryString> <X>1</X> <Y>9</Y> <StringId>46</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>2</Y> <StringId>34</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>3</Y> <StringId>35</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>4</Y> <StringId>36</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>5</Y> <StringId>37</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>6</Y> <StringId>38</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>7</Y> <StringId>39</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>9</Y> <StringId>40</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>10</Y> <StringId>41</StringId> </StoryString>
+    <StoryString> <X>1</X> <Y>11</Y> <StringId>42</StringId> </StoryString>
     <StoryString> <X>7</X> <Y>20</Y> <StringId>2</StringId> </StoryString>
     <StoryString> <X>15</X> <Y>20</Y> <StringId>21</StringId> </StoryString>
   </Strings>

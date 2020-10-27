@@ -111,50 +111,78 @@
     
     <!-- stage 1 story screen -->
     <StringConfig>
+      <Id>25</Id>
+      <Value>When patrolling remote</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>26</Id>
+      <Value>sectors of the galaxy,</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>27</Id>
+      <Value>you notice something weird</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>28</Id>
+      <Value>about one of the planets</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>29</Id>
+      <Value>below. It's supposed</Value>
+    </StringConfig>
+    <StringConfig>
       <Id>30</Id>
-      <Value>Lorem ipsum dolor sit amet,</Value>
+      <Value>to be uninhabited, but there</Value>
     </StringConfig>
     <StringConfig>
       <Id>31</Id>
-      <Value>consectetur adipiscing elit,</Value>
+      <Value>are clear life signals.</Value>
     </StringConfig>
     <StringConfig>
       <Id>32</Id>
-      <Value>sed do eiusmod tempor incidi</Value>
+      <Value>You decide to land and</Value>
     </StringConfig>
     <StringConfig>
       <Id>33</Id>
-      <Value>ut labore et magna aliqua.</Value>
+      <Value>investigate.</Value>
     </StringConfig>
     
     <!-- stage 2 story screen -->
     <StringConfig>
+      <Id>34</Id>
+      <Value>After making it through the</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>35</Id>
+      <Value>enemy encampments, you get</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>36</Id>
+      <Value>to a large structure high</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>37</Id>
+      <Value>in the mountains. Inside you</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>38</Id>
+      <Value>see  a large well leading</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>39</Id>
+      <Value>deep  below the surface.</Value>
+    </StringConfig>
+    <StringConfig>
       <Id>40</Id>
-      <Value>Ut enim ad minim veniam,</Value>
+      <Value>You enter the cave formations,</Value>
     </StringConfig>
     <StringConfig>
       <Id>41</Id>
-      <Value>quis nostrud exercitation,</Value>
+      <Value>hoping to find out what's</Value>
     </StringConfig>
     <StringConfig>
       <Id>42</Id>
-      <Value>ullamco laboris ni ut aliquip.</Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>43</Id>
-      <Value>Duis aute irure dolor in</Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>44</Id>
-      <Value>reprehenderit in voluptate</Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>45</Id>
-      <Value>velit esse cillum dolore eu</Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>46</Id>
-      <Value>fugiat nulla pariatur.</Value>
+      <Value>going on on this planet.</Value>
     </StringConfig>
    
     <!-- stage 3 story screen -->
