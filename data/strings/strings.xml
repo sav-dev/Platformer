@@ -241,28 +241,36 @@
 
     <!-- stage 4 story screen -->
     <StringConfig>
+      <Id>56</Id>
+      <Value>You make it paste the enemy</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>57</Id>
+      <Value>fortifications and land on the</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>58</Id>
+      <Value>planet you were headed for.</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>59</Id>
+      <Value>Close to where you landed, you</Value>
+    </StringConfig>
+    <StringConfig>
       <Id>60</Id>
-      <Value>Curabitur pretium tincidunt.</Value>
+      <Value>see an ominous building.</Value>
     </StringConfig>
     <StringConfig>
       <Id>61</Id>
-      <Value>Nulla gravida orci a odio, </Value>
+      <Value>It resembles a military base.</Value>
     </StringConfig>
     <StringConfig>
       <Id>62</Id>
-      <Value>nullam varius, turpis et </Value>
+      <Value>You enter it, knowing the</Value>
     </StringConfig>
     <StringConfig>
       <Id>63</Id>
-      <Value>commodo pharetra, est eros</Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>64</Id>
-      <Value>bibendum elit, nec luctus </Value>
-    </StringConfig>
-    <StringConfig>
-      <Id>65</Id>
-      <Value>magna felis sollici mauris.</Value>
+      <Value>answers you seek are close.</Value>
     </StringConfig>
    
     <!-- stage 5 story screen -->
