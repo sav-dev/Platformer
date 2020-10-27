@@ -13,7 +13,7 @@
     <StoryString> <X>1</X> <Y>13</Y>  <StringId>53</StringId> </StoryString>
     <StoryString> <X>1</X> <Y>14</Y>  <StringId>54</StringId> </StoryString>
     <StoryString> <X>1</X> <Y>15</Y>  <StringId>55</StringId> </StoryString>
-    <StoryString> <X>7</X> <Y>20</Y>  <StringId>2</StringId> </StoryString>
+    <StoryString> <X>7</X> <Y>20</Y>  <StringId>2</StringId>  </StoryString>
     <StoryString> <X>15</X> <Y>20</Y> <StringId>22</StringId> </StoryString>
   </Strings>
   <Song>song_index_song_story</Song>
