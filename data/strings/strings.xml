@@ -187,20 +187,56 @@
    
     <!-- stage 3 story screen -->
     <StringConfig>
+      <Id>43</Id>
+      <Value>Deep below the surface of the</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>44</Id>
+      <Value>planet, you find some sort of</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>45</Id>
+      <Value>a control room. Inside, you</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>46</Id>
+      <Value>find a map of the area you</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>47</Id>
+      <Value>were patrolling. Marked on it</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>48</Id>
+      <Value>is a small planet on the</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>49</Id>
+      <Value>outskirts of the system.</Value>
+    </StringConfig>
+    <StringConfig>
       <Id>50</Id>
-      <Value>Excepteur sint occaecat</Value>
+      <Value>You have to get there.</Value>
     </StringConfig>
     <StringConfig>
       <Id>51</Id>
-      <Value>cupidatat non proident,</Value>
+      <Value>You put on your jetpack and</Value>
     </StringConfig>
     <StringConfig>
       <Id>52</Id>
-      <Value>sunt in culpa qui officia</Value>
+      <Value>start heading for that planet.</Value>
     </StringConfig>
     <StringConfig>
       <Id>53</Id>
-      <Value>deserunt mollit anim id est.</Value>
+      <Value>But first, you have to make it</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>54</Id>
+      <Value>through the asteroid belt</Value>
+    </StringConfig>
+    <StringConfig>
+      <Id>55</Id>
+      <Value>which is in the way...</Value>
     </StringConfig>
 
     <!-- stage 4 story screen -->

@@ -244,60 +244,69 @@ STR_42 = 84
   .byte LOW(string42), HIGH(string42)
 
 ; 43
-; placeholder
-  .byte $00, $00
+; "Deep below the surface of the"
+STR_43 = 86
+  .byte LOW(string43), HIGH(string43)
 
 ; 44
-; placeholder
-  .byte $00, $00
+; "planet, you find some sort of"
+STR_44 = 88
+  .byte LOW(string44), HIGH(string44)
 
 ; 45
-; placeholder
-  .byte $00, $00
+; "a control room. Inside, you"
+STR_45 = 90
+  .byte LOW(string45), HIGH(string45)
 
 ; 46
-; placeholder
-  .byte $00, $00
+; "find a map of the area you"
+STR_46 = 92
+  .byte LOW(string46), HIGH(string46)
 
 ; 47
-; placeholder
-  .byte $00, $00
+; "were patrolling. Marked on it"
+STR_47 = 94
+  .byte LOW(string47), HIGH(string47)
 
 ; 48
-; placeholder
-  .byte $00, $00
+; "is a small planet on the"
+STR_48 = 96
+  .byte LOW(string48), HIGH(string48)
 
 ; 49
-; placeholder
-  .byte $00, $00
+; "outskirts of the system."
+STR_49 = 98
+  .byte LOW(string49), HIGH(string49)
 
 ; 50
-; "Excepteur sint occaecat"
+; "You have to get there."
 STR_50 = 100
   .byte LOW(string50), HIGH(string50)
 
 ; 51
-; "cupidatat non proident,"
+; "You put on your jetpack and"
 STR_51 = 102
   .byte LOW(string51), HIGH(string51)
 
 ; 52
-; "sunt in culpa qui officia"
+; "start heading for that planet."
 STR_52 = 104
   .byte LOW(string52), HIGH(string52)
 
 ; 53
-; "deserunt mollit anim id est."
+; "But first, you have to make it"
 STR_53 = 106
   .byte LOW(string53), HIGH(string53)
 
 ; 54
-; placeholder
-  .byte $00, $00
+; "through the asteroid belt"
+STR_54 = 108
+  .byte LOW(string54), HIGH(string54)
 
 ; 55
-; placeholder
-  .byte $00, $00
+; "which is in the way..."
+STR_55 = 110
+  .byte LOW(string55), HIGH(string55)
 
 ; 56
 ; placeholder
@@ -534,14 +543,32 @@ string41:
   .byte $19, $12, $19, $1A, $13, $18, $11, $00, $1E, $19, $00, $10, $13, $18, $0E, $00, $19, $1F, $1E, $00, $21, $12, $0B, $1E, $28, $1D
 string42:
   .byte $18, $11, $19, $13, $18, $11, $00, $19, $18, $00, $19, $18, $00, $1E, $12, $13, $1D, $00, $1A, $16, $0B, $18, $0F, $1E, $2B
+string43:
+  .byte $1D, $0E, $0F, $0F, $1A, $00, $0C, $0F, $16, $19, $21, $00, $1E, $12, $0F, $00, $1D, $1F, $1C, $10, $0B, $0D, $0F, $00, $19, $10, $00, $1E, $12, $0F
+string44:
+  .byte $1D, $1A, $16, $0B, $18, $0F, $1E, $2A, $00, $23, $19, $1F, $00, $10, $13, $18, $0E, $00, $1D, $19, $17, $0F, $00, $1D, $19, $1C, $1E, $00, $19, $10
+string45:
+  .byte $1B, $0B, $00, $0D, $19, $18, $1E, $1C, $19, $16, $00, $1C, $19, $19, $17, $2B, $00, $13, $18, $1D, $13, $0E, $0F, $2A, $00, $23, $19, $1F
+string46:
+  .byte $1A, $10, $13, $18, $0E, $00, $0B, $00, $17, $0B, $1A, $00, $19, $10, $00, $1E, $12, $0F, $00, $0B, $1C, $0F, $0B, $00, $23, $19, $1F
+string47:
+  .byte $1D, $21, $0F, $1C, $0F, $00, $1A, $0B, $1E, $1C, $19, $16, $16, $13, $18, $11, $2B, $00, $17, $0B, $1C, $15, $0F, $0E, $00, $19, $18, $00, $13, $1E
+string48:
+  .byte $18, $13, $1D, $00, $0B, $00, $1D, $17, $0B, $16, $16, $00, $1A, $16, $0B, $18, $0F, $1E, $00, $19, $18, $00, $1E, $12, $0F
+string49:
+  .byte $18, $19, $1F, $1E, $1D, $15, $13, $1C, $1E, $1D, $00, $19, $10, $00, $1E, $12, $0F, $00, $1D, $23, $1D, $1E, $0F, $17, $2B
 string50:
-  .byte $17, $0F, $22, $0D, $0F, $1A, $1E, $0F, $1F, $1C, $00, $1D, $13, $18, $1E, $00, $19, $0D, $0D, $0B, $0F, $0D, $0B, $1E
+  .byte $16, $23, $19, $1F, $00, $12, $0B, $20, $0F, $00, $1E, $19, $00, $11, $0F, $1E, $00, $1E, $12, $0F, $1C, $0F, $2B
 string51:
-  .byte $17, $0D, $1F, $1A, $13, $0E, $0B, $1E, $0B, $1E, $00, $18, $19, $18, $00, $1A, $1C, $19, $13, $0E, $0F, $18, $1E, $2A
+  .byte $1B, $23, $19, $1F, $00, $1A, $1F, $1E, $00, $19, $18, $00, $23, $19, $1F, $1C, $00, $14, $0F, $1E, $1A, $0B, $0D, $15, $00, $0B, $18, $0E
 string52:
-  .byte $19, $1D, $1F, $18, $1E, $00, $13, $18, $00, $0D, $1F, $16, $1A, $0B, $00, $1B, $1F, $13, $00, $19, $10, $10, $13, $0D, $13, $0B
+  .byte $1E, $1D, $1E, $0B, $1C, $1E, $00, $12, $0F, $0B, $0E, $13, $18, $11, $00, $10, $19, $1C, $00, $1E, $12, $0B, $1E, $00, $1A, $16, $0B, $18, $0F, $1E, $2B
 string53:
-  .byte $1C, $0E, $0F, $1D, $0F, $1C, $1F, $18, $1E, $00, $17, $19, $16, $16, $13, $1E, $00, $0B, $18, $13, $17, $00, $13, $0E, $00, $0F, $1D, $1E, $2B
+  .byte $1E, $0C, $1F, $1E, $00, $10, $13, $1C, $1D, $1E, $2A, $00, $23, $19, $1F, $00, $12, $0B, $20, $0F, $00, $1E, $19, $00, $17, $0B, $15, $0F, $00, $13, $1E
+string54:
+  .byte $19, $1E, $12, $1C, $19, $1F, $11, $12, $00, $1E, $12, $0F, $00, $0B, $1D, $1E, $0F, $1C, $19, $13, $0E, $00, $0C, $0F, $16, $1E
+string55:
+  .byte $16, $21, $12, $13, $0D, $12, $00, $13, $1D, $00, $13, $18, $00, $1E, $12, $0F, $00, $21, $0B, $23, $2B, $2B, $2B
 string60:
   .byte $1C, $0D, $1F, $1C, $0B, $0C, $13, $1E, $1F, $1C, $00, $1A, $1C, $0F, $1E, $13, $1F, $17, $00, $1E, $13, $18, $0D, $13, $0E, $1F, $18, $1E, $2B
 string61:
