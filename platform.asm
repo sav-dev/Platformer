@@ -649,7 +649,8 @@ Bank01Start:
   Sound:
     .include "sound\sound.asm"
 
-    
+  level_4_02:
+    .incbin "data\levels\level_4_02.bin"
 
 Bank01End:
 
