@@ -254,11 +254,11 @@
     </StringConfig>
     <StringConfig>
       <Id>59</Id>
-      <Value>Close to where you landed, you</Value>
+      <Value>Close to where you've landed,</Value>
     </StringConfig>
     <StringConfig>
       <Id>60</Id>
-      <Value>see an ominous building.</Value>
+      <Value>you see an ominous building.</Value>
     </StringConfig>
     <StringConfig>
       <Id>61</Id>
