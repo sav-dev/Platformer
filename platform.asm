@@ -634,6 +634,13 @@ Bank00Start:
   storyCredits:
     .incbin "data\stories\credits.bin"
               
+  level_4_03:
+    .incbin "data\levels\level_4_03.bin"
+  level_4_05:
+    .incbin "data\levels\level_4_05.bin"
+  level_4_07:
+    .incbin "data\levels\level_4_07.bin"
+              
 Bank00End:
 
 Bank01:
@@ -882,12 +889,6 @@ Bank12:
   .org $8000
 
 Bank12Start:  
-
-  level_4_03:
-    .incbin "data\levels\level_4_03.bin"
-  level_4_05:
-    .incbin "data\levels\level_4_05.bin"
-
 Bank12End:
   
 Bank13:
