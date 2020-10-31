@@ -889,6 +889,12 @@ Bank12:
   .org $8000
 
 Bank12Start:  
+
+  level_4_06:
+    .incbin "data\levels\level_4_06.bin"
+  level_4_08:
+    .incbin "data\levels\level_4_08.bin"
+    
 Bank12End:
   
 Bank13:
