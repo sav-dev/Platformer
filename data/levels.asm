@@ -70,7 +70,7 @@ NUMBER_OF_LEVELS_STAGE_3 = $0A
   .byte $03, LOW(level_3_09), HIGH(level_3_09)
   
   ; stage 4
-NUMBER_OF_LEVELS_STAGE_4 = $0D
+NUMBER_OF_LEVELS_STAGE_4 = $0E
   .byte $00, LOW(storyStage4), HIGH(storyStage4)
   .byte $05, LOW(level_4_01), HIGH(level_4_01)
   .byte $06, LOW(level_4_02), HIGH(level_4_02)
@@ -84,6 +84,7 @@ NUMBER_OF_LEVELS_STAGE_4 = $0D
   .byte $06, LOW(level_4_10), HIGH(level_4_10)
   .byte $06, LOW(level_4_11), HIGH(level_4_11)
   .byte $06, LOW(level_4_12), HIGH(level_4_12)
+  .byte $06, LOW(level_4_13), HIGH(level_4_13)
   
   ; stage 5
 NUMBER_OF_LEVELS_STAGE_5 = $06

@@ -898,8 +898,8 @@ Bank12Start:
     .incbin "data\levels\level_4_10.bin"
   level_4_11:
     .incbin "data\levels\level_4_11.bin"
-  level_4_12:
-    .incbin "data\levels\level_4_12.bin"
+  level_4_13:
+    .incbin "data\levels\level_4_13.bin"
     
 Bank12End:
   
@@ -911,7 +911,9 @@ Bank13:
 Bank13Start:
 
   level_4_03:
-    .incbin "data\levels\level_4_03.bin"
+    .incbin "data\levels\level_4_03.bin" ; todo
+  level_4_12:
+    .incbin "data\levels\level_4_12.bin" ; todo
 
 Bank13End:
 
