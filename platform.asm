@@ -634,12 +634,12 @@ Bank00Start:
   storyCredits:
     .incbin "data\stories\credits.bin"
               
-  level_4_04:
-    .incbin "data\levels\level_4_04.bin"
-  level_4_06:
-    .incbin "data\levels\level_4_06.bin"
-  level_4_08:
-    .incbin "data\levels\level_4_08.bin"
+  level_4_05:
+    .incbin "data\levels\level_4_05.bin"
+  level_4_07:
+    .incbin "data\levels\level_4_07.bin"
+  level_4_09:
+    .incbin "data\levels\level_4_09.bin"
               
 Bank00End:
 
@@ -656,8 +656,8 @@ Bank01Start:
   Sound:
     .include "sound\sound.asm"
 
-  level_4_03:
-    .incbin "data\levels\level_4_03.bin"
+  level_4_04:
+    .incbin "data\levels\level_4_04.bin"
 
 Bank01End:
 
@@ -870,8 +870,8 @@ Bank11Start:
     .incbin "data\levels\level_2_05.bin"
   level_4_01:
     .incbin "data\levels\level_4_01.bin"
-  level_4_05:
-    .incbin "data\levels\level_4_05.bin"
+  level_4_06:
+    .incbin "data\levels\level_4_06.bin"
   level_5_03:
     .incbin "data\levels\level_5_03.bin"
   level_5_04:
@@ -892,12 +892,12 @@ Bank12Start:
 
   level_4_02:
     .incbin "data\levels\level_4_02.bin"
-  level_4_07:
-    .incbin "data\levels\level_4_07.bin"
-  level_4_09:
-    .incbin "data\levels\level_4_09.bin"
+  level_4_08:
+    .incbin "data\levels\level_4_08.bin"
   level_4_10:
     .incbin "data\levels\level_4_10.bin"
+  level_4_11:
+    .incbin "data\levels\level_4_11.bin"
   level_4_12:
     .incbin "data\levels\level_4_12.bin"
     
@@ -910,8 +910,8 @@ Bank13:
 
 Bank13Start:
 
-  level_4_11:
-    .incbin "data\levels\level_4_11.bin"
+  level_4_03:
+    .incbin "data\levels\level_4_03.bin"
 
 Bank13End:
 
