@@ -913,7 +913,7 @@ Bank13Start:
   level_4_03:
     .incbin "data\levels\level_4_03.bin"
   level_4_12:
-    .incbin "data\levels\level_4_12.bin" ; todo: start = mid purple with violet, end = low steel
+    .incbin "data\levels\level_4_12.bin"
 
 Bank13End:
 
