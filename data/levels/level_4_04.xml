@@ -33,8 +33,8 @@
       <string>0-1-0-2</string>
       <string>0-0-1-2</string>
       <string>0-0-3-3</string>
-      <string>0-0-3-2</string>
-      <string>0-0-3-3</string>
+      <string>0-0-0-1</string>
+      <string>0-0-0-0</string>
       <string>0-0-3-2</string>
       <string>0-0-3-3</string>
     </ArrayOfString>
@@ -50,8 +50,8 @@
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
       <string>0-1-0-2</string>
-      <string>0-0-0-2</string>
-      <string>0-0-0-3</string>
+      <string>0-0-2-0</string>
+      <string>0-0-2-1</string>
       <string>0-0-4-0</string>
       <string>0-0-4-1</string>
     </ArrayOfString>
@@ -217,9 +217,9 @@
       <string>0-0-0-2</string>
       <string>0-0-2-3</string>
       <string>0-0-2-2</string>
-      <string>0-0-2-3</string>
-      <string>0-0-2-2</string>
       <string>0-0-0-3</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
       <string>0-0-2-0</string>
       <string>0-0-1-0</string>
       <string>0-0-2-2</string>
@@ -234,9 +234,9 @@
       <string>0-0-1-2</string>
       <string>0-0-3-3</string>
       <string>0-0-3-2</string>
-      <string>0-0-3-3</string>
-      <string>0-0-3-2</string>
       <string>0-0-1-3</string>
+      <string>0-1-0-2</string>
+      <string>0-1-0-2</string>
       <string>0-0-1-2</string>
       <string>0-0-3-3</string>
       <string>0-0-3-2</string>
@@ -959,24 +959,6 @@
   </Tiles>
   <Enemies>
     <Enemy>
-      <Name>TurretH</Name>
-      <X>176</X>
-      <Y>160</Y>
-      <MovementType>None</MovementType>
-      <Direction>None</Direction>
-      <SpecialMovement>None</SpecialMovement>
-      <Speed>0</Speed>
-      <ShouldFlip>true</ShouldFlip>
-      <MinPosition>0</MinPosition>
-      <MaxPosition>0</MaxPosition>
-      <InitialFlip>true</InitialFlip>
-      <ShootingFrequency>10</ShootingFrequency>
-      <ShootingInitialFrequency>10</ShootingInitialFrequency>
-      <BlinkingType>NotBlinking</BlinkingType>
-      <BlinkingFrequency>0</BlinkingFrequency>
-      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
-    </Enemy>
-    <Enemy>
       <Name>Sphere</Name>
       <X>200</X>
       <Y>56</Y>
@@ -990,6 +972,24 @@
       <InitialFlip>true</InitialFlip>
       <ShootingFrequency>50</ShootingFrequency>
       <ShootingInitialFrequency>50</ShootingInitialFrequency>
+      <BlinkingType>NotBlinking</BlinkingType>
+      <BlinkingFrequency>0</BlinkingFrequency>
+      <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
+    </Enemy>
+    <Enemy>
+      <Name>TurretH</Name>
+      <X>200</X>
+      <Y>160</Y>
+      <MovementType>None</MovementType>
+      <Direction>None</Direction>
+      <SpecialMovement>None</SpecialMovement>
+      <Speed>0</Speed>
+      <ShouldFlip>true</ShouldFlip>
+      <MinPosition>0</MinPosition>
+      <MaxPosition>0</MaxPosition>
+      <InitialFlip>true</InitialFlip>
+      <ShootingFrequency>10</ShootingFrequency>
+      <ShootingInitialFrequency>10</ShootingInitialFrequency>
       <BlinkingType>NotBlinking</BlinkingType>
       <BlinkingFrequency>0</BlinkingFrequency>
       <BlinkingInitialFrequency>0</BlinkingInitialFrequency>
