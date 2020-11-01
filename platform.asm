@@ -894,6 +894,10 @@ Bank12Start:
     .incbin "data\levels\level_4_06.bin"
   level_4_08:
     .incbin "data\levels\level_4_08.bin"
+  level_4_09:
+    .incbin "data\levels\level_4_09.bin"
+  level_4_12:
+    .incbin "data\levels\level_4_12.bin"
     
 Bank12End:
   
@@ -903,6 +907,12 @@ Bank13:
   .org $A000
 
 Bank13Start:
+
+  level_4_10:
+    .incbin "data\levels\level_4_12.bin" ; todo
+  level_4_11:
+    .incbin "data\levels\level_4_12.bin" ; todo
+
 Bank13End:
 
 ;****************************************************************
