@@ -101,6 +101,15 @@ NUMBER_OF_LEVELS_CONGRATS = $01
   ; credits
 NUMBER_OF_LEVELS_CREDITS = $01
   .byte $00, LOW(storyCredits), HIGH(storyCredits)
+
+  ; reserved for 6 more levels
+Reserved:
+  .byte $00, $00, $00
+  .byte $00, $00, $00
+  .byte $00, $00, $00
+  .byte $00, $00, $00
+  .byte $00, $00, $00
+  .byte $00, $00, $00
   
 LevelsEnd:
 
