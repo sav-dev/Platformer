@@ -657,7 +657,7 @@ UpdateBullets:
             STA <by2
       
       ; when we get here, X points to the y position and the 'b' boxes are set to the bullet
-      .checkCollisions: ; F5F3
+      .checkCollisions:
   
         JSR CheckForCollisionsPlatThDoor
         LDA <collision
@@ -1008,8 +1008,12 @@ UpdateBullets:
           ADC <genericDX
           STA <renderXPos
           STA bullets, x 
-          JMP .updateBulletState
-      
+          BCC .updateBulletState 
+          .bothPlanesXOverflow:
+            LDA <genericDX
+            BMI .updateBulletState
+            JMP ClearBullet            
+     
       .movingOnlyVertically:
         LDA <renderYPos
         CLC
@@ -1038,7 +1042,12 @@ UpdateBullets:
         ADC <genericDX
         STA <renderXPos
         STA bullets, x 
-        
+        BCC .updateBulletState
+        .horizontallyXOverflow:
+          LDA <genericDX
+          BMI .updateBulletState
+          JMP ClearBullet
+          
       ; update bullet state.
       .updateBulletState:
         LDX <xPointerCache
